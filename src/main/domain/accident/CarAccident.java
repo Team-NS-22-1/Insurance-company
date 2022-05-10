@@ -1,4 +1,4 @@
-package main.domain.accidnet;
+package main.domain.accident;
 
 
 
