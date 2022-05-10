@@ -33,5 +33,8 @@ public class Main {
         System.out.println("4. 사용자 가입");
 
         // 보험, 고객, 가입  코딩 / 메인 설계 (메인이 꼭 실행되야 함 => 결과가 나와야 됨)
+
+
+        System.out.println("무야호");
     }
 }
