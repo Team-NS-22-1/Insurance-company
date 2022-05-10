@@ -1,6 +1,6 @@
 package main.domain.employee;
 
-import main.domain.accidnet.Accident;
+import main.domain.accident.Accident;
 import main.domain.contract.Contract;
 import main.domain.insurance.Insuarance;
 

@@ -1,7 +1,7 @@
 package main.domain.customer;
 
 
-import main.domain.accidnet.Accident;
+import main.domain.accident.Accident;
 import main.domain.contract.Contract;
 
 /**

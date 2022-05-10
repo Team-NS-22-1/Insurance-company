@@ -1,4 +1,6 @@
-package main.domain.accidnet;
+package main.domain.accident;
+
+import java.util.ArrayList;
 
 
 /**
@@ -6,9 +8,12 @@ package main.domain.accidnet;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:22
  */
-public class AccidentList {
+public class AccidentListImpl extends AccidentList {
 
-	public AccidentList(){
+	private ArrayList<Accident> accidentList;
+	public Accident m_Accident;
+
+	public AccidentListImpl(){
 
 	}
 
