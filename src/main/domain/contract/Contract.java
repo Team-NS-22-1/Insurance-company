@@ -127,30 +127,4 @@ public class Contract {
 		return this;
 	}
 
-	public BuildingInfo getM_BuildingInfo() {
-		return m_BuildingInfo;
-	}
-
-	public Contract setM_BuildingInfo(BuildingInfo m_BuildingInfo) {
-		this.m_BuildingInfo = m_BuildingInfo;
-		return this;
-	}
-
-	public CarInfo getM_CarInfo() {
-		return m_CarInfo;
-	}
-
-	public Contract setM_CarInfo(CarInfo m_CarInfo) {
-		this.m_CarInfo = m_CarInfo;
-		return this;
-	}
-
-	public HealthInfo getM_HealthInfo() {
-		return m_HealthInfo;
-	}
-
-	public Contract setM_HealthInfo(HealthInfo m_HealthInfo) {
-		this.m_HealthInfo = m_HealthInfo;
-		return this;
-	}
 }
