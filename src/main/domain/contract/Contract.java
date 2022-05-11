@@ -11,7 +11,7 @@ import main.domain.customer.Payment;
 public class Contract {
 
 	private CarInfo carInfo;
-	//private enum conditionOfUw;
+	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
 	private BuildingInfo buildingInfo;
@@ -22,9 +22,7 @@ public class Contract {
 	private Payment payment;
 	private int premium;
 	private String reasonOfUw;
-	public BuildingInfo m_BuildingInfo;
-	public CarInfo m_CarInfo;
-	public HealthInfo m_HealthInfo;
+
 
 	public Contract(){
 

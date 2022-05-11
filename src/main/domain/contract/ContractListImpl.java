@@ -2,6 +2,7 @@ package main.domain.contract;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author ����
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  */
 public class ContractListImpl implements ContractList {
 
-	private ArrayList<Contract> contractList = new ArrayList<>();
+	private HashMap<Integer, Contract> contractMap = new HashMap<>();
 
 	public ContractListImpl(){
 
@@ -18,6 +19,9 @@ public class ContractListImpl implements ContractList {
 
 	@Override
 	public boolean create(Contract contract) {
+
+
+
 		return false;
 	}
 
