@@ -2,9 +2,9 @@ package main.domain.insurance;
 
 
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:25
+ * @created 09-5-2022 ���� 4:39:02
  */
 public class SalesAuthFile {
 
@@ -26,10 +26,6 @@ public class SalesAuthFile {
 	private String dirSrActuaryVerification;
 
 	public SalesAuthFile(){
-
-	}
-
-	public void finalize() throws Throwable {
 
 	}
 

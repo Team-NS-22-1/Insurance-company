@@ -1,6 +1,8 @@
 package main.domain.customer;
 
 
+import java.time.LocalDate;
+
 /**
  * @author 규현
  * @version 1.0
@@ -9,16 +11,12 @@ package main.domain.customer;
 public class Card extends Payment {
 
 	private String cardNo;
-	//private enum cardType;
+	private CardType cardType;
 	private String cvcNo;
-	//private Date expiryDate;
+	private LocalDate expiryDate;
 
 	public Card(){
 
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
 	}
 
 	public void add(){

@@ -17,8 +17,4 @@ public class AccDocFile {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
-
 }
