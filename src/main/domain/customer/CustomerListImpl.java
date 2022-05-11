@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class CustomerListImpl extends CustomerList {
 
-	private ArrayList<Customer> customerList;
+	private static ArrayList<Customer> customerList;
 	public Customer m_Customer;
 
 	public CustomerListImpl(){
