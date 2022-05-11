@@ -34,12 +34,13 @@ public class Application {
 
     public void run() {
         Scanner sc = new Scanner(System.in);
-        createMenu("유저 타입","보험가입희망자","고객","영업팀","언더라이팅팀","개발팀","보상팀");
+        createMenu("유저 타입","보험가입희망자","고객","영업팀","언더라이팅팀","개발팀","보상팀","종료하기");
         int userType = sc.nextInt();
         UserType[] values = UserType.values();
 
         UserType type = values[userType-1];
-
+        if(type == UserType.OUT)
+            System.exit(0);
         ViewLogic viewLogic = map.get(type);
         viewLogic.showMenu();
         String command = sc.next();

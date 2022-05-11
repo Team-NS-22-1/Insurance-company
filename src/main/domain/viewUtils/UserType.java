@@ -7,5 +7,5 @@ package main.domain.viewUtils;
  * 해당 값을 통해서 ViewLogic에 차이를 둠.
  */
 public enum UserType {
-    GUEST,CUSTOMER,SALES,UW,DEV,COMP
+    GUEST,CUSTOMER,SALES,UW,DEV,COMP,OUT
 }
