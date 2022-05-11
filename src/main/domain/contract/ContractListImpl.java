@@ -2,6 +2,8 @@ package main.domain.contract;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author ����
@@ -10,7 +12,9 @@ import java.util.ArrayList;
  */
 public class ContractListImpl implements ContractList {
 
-	private ArrayList<Contract> contractList = new ArrayList<>();
+	private static Map<Integer, Contract> contractList = new HashMap<>();
+	private static int idSequence;
+
 
 	public ContractListImpl(){
 
@@ -18,16 +22,22 @@ public class ContractListImpl implements ContractList {
 
 	@Override
 	public boolean create(Contract contract) {
-		return false;
+		contract.setId(++idSequence);
+		contractList.put(contract.getId(), contract);
+		return true;
 	}
 
 	@Override
 	public Contract read(int id) {
+		Contract contract = contractList.get(id);
+		if(contract != null)
+			return contract;
 		return null;
 	}
 
 	@Override
 	public boolean delete(int id) {
-		return false;
+		Contract remove = contractList.remove(id);
+		return remove!=null;
 	}
 }
