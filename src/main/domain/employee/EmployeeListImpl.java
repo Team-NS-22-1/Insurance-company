@@ -2,6 +2,7 @@ package main.domain.employee;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -11,37 +12,29 @@ import java.util.Iterator;
  */
 public class EmployeeListImpl implements EmployeeList {
 
-	private ArrayList<Employee> employeeList = new ArrayList<>();
+	private HashMap<Integer, Employee> employeeList = new HashMap<>();
+	private static int id = 0;
 
 	public EmployeeListImpl(){
 	}
 
 	@Override
 	public boolean create(Employee employee) {
-		if(this.employeeList.add(employee)) return true;
+		if(this.employeeList.put(employee.setId(++id).getId(), employee) != null) return true;
 		else return false;
 	}
 
 	@Override
 	public Employee read(int id) {
-		for(Employee employee : this.employeeList)
-			if(employee.getId() == id)
-				return employee;
-		return null;
+		Employee employee = this.employeeList.get(id);
+		if(employee != null) return employee;
+		else return null;
 	}
 
 	@Override
 	public boolean delete(int id) {
-		boolean delete = false;
-		Iterator it = this.employeeList.iterator();
-		while(it.hasNext()){
-			Employee employee = (Employee) it.next();
-			if(employee.getId() == id) {
-				it.remove();
-				delete = true;
-				break;
-			}
-		}
-		return delete;
+		Employee employee = this.employeeList.remove(id);
+		if(employee != null) return true;
+		else return false;
 	}
 }

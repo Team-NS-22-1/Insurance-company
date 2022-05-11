@@ -2,7 +2,9 @@ package main.domain.customer;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author ����
@@ -11,37 +13,31 @@ import java.util.Iterator;
  */
 public class CustomerListImpl implements CustomerList {
 
-	private ArrayList<Customer> customerList = new ArrayList<>();
+	private static Map<Integer, Customer> customerList = new HashMap<>();
+	private static int idSequence = 0;
 
 	public CustomerListImpl(){
 	}
 
 	@Override
 	public boolean create(Customer customer) {
-		if(this.customerList.add(customer)) return true;
-		return false;
+		customer.setId(++idSequence);
+		customerList.put(customer.getId(), customer);
+		return true;
 	}
 
 	@Override
 	public Customer read(int id) {
-		for(Customer customer : this.customerList)
-			if(customer.getId() == id)
-				return customer;
-		return null;
+		Customer customer = customerList.get(id);
+		if (customer == null) {
+			throw new IllegalArgumentException("id");
+		}
+		return customer;
 	}
 
 	@Override
 	public boolean delete(int id) {
-		boolean delete = false;
-		Iterator it = this.customerList.iterator();
-		while(it.hasNext()){
-			Customer customer = (Customer) it.next();
-			if(customer.getId() == id) {
-				it.remove();
-				delete = true;
-				break;
-			}
-		}
-		return delete;
+		Customer remove = customerList.remove(id);
+		return remove != null;
 	}
 }
