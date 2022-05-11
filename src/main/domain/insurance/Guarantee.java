@@ -2,22 +2,26 @@ package main.domain.insurance;
 
 
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:24
+ * @created 09-5-2022 ���� 4:39:00
  */
 public class Guarantee {
 
-	private String description;
 	private int insurranceId;
 	private String name;
+	private String description;
 
-	public Guarantee(){
-
+	public Guarantee(String name, String description){
+		this.name = name;
+		this.description = description;
 	}
 
-	public void finalize() throws Throwable {
-
+	public String getName(){
+		return this.name;
 	}
 
+	public String getDescription(){
+		return this.description;
+	}
 }

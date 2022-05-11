@@ -45,8 +45,5 @@ public class Application {
         viewLogic.showMenu();
         String command = sc.next();
         viewLogic.work(command);
-
     }
-
-
 }

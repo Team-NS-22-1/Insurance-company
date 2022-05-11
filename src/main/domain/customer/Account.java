@@ -9,14 +9,10 @@ package main.domain.customer;
 public class Account extends Payment {
 
 	private String accountNo;
-	//private enum bankType;
+	private BankType bankType;
 
 	public Account(){
 
-	}
-
-	public void finalize() throws Throwable {
-		super.finalize();
 	}
 
 	public void add(){

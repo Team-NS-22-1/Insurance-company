@@ -1,5 +1,7 @@
 package main.domain.accident;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -10,21 +12,17 @@ import java.util.List;
  */
 public class Accident {
 
-	private List<AccDocFile> accDocFileList;
-	//private enum accidentType;
+	private ArrayList<AccDocFile> accDocFileList;
+	private AccidentType accidentType;
 	private int customerId;
-	//private Date dateOfAccident;
-	//private Date dateOfReport;
+	private LocalDate dateOfAccident;
+	private LocalDate dateOfReport;
 	private int employeeId;
 	private int id;
 	private int lossReserves;
 	public AccDocFile m_AccDocFile;
 
 	public Accident(){
-
-	}
-
-	public void finalize() throws Throwable {
 
 	}
 

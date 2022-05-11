@@ -14,10 +14,6 @@ public class Payment {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
-
 	public void add(){
 
 	}

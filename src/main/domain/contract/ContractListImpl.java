@@ -1,40 +1,42 @@
 package main.domain.contract;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:24
+ * @created 09-5-2022 ���� 4:38:58
  */
-public class ContractListImpl extends ContractList {
+public class ContractListImpl implements ContractList {
 
-	private ArrayList<Contract> contractList;
-	public Contract m_Contract;
+	private static Map<Integer, Contract> contractList = new HashMap<>();
+	private static int idSequence;
+
 
 	public ContractListImpl(){
 
 	}
 
-	public void finalize() throws Throwable {
-
+	@Override
+	public boolean create(Contract contract) {
+		contract.setId(++idSequence);
+		contractList.put(contract.getId(), contract);
+		return true;
 	}
 
-	public void create(){
-
+	@Override
+	public Contract read(int id) {
+		Contract contract = contractList.get(id);
+		if(contract != null)
+			return contract;
+		return null;
 	}
 
-	public void delete(){
-
+	@Override
+	public boolean delete(int id) {
+		Contract remove = contractList.remove(id);
+		return remove!=null;
 	}
-
-	public void read(){
-
-	}
-
-	public void update(){
-
-	}
-
 }
