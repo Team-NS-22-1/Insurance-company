@@ -11,7 +11,7 @@ import main.domain.customer.Payment;
 public class Contract {
 
 	private CarInfo carInfo;
-	//private enum conditionOfUw;
+	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
 	private BuildingInfo buildingInfo;
@@ -22,9 +22,7 @@ public class Contract {
 	private Payment payment;
 	private int premium;
 	private String reasonOfUw;
-	public BuildingInfo m_BuildingInfo;
-	public CarInfo m_CarInfo;
-	public HealthInfo m_HealthInfo;
+
 
 	public Contract(){
 
@@ -129,30 +127,4 @@ public class Contract {
 		return this;
 	}
 
-	public BuildingInfo getM_BuildingInfo() {
-		return m_BuildingInfo;
-	}
-
-	public Contract setM_BuildingInfo(BuildingInfo m_BuildingInfo) {
-		this.m_BuildingInfo = m_BuildingInfo;
-		return this;
-	}
-
-	public CarInfo getM_CarInfo() {
-		return m_CarInfo;
-	}
-
-	public Contract setM_CarInfo(CarInfo m_CarInfo) {
-		this.m_CarInfo = m_CarInfo;
-		return this;
-	}
-
-	public HealthInfo getM_HealthInfo() {
-		return m_HealthInfo;
-	}
-
-	public Contract setM_HealthInfo(HealthInfo m_HealthInfo) {
-		this.m_HealthInfo = m_HealthInfo;
-		return this;
-	}
 }
