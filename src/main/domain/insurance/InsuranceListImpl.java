@@ -1,6 +1,7 @@
 package main.domain.insurance;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -10,28 +11,29 @@ import java.util.Iterator;
  */
 public class InsuranceListImpl implements InsuranceList {
 
-	private ArrayList<Insurance> insuranceList = new ArrayList<Insurance>();
+	private HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+	private static int id = 0;
 
 	public InsuranceListImpl(){
 	}
 
 	@Override
 	public boolean create(Insurance insurance) {
-		if(this.insuranceList.add(insurance)) return true;
+		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
 		else return false;
 	}
 
 	@Override
 	public Insurance read(int id) {
-		for(Insurance insurance : this.insuranceList)
-			if(insurance.getId() == id)
-				return insurance;
-		return null;
+		Insurance insurance = this.insuranceList.get(id);
+		if(insurance != null) return insurance;
+		else return null;
 	}
 
 	public ArrayList<Insurance> readByEid(int eid){
+		ArrayList<Insurance> insuranceArrayList = new ArrayList<>(this.insuranceList.values());
 		ArrayList<Insurance> eInsuranceList = new ArrayList<>();
-		for(Insurance insurance : this.insuranceList){
+		for(Insurance insurance : insuranceArrayList){
 			if(insurance.getDevInfo().getEmployeeId() == eid)
 				eInsuranceList.add(insurance);
 		}
@@ -40,36 +42,11 @@ public class InsuranceListImpl implements InsuranceList {
 
 	@Override
 	public boolean delete(int id) {
-		boolean delete = false;
-		Iterator it = this.insuranceList.iterator();
-		while(it.hasNext()){
-			Insurance insurance = (Insurance) it.next();
-			if(insurance.getId() == id) {
-				it.remove();
-				delete = true;
-				break;
-			}
-		}
-		return delete;
+		Insurance insurance = this.insuranceList.remove(id);
+		if(insurance != null) return true;
+		else return false;
 	}
 
-
-//	public boolean create(Insurance insurance){
-//		if(this.insuranceList.add(insurance)) return true;
-//		return false;
-//	}
-//
-//	public boolean delete(String insuranceId){
-//		if(this.insuranceList.remove(insuranceId)) return true;
-//		return false;
-//	}
-//
-//	public Insurance read(String insuranceId){
-//		for(Insurance insurance : this.insuranceList)
-//			if(insurance.getId() == Integer.parseInt(insuranceId))
-//				return insurance;
-//		return null;
-//	}
 
 //	public void update(){}
 
