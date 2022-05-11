@@ -2,6 +2,8 @@ package main;
 
 import main.domain.viewUtils.Application;
 
+import java.util.NoSuchElementException;
+
 public class Main {
     public static void main(String[] args) {
         Application app = new Application();
