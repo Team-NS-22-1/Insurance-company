@@ -14,7 +14,7 @@ public class Contract {
 	//private enum conditionOfUw;
 	private int customerId;
 	private int employeeId;
-	//private FireInfo fireInfo;
+	private BuildingInfo buildingInfo;
 	private HealthInfo healthInfo;
 	private int id;
 	private int insuranceId;
@@ -30,8 +30,5 @@ public class Contract {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 
 }

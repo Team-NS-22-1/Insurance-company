@@ -1,35 +1,12 @@
 package main.domain.employee;
 
 
+import main.domain.ifs.CrudInterface;
+
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:24
+ * @created 09-5-2022 ���� 4:38:59
  */
-public class EmployeeList {
-
-	public EmployeeList(){
-
-	}
-
-	public void finalize() throws Throwable {
-
-	}
-
-	public void create(){
-
-	}
-
-	public void delete(){
-
-	}
-
-	public void read(){
-
-	}
-
-	public void update(){
-
-	}
-
+public interface EmployeeList extends CrudInterface<Employee> {
 }

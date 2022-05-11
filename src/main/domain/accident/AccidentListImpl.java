@@ -1,40 +1,33 @@
 package main.domain.accident;
 
+
 import java.util.ArrayList;
 
-
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:22
+ * @created 09-5-2022 ���� 4:38:56
  */
-public class AccidentListImpl extends AccidentList {
+public class AccidentListImpl implements AccidentList {
 
-	private ArrayList<Accident> accidentList;
-	public Accident m_Accident;
+	private ArrayList<Accident> accidentList = new ArrayList<>();
 
 	public AccidentListImpl(){
 
 	}
 
-	public void finalize() throws Throwable {
-
+	@Override
+	public boolean create(Accident accident) {
+		return false;
 	}
 
-	public void create(){
-
+	@Override
+	public Accident read(int id) {
+		return null;
 	}
 
-	public void delete(){
-
+	@Override
+	public boolean delete(int id) {
+		return false;
 	}
-
-	public void read(){
-
-	}
-
-	public void update(){
-
-	}
-
 }

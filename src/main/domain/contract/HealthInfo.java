@@ -21,8 +21,5 @@ public class HealthInfo {
 
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 
 }

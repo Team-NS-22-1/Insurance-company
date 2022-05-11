@@ -4,6 +4,8 @@ package main.domain.customer;
 import main.domain.accident.Accident;
 import main.domain.contract.Contract;
 
+import java.util.ArrayList;
+
 /**
  * @author 규현
  * @version 1.0
@@ -12,8 +14,17 @@ import main.domain.contract.Contract;
 public class Customer {
 
 	private String address;
-	
-	
+	private String email;
+	private int id;
+	private boolean isContract;
+	private String job;
+	private String name;
+	private ArrayList<Payment> paymentList;
+	private String phone;
+	private String ssn;
+	public Accident m_Accident;
+	public Contract m_Contract;
+	public Payment m_Payment;
 	// Ȯ��
 	private String housePrice;
 	private String homeOwner;
@@ -122,23 +133,8 @@ public class Customer {
 		this.m_Payment = m_Payment;
 	}
 
-	private String email;
-	private int id;
-	private boolean isContract;
-	private String job;
-	private String name;
-	//private ArrayList<Payment> paymentList;
-	private String phone;
-	private String ssn;
-	public Accident m_Accident;
-	public Contract m_Contract;
-	public Payment m_Payment;
 
 	public Customer(){
-
-	}
-
-	public void finalize() throws Throwable {
 
 	}
 

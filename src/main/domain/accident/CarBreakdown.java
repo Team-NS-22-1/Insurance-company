@@ -15,8 +15,5 @@ public class CarBreakdown extends Accident {
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
 
 }
