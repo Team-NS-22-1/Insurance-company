@@ -9,17 +9,13 @@ package main.domain.contract;
 public class CarInfo {
 
 	private String carNo;
-	//private enum carType;
+	private CarType carType;
 	private int modelYear;
 	private String name;
 	private String owner;
 	private int value;
 
 	public CarInfo(){
-
-	}
-
-	public void finalize() throws Throwable {
 
 	}
 

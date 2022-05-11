@@ -1,40 +1,47 @@
 package main.domain.employee;
 
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:24
+ * @created 09-5-2022 ���� 4:39:00
  */
-public class EmployeeListImpl extends EmployeeList {
+public class EmployeeListImpl implements EmployeeList {
 
-	private ArrayList<Employee> employeeList;
-	public Employee m_Employee;
+	private ArrayList<Employee> employeeList = new ArrayList<>();
 
 	public EmployeeListImpl(){
-
 	}
 
-	public void finalize() throws Throwable {
-
+	@Override
+	public boolean create(Employee employee) {
+		if(this.employeeList.add(employee)) return true;
+		else return false;
 	}
 
-	public void create(){
-
+	@Override
+	public Employee read(int id) {
+		for(Employee employee : this.employeeList)
+			if(employee.getId() == id)
+				return employee;
+		return null;
 	}
 
-	public void delete(){
-
+	@Override
+	public boolean delete(int id) {
+		boolean delete = false;
+		Iterator it = this.employeeList.iterator();
+		while(it.hasNext()){
+			Employee employee = (Employee) it.next();
+			if(employee.getId() == id) {
+				it.remove();
+				delete = true;
+				break;
+			}
+		}
+		return delete;
 	}
-
-	public void read(){
-
-	}
-
-	public void update(){
-
-	}
-
 }

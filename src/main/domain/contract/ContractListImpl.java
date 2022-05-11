@@ -1,40 +1,33 @@
 package main.domain.contract;
 
+
 import java.util.ArrayList;
 
-
 /**
- * @author 규현
+ * @author ����
  * @version 1.0
- * @created 09-5-2022 오전 2:42:24
+ * @created 09-5-2022 ���� 4:38:58
  */
-public class ContractListImpl extends ContractList {
+public class ContractListImpl implements ContractList {
 
-	private ArrayList<Contract> contractList;
-	public Contract m_Contract;
+	private ArrayList<Contract> contractList = new ArrayList<>();
 
 	public ContractListImpl(){
 
 	}
 
-	public void finalize() throws Throwable {
-
+	@Override
+	public boolean create(Contract contract) {
+		return false;
 	}
 
-	public void create(){
-
+	@Override
+	public Contract read(int id) {
+		return null;
 	}
 
-	public void delete(){
-
+	@Override
+	public boolean delete(int id) {
+		return false;
 	}
-
-	public void read(){
-
-	}
-
-	public void update(){
-
-	}
-
 }

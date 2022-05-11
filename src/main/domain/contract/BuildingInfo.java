@@ -9,17 +9,13 @@ package main.domain.contract;
 public class BuildingInfo {
 
 	private int buildingArea;
-	//private enum buildingType;
+	private BuildingType buildingType;
 	private int collateralAmount;
 	private boolean isActualResidence;
 	private boolean isSelfOwned;
 
 	public BuildingInfo(){
-
 	}
 
-	public void finalize() throws Throwable {
-
-	}
 
 }

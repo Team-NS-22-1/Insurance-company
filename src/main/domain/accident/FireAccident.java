@@ -14,8 +14,5 @@ public class FireAccident extends Accident {
 
 	}
 
-	public void finalize() throws Throwable {
-		super.finalize();
-	}
 
 }
