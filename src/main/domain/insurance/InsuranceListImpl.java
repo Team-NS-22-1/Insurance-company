@@ -19,8 +19,11 @@ public class InsuranceListImpl implements InsuranceList {
 
 	@Override
 	public boolean create(Insurance insurance) {
-		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
-		else return false;
+		this.insuranceList.put(insurance.setId(++id).getId(), insurance);
+		return true;
+
+//		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
+//		else return false;
 	}
 
 	@Override

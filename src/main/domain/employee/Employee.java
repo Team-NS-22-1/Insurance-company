@@ -94,7 +94,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.HEALTH);
 			return insurance;
 		}
 		else if(typeInfo instanceof DtoCar){
@@ -105,7 +106,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.CAR);;
 			return insurance;
 		}
 		else if(typeInfo instanceof DtoFire){
@@ -116,7 +118,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.FIRE);;
 			return insurance;
 		}
 		return null;

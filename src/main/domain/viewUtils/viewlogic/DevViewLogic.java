@@ -75,14 +75,43 @@ public class DevViewLogic implements ViewLogic {
 
     private void menuDevelop(InsuranceType type) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        DtoBasicInfo basicInfo = formInputDefaultInfo(br);
-        DtoTypeInfo typeInfo = formInputTypeInfo(br, type);
-        ArrayList<DtoGuarantee> guaranteeInfo = formInputGuaranteeInfo(br);
-        Insurance insurance = employeeList.read(1).develop(basicInfo, typeInfo, guaranteeInfo);
+        Insurance insurance = employeeList.read(1).develop(
+                formInputDefaultInfo(br),
+                // return Basic Info of Insurance
+                formInputTypeInfo(br, type),
+                // return Type Info of Insurance (Type is Health, Car, Fire)
+                formInputGuaranteeInfo(br)
+                // return Guarantee Info of Insurance (Guarantee Info is list)
+        );
 
-        formCalculatePremium(br, isCalcPremium(br), insurance);
+        int premium = formCalculatePremium(br, isCalcPremium(br), insurance);
+        if(premium < 0) return;
 
+        formRegisterInsurance(br, insurance, premium);
 
+        System.out.println(employee.readMyInsurance(insuranceList));
+    }
+
+    private void formRegisterInsurance(BufferedReader br, Insurance insurance, int premium) throws IOException {
+        boolean forWhile = true;
+        while(forWhile){
+            System.out.println("<< 보험을 저장하시겠습니까? >>");
+            System.out.println("1. 예\t2. 아니오");
+            switch (Integer.parseInt(br.readLine())){
+                case 1 -> {
+                    if(employee.registerInsurance(insuranceList, insurance, premium))
+                        System.out.println("정상적으로 보험이 저장되었습니다!");
+                    else System.out.println("보험 저장에 실패하였습니다!");
+                    forWhile = false;
+                }
+                case 2 -> {
+                    System.out.println("정말 취소하시겠습니까?\n1. 예\t2. 아니오");
+                    int isCancel = Integer.parseInt(br.readLine());
+                    if(isCancel == 1)
+                        forWhile = false;
+                }
+            }
+        }
     }
 
     private DtoBasicInfo formInputDefaultInfo(BufferedReader br) {
@@ -156,8 +185,8 @@ public class DevViewLogic implements ViewLogic {
 //		System.out.print("보장명: "); String gName = br.readLine();
 //		System.out.print("보장 상세 내용: "); String gDescription = br.readLine();
         // test segment
-        String gName = "건강보험 1 보장명 01";
-        String gDescription = "건강보험 1 보장명 01의 설명입니다.";
+        String gName = "보장명 01";
+        String gDescription = "보장명 01의 설명입니다.";
         System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription);
         // test segment
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
