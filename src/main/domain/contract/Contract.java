@@ -1,6 +1,6 @@
 package main.domain.contract;
 
-import main.domain.customer.Payment;
+import main.domain.payment.Payment;
 
 
 /**

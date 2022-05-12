@@ -1,4 +1,4 @@
-package main.domain.customer;
+package main.domain.payment;
 
 
 /**

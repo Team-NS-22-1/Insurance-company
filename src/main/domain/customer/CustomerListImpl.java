@@ -13,13 +13,10 @@ import java.util.Map;
  */
 public class CustomerListImpl implements CustomerList {
 
-<<<<<<< HEAD
-	private static ArrayList<Customer> customerList;
-	public Customer m_Customer;
-=======
+
 	private static Map<Integer, Customer> customerList = new HashMap<>();
 	private static int idSequence = 0;
->>>>>>> main
+
 
 	public CustomerListImpl(){
 	}

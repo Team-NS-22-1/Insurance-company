@@ -3,6 +3,7 @@ package main.domain.customer;
 
 import main.domain.accident.Accident;
 import main.domain.contract.Contract;
+import main.domain.payment.Payment;
 
 import java.util.ArrayList;
 
