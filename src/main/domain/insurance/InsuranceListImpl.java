@@ -11,7 +11,7 @@ import java.util.Iterator;
  */
 public class InsuranceListImpl implements InsuranceList {
 
-	private HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+	private static HashMap<Integer, Insurance> insuranceList = new HashMap<>();
 	private static int id = 0;
 
 	public InsuranceListImpl(){
@@ -19,8 +19,11 @@ public class InsuranceListImpl implements InsuranceList {
 
 	@Override
 	public boolean create(Insurance insurance) {
-		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
-		else return false;
+		insurance.setId(++id);
+		insuranceList.put(insurance.getId(),insurance);
+		return true;
+//		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
+//		else return false;
 	}
 
 	@Override

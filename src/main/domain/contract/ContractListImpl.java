@@ -1,8 +1,12 @@
 package main.domain.contract;
 
+import main.exception.MyIllegalArgumentException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author ����
@@ -38,5 +42,18 @@ public class ContractListImpl implements ContractList {
 	public boolean delete(int id) {
 		Contract remove = contractList.remove(id);
 		return remove!=null;
+	}
+
+
+	@Override
+	public List<Contract> findAllByCustomerId(int customerId) {
+		List<Contract> contracts = contractList.values()
+				.stream()
+				.filter(c -> c.getCustomerId() == customerId)
+				.collect(Collectors.toList());
+
+		if(contracts.size()==0)
+			throw new MyIllegalArgumentException("해당 ID로 검색되는 계약이 존재하지 않습니다");
+		return contracts;
 	}
 }

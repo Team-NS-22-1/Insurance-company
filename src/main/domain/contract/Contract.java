@@ -155,4 +155,6 @@ public class Contract {
 		this.m_HealthInfo = m_HealthInfo;
 		return this;
 	}
+
+
 }
