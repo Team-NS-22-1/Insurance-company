@@ -1,10 +1,18 @@
 package main.domain.employee;
 
 
+import main.domain.contract.ConditionOfUw;
+import main.domain.contract.Contract;
+import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+import static main.domain.utility.MessageUtil.createMenu;
 
 /**
  * @author ����
@@ -167,11 +175,39 @@ public class Employee {
 
 	}
 
-	public void readContract(){
+	public Map<Integer, Contract> readContract(InsuranceType insuranceType){
+		Map<Integer, Contract> contractList = new HashMap<>();
 
+		for (Contract contract : ContractListImpl.getContractList().values()) {
+
+			switch (insuranceType) {
+
+				case HEALTH:
+					if (contract.getHealthInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
+						contractList.put(contract.getId(), contract);
+					break;
+				case CAR:
+					if (contract.getCarInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
+						contractList.put(contract.getId(), contract);
+					break;
+				case FIRE:
+					if (contract.getBuildingInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
+						contractList.put(contract.getId(), contract);
+					break;
+			}
+
+
+		}
+
+		return contractList;
 	}
 
-	public void underwriting(){
+	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
+		ContractListImpl contractList = new ContractListImpl();
+		Contract contract = contractList.read(contractId);
+		contract.setReasonOfUw(reasonOfUw);
+		contract.setConditionOfUw(conditionOfUw);
+		contract.setPublishStock(true);
 
 	}
 

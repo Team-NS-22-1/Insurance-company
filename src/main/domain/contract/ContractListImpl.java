@@ -1,7 +1,8 @@
 package main.domain.contract;
 
 
-import java.util.ArrayList;
+import main.domain.insurance.InsuranceType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,4 +41,16 @@ public class ContractListImpl implements ContractList {
 		Contract remove = contractList.remove(id);
 		return remove!=null;
 	}
+
+	public boolean update(int id, Contract contract) {
+		this.delete(id);
+		contractList.put(id, contract);
+		return true;
+	}
+
+	public static Map<Integer, Contract> getContractList() {
+		return contractList;
+	}
+
+
 }

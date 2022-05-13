@@ -7,5 +7,5 @@ package main.domain.contract;
  * 해당 값을 통해서 ViewLogic에 차이를 둠.
  */
 public enum ConditionOfUw {
-    APPROVAL,RE_AUDIT,REFUSE
+    APPROVAL,RE_AUDIT,REFUSE,WAIT
 }

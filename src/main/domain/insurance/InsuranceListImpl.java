@@ -1,5 +1,7 @@
 package main.domain.insurance;
 
+import main.domain.contract.Contract;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +13,7 @@ import java.util.Iterator;
  */
 public class InsuranceListImpl implements InsuranceList {
 
-	private HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+	private static HashMap<Integer, Insurance> insuranceList = new HashMap<>();
 	private static int id = 0;
 
 	public InsuranceListImpl(){
@@ -45,6 +47,13 @@ public class InsuranceListImpl implements InsuranceList {
 		Insurance insurance = this.insuranceList.remove(id);
 		if(insurance != null) return true;
 		else return false;
+	}
+
+	// 나중에 수정
+	public boolean add(Insurance insurance) {
+		insurance.setId(++id);
+		insuranceList.put(insurance.getId(), insurance);
+		return true;
 	}
 
 
