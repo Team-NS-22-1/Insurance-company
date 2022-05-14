@@ -2,7 +2,6 @@ package main.domain.accident;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 
 /**

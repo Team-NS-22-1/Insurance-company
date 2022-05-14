@@ -1,7 +1,8 @@
 package main.application.viewlogic;
 
 import main.application.ViewLogic;
-import main.utility.MessageUtil;
+
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -17,7 +18,7 @@ import main.utility.MessageUtil;
 public class GuestViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
-        MessageUtil.createMenu("보험가입희망자메뉴", "가입한다");
+        createMenu("보험가입희망자메뉴", "가입한다");
     }
 
     @Override
