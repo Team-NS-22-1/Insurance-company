@@ -1,6 +1,6 @@
 package main.domain.contract;
 
-import main.domain.customer.Payment;
+import main.domain.payment.Payment;
 
 
 /**
@@ -121,7 +121,6 @@ public class Contract {
 	public String getReasonOfUw() {
 		return reasonOfUw;
 	}
-
 	public Contract setReasonOfUw(String reasonOfUw) {
 		this.reasonOfUw = reasonOfUw;
 		return this;
