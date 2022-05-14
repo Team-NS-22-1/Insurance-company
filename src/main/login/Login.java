@@ -1,6 +1,6 @@
 package main.login;
 
-import main.domain.utility.MyBufferedReader;
+import main.utility.MyBufferedReader;
 import main.exception.InputException;
 
 import java.io.IOException;

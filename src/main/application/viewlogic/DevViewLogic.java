@@ -51,6 +51,9 @@ public class DevViewLogic implements ViewLogic {
     public DevViewLogic() {
     }
 
+    public DevViewLogic(EmployeeListImpl employeeList, InsuranceListImpl insuranceList) {
+    }
+
     @Override
     public void showMenu() {
         createMenu("개발팀 메뉴", "보험 개발", "판매인가 등록", "로그인");

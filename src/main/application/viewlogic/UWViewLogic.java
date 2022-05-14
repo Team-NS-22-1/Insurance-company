@@ -5,6 +5,7 @@ import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
 import main.domain.employee.Department;
 import main.domain.employee.Employee;
+import main.domain.employee.EmployeeListImpl;
 import main.domain.employee.Position;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
@@ -91,6 +92,9 @@ public class UWViewLogic implements ViewLogic {
         contractList.create(testContract);
         contractList.create(testContract1);
         contractList.create(testContract2);
+    }
+
+    public UWViewLogic(EmployeeListImpl employeeList, CustomerListImpl customerList, InsuranceListImpl insuranceList, ContractListImpl contractList) {
     }
 
     @Override

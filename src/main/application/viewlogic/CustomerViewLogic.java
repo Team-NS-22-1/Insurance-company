@@ -51,6 +51,9 @@ public class CustomerViewLogic implements ViewLogic {
         this.paymentList = new PaymentListImpl();
     }
 
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList) {
+    }
+
     @Override
     public void showMenu() {
         createMenu("고객메뉴", "보험가입", "보험료납입", "사고접수", "보상금청구", "기타등등");
