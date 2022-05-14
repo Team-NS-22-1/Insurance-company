@@ -1,4 +1,4 @@
-package main.viewUtils.viewlogic;
+package main.application.viewlogic;
 
 import main.domain.contract.BuildingType;
 import main.domain.employee.Employee;
@@ -9,7 +9,7 @@ import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
 import main.utility.MyBufferedReader;
 import main.exception.InputException;
-import main.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 import main.login.Login;
 
 import java.io.IOException;

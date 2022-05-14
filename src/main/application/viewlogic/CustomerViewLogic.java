@@ -1,4 +1,4 @@
-package main.viewUtils.viewlogic;
+package main.application.viewlogic;
 
 import main.domain.contract.Contract;
 import main.domain.contract.ContractList;
@@ -10,7 +10,7 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
-import main.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
 

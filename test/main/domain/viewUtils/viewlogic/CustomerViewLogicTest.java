@@ -5,7 +5,7 @@ import main.domain.contract.ContractListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
-import main.viewUtils.viewlogic.CustomerViewLogic;
+import main.application.viewlogic.CustomerViewLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

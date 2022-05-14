@@ -1,6 +1,6 @@
 package main.utility;
 
-import main.viewUtils.UserType;
+import main.application.UserType;
 
 /**
  * packageName :  main.domain.utility

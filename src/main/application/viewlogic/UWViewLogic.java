@@ -1,4 +1,4 @@
-package main.viewUtils.viewlogic;
+package main.application.viewlogic;
 
 import main.domain.contract.*;
 import main.domain.customer.Customer;
@@ -9,7 +9,7 @@ import main.domain.employee.Position;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
-import main.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 
 import java.util.Map;
 import java.util.Scanner;

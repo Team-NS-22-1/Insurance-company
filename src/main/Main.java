@@ -1,6 +1,6 @@
 package main;
 
-import main.viewUtils.Application;
+import main.application.Application;
 
 public class Main {
     public static void main(String[] args) {

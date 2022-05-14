@@ -1,6 +1,6 @@
-package main.viewUtils.viewlogic;
+package main.application.viewlogic;
 
-import main.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 
 import static main.utility.MessageUtil.createMenu;
 

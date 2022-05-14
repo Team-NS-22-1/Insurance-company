@@ -1,7 +1,7 @@
-package main.viewUtils;
+package main.application;
 
 import main.domain.viewUtils.viewlogic.*;
-import main.viewUtils.viewlogic.*;
+import main.application.viewlogic.*;
 
 
 import java.util.HashMap;

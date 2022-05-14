@@ -6,7 +6,7 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
-import main.viewUtils.Application;
+import main.application.Application;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
