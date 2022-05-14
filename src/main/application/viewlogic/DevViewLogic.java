@@ -7,10 +7,10 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
-import main.exception.InputException;
-import main.login.Login;
 import main.utility.MyBufferedReader;
+import main.exception.InputException;
 import main.application.ViewLogic;
+import main.login.Login;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
