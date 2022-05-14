@@ -8,7 +8,7 @@ import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
 import main.domain.utility.MyBufferedReader;
-import main.exception.TestInputException;
+import main.exception.InputException;
 import main.domain.viewUtils.ViewLogic;
 import main.login.Login;
 
@@ -79,8 +79,8 @@ public class DevViewLogic implements ViewLogic {
                 insType = br.verifyMenu(3);
                 forWhile = false;
             }
-            catch (TestInputException.InvalidMenuException |
-                   TestInputException.InputNullDataException e){
+            catch (InputException.InvalidMenuException |
+                   InputException.InputNullDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -122,7 +122,7 @@ public class DevViewLogic implements ViewLogic {
                 System.out.print("만기 나이(세): "); contractPeriod = (int) br.verifyRead(contractPeriod);
                 forWhile = false;
             }
-            catch (TestInputException e){
+            catch (InputException e){
                 System.out.println(e.getMessage());
             }
 //            catch (TestInputException.ExitMenuException e){
@@ -149,9 +149,9 @@ public class DevViewLogic implements ViewLogic {
                     if(sex == 1) targetSex = true;
                     forWhile = false;
                 }
-                catch (TestInputException.InputNullDataException |
-                        TestInputException.InputInvalidDataException |
-                        TestInputException.InvalidMenuException e){
+                catch (InputException.InputNullDataException |
+                        InputException.InputInvalidDataException |
+                        InputException.InvalidMenuException e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -168,8 +168,8 @@ public class DevViewLogic implements ViewLogic {
                     System.out.print("차량가액 기준(원): "); valueCriterion = (long) br.verifyRead(valueCriterion);
                     forWhile = false;
                 }
-                catch (TestInputException.InputNullDataException |
-                       TestInputException.InputInvalidDataException e){
+                catch (InputException.InputNullDataException |
+                       InputException.InputInvalidDataException e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -192,9 +192,9 @@ public class DevViewLogic implements ViewLogic {
                     System.out.print("담보금액: "); collateralAmount = (long) br.verifyRead(collateralAmount);
                     forWhile = false;
                 }
-                catch (TestInputException.InputNullDataException |
-                       TestInputException.InputInvalidDataException |
-                       TestInputException.InvalidMenuException e){
+                catch (InputException.InputNullDataException |
+                       InputException.InputInvalidDataException |
+                       InputException.InvalidMenuException e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -225,14 +225,14 @@ public class DevViewLogic implements ViewLogic {
                                 if(br.verifyMenu(2) == 2)
                                     isAdd = false;
                             }
-                            catch (TestInputException.InvalidMenuException e){
+                            catch (InputException.InvalidMenuException e){
                                 System.out.println(e.getMessage());
                             }
                         }
                     forWhile = false;
                 }
-                catch (TestInputException.InputNullDataException |
-                       TestInputException.InputInvalidDataException e){
+                catch (InputException.InputNullDataException |
+                       InputException.InputInvalidDataException e){
                     System.out.println(e.getMessage());
                 }
         }
@@ -258,7 +258,7 @@ public class DevViewLogic implements ViewLogic {
                     }
                 }
             }
-            catch (TestInputException.InvalidMenuException e){
+            catch (InputException.InvalidMenuException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -287,7 +287,7 @@ public class DevViewLogic implements ViewLogic {
                     }
                 }
             }
-            catch (TestInputException.InvalidMenuException e) {
+            catch (InputException.InvalidMenuException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -310,8 +310,8 @@ public class DevViewLogic implements ViewLogic {
                 System.out.printf("총보험료: %d(원)", premium);
                 forWhile = false;
             }
-            catch (TestInputException.InputNullDataException |
-                    TestInputException.InputInvalidDataException e){
+            catch (InputException.InputNullDataException |
+                    InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -333,8 +333,8 @@ public class DevViewLogic implements ViewLogic {
                 System.out.println("조정보험료: "+premium[1]+"원");
                 forWhile = false;
             }
-            catch (TestInputException.InputNullDataException |
-                   TestInputException.InputInvalidDataException e){
+            catch (InputException.InputNullDataException |
+                   InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -350,9 +350,8 @@ public class DevViewLogic implements ViewLogic {
                 System.out.println("1. 예\t2. 아니오");
                 switch (br.verifyMenu(2)){
                     case 1 -> {
-                        if(employee.registerInsurance(insuranceList, insurance, premium))
-                            System.out.println("정상적으로 보험이 저장되었습니다!");
-                        else System.out.println("보험 저장에 실패하였습니다!");
+                        employee.registerInsurance(insuranceList, insurance, premium);
+                        System.out.println("정상적으로 보험이 저장되었습니다!");
                         forWhile = false;
                     }
                     case 2 -> {
@@ -363,7 +362,7 @@ public class DevViewLogic implements ViewLogic {
                     }
                 }
             }
-            catch (TestInputException.InvalidMenuException e){
+            catch (InputException.InvalidMenuException e){
                 System.out.println(e.getMessage());
             }
         }
