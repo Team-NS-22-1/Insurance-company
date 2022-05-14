@@ -70,12 +70,12 @@ public class CarInfo {
 	@Override
 	public String toString() {
 		return "자동차정보 {" +
-				"자동차번호='" + carNo + '\'' +
-				", 차량유형=" + carType +
-				", 연식=" + modelYear +
-				", 차명='" + name + '\'' +
-				", 차주='" + owner + '\'' +
-				", 차량가액=" + value +
+				"자동차번호: '" + carNo + '\'' +
+				", 차량유형: " + carType +
+				", 연식: " + modelYear +
+				", 차명: '" + name + '\'' +
+				", 차주: '" + owner + '\'' +
+				", 차량가액: " + value +
 				'}';
 	}
 }

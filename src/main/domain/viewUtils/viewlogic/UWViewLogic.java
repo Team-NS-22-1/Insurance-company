@@ -98,7 +98,7 @@ public class UWViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-        createMenu("언더라이팅팀메뉴", "인수심사한다", "돌아간다");
+        createMenu("<<언더라이팅팀메뉴>>", "인수심사한다", "돌아간다");
     }
 
     @Override
@@ -128,7 +128,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenu("보험 선택","건강보험", "자동차보험", "화재보험", "이전 화면으로 돌아간다");
+                createMenu("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험", "이전 화면으로 돌아간다");
 
                 InsuranceType insuranceType = null;
 
@@ -154,12 +154,12 @@ public class UWViewLogic implements ViewLogic {
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
                 printContractList(this.employee.readContract(insuranceType));
 
-                createMenu("인수심사할 계약 ID를 입력하세요.(이전 화면으로 돌아가기는 0번)");
+                createMenu("<<인수심사할 계약 ID를 입력하세요.(이전 화면으로 돌아가기는 0번)>>");
                 String contractId = sc.next();
 
                 if (Integer.parseInt(contractId) == 0) break;
 
-                createMenu("계약 정보(계약 ID: " + contractId + ")");
+                createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
                 Contract contract = printContractInfo(Integer.parseInt(contractId));
 
                 selectUwState(contract);
@@ -179,13 +179,13 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenu("명령 선택","승인", "거절", "재심사", "계약 목록 조회");
+                createMenu("<<인수심사결과 선택>>","승인", "거절", "재심사", "계약 목록 조회");
                 String command = sc.next();
 
                 switch (command) {
 
                     case "1": case "2": case "3":
-                        createMenu("인수사유를 입력해주세요.");
+                        createMenu("<<인수사유를 입력해주세요.>>");
                         String reasonOfUw = sc.next();
                         ConditionOfUw conditionOfUw = null;
 
@@ -218,7 +218,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenu("인수심사 결과를 반영하시겠습니까?", "예", "아니오");
+                createMenu("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
 
                 switch (sc.next()) {
                     case "1":

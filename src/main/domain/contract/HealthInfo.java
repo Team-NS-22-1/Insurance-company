@@ -88,14 +88,14 @@ public class HealthInfo {
 	@Override
 	public String toString() {
 		return "건강정보 {" +
-				"키=" + height +
-				", 위험활동여부=" + isDangerActivity +
-				", 음주여부=" + isDrinking +
-				", 운전여부=" + isDriving +
-				", 질병여부=" + isHavingDisease +
-				", 흡연여부=" + isSmoking +
-				", 약물복용여부=" + isTakingDrug +
-				", 몸무게=" + weight +
+				"키: " + height +
+				", 위험활동여부: " + isDangerActivity +
+				", 음주여부: " + isDrinking +
+				", 운전여부: " + isDriving +
+				", 질병여부: " + isHavingDisease +
+				", 흡연여부: " + isSmoking +
+				", 약물복용여부: " + isTakingDrug +
+				", 몸무게: " + weight +
 				'}';
 	}
 }

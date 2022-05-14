@@ -60,11 +60,11 @@ public class BuildingInfo {
 	@Override
 	public String toString() {
 		return "화재정보 {" +
-				"주택면적=" + buildingArea +
-				", 건물종류=" + buildingType +
-				", 담보금액=" + collateralAmount +
-				", 실거주여부=" + isActualResidence +
-				", 자가여부=" + isSelfOwned +
+				"주택면적: " + buildingArea +
+				", 건물종류: " + buildingType +
+				", 담보금액: " + collateralAmount +
+				", 실거주여부: " + isActualResidence +
+				", 자가여부: " + isSelfOwned +
 				'}';
 	}
 }

@@ -123,7 +123,7 @@ public class Insurance {
 	}
 
 	public String print() {
-		return "보험 정보{" +
+		return "보험 정보 {" +
 				"보험ID: " + id +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
