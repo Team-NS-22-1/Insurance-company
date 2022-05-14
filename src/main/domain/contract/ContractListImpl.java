@@ -1,6 +1,8 @@
 package main.domain.contract;
 
 
+import main.domain.insurance.InsuranceType;
+
 import main.exception.MyIllegalArgumentException;
 
 import java.util.ArrayList;
@@ -59,4 +61,16 @@ public class ContractListImpl implements ContractList {
 		return contracts;
 
 	}
+
+	public boolean update(int id, Contract contract) {
+		this.delete(id);
+		contractList.put(id, contract);
+		return true;
+	}
+
+	public static Map<Integer, Contract> getContractList() {
+		return contractList;
+	}
+
+
 }
