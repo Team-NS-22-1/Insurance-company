@@ -1,14 +1,13 @@
 package main.domain.employee;
 
 
-import java.util.ArrayList;
+import java.io.*;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
- * @author ����
+ * @author SeungHo
  * @version 1.0
- * @created 09-5-2022 ���� 4:39:00
+ * @created 09-5-2022 오후 4:39:00
  */
 public class EmployeeListImpl implements EmployeeList {
 
@@ -19,9 +18,8 @@ public class EmployeeListImpl implements EmployeeList {
 	}
 
 	@Override
-	public boolean create(Employee employee) {
-		if(this.employeeList.put(employee.setId(++id).getId(), employee) != null) return true;
-		else return false;
+	public void create(Employee employee) {
+		this.employeeList.put(employee.setId(++id).getId(), employee);
 	}
 
 	@Override
@@ -37,4 +35,5 @@ public class EmployeeListImpl implements EmployeeList {
 		if(employee != null) return true;
 		else return false;
 	}
+
 }

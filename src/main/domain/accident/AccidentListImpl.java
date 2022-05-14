@@ -17,8 +17,8 @@ public class AccidentListImpl implements AccidentList {
 	}
 
 	@Override
-	public boolean create(Accident accident) {
-		return false;
+	public void create(Accident accident) {
+
 	}
 
 	@Override

@@ -20,10 +20,9 @@ public class CustomerListImpl implements CustomerList {
 	}
 
 	@Override
-	public boolean create(Customer customer) {
+	public void create(Customer customer) {
 		customer.setId(++idSequence);
 		customerList.put(customer.getId(), customer);
-		return true;
 	}
 
 	@Override

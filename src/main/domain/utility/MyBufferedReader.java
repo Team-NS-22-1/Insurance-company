@@ -1,80 +1,62 @@
 package main.domain.utility;
 
+import main.exception.TestInputException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
 public class MyBufferedReader extends BufferedReader {
-    public MyBufferedReader(Reader in, int sz) {
-        super(in, sz);
-    }
     public MyBufferedReader(Reader in) {
         super(in);
     }
 
-    public Object verifyRead(Object returnType) throws IOException {
+    public Object verifyRead(Object returnType) throws IOException,
+                                                    TestInputException.InputNullDataException,
+                                                    TestInputException.InputInvalidDataException {
         String value = this.readLine();
-        if(value.equals("") || value == null)
-            throw new InputNullDataException();
+        if(value.equals("") || value == null || value.isBlank())
+            throw new TestInputException.InputNullDataException();
 
-        if(returnType instanceof String) {
-            return value;
+        try {
+            if(returnType instanceof String)
+                return value;
+            else if(returnType instanceof Integer){
+                int intValue = Integer.parseInt(value);
+                return intValue;
+            }
+            else if(returnType instanceof Long){
+                long longValue = Long.parseLong(value);
+                return longValue;
+            }
+            else if(returnType instanceof Double){
+                double doubleValue = Double.parseDouble(value);
+                return doubleValue;
+            }
+            else
+                throw new TestInputException.InputInvalidDataException();
         }
-        else if(returnType instanceof Integer){
-            int intValue;
-            try {
-                intValue = Integer.parseInt(value);
-            }
-            catch (NumberFormatException e) {
-                throw new InputInvalidDataException();
-            }
-            return intValue;
+        catch (NumberFormatException e) {
+            throw new TestInputException.InputInvalidDataException();
         }
-        else if(returnType instanceof Long){
-            long longValue;
-            try {
-                longValue = Long.parseLong(value);
-            }
-            catch (NumberFormatException e) {
-                throw new InputInvalidDataException();
-            }
-            return longValue;
-        }
-        else
-            throw new InputInvalidDataException();
     }
 
-    public int verifyMenu(int categorySize) throws IOException {
+    public int verifyMenu(int categorySize) throws IOException, TestInputException.InvalidMenuException {
         String value = this.readLine();
+        if(value.equals("") || value == null || value.isBlank())
+            throw new TestInputException.InvalidMenuException();
+
         int selectedMenu;
         try {
             selectedMenu = Integer.parseInt(value);
         }
         catch (NumberFormatException e){
-            throw new InvalidMenuException();
+            throw new TestInputException.InvalidMenuException();
         }
         if(selectedMenu > categorySize || selectedMenu < 1)
-            throw new InvalidMenuException();
+            throw new TestInputException.InvalidMenuException();
 
         return selectedMenu;
     }
 
-}
-
-class InputNullDataException extends RuntimeException {
-    public InputNullDataException() {
-        super("ERROR!! : 입력창에 값을 입력해주세요.");
-    }
-}
-
-class InputInvalidDataException extends RuntimeException {
-    public InputInvalidDataException() {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.");
-    }
-}
-
-class InvalidMenuException extends RuntimeException {
-    public InvalidMenuException() {
-        super("ERROR!! : 올바른 메뉴를 입력해주세요.");
-    }
 }

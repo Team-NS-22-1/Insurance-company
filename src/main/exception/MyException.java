@@ -12,4 +12,5 @@ package main.exception;
  * 2022-05-11                규현             최초 생성
  */
 public class MyException extends RuntimeException{
+
 }
