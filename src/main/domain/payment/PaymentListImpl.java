@@ -26,10 +26,9 @@ public class PaymentListImpl implements PaymentList{
     private static int idSequence;
 
     @Override
-    public boolean create(Payment payment) {
+    public void create(Payment payment) {
         payment.setId(++idSequence);
         paymentList.put(payment.getId(), payment);
-        return true;
     }
 
     @Override
