@@ -14,7 +14,8 @@ import java.util.HashMap;
  */
 public class InsuranceListImpl implements InsuranceList {
 
-	private HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+	private static HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+
 	private static int id = 0;
 
 	public InsuranceListImpl(){
