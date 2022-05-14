@@ -12,6 +12,7 @@ import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
 import main.domain.viewUtils.ViewLogic;
 import main.exception.MyIllegalArgumentException;
+import main.exception.MyInadequateFormatException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static main.domain.utility.FormatUtility.*;
 import static main.domain.utility.MessageUtil.createMenu;
 
 /**
@@ -200,15 +202,15 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("카드 등록하기");
                 System.out.println("카드사 선택");
                 CardType cardType = selectCardType();
-                System.out.println("카드 번호 : ");
-                String cardNo = sc.next();
-                System.out.println("CVC : ");
-                String cvc = sc.next();
+                System.out.println("카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}");
+                String cardNo = validateCardNoFormat(sc.next());
+                System.out.println("CVC : (예시 : *** {3자리 숫자})");
+                String cvc = validateCVCFormat(sc.next());
                 System.out.println("만료일 : ");
                 System.out.print("월 : ");
-                int month = sc.nextInt();
-                System.out.print("년 : ");
-                int year = sc.nextInt();
+                int month = validateMonthFormat(sc.nextInt());
+                System.out.print("년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}");
+                int year = validateYearFormat(sc.nextInt());
                 LocalDate expireDate = createExpireDate(month, year);
                 card = new Card();
                 card.setCardNo(cardNo)
@@ -220,7 +222,7 @@ public class CustomerViewLogic implements ViewLogic {
 
                 break;
 
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            } catch (ArrayIndexOutOfBoundsException | NumberFormatException | MyInadequateFormatException e) {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
@@ -228,6 +230,18 @@ public class CustomerViewLogic implements ViewLogic {
         customer.addPayment(card);
         System.out.println("결제 수단이 추가되었습니다.");
 
+    }
+
+    private int validateYearFormat(int year) {
+        if(!isYear(Integer.toString(year)))
+            throw new MyInadequateFormatException();
+        return year;
+    }
+
+    private int validateMonthFormat(int month) {
+        if(!isMonth(month))
+            throw new MyInadequateFormatException();
+        return month;
     }
 
     private LocalDate createExpireDate(int month, int year) {
@@ -255,9 +269,7 @@ public class CustomerViewLogic implements ViewLogic {
         System.out.println("뒤로 가기 X");
         System.out.println("은행 번호 : ");
         String key = sc.next();
-        return values[Integer.parseInt(key)];
-
-
+        return values[Integer.parseInt(key)-1];
     }
 
     private void createAccount() {
@@ -267,8 +279,8 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
                 BankType bankType = selectBankType();
-                System.out.println("계좌 번호");
-                String accountNo = sc.next();
+                System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
+                String accountNo = checkAccountFormat(bankType, sc.next());
 
                 account = new Account();
                 account.setBankType(bankType)
@@ -276,13 +288,63 @@ public class CustomerViewLogic implements ViewLogic {
                         .setCustomerId(this.customer.getId())
                         .setPaytype(PayType.ACCOUNT);
                 break;
-            }catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            }catch (ArrayIndexOutOfBoundsException | NumberFormatException| MyInadequateFormatException e) {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
         paymentList.create(account);
         customer.addPayment(account);
         System.out.println("결제 수단이 추가되었습니다.");
+    }
+
+    private String validateCardNoFormat(String cardNo) {
+        if(!isCardNo(cardNo))
+            throw new MyInadequateFormatException();
+        return cardNo;
+    }
+
+    private String validateCVCFormat(String cvc) {
+        if(!isCardNo(cvc))
+            throw new MyInadequateFormatException();
+        return cvc;
+    }
+
+    private String checkAccountFormat(BankType bankType, String accountNo) {
+        boolean result = false;
+        switch (bankType) {
+            case KB :
+                result = isKB(accountNo);
+                break;
+            case NH:
+                result = isNH(accountNo);
+                break;
+            case KAKAOBANK:
+                result = isKakaoBank(accountNo);
+                break;
+            case SINHAN:
+                result = isSinhan(accountNo);
+                break;
+            case WOORI:
+                result = isWoori(accountNo);
+                break;
+            case IBK:
+                result = isIBK(accountNo);
+                break;
+            case HANA:
+                result = isHana(accountNo);
+                break;
+            case CITY:
+                result = isCity(accountNo);
+                break;
+            case SAEMAUL:
+                result = isSaemaul(accountNo);
+                break;
+        }
+        if (!result)
+            throw new MyInadequateFormatException("정확한 형식의 값을 입력해주세요");
+
+        return accountNo;
+
     }
 
     public void showInfoForPayment(Contract contract) {
