@@ -70,7 +70,7 @@ public class Card extends Payment {
 
 	@Override
 	public String toString() {
-		String exDate = expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyyy"));
+		String exDate = expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 		return "ID : " + id + " 종류 : 카드 " + " 카드사 : " + cardType.name() + " 카드 번호 : " + cardNo + " 만료일 : " + exDate + " CVC : " + cvcNo;
 
 

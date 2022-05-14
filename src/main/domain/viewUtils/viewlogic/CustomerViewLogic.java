@@ -84,31 +84,33 @@ public class CustomerViewLogic implements ViewLogic {
 
     private void selectButton() {
 
+        while (true) {
+            Contract contract = selectContract();
+            if (contract == null) {
+                System.out.println("취소하였습니다.");
+                return;
+            }
 
-        Contract contract = selectContract();
-        if (contract == null) {
-            System.out.println("취소하였습니다.");
-            return;
-        }
 
-
-        loop : while (true) {
-            createMenu("결제 선택","결제하기","결제수단등록하기","결제수단추가하기","취소하기");
-            String next = sc.next();
-            switch (next) {
-                case "1" :
-                    payLogic(contract);
-                    break;
-                case "2" :
-                    setPaymentOnContract(contract);
-                    break;
-                case"3":
-                    addnewPayment();
-                    break;
-                case "4" :
-                    break loop;
+            loop : while (true) {
+                createMenu("결제 선택","결제하기","결제수단등록하기","결제수단추가하기","취소하기");
+                String next = sc.next();
+                switch (next) {
+                    case "1" :
+                        payLogic(contract);
+                        break;
+                    case "2" :
+                        setPaymentOnContract(contract);
+                        break;
+                    case"3":
+                        addnewPayment();
+                        break;
+                    case "4" :
+                        break loop;
+                }
             }
         }
+
 
 
     }
@@ -158,12 +160,18 @@ public class CustomerViewLogic implements ViewLogic {
                 for (Payment payment : paymentList) {
                     System.out.println(payment);
                 }
-                int paymentId = sc.nextInt();
-                Payment payment = this.paymentList.read(paymentId);
+                System.out.println("X : 취소하기");
+                String key = sc.next();
+                key = key.toUpperCase();
+                if (key.equals("X"))
+                    return;
+                Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
                 break;
             } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("정확한 형식의 값을 입력해주세요.");
             }
 
         }
@@ -220,6 +228,18 @@ public class CustomerViewLogic implements ViewLogic {
                         .setCustomerId(this.customer.getId())
                         .setPaytype(PayType.CARD);
 
+                while (true) {
+                    System.out.println("카드 정보를 등록하시겠습니까? (Y/N)");
+                    String result = sc.next();
+                    result = result.toUpperCase();
+                    if (result.equals("N")) {
+                        System.out.println("결제 수단 등록을 취소하셨습니다.");
+                        return;
+                    } else if (result.equals("Y"))
+                        break;
+                    else
+                        System.out.println("Y 혹은 N을 입력해주세요");
+                }
                 break;
 
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException | MyInadequateFormatException e) {
@@ -287,6 +307,20 @@ public class CustomerViewLogic implements ViewLogic {
                         .setAccountNo(accountNo)
                         .setCustomerId(this.customer.getId())
                         .setPaytype(PayType.ACCOUNT);
+
+                while (true) {
+                    System.out.println("계좌 정보를 등록하시겠습니까? (Y/N)");
+                    String result = sc.next();
+                    result = result.toUpperCase();
+                    if (result.equals("N")) {
+                        System.out.println("결제 수단 등록을 취소하셨습니다.");
+                        return;
+                    } else if (result.equals("Y"))
+                        break;
+                    else
+                        System.out.println("Y 혹은 N을 입력해주세요");
+                }
+
                 break;
             }catch (ArrayIndexOutOfBoundsException | NumberFormatException| MyInadequateFormatException e) {
                 System.out.println("정확한 값을 입력해주세요");
@@ -304,7 +338,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private String validateCVCFormat(String cvc) {
-        if(!isCardNo(cvc))
+        if(!isCVC(cvc))
             throw new MyInadequateFormatException();
         return cvc;
     }
