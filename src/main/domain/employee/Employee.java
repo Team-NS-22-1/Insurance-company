@@ -2,6 +2,7 @@ package main.domain.employee;
 
 
 import main.domain.insurance.*;
+import main.domain.insurance.inputDto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -78,32 +79,45 @@ public class Employee {
 		return value;
 	}
 
-	public Insurance develop(InsuranceType type, Object[] defaultInfo, Object[] typeInfo, ArrayList<String[]> guaranteeListInfo) {
-		if(type == InsuranceType.HEALTH){
-			// 이런 Object 배열을 이용하는 하드코딩? 이외의 방법은 없을까요??
+	public Insurance develop(DtoBasicInfo basicInfo, DtoTypeInfo typeInfo, ArrayList<DtoGuarantee> guaranteeListInfo) {
+		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+		for(int i=0; i<guaranteeListInfo.size(); i++)
+			guaranteeList.add(
+					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription())
+			);
+		if(typeInfo instanceof DtoHealth){
 			HealthInsurance insurance = new HealthInsurance();
-			insurance.setTargetAge((Integer) typeInfo[0])
-					.setTargetSex((Boolean) typeInfo[1])
-					.setRiskPremiumCriterion((Integer) typeInfo[2])
-			// id를 여기서 세팅해야 하는지, DB의 Auto Increment를 사용할지 결정?
-					.setId(0)
-					.setName((String) defaultInfo[0])
-					.setDescription((String) defaultInfo[1])
-					.setPaymentPeriod((Integer) defaultInfo[2])
-					.setContractPeriod((Integer) defaultInfo[3]);
-			ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-			for(int i=0; i<guaranteeListInfo.size(); i++)
-				guaranteeList.add(
-						new Guarantee(guaranteeListInfo.get(i)[0], guaranteeListInfo.get(i)[1])
-				);
-			insurance.setGuarantee(guaranteeList);
+			insurance.setTargetAge(((DtoHealth) typeInfo).getTargetAge())
+					.setTargetSex(((DtoHealth) typeInfo).isTargetSex())
+					.setRiskPremiumCriterion(((DtoHealth) typeInfo).getRiskCriterion())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList);
 			return insurance;
 		}
-		else if(type == InsuranceType.CAR){
-
+		else if(typeInfo instanceof DtoCar){
+			CarInsurance insurance = new CarInsurance();
+			insurance.setTargetAge(((DtoCar) typeInfo).getTargetAge())
+					.setValueCriterion(((DtoCar) typeInfo).getTargetAge())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList);
+			return insurance;
 		}
-		else if(type == InsuranceType.FIRE){
-
+		else if(typeInfo instanceof DtoFire){
+			FireInsurance insurance = new FireInsurance();
+			insurance.setBuildingType(((DtoFire) typeInfo).getBuildingType())
+					.setCollateralAmount(((DtoFire) typeInfo).getCollateralAmount())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList);
+			return insurance;
 		}
 		return null;
 	}

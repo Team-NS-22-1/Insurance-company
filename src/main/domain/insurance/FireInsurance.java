@@ -11,11 +11,27 @@ import main.domain.contract.BuildingType;
 public class FireInsurance extends Insurance {
 
 	private BuildingType buildingType;
-	private int collateralAmount;
+	private long collateralAmount;
 
 	
 	public FireInsurance(){
 	}
 
-	
+	public BuildingType getBuildingType() {
+		return buildingType;
+	}
+
+	public FireInsurance setBuildingType(BuildingType buildingType) {
+		this.buildingType = buildingType;
+		return this;
+	}
+
+	public long getCollateralAmount() {
+		return collateralAmount;
+	}
+
+	public FireInsurance setCollateralAmount(long collateralAmount) {
+		this.collateralAmount = collateralAmount;
+		return this;
+	}
 }
