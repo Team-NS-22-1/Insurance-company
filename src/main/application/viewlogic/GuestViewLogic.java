@@ -1,25 +1,23 @@
-package main.domain.viewUtils.viewlogic;
+package main.application.viewlogic;
 
-import main.domain.viewUtils.ViewLogic;
-
-import static main.domain.utility.MessageUtil.createMenu;
+import main.application.ViewLogic;
+import main.utility.MessageUtil;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
- * fileName : CompVIewLogic
+ * fileName : GuestViewLogic
  * author :  규현
  * date : 2022-05-10
- * description : ViewLogic의 구현클래스, 보상팀의 업무 목록과
- * 그것을 실행시키는 기능이 있다.
+ * description :
  * ===========================================================
  * DATE                 AUTHOR                NOTE
  * -----------------------------------------------------------
  * 2022-05-10                규현             최초 생성
  */
-public class CompVIewLogic implements ViewLogic {
+public class GuestViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
-       createMenu("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+        MessageUtil.createMenu("보험가입희망자메뉴", "가입한다");
     }
 
     @Override

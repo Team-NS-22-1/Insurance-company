@@ -1,4 +1,4 @@
-package main.domain.viewUtils.viewlogic;
+package main.application.viewlogic;
 
 import main.domain.contract.BuildingType;
 import main.domain.employee.Employee;
@@ -7,16 +7,15 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
-import main.domain.utility.MyBufferedReader;
+import main.utility.MyBufferedReader;
 import main.exception.InputException;
-import main.domain.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 import main.login.Login;
+import main.utility.MessageUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import static main.domain.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -52,7 +51,7 @@ public class DevViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-        createMenu("개발팀 메뉴", "보험 개발", "판매인가 등록", "로그인");
+        MessageUtil.createMenu("개발팀 메뉴", "보험 개발", "판매인가 등록", "로그인");
     }
 
     @Override
@@ -74,7 +73,7 @@ public class DevViewLogic implements ViewLogic {
         boolean forWhile = true;
         int insType = 0;
         while(forWhile){
-            createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
+            MessageUtil.createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
             try {
                 insType = br.verifyMenu(3);
                 forWhile = false;

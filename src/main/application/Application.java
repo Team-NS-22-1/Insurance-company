@@ -1,19 +1,12 @@
-package main.domain.viewUtils;
+package main.application;
 
-import main.domain.viewUtils.viewlogic.*;
+import main.application.viewlogic.*;
+import main.utility.MessageUtil;
 
-
-import java.util.*;
-
-import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-
-
-import static main.domain.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils
@@ -42,7 +35,7 @@ public class Application {
     public void run() {
         Scanner sc = new Scanner(System.in);
         try {
-            createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
+            MessageUtil.createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
             int userType = sc.nextInt();
             UserType[] values = UserType.values();
 

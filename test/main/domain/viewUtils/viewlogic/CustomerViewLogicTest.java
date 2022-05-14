@@ -2,18 +2,15 @@ package main.domain.viewUtils.viewlogic;
 
 import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
-import main.domain.customer.Customer;
 import main.domain.insurance.Insurance;
-import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
+import main.application.viewlogic.CustomerViewLogic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
