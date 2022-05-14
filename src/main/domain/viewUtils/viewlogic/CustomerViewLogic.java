@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static main.domain.utility.FormatUtility.*;
+import static main.domain.utility.PaymentFormatUtil.*;
 import static main.domain.utility.MessageUtil.createMenu;
 
 /**

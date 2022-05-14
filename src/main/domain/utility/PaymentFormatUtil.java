@@ -4,16 +4,16 @@ import java.util.regex.Pattern;
 
 /**
  * packageName :  main.domain.utility
- * fileName : FormatUtility
+ * fileName : PaymentFormatUtil
  * author :  규현
  * date : 2022-05-14
- * description :
+ * description : 고객이 카드, 계좌 정보 추가 시 입력하는 형식을 검증하는 클래스
  * ===========================================================
  * DATE                 AUTHOR                NOTE
  * -----------------------------------------------------------
  * 2022-05-14                규현             최초 생성
  */
-public class FormatUtility {
+public class PaymentFormatUtil {
 
     public static boolean isCardNo(String str) {
         return Pattern.matches("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$",str);
