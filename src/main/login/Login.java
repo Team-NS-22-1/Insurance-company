@@ -1,7 +1,7 @@
 package main.login;
 
 import main.domain.utility.MyBufferedReader;
-import main.exception.TestInputException;
+import main.exception.InputException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,8 +32,8 @@ public class Login {
                     System.out.println((String) result);
                 else forWhile = false;
             }
-            catch (TestInputException.InputNullDataException |
-                   TestInputException.InputInvalidDataException e) {
+            catch (InputException.InputNullDataException |
+                   InputException.InputInvalidDataException e) {
                 System.out.println(e.getMessage());
             }
         }

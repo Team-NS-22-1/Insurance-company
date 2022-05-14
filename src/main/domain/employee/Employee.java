@@ -145,14 +145,14 @@ public class Employee {
 		return new Object[]{ adjustedRate, premium };
 	}
 
-	public boolean registerInsurance(InsuranceListImpl insuranceList, Insurance insurance, int premium){
+	public void registerInsurance(InsuranceListImpl insuranceList, Insurance insurance, int premium){
 		insurance.setPremium(premium)
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
 										.setSalesAuthState(SalesAuthState.WAIT)
 										.setSalesStartDate(null)
 				);
-		return insuranceList.create(insurance);
+		insuranceList.create(insurance);
 	}
 
 	public String readMyInsurance(InsuranceListImpl insuranceList){
