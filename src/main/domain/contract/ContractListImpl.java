@@ -21,11 +21,13 @@ public class ContractListImpl implements ContractList {
 	private static Map<Integer, Contract> contractList = new HashMap<>();
 	private static int idSequence;
 
+	public ContractListImpl(){
+
+	}
+
 	@Override
-	public boolean create(Contract contract) {
-		contract.setId(++idSequence);
-		contractList.put(contract.getId(), contract);
-		return true;
+	public void create(Contract contract) {
+		contractList.put(contract.setId(++idSequence).getId(), contract);
 	}
 
 	@Override

@@ -2,11 +2,12 @@ package main.domain.insurance;
 
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- * @author ����
+ * @author SeungHo
  * @version 1.0
- * @created 09-5-2022 ���� 4:39:01
+ * @created 09-5-2022 오후 4:39:01
  */
 public class Insurance {
 
@@ -19,10 +20,15 @@ public class Insurance {
 	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 	public DevInfo devInfo;
 	public SalesAuthFile salesAuthFile;
-
 	public InsuranceType insuranceType;
 
 	public Insurance(){
+	}
+
+	public String toString() {
+		String value = this.id+"'"+this.name+"'"+this.description
+				+"'"+this.premium+"'"+this.paymentPeriod+"'"+this.contractPeriod;
+		return value;
 	}
 
 	public int getId() {
@@ -112,12 +118,6 @@ public class Insurance {
 	public Insurance setInsuranceType(InsuranceType insuranceType) {
 		this.insuranceType = insuranceType;
 		return this;
-	}
-
-	public String toString(){
-		String value = "";
-		value += this.getId()+" "+this.getName()+" "+this.getDescription();
-		return value;
 	}
 
 }

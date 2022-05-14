@@ -6,11 +6,12 @@ import main.domain.insurance.inputDto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- * @author ����
+ * @author SeungHo
  * @version 1.0
- * @created 09-5-2022 ���� 4:38:59
+ * @created 09-5-2022 오후 4:38:59
  */
 public class Employee {
 
@@ -20,12 +21,12 @@ public class Employee {
 	private Department department;
 	private Position position;
 
-
-//	public Contract m_Contract;
-//	public Insurance m_Insurance;
-//	public Accident m_Accident;
-
 	public Employee(){
+	}
+
+	@Override
+	public String toString() {
+		return this.id+"'"+this.name+"'"+this.phone+"'"+this.department.getName()+"'"+this.position.getName();
 	}
 
 	public int getId() {
@@ -73,12 +74,6 @@ public class Employee {
 		return this;
 	}
 
-	public String toString(){
-		String value = "";
-		value += this.getId()+" "+this.getName()+" "+this.getPhone()+" "+this.getDepartment()+" "+this.getPosition();
-		return value;
-	}
-
 	public Insurance develop(DtoBasicInfo basicInfo, DtoTypeInfo typeInfo, ArrayList<DtoGuarantee> guaranteeListInfo) {
 		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 		for(int i=0; i<guaranteeListInfo.size(); i++)
@@ -94,7 +89,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.HEALTH);
 			return insurance;
 		}
 		else if(typeInfo instanceof DtoCar){
@@ -105,7 +101,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.CAR);;
 			return insurance;
 		}
 		else if(typeInfo instanceof DtoFire){
@@ -116,7 +113,8 @@ public class Employee {
 					.setDescription(basicInfo.getDescription())
 					.setPaymentPeriod(basicInfo.getPaymentPeriod())
 					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList);
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.FIRE);;
 			return insurance;
 		}
 		return null;
@@ -126,14 +124,14 @@ public class Employee {
 		// Not Used...?
 	}
 
-	public int calcPurePremiumMethod(Insurance insurance, long damageAmount, long countContract, long businessExpense, double profitMargin){
+	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, double profitMargin){
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
 		int premium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return premium;
 	}
 
-	public Object[] calcLossRatioMethod(Insurance insurance, int lossRatio, int expectedBusinessRatio, int curTotalPremium){
+	public Object[] calcLossRatioMethod(int lossRatio, int expectedBusinessRatio, int curTotalPremium){
 		double adjustedRate = (double) (lossRatio - (100 - expectedBusinessRatio)) / (100 - expectedBusinessRatio);
 		int premium = (int) (curTotalPremium + (curTotalPremium * adjustedRate));
 		return new Object[]{ adjustedRate, premium };

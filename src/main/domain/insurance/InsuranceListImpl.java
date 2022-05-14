@@ -1,8 +1,11 @@
 package main.domain.insurance;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @author ����
@@ -19,9 +22,8 @@ public class InsuranceListImpl implements InsuranceList {
 	}
 
 	@Override
-	public boolean create(Insurance insurance) {
-		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
-		else return false;
+	public void create(Insurance insurance) {
+		this.insuranceList.put(insurance.setId(++id).getId(), insurance);
 	}
 
 	@Override
@@ -47,8 +49,5 @@ public class InsuranceListImpl implements InsuranceList {
 		if(insurance != null) return true;
 		else return false;
 	}
-
-
-//	public void update(){}
 
 }
