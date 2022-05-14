@@ -42,7 +42,6 @@ public class Application {
         UserType type = values[userType-1];
         if(type == UserType.OUT)
             System.exit(0);
-
         while (true) {
             ViewLogic viewLogic = map.get(type);
             viewLogic.showMenu();

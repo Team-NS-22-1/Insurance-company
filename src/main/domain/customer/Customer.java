@@ -7,6 +7,8 @@ import main.domain.payment.Payment;
 
 import java.util.ArrayList;
 
+import java.util.ArrayList;
+
 /**
  * @author 규현
  * @version 1.0
@@ -20,7 +22,9 @@ public class Customer {
 	private boolean isContract;
 	private String job;
 	private String name;
+
 	private ArrayList<Payment> paymentList = new ArrayList<>();
+
 	private String phone;
 	private String ssn;
 	public Accident m_Accident;

@@ -1,11 +1,10 @@
 package main.domain.customer;
 
 
+
 import main.exception.MyIllegalArgumentException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -14,12 +13,8 @@ import java.util.Map;
  * @created 09-5-2022 ���� 4:38:59
  */
 public class CustomerListImpl implements CustomerList {
-
-
 	private static Map<Integer, Customer> customerList = new HashMap<>();
 	private static int idSequence = 0;
-
-
 	public CustomerListImpl(){
 	}
 
