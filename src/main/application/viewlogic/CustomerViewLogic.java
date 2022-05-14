@@ -21,8 +21,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static main.utility.PaymentFormatUtil.*;
 import static main.utility.MessageUtil.createMenu;
+import static main.utility.PaymentFormatUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -49,6 +49,9 @@ public class CustomerViewLogic implements ViewLogic {
         this.insuranceList = new InsuranceListImpl();
         this.customerList = new CustomerListImpl();
         this.paymentList = new PaymentListImpl();
+    }
+
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList) {
     }
 
     @Override

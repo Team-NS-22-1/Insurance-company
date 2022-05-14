@@ -1,7 +1,9 @@
 package main.application.viewlogic;
 
+
 import main.application.ViewLogic;
-import main.utility.MessageUtil;
+
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -17,7 +19,7 @@ import main.utility.MessageUtil;
 public class SalesViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
-        MessageUtil.createMenu("영업팀 메뉴", "보험상품설계");
+        createMenu("영업팀 메뉴", "보험상품설계");
     }
 
     @Override

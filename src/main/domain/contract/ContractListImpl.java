@@ -1,11 +1,8 @@
 package main.domain.contract;
 
 
-import main.domain.insurance.InsuranceType;
-
 import main.exception.MyIllegalArgumentException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

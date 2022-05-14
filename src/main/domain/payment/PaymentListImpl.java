@@ -1,6 +1,5 @@
 package main.domain.payment;
 
-import main.exception.MyException;
 import main.exception.MyIllegalArgumentException;
 
 import java.util.ArrayList;

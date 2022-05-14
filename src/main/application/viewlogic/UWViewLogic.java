@@ -5,15 +5,17 @@ import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
 import main.domain.employee.Department;
 import main.domain.employee.Employee;
+import main.domain.employee.EmployeeListImpl;
 import main.domain.employee.Position;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.application.ViewLogic;
-import main.utility.MessageUtil;
 
 import java.util.Map;
 import java.util.Scanner;
+
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -92,9 +94,12 @@ public class UWViewLogic implements ViewLogic {
         contractList.create(testContract2);
     }
 
+    public UWViewLogic(EmployeeListImpl employeeList, CustomerListImpl customerList, InsuranceListImpl insuranceList, ContractListImpl contractList) {
+    }
+
     @Override
     public void showMenu() {
-        MessageUtil.createMenu("<<언더라이팅팀메뉴>>", "인수심사한다", "돌아간다");
+        createMenu("<<언더라이팅팀메뉴>>", "인수심사한다", "돌아간다");
     }
 
     @Override
@@ -124,7 +129,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenu("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험", "이전 화면으로 돌아간다");
+                createMenu("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험", "이전 화면으로 돌아간다");
 
                 InsuranceType insuranceType = null;
 
@@ -147,15 +152,15 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenu("계약 ID | 고객 이름 | 인수심사상태");
+                createMenu("계약 ID | 고객 이름 | 인수심사상태");
                 printContractList(this.employee.readContract(insuranceType));
 
-                MessageUtil.createMenu("<<인수심사할 계약 ID를 입력하세요.(이전 화면으로 돌아가기는 0번)>>");
+                createMenu("<<인수심사할 계약 ID를 입력하세요.(이전 화면으로 돌아가기는 0번)>>");
                 String contractId = sc.next();
 
                 if (Integer.parseInt(contractId) == 0) break;
 
-                MessageUtil.createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
+                createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
                 Contract contract = printContractInfo(Integer.parseInt(contractId));
 
                 selectUwState(contract);
@@ -175,13 +180,13 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenu("<<인수심사결과 선택>>","승인", "거절", "재심사", "계약 목록 조회");
+                createMenu("<<인수심사결과 선택>>","승인", "거절", "재심사", "계약 목록 조회");
                 String command = sc.next();
 
                 switch (command) {
 
                     case "1": case "2": case "3":
-                        MessageUtil.createMenu("<<인수사유를 입력해주세요.>>");
+                        createMenu("<<인수사유를 입력해주세요.>>");
                         String reasonOfUw = sc.next();
                         ConditionOfUw conditionOfUw = null;
 
@@ -214,13 +219,13 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenu("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
+                createMenu("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
 
                 switch (sc.next()) {
                     case "1":
                         employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
-                        MessageUtil.createMenu("인수심사 결과가 반영되었습니다.");
+                        createMenu("인수심사 결과가 반영되었습니다.");
                         System.out.println(ContractListImpl.getContractList().get(1));
                         isExit = true;
                         break;

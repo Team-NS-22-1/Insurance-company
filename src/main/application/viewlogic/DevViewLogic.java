@@ -11,11 +11,13 @@ import main.utility.MyBufferedReader;
 import main.exception.InputException;
 import main.application.ViewLogic;
 import main.login.Login;
-import main.utility.MessageUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import static main.utility.MessageUtil.createMenu;
+
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -49,9 +51,12 @@ public class DevViewLogic implements ViewLogic {
     public DevViewLogic() {
     }
 
+    public DevViewLogic(EmployeeListImpl employeeList, InsuranceListImpl insuranceList) {
+    }
+
     @Override
     public void showMenu() {
-        MessageUtil.createMenu("개발팀 메뉴", "보험 개발", "판매인가 등록", "로그인");
+        createMenu("개발팀 메뉴", "보험 개발", "판매인가 등록", "로그인");
     }
 
     @Override
@@ -73,7 +78,7 @@ public class DevViewLogic implements ViewLogic {
         boolean forWhile = true;
         int insType = 0;
         while(forWhile){
-            MessageUtil.createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
+            createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
             try {
                 insType = br.verifyMenu(3);
                 forWhile = false;
