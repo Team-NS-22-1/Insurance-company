@@ -2,7 +2,6 @@ package main.domain.contract;
 
 import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
-import main.domain.customer.Payment;
 import main.domain.payment.Payment;
 
 

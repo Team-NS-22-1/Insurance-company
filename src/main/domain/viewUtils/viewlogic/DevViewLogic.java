@@ -350,9 +350,8 @@ public class DevViewLogic implements ViewLogic {
                 System.out.println("1. 예\t2. 아니오");
                 switch (br.verifyMenu(2)){
                     case 1 -> {
-                        if(employee.registerInsurance(insuranceList, insurance, premium))
+                        employee.registerInsurance(insuranceList, insurance, premium);
                             System.out.println("정상적으로 보험이 저장되었습니다!");
-                        else System.out.println("보험 저장에 실패하였습니다!");
                         forWhile = false;
                     }
                     case 2 -> {
