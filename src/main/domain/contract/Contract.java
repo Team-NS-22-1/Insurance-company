@@ -1,5 +1,8 @@
 package main.domain.contract;
 
+import main.domain.customer.Customer;
+import main.domain.customer.CustomerListImpl;
+import main.domain.customer.Payment;
 import main.domain.payment.Payment;
 
 
@@ -124,6 +127,42 @@ public class Contract {
 	public Contract setReasonOfUw(String reasonOfUw) {
 		this.reasonOfUw = reasonOfUw;
 		return this;
+	}
+
+	public ConditionOfUw getConditionOfUw() {
+		return conditionOfUw;
+	}
+
+	public void setConditionOfUw(ConditionOfUw conditionOfUw) {
+		this.conditionOfUw = conditionOfUw;
+	}
+
+	@Override
+	public String toString() {
+		String text =
+		 "계약 정보 {" +
+				"carInfo: " + carInfo +
+				", 인수심사상태: " + conditionOfUw +
+				", 화재정보: " + buildingInfo +
+				", 건강정보: " + healthInfo +
+				", 증권발행여부: " + isPublishStock +
+				", 결제수단: " + payment +
+				", premium: " + premium +
+				", 인수사유: '" + reasonOfUw + '\'' +
+				'}';
+
+		if (carInfo != null) text.concat(carInfo.toString());
+		if (buildingInfo != null) text.concat(buildingInfo.toString());
+		if (healthInfo != null) text.concat(healthInfo.toString());
+
+		 return text;
+	}
+
+	public String print() {
+		CustomerListImpl customerList = new CustomerListImpl();
+		Customer customer = customerList.read(this.customerId);
+
+		return id + "        " + customer.getName() + "        " + conditionOfUw;
 	}
 
 }
