@@ -46,9 +46,13 @@ public class Application {
         while (true) {
             ViewLogic viewLogic = map.get(type);
             viewLogic.showMenu();
+            System.out.println("X : 시스템 종료");
             String command = sc.next();
-            if(Objects.equals(command, "X"))
+            command = command.toUpperCase();
+            if (Objects.equals(command, "X")) {
+                System.out.println("시스템을 종료합니다.");
                 break;
+            }
             viewLogic.work(command);
 
         }

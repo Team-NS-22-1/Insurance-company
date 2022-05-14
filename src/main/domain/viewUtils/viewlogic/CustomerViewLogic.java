@@ -70,28 +70,28 @@ public class CustomerViewLogic implements ViewLogic {
 
         switch (command) {
             case "2" :
-                selectButton();
+                payPremiumButton();
                 break;
         }
 
     }
-
+    // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
     public void login(int customerId) {
         this.customer  = customerList.read(customerId);
         List<Payment> payments = paymentList.findAllByCustomerId(customerId);
         this.customer.setPaymentList((ArrayList<Payment>) payments);
     }
 
-    private void selectButton() {
-
+    // 보험료 납입 버튼을 클릭했을 경우, 그 이후 작업들에 대해서 보여준다
+    // 이후 진행될 작업으로 보험료를 납입할 계약을 선택하고, 해당 계약으로 즉시 결제를 할지, 계약에 기존에 등록된 결제수단을 등록할지,
+    // 고객에게 새로운 결제 수단을 추가할지 정할 수 있다.
+    private void payPremiumButton() {
         while (true) {
             Contract contract = selectContract();
             if (contract == null) {
                 System.out.println("취소하였습니다.");
                 return;
             }
-
-
             loop : while (true) {
                 createMenu("결제 선택","결제하기","결제수단등록하기","결제수단추가하기","취소하기");
                 String next = sc.next();
@@ -110,10 +110,9 @@ public class CustomerViewLogic implements ViewLogic {
                 }
             }
         }
-
-
-
     }
+    // 고객이 보험료 납입 버튼을 클릭한 이후 사용할 계약을 선택하는 기능이다.
+    // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
@@ -121,13 +120,12 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 System.out.println("가입된 계약 목록");
                 for (Contract con : contracts) {
-                    showInfoForPayment(con);
+                    showContractInfoForPay(con);
                 }
                 System.out.println("뒤로가기 : X");
                 String key = sc.next();
                 if (key.equals("X"))
                     break;
-
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -139,6 +137,19 @@ public class CustomerViewLogic implements ViewLogic {
         return contract;
     }
 
+    // 보험료 납부를 위한 계약 정보를 출력하는 기능
+    public void showContractInfoForPay(Contract contract) {
+        Insurance insurance = insuranceList.read(contract.getInsuranceId());
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ID]").append(" : ").append(contract.getId())
+                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(contract.getPremium())
+                .append("\n");
+        System.out.println(sb.toString());
+    }
+
+
+    // 계약을 선택한 이후 즉시 결제를 시도하는 기능.
+    // 해당 계약에 결제 수단이 등록되지 않았다면 결제 수단 등록을 진행한다.
     private void payLogic(Contract contract) {
         if (contract.getPayment() == null) {
             System.out.println("해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.");
@@ -147,6 +158,12 @@ public class CustomerViewLogic implements ViewLogic {
             pay(contract);
         }
     }
+
+    // 계약에 대해서 보험료를 납부하는 기능
+    private void pay(Contract contract) {
+        customer.pay(contract);
+    }
+
 
     // 고객에게 등록된 결제 수단들을 불러온다.
     private void setPaymentOnContract(Contract contract) {
@@ -176,9 +193,8 @@ public class CustomerViewLogic implements ViewLogic {
 
         }
     }
-    
+    // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
     public void addnewPayment() {
-
         loop :while (true) {
             createMenu("결제수단추가하기","카드추가하기","계좌추가하기","취소하기");
             switch (sc.next()) {
@@ -191,18 +207,11 @@ public class CustomerViewLogic implements ViewLogic {
                 case "3":
                     break loop;
             }
-
         }
-
-
-
     }
+    
 
-
-
-    private void pay(Contract contract) {
-       customer.pay(contract);
-    }
+    // 결제수단 중 카드를 새로 추가하는 기능
     private void createCard() {
         Card card = null;
         while (true) {
@@ -252,24 +261,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     }
 
-    private int validateYearFormat(int year) {
-        if(!isYear(Integer.toString(year)))
-            throw new MyInadequateFormatException();
-        return year;
-    }
-
-    private int validateMonthFormat(int month) {
-        if(!isMonth(month))
-            throw new MyInadequateFormatException();
-        return month;
-    }
-
-    private LocalDate createExpireDate(int month, int year) {
-        String mm = month < 10 ? "0"+month : String.valueOf(month);
-        String date = "01/"+mm+"/"+year;
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    }
-
+    // 카드 결제 수단 추가 중 카드사를 선택하는 기능
     private CardType selectCardType() {
         CardType[] values = CardType.values();
         for (int i = 0; i < values.length; i++) {
@@ -278,20 +270,41 @@ public class CustomerViewLogic implements ViewLogic {
         System.out.println("뒤로 가기 X");
         System.out.println("카드사 번호 : ");
         String key = sc.next();
-       return values[Integer.parseInt(key)];
+        return values[Integer.parseInt(key)];
+    }
+    // 카드 결제 수단을 추가하는 과정에서 만료기간 중 연도를 형식에 맞게 입력했는지 검증하는 기능
+    private int validateYearFormat(int year) {
+        if(!isYear(Integer.toString(year)))
+            throw new MyInadequateFormatException();
+        return year;
+    }
+    // 카드 결제 수단을 추가하는 과정에서 만료기간 중 달를 형식에 맞게 입력했는지 검증하는 기능
+    private int validateMonthFormat(int month) {
+        if(!isMonth(month))
+            throw new MyInadequateFormatException();
+        return month;
+    }
+    
+    // 카드 결제 수단을 추가하는 과정에서 입력한 달과 연을 통해서 저장하기 위한 LocalDate 객체를 생성하는 기능
+    private LocalDate createExpireDate(int month, int year) {
+        String mm = month < 10 ? "0"+month : String.valueOf(month);
+        String date = "01/"+mm+"/"+year;
+        return LocalDate.parse(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+    // 카드 결제 수단 추가 과정에서 카드 번호 형식에 대해서 검증하는 기능
+    private String validateCardNoFormat(String cardNo) {
+        if(!isCardNo(cardNo))
+            throw new MyInadequateFormatException();
+        return cardNo;
+    }
+    // 카드 결제 수단 추가 과정에서 CVC 번호 형식에 대해서 검증하는 기능
+    private String validateCVCFormat(String cvc) {
+        if(!isCVC(cvc))
+            throw new MyInadequateFormatException();
+        return cvc;
     }
 
-    private BankType selectBankType() {
-        BankType[] values = BankType.values();
-        for (int i = 0; i < values.length; i++) {
-            System.out.println((i+1) + " " + values[i]);
-        }
-        System.out.println("뒤로 가기 X");
-        System.out.println("은행 번호 : ");
-        String key = sc.next();
-        return values[Integer.parseInt(key)-1];
-    }
-
+    // 계좌 결제 수단을 추가하는 기능
     private void createAccount() {
         Account account;
         while (true) {
@@ -331,18 +344,19 @@ public class CustomerViewLogic implements ViewLogic {
         System.out.println("결제 수단이 추가되었습니다.");
     }
 
-    private String validateCardNoFormat(String cardNo) {
-        if(!isCardNo(cardNo))
-            throw new MyInadequateFormatException();
-        return cardNo;
+    // 계좌 결제 수단 추가 과정에서 은행을 선택하는 기능
+    private BankType selectBankType() {
+        BankType[] values = BankType.values();
+        for (int i = 0; i < values.length; i++) {
+            System.out.println((i+1) + " " + values[i]);
+        }
+        System.out.println("뒤로 가기 X");
+        System.out.println("은행 번호 : ");
+        String key = sc.next();
+        return values[Integer.parseInt(key)-1];
     }
 
-    private String validateCVCFormat(String cvc) {
-        if(!isCVC(cvc))
-            throw new MyInadequateFormatException();
-        return cvc;
-    }
-
+    // 계좌 결제 수단 추가 과정에서 은행사에 따라서 계좌 번호를 검증하는 기능
     private String checkAccountFormat(BankType bankType, String accountNo) {
         boolean result = false;
         switch (bankType) {
@@ -381,14 +395,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     }
 
-    public void showInfoForPayment(Contract contract) {
-        Insurance insurance = insuranceList.read(contract.getInsuranceId());
-        StringBuilder sb = new StringBuilder();
-        sb.append("[ID]").append(" : ").append(contract.getId())
-                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(contract.getPremium())
-                .append("\n");
-        System.out.println(sb.toString());
-    }
+
 
     public void payLogicforTest(Contract contract) {
         payLogic(contract);
