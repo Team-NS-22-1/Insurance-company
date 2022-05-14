@@ -27,4 +27,5 @@ public class MyException extends RuntimeException{
     public MyException(Throwable cause) {
         super(cause);
     }
+
 }
