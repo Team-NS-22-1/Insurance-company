@@ -2,7 +2,6 @@ package main.domain.insurance;
 
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * @author SeungHo
@@ -23,12 +22,6 @@ public class Insurance {
 	public InsuranceType insuranceType;
 
 	public Insurance(){
-	}
-
-	public String toString() {
-		String value = this.id+"'"+this.name+"'"+this.description
-				+"'"+this.premium+"'"+this.paymentPeriod+"'"+this.contractPeriod;
-		return value;
 	}
 
 	public int getId() {
