@@ -5,9 +5,11 @@ import main.domain.contract.ConditionOfUw;
 import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
+import main.domain.insurance.inputDto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -15,9 +17,9 @@ import java.util.Scanner;
 import static main.domain.utility.MessageUtil.createMenu;
 
 /**
- * @author ����
+ * @author SeungHo
  * @version 1.0
- * @created 09-5-2022 ���� 4:38:59
+ * @created 09-5-2022 오후 4:38:59
  */
 public class Employee {
 
@@ -27,12 +29,12 @@ public class Employee {
 	private Department department;
 	private Position position;
 
-
-//	public Contract m_Contract;
-//	public Insurance m_Insurance;
-//	public Accident m_Accident;
-
 	public Employee(){
+	}
+
+	@Override
+	public String toString() {
+		return this.id+"'"+this.name+"'"+this.phone+"'"+this.department.getName()+"'"+this.position.getName();
 	}
 
 	public int getId() {
@@ -80,38 +82,48 @@ public class Employee {
 		return this;
 	}
 
-	public String toString(){
-		String value = "";
-		value += this.getId()+" "+this.getName()+" "+this.getPhone()+" "+this.getDepartment()+" "+this.getPosition();
-		return value;
-	}
-
-	public Insurance develop(InsuranceType type, Object[] defaultInfo, Object[] typeInfo, ArrayList<String[]> guaranteeListInfo) {
-		if(type == InsuranceType.HEALTH){
-			// 이런 Object 배열을 이용하는 하드코딩? 이외의 방법은 없을까요??
+	public Insurance develop(DtoBasicInfo basicInfo, DtoTypeInfo typeInfo, ArrayList<DtoGuarantee> guaranteeListInfo) {
+		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+		for(int i=0; i<guaranteeListInfo.size(); i++)
+			guaranteeList.add(
+					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription())
+			);
+		if(typeInfo instanceof DtoHealth){
 			HealthInsurance insurance = new HealthInsurance();
-			insurance.setTargetAge((Integer) typeInfo[0])
-					.setTargetSex((Boolean) typeInfo[1])
-					.setRiskPremiumCriterion((Integer) typeInfo[2])
-			// id를 여기서 세팅해야 하는지, DB의 Auto Increment를 사용할지 결정?
-					.setId(0)
-					.setName((String) defaultInfo[0])
-					.setDescription((String) defaultInfo[1])
-					.setPaymentPeriod((Integer) defaultInfo[2])
-					.setContractPeriod((Integer) defaultInfo[3]);
-			ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-			for(int i=0; i<guaranteeListInfo.size(); i++)
-				guaranteeList.add(
-						new Guarantee(guaranteeListInfo.get(i)[0], guaranteeListInfo.get(i)[1])
-				);
-			insurance.setGuarantee(guaranteeList);
+			insurance.setTargetAge(((DtoHealth) typeInfo).getTargetAge())
+					.setTargetSex(((DtoHealth) typeInfo).isTargetSex())
+					.setRiskPremiumCriterion(((DtoHealth) typeInfo).getRiskCriterion())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.HEALTH);
 			return insurance;
 		}
-		else if(type == InsuranceType.CAR){
-
+		else if(typeInfo instanceof DtoCar){
+			CarInsurance insurance = new CarInsurance();
+			insurance.setTargetAge(((DtoCar) typeInfo).getTargetAge())
+					.setValueCriterion(((DtoCar) typeInfo).getTargetAge())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.CAR);;
+			return insurance;
 		}
-		else if(type == InsuranceType.FIRE){
-
+		else if(typeInfo instanceof DtoFire){
+			FireInsurance insurance = new FireInsurance();
+			insurance.setBuildingType(((DtoFire) typeInfo).getBuildingType())
+					.setCollateralAmount(((DtoFire) typeInfo).getCollateralAmount())
+					.setName(basicInfo.getName())
+					.setDescription(basicInfo.getDescription())
+					.setPaymentPeriod(basicInfo.getPaymentPeriod())
+					.setContractPeriod(basicInfo.getContractPeriod())
+					.setGuarantee(guaranteeList)
+					.setInsuranceType(InsuranceType.FIRE);;
+			return insurance;
 		}
 		return null;
 	}
@@ -120,14 +132,14 @@ public class Employee {
 		// Not Used...?
 	}
 
-	public int calcPurePremiumMethod(Insurance insurance, long damageAmount, long countContract, long businessExpense, double profitMargin){
+	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, double profitMargin){
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
 		int premium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return premium;
 	}
 
-	public Object[] calcLossRatioMethod(Insurance insurance, int lossRatio, int expectedBusinessRatio, int curTotalPremium){
+	public Object[] calcLossRatioMethod(int lossRatio, int expectedBusinessRatio, int curTotalPremium){
 		double adjustedRate = (double) (lossRatio - (100 - expectedBusinessRatio)) / (100 - expectedBusinessRatio);
 		int premium = (int) (curTotalPremium + (curTotalPremium * adjustedRate));
 		return new Object[]{ adjustedRate, premium };

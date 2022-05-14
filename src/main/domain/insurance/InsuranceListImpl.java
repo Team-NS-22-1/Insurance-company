@@ -2,9 +2,12 @@ package main.domain.insurance;
 
 import main.domain.contract.Contract;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * @author ����
@@ -14,15 +17,15 @@ import java.util.Iterator;
 public class InsuranceListImpl implements InsuranceList {
 
 	private static HashMap<Integer, Insurance> insuranceList = new HashMap<>();
+
 	private static int id = 0;
 
 	public InsuranceListImpl(){
 	}
 
 	@Override
-	public boolean create(Insurance insurance) {
-		if(this.insuranceList.put(insurance.setId(++id).getId(), insurance) != null) return true;
-		else return false;
+	public void create(Insurance insurance) {
+		this.insuranceList.put(insurance.setId(++id).getId(), insurance);
 	}
 
 	@Override

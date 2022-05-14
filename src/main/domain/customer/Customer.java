@@ -3,6 +3,9 @@ package main.domain.customer;
 
 import main.domain.accident.Accident;
 import main.domain.contract.Contract;
+import main.domain.payment.Payment;
+
+import java.util.ArrayList;
 
 import java.util.ArrayList;
 
@@ -19,12 +22,30 @@ public class Customer {
 	private boolean isContract;
 	private String job;
 	private String name;
-	private ArrayList<Payment> paymentList;
+
+	private ArrayList<Payment> paymentList = new ArrayList<>();
+
 	private String phone;
 	private String ssn;
 	public Accident m_Accident;
 	public Contract m_Contract;
 	public Payment m_Payment;
+	// Ȯ��
+	private String housePrice;
+	private String homeOwner;
+
+	public ArrayList<Payment> getPaymentList() {
+		return paymentList;
+	}
+
+	public Customer setPaymentList(ArrayList<Payment> paymentList) {
+		this.paymentList = paymentList;
+		return this;
+	}
+
+	public String getHousePrice() {
+		return housePrice;
+	}
 
 	
 	public String getAddress() {
@@ -128,8 +149,10 @@ public class Customer {
 
 	}
 
-	public void pay(){
-
+	public void pay(Contract contract){
+		Payment payment = contract.getPayment();
+		if(payment != null)
+			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
 	}
 
 	public void readContract(){
@@ -140,8 +163,13 @@ public class Customer {
 
 	}
 
-	public void registerPayment(){
+	public void addPayment(Payment payment){
+		this.paymentList.add(payment);
+		payment.setCustomerId(this.id);
+	}
 
+	public void registerPayment(Contract contract, Payment payment) {
+		contract.setPayment(payment);
 	}
 
 	public void reportAccident(){

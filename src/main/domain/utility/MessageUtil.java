@@ -1,5 +1,7 @@
 package main.domain.utility;
 
+import main.domain.viewUtils.UserType;
+
 /**
  * packageName :  main.domain.utility
  * fileName : MessageUtil
@@ -17,6 +19,16 @@ public class MessageUtil {
         sb.append(menuName).append("\n");
         for (int i = 0; i < elements.length; i++) {
             sb.append(i + 1).append(".").append(elements[i]).append("\n");
+        }
+        System.out.println(sb.toString());
+    }
+
+    public static void createMenuEX(String menuName, UserType userType) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(menuName).append("\n");
+        UserType[] values = UserType.values();
+        for (int i = 0; i < values.length; i++) {
+            sb.append(i + 1).append(".").append(values[i].name()).append("\n");
         }
         System.out.println(sb.toString());
     }

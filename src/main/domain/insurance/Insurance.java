@@ -4,11 +4,12 @@ package main.domain.insurance;
 import main.domain.contract.Contract;
 
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
- * @author ����
+ * @author SeungHo
  * @version 1.0
- * @created 09-5-2022 ���� 4:39:01
+ * @created 09-5-2022 오후 4:39:01
  */
 public class Insurance {
 
@@ -21,7 +22,6 @@ public class Insurance {
 	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 	public DevInfo devInfo;
 	public SalesAuthFile salesAuthFile;
-
 	public InsuranceType insuranceType;
 
 	public Insurance(){

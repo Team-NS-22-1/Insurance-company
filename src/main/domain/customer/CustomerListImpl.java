@@ -1,9 +1,10 @@
 package main.domain.customer;
 
 
-import java.util.ArrayList;
+
+import main.exception.MyIllegalArgumentException;
+
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -12,25 +13,22 @@ import java.util.Map;
  * @created 09-5-2022 ���� 4:38:59
  */
 public class CustomerListImpl implements CustomerList {
-
 	private static Map<Integer, Customer> customerList = new HashMap<>();
 	private static int idSequence = 0;
-
 	public CustomerListImpl(){
 	}
 
 	@Override
-	public boolean create(Customer customer) {
+	public void create(Customer customer) {
 		customer.setId(++idSequence);
 		customerList.put(customer.getId(), customer);
-		return true;
 	}
 
 	@Override
 	public Customer read(int id) {
 		Customer customer = customerList.get(id);
 		if (customer == null) {
-			throw new IllegalArgumentException("id");
+			throw new MyIllegalArgumentException(id + "에 해당하는 고객정보가 존재하지 않습니다.");
 		}
 		return customer;
 	}
