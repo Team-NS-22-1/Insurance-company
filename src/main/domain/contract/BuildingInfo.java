@@ -21,40 +21,45 @@ public class BuildingInfo {
 		return buildingArea;
 	}
 
-	public void setBuildingArea(int buildingArea) {
+	public BuildingInfo setBuildingArea(int buildingArea) {
 		this.buildingArea = buildingArea;
+		return this;
 	}
 
 	public BuildingType getBuildingType() {
 		return buildingType;
 	}
 
-	public void setBuildingType(BuildingType buildingType) {
+	public BuildingInfo setBuildingType(BuildingType buildingType) {
 		this.buildingType = buildingType;
+		return this;
 	}
 
 	public int getCollateralAmount() {
 		return collateralAmount;
 	}
 
-	public void setCollateralAmount(int collateralAmount) {
+	public BuildingInfo setCollateralAmount(int collateralAmount) {
 		this.collateralAmount = collateralAmount;
+		return this;
 	}
 
 	public boolean isActualResidence() {
 		return isActualResidence;
 	}
 
-	public void setActualResidence(boolean actualResidence) {
+	public BuildingInfo setActualResidence(boolean actualResidence) {
 		isActualResidence = actualResidence;
+		return this;
 	}
 
 	public boolean isSelfOwned() {
 		return isSelfOwned;
 	}
 
-	public void setSelfOwned(boolean selfOwned) {
+	public BuildingInfo setSelfOwned(boolean selfOwned) {
 		isSelfOwned = selfOwned;
+		return this;
 	}
 
 	@Override

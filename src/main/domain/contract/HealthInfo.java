@@ -9,80 +9,94 @@ package main.domain.contract;
 public class HealthInfo {
 
 	private int height;
-	private boolean isDangerActivity;
-	private boolean isDrinking;
-	private boolean isDriving;
-	private boolean isHavingDisease;
-	private boolean isSmoking;
-	private boolean isTakingDrug;
 	private int weight;
+	private boolean isDrinking;
+	private boolean isSmoking;
+	private boolean isDriving;
+	private boolean isDangerActivity;
+	private boolean isHavingDisease;
+	private boolean isTakingDrug;
+	private String diseaseDetail;
 
 	public HealthInfo(){
 
 	}
 
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
+	public HealthInfo setHeight(int height) {
 		this.height = height;
-	}
-
-	public boolean isDangerActivity() {
-		return isDangerActivity;
-	}
-
-	public void setDangerActivity(boolean dangerActivity) {
-		isDangerActivity = dangerActivity;
-	}
-
-	public boolean isDrinking() {
-		return isDrinking;
-	}
-
-	public void setDrinking(boolean drinking) {
-		isDrinking = drinking;
-	}
-
-	public boolean isDriving() {
-		return isDriving;
-	}
-
-	public void setDriving(boolean driving) {
-		isDriving = driving;
-	}
-
-	public boolean isHavingDisease() {
-		return isHavingDisease;
-	}
-
-	public void setHavingDisease(boolean havingDisease) {
-		isHavingDisease = havingDisease;
-	}
-
-	public boolean isSmoking() {
-		return isSmoking;
-	}
-
-	public void setSmoking(boolean smoking) {
-		isSmoking = smoking;
-	}
-
-	public boolean isTakingDrug() {
-		return isTakingDrug;
-	}
-
-	public void setTakingDrug(boolean takingDrug) {
-		isTakingDrug = takingDrug;
+		return this;
 	}
 
 	public int getWeight() {
 		return weight;
 	}
 
-	public void setWeight(int weight) {
+	public HealthInfo setWeight(int weight) {
 		this.weight = weight;
+		return this;
+	}
+
+	public boolean isDrinking() {
+		return isDrinking;
+	}
+
+	public HealthInfo setDrinking(boolean drinking) {
+		isDrinking = drinking;
+		return this;
+	}
+
+	public boolean isSmoking() {
+		return isSmoking;
+	}
+
+	public HealthInfo setSmoking(boolean smoking) {
+		isSmoking = smoking;
+		return this;
+	}
+
+	public boolean isDriving() {
+		return isDriving;
+	}
+
+	public HealthInfo setDriving(boolean driving) {
+		isDriving = driving;
+		return this;
+	}
+
+	public boolean isDangerousActivity() {
+		return isDangerActivity;
+	}
+
+	public HealthInfo setDangerousActivity(boolean dangerousActivity) {
+		isDangerActivity = dangerousActivity;
+		return this;
+	}
+
+	public boolean isHavingDisease() {
+		return isHavingDisease;
+	}
+
+	public HealthInfo setHavingDisease(boolean havingDisease) {
+		isHavingDisease = havingDisease;
+		return this;
+	}
+
+	public boolean isTakingDrug() {
+		return isTakingDrug;
+	}
+
+	public HealthInfo setTakingDrug(boolean takingDrug) {
+		isTakingDrug = takingDrug;
+		return this;
+	}
+
+	public String getDiseaseDetail() {
+		return diseaseDetail;
+	}
+
+	public HealthInfo setDiseaseDetail(String diseaseDetail) {
+		this.diseaseDetail = diseaseDetail;
+		return this;
 	}
 
 	@Override
