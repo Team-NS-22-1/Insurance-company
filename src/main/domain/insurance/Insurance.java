@@ -1,6 +1,8 @@
 package main.domain.insurance;
 
 
+import main.domain.contract.Contract;
+
 import java.util.ArrayList;
 
 /**
@@ -113,4 +115,24 @@ public class Insurance {
 		return this;
 	}
 
+	public String toString(){
+		String value = "";
+		value += this.getId()+" "+this.getName()+" "+this.getDescription();
+		return value;
+	}
+
+	public String print() {
+		return "보험 정보 {" +
+				"보험ID: " + id +
+				", 이름: '" + name + '\'' +
+				", 설명: '" + description + '\'' +
+				", 보험료: " + premium +
+				", 계약기간: " + contractPeriod +
+				", 납입기간: " + paymentPeriod +
+				", 보장정보: " + guaranteeList +
+				", 개발정보: " + devInfo +
+				", 인가파일: " + salesAuthFile +
+				", 보험유형:" + insuranceType +
+				'}';
+	}
 }

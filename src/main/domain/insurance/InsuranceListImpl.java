@@ -1,5 +1,7 @@
 package main.domain.insurance;
 
+import main.domain.contract.Contract;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -49,5 +51,15 @@ public class InsuranceListImpl implements InsuranceList {
 		if(insurance != null) return true;
 		else return false;
 	}
+
+	// 나중에 수정
+	public boolean add(Insurance insurance) {
+		insurance.setId(++id);
+		insuranceList.put(insurance.getId(), insurance);
+		return true;
+	}
+
+
+//	public void update(){}
 
 }

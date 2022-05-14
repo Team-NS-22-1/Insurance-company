@@ -47,17 +47,6 @@ public class Customer {
 		return housePrice;
 	}
 
-	public void setHousePrice(String housePrice) {
-		this.housePrice = housePrice;
-	}
-
-	public String getHomeOwner() {
-		return homeOwner;
-	}
-
-	public void setHomeOwner(String homeOwner) {
-		this.homeOwner = homeOwner;
-	}
 	
 	public String getAddress() {
 		return address;
@@ -193,6 +182,21 @@ public class Customer {
 
 	public void terminate(){
 
+	}
+
+	@Override
+	public String toString() {
+		return "고객정보 {" +
+				"주소: '" + address + '\'' +
+				", 이메일: '" + email + '\'' +
+				", 고객ID: " + id +
+				", 인수심사여부: " + isContract +
+				", 직업: '" + job + '\'' +
+				", 이름: '" + name + '\'' +
+				", 결제수단: " + paymentList +
+				", 전화번호: '" + phone + '\'' +
+				", 주민등록번호: '" + ssn + '\'' +
+				'}';
 	}
 
 }
