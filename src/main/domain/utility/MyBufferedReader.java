@@ -1,6 +1,6 @@
 package main.domain.utility;
 
-import main.exception.TestInputException;
+import main.exception.InputException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,11 +12,11 @@ public class MyBufferedReader extends BufferedReader {
     }
 
     public Object verifyRead(Object returnType) throws IOException,
-                                                    TestInputException.InputNullDataException,
-                                                    TestInputException.InputInvalidDataException {
+                                                    InputException.InputNullDataException,
+                                                    InputException.InputInvalidDataException {
         String value = this.readLine();
         if(value.equals("") || value == null || value.isBlank())
-            throw new TestInputException.InputNullDataException();
+            throw new InputException.InputNullDataException();
 
         try {
             if(returnType instanceof String)
@@ -34,27 +34,27 @@ public class MyBufferedReader extends BufferedReader {
                 return doubleValue;
             }
             else
-                throw new TestInputException.InputInvalidDataException();
+                throw new InputException.InputInvalidDataException();
         }
         catch (NumberFormatException e) {
-            throw new TestInputException.InputInvalidDataException();
+            throw new InputException.InputInvalidDataException();
         }
     }
 
-    public int verifyMenu(int categorySize) throws IOException, TestInputException.InvalidMenuException {
+    public int verifyMenu(int categorySize) throws IOException, InputException.InvalidMenuException {
         String value = this.readLine();
         if(value.equals("") || value == null || value.isBlank())
-            throw new TestInputException.InvalidMenuException();
+            throw new InputException.InvalidMenuException();
 
         int selectedMenu;
         try {
             selectedMenu = Integer.parseInt(value);
         }
         catch (NumberFormatException e){
-            throw new TestInputException.InvalidMenuException();
+            throw new InputException.InvalidMenuException();
         }
         if(selectedMenu > categorySize || selectedMenu < 1)
-            throw new TestInputException.InvalidMenuException();
+            throw new InputException.InvalidMenuException();
 
         return selectedMenu;
     }

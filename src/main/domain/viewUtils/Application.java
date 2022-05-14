@@ -2,12 +2,16 @@ package main.domain.viewUtils;
 
 import main.domain.viewUtils.viewlogic.*;
 
+
+import java.util.*;
+
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
+
 
 import static main.domain.utility.MessageUtil.createMenu;
 
@@ -37,25 +41,30 @@ public class Application {
 
     public void run() {
         Scanner sc = new Scanner(System.in);
-        createMenu("유저 타입","보험가입희망자","고객","영업팀","언더라이팅팀","개발팀","보상팀","종료하기");
-        int userType = sc.nextInt();
-        UserType[] values = UserType.values();
+        try {
+            createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
+            int userType = sc.nextInt();
+            UserType[] values = UserType.values();
 
-        UserType type = values[userType-1];
-        if(type == UserType.OUT)
-            System.exit(0);
-        while (true) {
-            ViewLogic viewLogic = map.get(type);
-            viewLogic.showMenu();
-            System.out.println("X : 시스템 종료");
-            String command = sc.next();
-            command = command.toUpperCase();
-            if (Objects.equals(command, "X")) {
-                System.out.println("시스템을 종료합니다.");
-                break;
+            UserType type = values[userType - 1];
+            if (type == UserType.OUT)
+                System.exit(0);
+
+            while (true) {
+                ViewLogic viewLogic = map.get(type);
+                viewLogic.showMenu();
+                System.out.println("X : 시스템 종료");
+                String command = sc.next();
+                command = command.toUpperCase();
+                if (Objects.equals(command, "X")) {
+                    System.out.println("시스템을 종료합니다.");
+                    break;
+                }
+                viewLogic.work(command);
+
             }
-            viewLogic.work(command);
-
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("정확한 값을 입력해주세요.");
         }
     }
 }

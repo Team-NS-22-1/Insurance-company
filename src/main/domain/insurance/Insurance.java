@@ -4,7 +4,6 @@ package main.domain.insurance;
 import main.domain.contract.Contract;
 
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * @author SeungHo

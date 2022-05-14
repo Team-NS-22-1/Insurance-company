@@ -2,6 +2,7 @@ package main.domain.payment;
 
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -70,8 +71,9 @@ public class Card extends Payment {
 
 	@Override
 	public String toString() {
-		String exDate = expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-		return "ID : " + id + " 종류 : 카드 " + " 카드사 : " + cardType.name() + " 카드 번호 : " + cardNo + " 만료일 : " + exDate + " CVC : " + cvcNo;
+		int monthValue = expiryDate.getMonthValue();
+		int year = expiryDate.getYear();
+		return "ID : " + id + " 종류 : 카드 " + " 카드사 : " + cardType.name() + " 카드 번호 : " + cardNo + " 만료일 : " + monthValue+"/"+year + " CVC : " + cvcNo;
 
 
 //		return "Card{" +
