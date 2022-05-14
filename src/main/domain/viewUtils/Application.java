@@ -4,6 +4,7 @@ import main.domain.viewUtils.viewlogic.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 
 import static main.domain.utility.MessageUtil.createMenu;
@@ -41,9 +42,15 @@ public class Application {
         UserType type = values[userType-1];
         if(type == UserType.OUT)
             System.exit(0);
-        ViewLogic viewLogic = map.get(type);
-        viewLogic.showMenu();
-        String command = sc.next();
-        viewLogic.work(command);
+
+        while (true) {
+            ViewLogic viewLogic = map.get(type);
+            viewLogic.showMenu();
+            String command = sc.next();
+            if(Objects.equals(command, "X"))
+                break;
+            viewLogic.work(command);
+
+        }
     }
 }

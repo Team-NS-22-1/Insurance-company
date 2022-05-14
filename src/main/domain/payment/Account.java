@@ -47,12 +47,14 @@ public class Account extends Payment {
 
 	@Override
 	public String toString() {
-		return "Account{" +
-				"accountNo='" + accountNo + '\'' +
-				", bankType=" + bankType +
-				", id=" + id +
-				", paytype=" + paytype +
-				", customerId=" + customerId +
-				'}';
+		return "ID : " + id + " 종류 : 계좌 " + " 은행 : " + bankType.name() + " 계좌 번호 : " + accountNo;
+
+//		return "Account{" +
+//				"accountNo='" + accountNo + '\'' +
+//				", bankType=" + bankType +
+//				", id=" + id +
+//				", paytype=" + paytype +
+//				", customerId=" + customerId +
+//				'}';
 	}
 }

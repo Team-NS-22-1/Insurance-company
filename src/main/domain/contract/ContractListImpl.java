@@ -35,7 +35,7 @@ public class ContractListImpl implements ContractList {
 		Contract contract = contractList.get(id);
 		if(contract != null)
 			return contract;
-		return null;
+		throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
 	}
 
 	@Override

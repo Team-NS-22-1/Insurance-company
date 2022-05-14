@@ -2,6 +2,7 @@ package main.domain.payment;
 
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author 규현
@@ -69,14 +70,18 @@ public class Card extends Payment {
 
 	@Override
 	public String toString() {
-		return "Card{" +
-				"cardNo='" + cardNo + '\'' +
-				", cardType=" + cardType +
-				", cvcNo='" + cvcNo + '\'' +
-				", expiryDate=" + expiryDate +
-				", id=" + id +
-				", paytype=" + paytype +
-				", customerId=" + customerId +
-				'}';
+		String exDate = expiryDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyyy"));
+		return "ID : " + id + " 종류 : 카드 " + " 카드사 : " + cardType.name() + " 카드 번호 : " + cardNo + " 만료일 : " + exDate + " CVC : " + cvcNo;
+
+
+//		return "Card{" +
+//				"cardNo='" + cardNo + '\'' +
+//				", cardType=" + cardType +
+//				", cvcNo='" + cvcNo + '\'' +
+//				", expiryDate=" + expiryDate +
+//				", id=" + id +
+//				", paytype=" + paytype +
+//				", customerId=" + customerId +
+//				'}';
 	}
 }

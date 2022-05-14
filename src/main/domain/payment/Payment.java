@@ -30,6 +30,7 @@ public abstract class Payment {
 		return this;
 	}
 
+
 	public int getCustomerId() {
 		return customerId;
 	}
@@ -40,11 +41,5 @@ public abstract class Payment {
 	}
 
 	@Override
-	public String toString() {
-		return "Payment{" +
-				"id=" + id +
-				", paytype=" + paytype +
-				", customerId=" + customerId +
-				'}';
-	}
+	public abstract String toString();
 }

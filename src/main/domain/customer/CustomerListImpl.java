@@ -1,6 +1,8 @@
 package main.domain.customer;
 
 
+import main.exception.MyIllegalArgumentException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,7 +34,7 @@ public class CustomerListImpl implements CustomerList {
 	public Customer read(int id) {
 		Customer customer = customerList.get(id);
 		if (customer == null) {
-			throw new IllegalArgumentException("id");
+			throw new MyIllegalArgumentException(id + "에 해당하는 고객정보가 존재하지 않습니다.");
 		}
 		return customer;
 	}

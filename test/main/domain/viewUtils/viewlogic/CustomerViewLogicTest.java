@@ -97,9 +97,9 @@ class CustomerViewLogicTest {
     }
 
     @DisplayName("결제 성공")
-    @Test
+//    @Test
     void successPay() {
-        customerViewLogic.showContract(1);
+//        customerViewLogic.showContract(1);
 
     }
 
