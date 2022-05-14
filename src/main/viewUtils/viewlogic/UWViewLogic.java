@@ -1,8 +1,7 @@
-package main.domain.viewUtils.viewlogic;
+package main.viewUtils.viewlogic;
 
 import main.domain.contract.*;
 import main.domain.customer.Customer;
-import main.domain.customer.CustomerList;
 import main.domain.customer.CustomerListImpl;
 import main.domain.employee.Department;
 import main.domain.employee.Employee;
@@ -10,14 +9,12 @@ import main.domain.employee.Position;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
-import main.domain.viewUtils.ViewLogic;
+import main.viewUtils.ViewLogic;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Scanner;
 
-import static main.domain.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic

@@ -1,8 +1,6 @@
 package main;
 
-import main.domain.viewUtils.Application;
-
-import java.util.NoSuchElementException;
+import main.viewUtils.Application;
 
 public class Main {
     public static void main(String[] args) {

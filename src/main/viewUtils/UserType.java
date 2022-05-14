@@ -1,4 +1,4 @@
-package main.domain.viewUtils;
+package main.viewUtils;
 
 /**
  * 작성자 : 김규현

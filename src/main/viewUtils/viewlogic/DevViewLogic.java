@@ -1,4 +1,4 @@
-package main.domain.viewUtils.viewlogic;
+package main.viewUtils.viewlogic;
 
 import main.domain.contract.BuildingType;
 import main.domain.employee.Employee;
@@ -7,16 +7,16 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
-import main.domain.utility.MyBufferedReader;
+import main.utility.MyBufferedReader;
 import main.exception.InputException;
-import main.domain.viewUtils.ViewLogic;
+import main.viewUtils.ViewLogic;
 import main.login.Login;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import static main.domain.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
