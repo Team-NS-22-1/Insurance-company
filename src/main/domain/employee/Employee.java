@@ -9,12 +9,8 @@ import main.domain.insurance.inputDto.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
-
-import static main.domain.utility.MessageUtil.createMenu;
 
 /**
  * @author SeungHo

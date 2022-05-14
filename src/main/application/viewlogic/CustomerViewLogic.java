@@ -1,4 +1,4 @@
-package main.domain.viewUtils.viewlogic;
+package main.application.viewlogic;
 
 import main.domain.contract.Contract;
 import main.domain.contract.ContractList;
@@ -10,7 +10,7 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
-import main.domain.viewUtils.ViewLogic;
+import main.application.ViewLogic;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
 
@@ -21,8 +21,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static main.domain.utility.PaymentFormatUtil.*;
-import static main.domain.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenu;
+import static main.utility.PaymentFormatUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic

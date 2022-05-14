@@ -1,8 +1,9 @@
-package main.domain.viewUtils.viewlogic;
+package main.application.viewlogic;
 
-import main.domain.viewUtils.ViewLogic;
 
-import static main.domain.utility.MessageUtil.createMenu;
+import main.application.ViewLogic;
+
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic

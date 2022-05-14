@@ -1,8 +1,6 @@
 package main.domain.insurance;
 
 
-import main.domain.contract.Contract;
-
 import java.util.ArrayList;
 
 /**

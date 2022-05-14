@@ -1,19 +1,13 @@
-package main.domain.viewUtils;
+package main.application;
 
-import main.domain.viewUtils.viewlogic.*;
+import main.application.viewlogic.*;
 
-
-import java.util.*;
-
-import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 
-
-import static main.domain.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenu;
 
 /**
  * packageName :  main.domain.viewUtils
