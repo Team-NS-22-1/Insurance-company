@@ -1,5 +1,6 @@
 package main.application.viewlogic;
 
+
 import main.application.ViewLogic;
 
 import static main.utility.MessageUtil.createMenu;

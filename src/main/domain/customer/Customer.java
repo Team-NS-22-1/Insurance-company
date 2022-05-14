@@ -7,8 +7,6 @@ import main.domain.payment.Payment;
 
 import java.util.ArrayList;
 
-import java.util.ArrayList;
-
 /**
  * @author 규현
  * @version 1.0

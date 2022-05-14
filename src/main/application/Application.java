@@ -1,14 +1,18 @@
 package main.application;
 
-import main.domain.viewUtils.viewlogic.*;
 import main.application.viewlogic.*;
-
+import main.domain.contract.ContractListImpl;
+import main.domain.customer.CustomerListImpl;
+import main.domain.employee.EmployeeListImpl;
+import main.domain.insurance.InsuranceListImpl;
+import main.domain.payment.PaymentListImpl;
+import main.application.viewlogic.*;
+import main.utility.MessageUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
-
 
 import static main.utility.MessageUtil.createMenu;
 
@@ -28,13 +32,20 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
+        CustomerListImpl customerList = new CustomerListImpl();
+        EmployeeListImpl employeeList = new EmployeeListImpl();
+        InsuranceListImpl insuranceList = new InsuranceListImpl();
+        ContractListImpl contractList = new ContractListImpl();
+        PaymentListImpl paymentList = new PaymentListImpl();
+
         map.put(UserType.GUEST,new GuestViewLogic());
-        map.put(UserType.CUSTOMER, new CustomerViewLogic());
+        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
         map.put(UserType.SALES, new SalesViewLogic());
-        map.put(UserType.DEV, new DevViewLogic());
-        map.put(UserType.UW, new UWViewLogic());
+        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
+        map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic());
     }
+
 
     public void run() {
         Scanner sc = new Scanner(System.in);

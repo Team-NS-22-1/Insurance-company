@@ -1,8 +1,5 @@
 package main.login;
 
-import main.domain.insurance.Insurance;
-
-import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import static main.utility.MessageUtil.createMenu;
 
+
 /**
  * packageName :  main.domain.viewUtils.viewlogic
  * fileName : DevViewLogic
@@ -48,6 +49,9 @@ public class DevViewLogic implements ViewLogic {
     }
 
     public DevViewLogic() {
+    }
+
+    public DevViewLogic(EmployeeListImpl employeeList, InsuranceListImpl insuranceList) {
     }
 
     @Override
