@@ -2,7 +2,7 @@ package main.exception;
 
 /**
  * packageName :  main.exception
- * fileName : MyAccountFormatException
+ * fileName : MyInadequateFormatException
  * author :  규현
  * date : 2022-05-14
  * description : 적절하지 않은 형식을 입력했을 때, 발생하는 예외 클래스

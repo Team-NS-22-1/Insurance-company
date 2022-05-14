@@ -17,6 +17,7 @@ import main.exception.MyInadequateFormatException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -65,9 +66,10 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
             } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("올바른 값을 입력해주세요");
             }
         }
-
         switch (command) {
             case "2" :
                 payPremiumButton();
@@ -223,7 +225,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String cardNo = validateCardNoFormat(sc.next());
                 System.out.println("CVC : (예시 : *** {3자리 숫자})");
                 String cvc = validateCVCFormat(sc.next());
-                System.out.println("만료일 : ");
+                System.out.println("만료일");
                 System.out.print("월 : ");
                 int month = validateMonthFormat(sc.nextInt());
                 System.out.print("년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}");
