@@ -3,13 +3,10 @@ package main.application;
 import main.application.viewlogic.*;
 import main.utility.MessageUtil;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * packageName :  main.domain.viewUtils
+ * packageName :  main.application
  * fileName : Application
  * author :  규현
  * date : 2022-05-10
@@ -24,6 +21,9 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
+
+
+
         map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic());
         map.put(UserType.SALES, new SalesViewLogic());
@@ -33,6 +33,8 @@ public class Application {
     }
 
     public void run() {
+
+
         Scanner sc = new Scanner(System.in);
         try {
             MessageUtil.createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
@@ -56,7 +58,7 @@ public class Application {
                 viewLogic.work(command);
 
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (ArrayIndexOutOfBoundsException| InputMismatchException e) {
             System.out.println("정확한 값을 입력해주세요.");
         }
     }
