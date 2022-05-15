@@ -17,7 +17,6 @@ public class Customer {
 	private String address;
 	private String email;
 	private int id;
-	private boolean isContract;
 	private String job;
 	private String name;
 
@@ -69,15 +68,6 @@ public class Customer {
 	public void setId(int id) {
 		this.id = id;
 	}
-
-	public boolean isContract() {
-		return isContract;
-	}
-
-	public void setContract(boolean isContract) {
-		this.isContract = isContract;
-	}
-
 	public String getJob() {
 		return job;
 	}
@@ -188,7 +178,6 @@ public class Customer {
 				"주소: '" + address + '\'' +
 				", 이메일: '" + email + '\'' +
 				", 고객ID: " + id +
-				", 인수심사여부: " + isContract +
 				", 직업: '" + job + '\'' +
 				", 이름: '" + name + '\'' +
 				", 결제수단: " + paymentList +

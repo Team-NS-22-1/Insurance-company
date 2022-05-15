@@ -59,10 +59,7 @@ public class Application {
                     System.out.println("시스템을 종료합니다.");
                     System.exit(0);
                 }
-
                 UserType type = values[userType - 1];
-
-
                 while (true) {
                     ViewLogic viewLogic = map.get(type);
                     viewLogic.showMenu();
