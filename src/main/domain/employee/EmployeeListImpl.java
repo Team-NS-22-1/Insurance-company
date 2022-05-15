@@ -1,6 +1,7 @@
 package main.domain.employee;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -26,6 +27,10 @@ public class EmployeeListImpl implements EmployeeList {
 		Employee employee = this.employeeList.get(id);
 		if(employee != null) return employee;
 		else return null;
+	}
+
+	public ArrayList<Employee> readAll() {
+		return new ArrayList<>(this.employeeList.values());
 	}
 
 	@Override

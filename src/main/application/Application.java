@@ -1,5 +1,6 @@
 package main.application;
 
+import main.TestDevData;
 import main.application.viewlogic.*;
 import main.domain.contract.ContractListImpl;
 import main.domain.customer.CustomerListImpl;
@@ -7,6 +8,8 @@ import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.PaymentListImpl;
 import main.application.viewlogic.*;
+import main.exception.ReturnMenuException;
+import main.exception.SystemExitException;
 import main.utility.MessageUtil;
 
 import java.util.HashMap;
@@ -38,6 +41,9 @@ public class Application {
         ContractListImpl contractList = new ContractListImpl();
         PaymentListImpl paymentList = new PaymentListImpl();
 
+        // 테스트 더미 데이터 생성
+        employeeList = new TestDevData(employeeList).createEmployee();
+
         map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
         map.put(UserType.SALES, new SalesViewLogic());
@@ -59,20 +65,22 @@ public class Application {
                 System.exit(0);
 
             while (true) {
-                ViewLogic viewLogic = map.get(type);
-                viewLogic.showMenu();
-                System.out.println("X : 시스템 종료");
-                String command = sc.next();
-                command = command.toUpperCase();
-                if (Objects.equals(command, "X")) {
-                    System.out.println("시스템을 종료합니다.");
-                    break;
+                try {
+                    ViewLogic viewLogic = map.get(type);
+                    viewLogic.showMenu();
+                    System.out.println("EXIT : 시스템 종료");
+                    String command = sc.next();
+                    command = command.toUpperCase();
+                    viewLogic.work(command);
                 }
-                viewLogic.work(command);
-
+                catch (ReturnMenuException e) {
+                    System.out.println(e.getMessage());
+                }
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("정확한 값을 입력해주세요.");
+        } catch (SystemExitException e){
+            System.exit(0);
         }
     }
 }
