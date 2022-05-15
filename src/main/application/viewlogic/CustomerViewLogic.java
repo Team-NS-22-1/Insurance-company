@@ -168,7 +168,7 @@ public class CustomerViewLogic implements ViewLogic {
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
         sb.append("[ID]").append(" : ").append(contract.getId())
-                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(contract.getPremium())
+                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
                 .append("\n");
         System.out.println(sb.toString());
     }
@@ -214,10 +214,10 @@ public class CustomerViewLogic implements ViewLogic {
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
                 break;
-            } catch (MyIllegalArgumentException e) {
-                System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
+            } catch (IllegalArgumentException e ) {
+                System.out.println(e.getMessage());
             }
         }
     }

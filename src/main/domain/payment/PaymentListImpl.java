@@ -60,7 +60,7 @@ public class PaymentListImpl implements PaymentList{
                 .filter(p -> p.getCustomerId() == customerId)
                 .collect(Collectors.toList());
         if (collect.isEmpty())
-            throw new MyIllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
+            throw new IllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
         return collect;
     }
 }

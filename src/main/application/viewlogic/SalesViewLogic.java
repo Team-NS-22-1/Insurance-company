@@ -358,7 +358,7 @@ public class SalesViewLogic implements ViewLogic {
                         .setActualResidence(isActualResidence)
                 );
 
-                concludeContract(contract, customer);
+
 
                 break;
 
@@ -407,6 +407,7 @@ public class SalesViewLogic implements ViewLogic {
                 );
                 break;
         }
+        concludeContract(contract, customer);
     }
 
     private void concludeContract(Contract contract, Customer customer) {
