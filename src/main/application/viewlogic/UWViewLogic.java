@@ -93,12 +93,12 @@ public class UWViewLogic implements ViewLogic {
         testContract2.setBuildingInfo(buildingInfo);
         testContract2.setConditionOfUw(ConditionOfUw.WAIT);
 
-        employeeList.create(employee);
-        customerList.create(customer);
-        insuranceList.create(insurance);
-        contractList.create(testContract);
-        contractList.create(testContract1);
-        contractList.create(testContract2);
+        this.employeeList.create(employee);
+        this.customerList.create(customer);
+        this.insuranceList.create(insurance);
+        this.contractList.create(testContract);
+        this.contractList.create(testContract1);
+        this.contractList.create(testContract2);
     }
 
     @Override
