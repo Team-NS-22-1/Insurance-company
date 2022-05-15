@@ -56,8 +56,7 @@ public class Application {
                 UserType[] values = UserType.values();
 
                 if (userType == 0) {
-                    System.out.println("시스템을 종료합니다.");
-                    System.exit(0);
+                    throw new MyCloseSequence();
                 }
                 UserType type = values[userType - 1];
                 while (true) {
