@@ -219,7 +219,6 @@ public class CustomerViewLogic implements ViewLogic {
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
             }
-
         }
     }
     // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
