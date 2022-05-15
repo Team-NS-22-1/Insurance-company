@@ -33,10 +33,10 @@ public class TestData {
         this.insuranceList = new InsuranceListImpl();
         this.contractList = new ContractListImpl();
 
-        createContract();
-        createCustomerData();
+//        createContract();
+//        createCustomerData();
 //        createInsurance();
-        createPayment();
+//        createPayment();
 
 
     }
