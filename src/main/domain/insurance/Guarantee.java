@@ -24,4 +24,8 @@ public class Guarantee {
 	public String getDescription(){
 		return this.description;
 	}
+	@Override
+	public String toString() {
+		return "이름 : " + name + " 설명 : " + description;
+	}
 }

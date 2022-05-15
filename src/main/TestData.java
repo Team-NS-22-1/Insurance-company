@@ -38,6 +38,7 @@ public class TestData {
         this.contractList = new ContractListImpl();
         this.employeeList = new EmployeeListImpl();
 
+
         createContract();
         createCustomerData();
         createInsurance();

@@ -42,7 +42,6 @@ public class Application {
         // 테스트 더미 데이터 생성
         new TestDevData(employeeList).createEmployee();
 
-
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
@@ -86,5 +85,4 @@ public class Application {
         }
     }
 
-//    private void close(Object )
 }
