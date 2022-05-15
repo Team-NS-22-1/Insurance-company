@@ -204,5 +204,4 @@ public class Customer {
 				", 주민등록번호: '" + ssn + '\'' +
 				'}';
 	}
-
 }

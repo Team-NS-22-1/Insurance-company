@@ -414,10 +414,15 @@ public class SalesViewLogic implements ViewLogic {
         command = sc.nextInt();
         switch (command) {
             case 1:
-                customerList.create(customer);
-                contract.setEmployeeId(employee.getId())
+                if (customer.getId() == 0) {
+                    customerList.create(customer);
+                }
+                contract.setConditionOfUw(ConditionOfUw.WAIT)
+                        .setEmployeeId(employee.getId())
                         .setCustomerId(customer.getId());
                 contractList.create(contract);
+                System.out.println(customerList.read(customer.getId()));
+                System.out.println(contractList.read(contract.getId()));
                 System.out.println("계약을 체결하였습니다.");
                 break;
             case 2:

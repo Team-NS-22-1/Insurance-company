@@ -323,8 +323,11 @@ public class GuestViewLogic implements ViewLogic {
                 customerList.create(customer);
                 contract.setPremium(premium)
                         .setCustomerId(customer.getId())
-                        .setInsuranceId(insuranceId);
+                        .setInsuranceId(insuranceId)
+                        .setConditionOfUw(ConditionOfUw.WAIT);
                 contractList.create(contract);
+                System.out.println(customerList.read(customer.getId()));
+                System.out.println(contractList.read(contract.getId()));
                 System.out.println("가입이 완료되었습니다.");
                 break;
             case 2:

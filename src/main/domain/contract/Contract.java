@@ -132,8 +132,9 @@ public class Contract {
 		return conditionOfUw;
 	}
 
-	public void setConditionOfUw(ConditionOfUw conditionOfUw) {
+	public Contract setConditionOfUw(ConditionOfUw conditionOfUw) {
 		this.conditionOfUw = conditionOfUw;
+		return this;
 	}
 
 	@Override
