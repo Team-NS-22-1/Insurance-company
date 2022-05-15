@@ -6,6 +6,7 @@ import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
 import main.domain.insurance.inputDto.*;
+import main.exception.MyIllegalArgumentException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -203,9 +204,9 @@ public class Employee {
 						contractList.put(contract.getId(), contract);
 					break;
 			}
-
-
 		}
+
+		if (contractList.isEmpty()) System.out.println("계약 정보가 존재하지 않습니다.");
 
 		return contractList;
 	}

@@ -50,15 +50,16 @@ public class Application {
     public void run() {
         Scanner sc = new Scanner(System.in);
         try {
-            createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
-            int userType = sc.nextInt();
-            UserType[] values = UserType.values();
-
-            UserType type = values[userType - 1];
-            if (type == UserType.OUT)
-                System.exit(0);
-
             while (true) {
+                createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
+                int userType = sc.nextInt();
+                UserType[] values = UserType.values();
+
+                UserType type = values[userType - 1];
+                if (type == UserType.OUT)
+                    System.exit(0);
+
+            //while (true) {
                 ViewLogic viewLogic = map.get(type);
                 viewLogic.showMenu();
                 System.out.println("X : 시스템 종료");
