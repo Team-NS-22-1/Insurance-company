@@ -1,6 +1,7 @@
 package main.application;
 
 import main.TestDevData;
+import main.TestData;
 import main.application.viewlogic.*;
 import main.domain.contract.ContractListImpl;
 import main.domain.customer.CustomerListImpl;
@@ -11,16 +12,16 @@ import main.application.viewlogic.*;
 import main.exception.ReturnMenuException;
 import main.exception.SystemExitException;
 import main.utility.MessageUtil;
+import main.exception.MyCloseSequence;
+import main.exception.MyIllegalArgumentException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+
+import java.util.*;
 
 import static main.utility.MessageUtil.createMenu;
 
 /**
- * packageName :  main.domain.viewUtils
+ * packageName :  main.application
  * fileName : Application
  * author :  규현
  * date : 2022-05-10
@@ -35,6 +36,7 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
+        TestData t = new TestData();
         CustomerListImpl customerList = new CustomerListImpl();
         EmployeeListImpl employeeList = new EmployeeListImpl();
         InsuranceListImpl insuranceList = new InsuranceListImpl();
@@ -54,30 +56,38 @@ public class Application {
 
 
     public void run() {
-        Scanner sc = new Scanner(System.in);
-        try {
-            createMenu("유저 타입", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀", "종료하기");
-            int userType = sc.nextInt();
-            UserType[] values = UserType.values();
+        while (true) {
+            Scanner sc = new Scanner(System.in);
+            try {
+                createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
+                System.out.println("0. 종료하기");
+                int userType = sc.nextInt();
+                UserType[] values = UserType.values();
 
-            UserType type = values[userType - 1];
-            if (type == UserType.OUT)
+                if (userType == 0) {
+                    throw new MyCloseSequence();
+                }
+                UserType type = values[userType - 1];
+                while (true) {
+                    ViewLogic viewLogic = map.get(type);
+                    viewLogic.showMenu();
+                    System.out.println("0 : 취소하기");
+                    System.out.println("exit : 시스템 종료");
+                    String command = sc.next();
+                    if (command.equals("0"))
+                        break;
+                    if (command.equals("exit"))
+                        throw new MyCloseSequence();
+                    viewLogic.work(command);
+                }
+            } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
+                System.out.println("정확한 값을 입력해주세요.");
+            } catch (MyCloseSequence e) {
+                System.out.println("시스템을 종료합니다.");
                 System.exit(0);
-
-            while (true) {
-                ViewLogic viewLogic = map.get(type);
-                viewLogic.showMenu();
-                System.out.println("EXIT : 시스템 종료");
-                String command = sc.next();
-                if(command.equals("0"))
-                    break;
-                command = command.toUpperCase();
-                viewLogic.work(command);
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("정확한 값을 입력해주세요.");
-        } catch (SystemExitException e){
-            System.exit(0);
         }
     }
+
+//    private void close(Object )
 }
