@@ -44,7 +44,7 @@ public class GuestViewLogic implements ViewLogic {
 
         while (isLoop) {
             try {
-                command = sc.next();
+//                command = sc.next();
                 switch (command) {
                     // 보험가입
                     case "1":
