@@ -13,6 +13,7 @@ package main.exception;
  */
 public class MyCloseSequence extends MyException{
     public MyCloseSequence() {
+        super("EXIT!! : 시스템을 종료합니다.");
     }
 
     public MyCloseSequence(String message) {
