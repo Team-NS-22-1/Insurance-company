@@ -376,9 +376,6 @@ public class SalesViewLogic implements ViewLogic {
                         .setSelfOwned(isSelfOwned)
                         .setActualResidence(isActualResidence)
                 );
-
-                concludeContract(contract, customer);
-
                 break;
 
             case CAR:
@@ -429,6 +426,7 @@ public class SalesViewLogic implements ViewLogic {
 
                 break;
         }
+        concludeContract(contract, customer);
     }
 
     private void concludeContract(Contract contract, Customer customer) {
