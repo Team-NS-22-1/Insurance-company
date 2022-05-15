@@ -29,11 +29,6 @@ public class Employee {
 	public Employee(){
 	}
 
-	@Override
-	public String toString() {
-		return this.id+"'"+this.name+"'"+this.phone+"'"+this.department.getName()+"'"+this.position.getName();
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -125,14 +120,10 @@ public class Employee {
 		return null;
 	}
 
-	public void calculatePremium(Insurance insurance){
-		// Not Used...?
-	}
-
-	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, double profitMargin){
+	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
-		int premium = (int) ((purePremium + riskCost) / (1 - profitMargin));
+		int premium = (purePremium + riskCost) / (100 - profitMargin);
 		return premium;
 	}
 
@@ -217,7 +208,15 @@ public class Employee {
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
-
 	}
 
+	public String print() {
+		return "직원 정보 {" +
+				"직원ID: " + id +
+				", 이름: '" + name + '\'' +
+				", 연락처: '" + phone + '\'' +
+				", 부서: " + department.getName() +
+				", 직책: " + position.getName() +
+				'}';
+	}
 }

@@ -1,5 +1,6 @@
 package main.application;
 
+import main.TestDevData;
 import main.TestData;
 import main.application.viewlogic.*;
 import main.domain.contract.ContractListImpl;
@@ -7,6 +8,10 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.PaymentListImpl;
+import main.application.viewlogic.*;
+import main.exception.ReturnMenuException;
+import main.exception.SystemExitException;
+import main.utility.MessageUtil;
 import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 
@@ -38,6 +43,9 @@ public class Application {
         ContractListImpl contractList = new ContractListImpl();
         PaymentListImpl paymentList = new PaymentListImpl();
 
+        // 테스트 더미 데이터 생성
+        new TestDevData(employeeList).createEmployee();
+
         map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
         map.put(UserType.SALES, new SalesViewLogic());
@@ -45,6 +53,7 @@ public class Application {
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic());
     }
+
 
     public void run() {
         while (true) {
