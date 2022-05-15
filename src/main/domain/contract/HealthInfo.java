@@ -87,7 +87,7 @@ public class HealthInfo {
 
 	@Override
 	public String toString() {
-		return "건강정보 {" +
+		return "{" +
 				"키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +

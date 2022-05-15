@@ -140,13 +140,13 @@ public class Contract {
 	public String toString() {
 		String text =
 		 "계약 정보 {" +
-				"carInfo: " + carInfo +
+				"자동차정보: " + carInfo +
 				", 인수심사상태: " + conditionOfUw +
 				", 화재정보: " + buildingInfo +
 				", 건강정보: " + healthInfo +
 				", 증권발행여부: " + isPublishStock +
 				", 결제수단: " + payment +
-				", premium: " + premium +
+				", 보험료: " + premium +
 				", 인수사유: '" + reasonOfUw + '\'' +
 				'}';
 
