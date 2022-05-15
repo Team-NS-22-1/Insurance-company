@@ -71,19 +71,7 @@ public class Customer {
 		this.id = id;
 		return this;
 	}
-<<<<<<< HEAD
-=======
 
-	public boolean isContract() {
-		return isContract;
-	}
-
-	public Customer setContract(boolean isContract) {
-		this.isContract = isContract;
-		return this;
-	}
-
->>>>>>> mincheol
 	public String getJob() {
 		return job;
 	}
