@@ -111,6 +111,7 @@ public class Employee {
 		return insurance;
 	}
 
+	// TODO 단위 만원
 	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
 		if(damageAmount <=0 || countContract <=0 || businessExpense <=0 || profitMargin <= 0 || profitMargin>=100)
 			throw new InputInvalidDataException();
@@ -133,7 +134,7 @@ public class Employee {
 		insurance.setPremium(premium)
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
-										.setSalesAuthState(SalesAuthState.WAIT)
+										.setSalesAuthState(SalesAuthState.PERMISSION)
 										.setSalesStartDate(null)
 				);
 		insuranceList.create(insurance);

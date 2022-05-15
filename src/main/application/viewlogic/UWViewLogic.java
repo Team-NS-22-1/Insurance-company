@@ -93,12 +93,12 @@ public class UWViewLogic implements ViewLogic {
         testContract2.setBuildingInfo(buildingInfo);
         testContract2.setConditionOfUw(ConditionOfUw.WAIT);
 
-        this.employeeList.create(employee);
-        this.customerList.create(customer);
-        this.insuranceList.create(insurance);
-        this.contractList.create(testContract);
-        this.contractList.create(testContract1);
-        this.contractList.create(testContract2);
+//        this.employeeList.create(employee);
+//        this.customerList.create(customer);
+//        this.insuranceList.create(insurance);
+//        this.contractList.create(testContract);
+//        this.contractList.create(testContract1);
+//        this.contractList.create(testContract2);
     }
 
     @Override
@@ -276,6 +276,7 @@ public class UWViewLogic implements ViewLogic {
         }
     }
 
+    // TODO 보험 타입에 따른 리스트 조회 필요
     public Contract printContractInfo(int customerId) {
         Contract contract = this.contractList.read(customerId);
         System.out.println(contract.toString());
