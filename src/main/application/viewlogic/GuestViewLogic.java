@@ -27,13 +27,17 @@ import static main.utility.MessageUtil.createMenu;
  */
 public class GuestViewLogic implements ViewLogic {
     int command;
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc;
 
-    private InsuranceListImpl insuranceList = new InsuranceListImpl();
-    private ContractListImpl contractList = new ContractListImpl();
-    private CustomerListImpl customerList = new CustomerListImpl();
+    private InsuranceListImpl insuranceList;
+    private ContractListImpl contractList;
+    private CustomerListImpl customerList;
 
     public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList) {
+        this.sc = new Scanner(System.in);
+        this.insuranceList = insuranceList;
+        this.contractList = contractList;
+        this.customerList = customerList;
     }
 
     @Override
@@ -64,7 +68,8 @@ public class GuestViewLogic implements ViewLogic {
 
         while(isLoop) {
             for (Insurance insurance : insuranceList.readAll()) {
-                System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
+                    System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
             }
 
             System.out.println("가입할 보험상품의 보험코드를 입력하세요.");
@@ -76,7 +81,7 @@ public class GuestViewLogic implements ViewLogic {
                 if (insurance == null) {
                     System.out.println("선택된 보험상품이 없습니다.");
                     break;
-                } else if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
+                } else {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
                     createMenu("해당 보험상품을 가입하시겠습니까?","가입", "취소");
                     command = sc.nextInt();
@@ -96,9 +101,6 @@ public class GuestViewLogic implements ViewLogic {
                             break;
                     }
 
-                } else {
-                    System.out.println("해당 상품은 준비중입니다.");
-                    break;
                 }
         }
 

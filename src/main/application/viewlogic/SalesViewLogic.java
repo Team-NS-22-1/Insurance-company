@@ -5,6 +5,7 @@ import main.application.ViewLogic;
 import main.domain.contract.*;
 import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
+import main.domain.employee.Department;
 import main.domain.employee.Employee;
 import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.Insurance;
@@ -13,7 +14,6 @@ import main.domain.insurance.InsuranceListImpl;
 import java.util.Scanner;
 
 import static main.domain.contract.BuildingType.*;
-import static main.domain.contract.BuildingType.INSTITUTIONAL;
 import static main.domain.contract.CarType.*;
 import static main.utility.MessageUtil.createMenu;
 
@@ -30,15 +30,20 @@ import static main.utility.MessageUtil.createMenu;
  */
 public class SalesViewLogic implements ViewLogic {
     int command;
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc;
 
-    private InsuranceListImpl insuranceList = new InsuranceListImpl();
-    private ContractListImpl contractList = new ContractListImpl();
-    private CustomerListImpl customerList = new CustomerListImpl();
-    private EmployeeListImpl employeeList = new EmployeeListImpl();
-    Employee employee = new Employee().setId(1);
+    private InsuranceListImpl insuranceList;
+    private ContractListImpl contractList;
+    private CustomerListImpl customerList;
+    private EmployeeListImpl employeeList;
+    private Employee employee;
 
     public SalesViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList, EmployeeListImpl employeeList) {
+        this.sc = new Scanner(System.in);
+        this.insuranceList = insuranceList;
+        this.contractList = contractList;
+        this.customerList = customerList;
+        this.employeeList = employeeList;
     }
 
     @Override
@@ -52,6 +57,7 @@ public class SalesViewLogic implements ViewLogic {
         switch (command) {
             // 보험상품설계
             case "1":
+                initEmployee();
                 planInsurance();
                 break;
             // 뒤로
@@ -62,6 +68,17 @@ public class SalesViewLogic implements ViewLogic {
                 break;
         }
     }
+
+    private void initEmployee() {
+        System.out.println("직원 ID을 입력하세요.");
+        for(Employee employee : this.employeeList.readAll()) {
+            if (employee.getDepartment() == Department.SALES)
+                System.out.println(employee.print());
+        }
+        int employeeId = sc.nextInt();
+        this.employee = this.employeeList.read(employeeId);
+    }
+
 
     public void planInsurance() {
         boolean isLoop = true;
@@ -339,6 +356,8 @@ public class SalesViewLogic implements ViewLogic {
                         .setDiseaseDetail(diseaseDetail)
                 );
 
+                concludeContract(contract, customer);
+
                 break;
 
             case FIRE:
@@ -405,6 +424,9 @@ public class SalesViewLogic implements ViewLogic {
                         .setModelName(modelName)
                         .setModelYear(modelYear)
                 );
+
+                concludeContract(contract, customer);
+
                 break;
         }
     }
