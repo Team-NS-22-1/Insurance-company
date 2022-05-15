@@ -6,6 +6,8 @@ import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
 import main.domain.insurance.inputDto.*;
+import main.exception.InputException;
+import main.exception.InputException.InputInvalidDataException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -120,6 +122,8 @@ public class Employee {
 	}
 
 	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
+		if(damageAmount <=0 || countContract <=0 || businessExpense <=0 || profitMargin <= 0 || profitMargin>=100)
+			throw new InputInvalidDataException();
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
 		int premium = (purePremium + riskCost) / (100 - profitMargin);
@@ -127,6 +131,9 @@ public class Employee {
 	}
 
 	public Object[] calcLossRatioMethod(int lossRatio, int expectedBusinessRatio, int curTotalPremium){
+		if (expectedBusinessRatio >= 100 || lossRatio <=0 || curTotalPremium <= 0) {
+			throw new InputInvalidDataException();
+		}
 		double adjustedRate = (double) (lossRatio - (100 - expectedBusinessRatio)) / (100 - expectedBusinessRatio);
 		int premium = (int) (curTotalPremium + (curTotalPremium * adjustedRate));
 		return new Object[]{ adjustedRate, premium };
