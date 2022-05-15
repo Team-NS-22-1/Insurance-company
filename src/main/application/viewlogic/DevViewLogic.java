@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static main.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenuAndClose;
 
 
 /**
@@ -59,7 +60,7 @@ public class DevViewLogic implements ViewLogic {
             showInsuranceByEmployee(employee.getId());
             switch (command){
                 case "1" -> this.menuDevelop(this.menuInsuranceType());
-                case "2" -> {}
+//                case "2" -> {}
             }
         }
         catch (IllegalStateException e){
@@ -71,14 +72,14 @@ public class DevViewLogic implements ViewLogic {
     }
 
     private void testInitEmployee() throws IOException {
-        System.out.println("<< 직원을 선택하세요. >>");
-        ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
-        for(Employee employee : employeeArrayList){
-            System.out.println(employee.print());
-        }
-        System.out.println("---------------------------------");
         while(true){
             try {
+                System.out.println("<< 직원을 선택하세요. >>");
+                ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
+                for(Employee employee : employeeArrayList){
+                    System.out.println(employee.print());
+                }
+                System.out.println("---------------------------------");
                 int employeeId = br.verifyMenu(employeeArrayList.size());
                 this.employee = this.employeeList.read(employeeId);
                 break;
@@ -106,7 +107,7 @@ public class DevViewLogic implements ViewLogic {
         int insType = 0;
         boolean forWhile = true;
         while(forWhile){
-            createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
+            createMenuAndClose("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
             try {
                 insType = br.verifyMenu(3);
                 forWhile = false;
@@ -335,9 +336,10 @@ public class DevViewLogic implements ViewLogic {
                 System.out.print("이익률(1~99%): "); profitMargin = (int) br.verifyRead(profitMargin);
                 premium = employee.calcPurePremiumMethod(damageAmount, countContract, businessExpense, profitMargin);
                 System.out.printf("총보험료: %d(원)\n", premium);
+                // TODO 보험료 산출을 확정하시겠습까?
                 System.out.println("<< 다시 산출하시겠습니까? >>\n1.예 2. 아니오");
                 switch (br.verifyMenu(2)){
-                    case 2 -> forWhile = false;
+                    case 1 -> forWhile = false;
                 }
             }
             catch (InputException.InputNullDataException |

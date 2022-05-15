@@ -10,6 +10,7 @@ import java.time.LocalDate;
  */
 public class DevInfo {
 
+	//TODO toString
 	private int employeeId;
 	private LocalDate devDate;
 	private SalesAuthState salesAuthState;

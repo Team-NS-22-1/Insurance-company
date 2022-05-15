@@ -1,6 +1,5 @@
 package main.application;
 
-import main.TestDevData;
 import main.TestData;
 import main.application.viewlogic.*;
 import main.domain.contract.ContractListImpl;
@@ -32,7 +31,6 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        TestData t = new TestData();
         CustomerListImpl customerList = new CustomerListImpl();
         EmployeeListImpl employeeList = new EmployeeListImpl();
         InsuranceListImpl insuranceList = new InsuranceListImpl();
@@ -40,8 +38,7 @@ public class Application {
         PaymentListImpl paymentList = new PaymentListImpl();
 
         // 테스트 더미 데이터 생성
-        new TestDevData(employeeList).createEmployee();
-
+        new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
