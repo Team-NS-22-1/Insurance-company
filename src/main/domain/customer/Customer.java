@@ -14,19 +14,14 @@ import java.util.ArrayList;
  */
 public class Customer {
 
-	private String address;
-	private String email;
 	private int id;
-	private String job;
 	private String name;
-
-	private ArrayList<Payment> paymentList = new ArrayList<>();
-
-	private String phone;
 	private String ssn;
-
-
-
+	private String address;
+	private String phone;
+	private String email;
+	private String job;
+	private ArrayList<Payment> paymentList = new ArrayList<>();
 	public ArrayList<Payment> getPaymentList() {
 		return paymentList;
 	}
@@ -35,7 +30,6 @@ public class Customer {
 		this.paymentList = paymentList;
 		return this;
 	}
-
 	public String getAddress() {
 		return address;
 	}

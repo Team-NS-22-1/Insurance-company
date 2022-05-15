@@ -338,7 +338,6 @@ public class SalesViewLogic implements ViewLogic {
                         .setWeight(weight)
                         .setDiseaseDetail(diseaseDetail)
                 );
-
                 break;
 
             case FIRE:
@@ -357,9 +356,6 @@ public class SalesViewLogic implements ViewLogic {
                         .setSelfOwned(isSelfOwned)
                         .setActualResidence(isActualResidence)
                 );
-
-
-
                 break;
 
             case CAR:
