@@ -81,44 +81,33 @@ public class Employee {
 			guaranteeList.add(
 					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription())
 			);
+
+		Insurance insurance=null;
 		if(typeInfo instanceof DtoHealth){
-			HealthInsurance insurance = new HealthInsurance();
-			insurance.setTargetAge(((DtoHealth) typeInfo).getTargetAge())
+			insurance = new HealthInsurance();
+			((HealthInsurance) insurance).setTargetAge(((DtoHealth) typeInfo).getTargetAge())
 					.setTargetSex(((DtoHealth) typeInfo).isTargetSex())
 					.setRiskPremiumCriterion(((DtoHealth) typeInfo).getRiskCriterion())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.HEALTH);
-			return insurance;
 		}
 		else if(typeInfo instanceof DtoCar){
-			CarInsurance insurance = new CarInsurance();
-			insurance.setTargetAge(((DtoCar) typeInfo).getTargetAge())
+			insurance = new CarInsurance();
+			((CarInsurance)insurance).setTargetAge(((DtoCar) typeInfo).getTargetAge())
 					.setValueCriterion(((DtoCar) typeInfo).getTargetAge())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.CAR);;
-			return insurance;
 		}
 		else if(typeInfo instanceof DtoFire){
-			FireInsurance insurance = new FireInsurance();
-			insurance.setBuildingType(((DtoFire) typeInfo).getBuildingType())
+			insurance = new FireInsurance();
+			((FireInsurance)insurance).setBuildingType(((DtoFire) typeInfo).getBuildingType())
 					.setCollateralAmount(((DtoFire) typeInfo).getCollateralAmount())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.FIRE);;
-			return insurance;
 		}
-		return null;
+		insurance.setName(basicInfo.getName())
+				.setDescription(basicInfo.getDescription())
+				.setPaymentPeriod(basicInfo.getPaymentPeriod())
+				.setContractPeriod(basicInfo.getContractPeriod())
+				.setGuarantee(guaranteeList);
+		return insurance;
 	}
 
 	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
