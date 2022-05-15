@@ -17,14 +17,12 @@ public class MyBufferedReader extends BufferedReader {
     public Object verifyRead(Object returnType) throws IOException,
                                                     InputException.InputNullDataException,
                                                     InputException.InputInvalidDataException,
-                                                    SystemExitException, ReturnMenuException {
+                                                    SystemExitException {
         String value = this.readLine();
         if(value.equals("") || value == null || value.isBlank())
             throw new InputException.InputNullDataException();
         if(value.equalsIgnoreCase("EXIT"))
             throw new SystemExitException();
-        if(value.equals("0"))
-            throw new ReturnMenuException();
 
         try {
             if(returnType instanceof String)
@@ -51,19 +49,17 @@ public class MyBufferedReader extends BufferedReader {
 
     public int verifyMenu(int categorySize) throws IOException,
                                                     InputException.InvalidMenuException,
-                                                    SystemExitException, ReturnMenuException{
+                                                    SystemExitException {
         String value = this.readLine();
         if(value.equals("") || value == null || value.isBlank())
             throw new InputException.InvalidMenuException();
         if(value.equalsIgnoreCase("EXIT"))
             throw new SystemExitException();
-        if(value.equals("0"))
-            throw new ReturnMenuException();
 
         int selectedMenu;
         try {
             selectedMenu = Integer.parseInt(value);
-            if(selectedMenu > categorySize || selectedMenu < 1)
+            if(selectedMenu > categorySize || selectedMenu < 0)
                 throw new InputException.InvalidMenuException();
         }
         catch (NumberFormatException e){

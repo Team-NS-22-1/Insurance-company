@@ -38,9 +38,12 @@ public class DevViewLogic implements ViewLogic {
 
     private Employee employee;
 
+    private MyBufferedReader br;
+
     public DevViewLogic() {}
 
     public DevViewLogic(EmployeeListImpl employeeList, InsuranceListImpl insuranceList) {
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employeeList = employeeList;
         this.insuranceList = insuranceList;
     }
@@ -54,12 +57,10 @@ public class DevViewLogic implements ViewLogic {
     public void work(String command) throws SystemExitException, ReturnMenuException {
         try {
             testInitEmployee();
-            while(true){
-                showInsuranceByEmployee(employee.getId());
-                switch (command){
-                    case "1" -> this.menuDevelop(this.menuInsuranceType());
-                    case "2" -> {}
-                }
+            showInsuranceByEmployee(employee.getId());
+            switch (command){
+                case "1" -> this.menuDevelop(this.menuInsuranceType());
+                case "2" -> {}
             }
         }
         catch (IOException ex) {
@@ -68,7 +69,6 @@ public class DevViewLogic implements ViewLogic {
     }
 
     private void testInitEmployee() throws IOException {
-        MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
         System.out.println("<< 직원을 선택하세요. >>");
         ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
         for(Employee employee : employeeArrayList){
@@ -102,45 +102,39 @@ public class DevViewLogic implements ViewLogic {
 
     private InsuranceType menuInsuranceType() throws IOException, SystemExitException {
         int insType = 0;
-        menuOutline:{
-            MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
-            boolean forWhile = true;
-            while(forWhile){
-                createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
-                try {
-                    insType = br.verifyMenu(3);
-                    forWhile = false;
-                }
-                catch (InputException e){
-                    System.out.println(e.getMessage());
-                }
-                catch (ReturnMenuException e){
-                    return null;
-                }
+        boolean forWhile = true;
+        while(forWhile){
+            createMenu("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
+            try {
+                insType = br.verifyMenu(3);
+                forWhile = false;
+            }
+            catch (InputException e){
+                System.out.println(e.getMessage());
             }
         }
         return switch (insType){
             case 1 -> InsuranceType.HEALTH;
             case 2 -> InsuranceType.CAR;
             case 3 -> InsuranceType.FIRE;
-            default -> null;
+            case 0 -> null;
+            default -> throw new IllegalStateException("Unexpected value: " + insType);
         };
     }
 
     private void menuDevelop(InsuranceType type) throws IOException, SystemExitException {
-        if (type == null) throw new ReturnMenuException();
-        MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
-        Insurance insurance = employeeList.read(1).develop(
-                formInputBasicInfo(br), // return Basic Info of Insurance
-                formInputTypeInfo(br, type), // return Type Info of Insurance (Type is Health, Car, Fire)
-                formInputGuaranteeInfo(br) // return Guarantee Info of Insurance (Guarantee Info is list)
+        if (type == null) return;
+        Insurance insurance = employee.develop(
+                formInputBasicInfo(), // return Basic Info of Insurance
+                formInputTypeInfo(type), // return Type Info of Insurance (Type is Health, Car, Fire)
+                formInputGuaranteeInfo() // return Guarantee Info of Insurance (Guarantee Info is list)
         );
-        int premium = formCalculatePremium(br, isCalcPremium(br));
+        int premium = formCalculatePremium(isCalcPremium());
         if(premium < 0) return;
-        formRegisterInsurance(br, insurance, premium);
+        formRegisterInsurance(insurance, premium);
     }
 
-    private DtoBasicInfo formInputBasicInfo(MyBufferedReader br) throws IOException, SystemExitException{
+    private DtoBasicInfo formInputBasicInfo() throws IOException, SystemExitException{
         boolean forWhile = true;
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
@@ -161,7 +155,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private DtoTypeInfo formInputTypeInfo(MyBufferedReader br, InsuranceType type) throws IOException, SystemExitException {
+    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException, SystemExitException {
         return switch (type) {
             case HEALTH -> formDtoHealth(br);
             case CAR -> formDtoCar(br);
@@ -235,7 +229,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoFire(buildingType, collateralAmount);
     }
 
-    private ArrayList<DtoGuarantee> formInputGuaranteeInfo(MyBufferedReader br) throws IOException, SystemExitException {
+    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException, SystemExitException {
         boolean isAdd = true, forWhile = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         while(forWhile){
@@ -270,7 +264,7 @@ public class DevViewLogic implements ViewLogic {
         return guaranteeListInfo;
     }
 
-    private boolean isCalcPremium(MyBufferedReader br) throws IOException, SystemExitException {
+    private boolean isCalcPremium() throws IOException, SystemExitException {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
@@ -296,7 +290,7 @@ public class DevViewLogic implements ViewLogic {
         return isCalcPremium;
     }
 
-    private int formCalculatePremium(MyBufferedReader br, boolean isCalcPremium) throws IOException, SystemExitException {
+    private int formCalculatePremium(boolean isCalcPremium) throws IOException, SystemExitException {
         int premium = -1;
 
         if(!isCalcPremium) return premium;
@@ -379,7 +373,7 @@ public class DevViewLogic implements ViewLogic {
     }
 
 
-    private void formRegisterInsurance(MyBufferedReader br, Insurance insurance, int premium) throws IOException, SystemExitException {
+    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException, SystemExitException {
         boolean forWhile = true;
         while(forWhile){
             try {

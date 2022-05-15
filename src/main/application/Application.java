@@ -42,7 +42,7 @@ public class Application {
         PaymentListImpl paymentList = new PaymentListImpl();
 
         // 테스트 더미 데이터 생성
-        employeeList = new TestDevData(employeeList).createEmployee();
+        new TestDevData(employeeList).createEmployee();
 
         map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
@@ -65,17 +65,14 @@ public class Application {
                 System.exit(0);
 
             while (true) {
-                try {
-                    ViewLogic viewLogic = map.get(type);
-                    viewLogic.showMenu();
-                    System.out.println("EXIT : 시스템 종료");
-                    String command = sc.next();
-                    command = command.toUpperCase();
-                    viewLogic.work(command);
-                }
-                catch (ReturnMenuException e) {
-                    System.out.println(e.getMessage());
-                }
+                ViewLogic viewLogic = map.get(type);
+                viewLogic.showMenu();
+                System.out.println("EXIT : 시스템 종료");
+                String command = sc.next();
+                if(command.equals("0"))
+                    break;
+                command = command.toUpperCase();
+                viewLogic.work(command);
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("정확한 값을 입력해주세요.");
