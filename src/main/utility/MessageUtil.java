@@ -20,7 +20,7 @@ public class MessageUtil {
         for (int i = 0; i < elements.length; i++) {
             sb.append(i + 1).append(".").append(elements[i]).append("\n");
         }
-        System.out.println(sb.toString());
+        System.out.print(sb);
     }
 
     public static void createMenuAndClose(String menuName, String ... elements) {
