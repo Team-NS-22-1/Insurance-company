@@ -1,6 +1,7 @@
 package main.domain.employee;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -10,7 +11,7 @@ import java.util.HashMap;
  */
 public class EmployeeListImpl implements EmployeeList {
 
-	private HashMap<Integer, Employee> employeeList = new HashMap<>();
+	private static HashMap<Integer, Employee> employeeList = new HashMap<>();
 	private static int id = 0;
 
 	public EmployeeListImpl(){
@@ -18,19 +19,23 @@ public class EmployeeListImpl implements EmployeeList {
 
 	@Override
 	public void create(Employee employee) {
-		this.employeeList.put(employee.setId(++id).getId(), employee);
+		employeeList.put(employee.setId(++id).getId(), employee);
 	}
 
 	@Override
 	public Employee read(int id) {
-		Employee employee = this.employeeList.get(id);
+		Employee employee = employeeList.get(id);
 		if(employee != null) return employee;
 		else return null;
 	}
 
+	public ArrayList<Employee> readAll() {
+		return new ArrayList<>(employeeList.values());
+	}
+
 	@Override
 	public boolean delete(int id) {
-		Employee employee = this.employeeList.remove(id);
+		Employee employee = employeeList.remove(id);
 		if(employee != null) return true;
 		else return false;
 	}
