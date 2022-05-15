@@ -39,6 +39,19 @@ public class InsuranceListImpl implements InsuranceList {
 		return eInsuranceList;
 	}
 
+	public ArrayList<Insurance> readAll() {
+		ArrayList<Insurance> insuranceArrayList = new ArrayList<>(this.insuranceList.values());
+		return insuranceArrayList;
+	}
+
+	// 임시
+	public int readPremium(int id) {
+		Insurance insurance = this.insuranceList.get(id);
+		if(insurance != null) return insurance.premium;
+		else return 0;
+	}
+	//
+
 	@Override
 	public boolean delete(int id) {
 		Insurance insurance = this.insuranceList.remove(id);

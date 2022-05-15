@@ -42,9 +42,9 @@ public class Application {
         // 테스트 더미 데이터 생성
         new TestDevData(employeeList).createEmployee();
 
-        map.put(UserType.GUEST,new GuestViewLogic());
+        map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
-        map.put(UserType.SALES, new SalesViewLogic());
+        map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic());
