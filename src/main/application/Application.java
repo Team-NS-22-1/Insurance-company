@@ -8,10 +8,6 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.PaymentListImpl;
-import main.application.viewlogic.*;
-import main.exception.ReturnMenuException;
-import main.exception.SystemExitException;
-import main.utility.MessageUtil;
 import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 
@@ -83,7 +79,7 @@ public class Application {
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             } catch (MyCloseSequence e) {
-                System.out.println("시스템을 종료합니다.");
+                System.out.println(e.getMessage());
                 System.exit(0);
             }
         }

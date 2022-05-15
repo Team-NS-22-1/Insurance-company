@@ -1,13 +1,11 @@
 package main.utility;
 
 import main.exception.InputException;
-import main.exception.ReturnMenuException;
-import main.exception.SystemExitException;
+import main.exception.MyCloseSequence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Locale;
 
 public class MyBufferedReader extends BufferedReader {
     public MyBufferedReader(Reader in) {
@@ -17,12 +15,9 @@ public class MyBufferedReader extends BufferedReader {
     public Object verifyRead(Object returnType) throws IOException,
                                                     InputException.InputNullDataException,
                                                     InputException.InputInvalidDataException,
-                                                    SystemExitException {
+            MyCloseSequence {
         String value = this.readLine();
-        if(value.equals("") || value == null || value.isBlank())
-            throw new InputException.InputNullDataException();
-        if(value.equalsIgnoreCase("EXIT"))
-            throw new SystemExitException();
+        checkBlankOrExit(value);
 
         try {
             if(returnType instanceof String)
@@ -47,14 +42,17 @@ public class MyBufferedReader extends BufferedReader {
         }
     }
 
-    public int verifyMenu(int categorySize) throws IOException,
-                                                    InputException.InvalidMenuException,
-                                                    SystemExitException {
-        String value = this.readLine();
+    private void checkBlankOrExit(String value) {
         if(value.equals("") || value == null || value.isBlank())
-            throw new InputException.InvalidMenuException();
+            throw new InputException.InputNullDataException();
         if(value.equalsIgnoreCase("EXIT"))
-            throw new SystemExitException();
+            throw new MyCloseSequence();
+    }
+
+    public int verifyMenu(int categorySize) throws IOException,
+                                                    InputException.InvalidMenuException, MyCloseSequence {
+        String value = this.readLine();
+        checkBlankOrExit(value);
 
         int selectedMenu;
         try {
