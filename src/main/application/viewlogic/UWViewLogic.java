@@ -12,8 +12,8 @@ import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.application.ViewLogic;
 import main.exception.InputException;
+import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
-import main.exception.MySystemExitException;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -105,7 +105,6 @@ public class UWViewLogic implements ViewLogic {
     public void showMenu() {
 
         createMenu("<<언더라이팅팀메뉴>>", "인수심사한다");
-        System.out.println("0 : 돌아가기");
     }
 
     @Override
@@ -131,13 +130,13 @@ public class UWViewLogic implements ViewLogic {
 
     public void createMenuAndExit(String menuName, String ... elements) {
         createMenu(menuName, elements);
-        System.out.println("0 : 돌아가기");
-        System.out.println("X : 시스템 종료");
+        System.out.println("0 : 취소하기");
+        System.out.println("exit : 시스템 종료");
     }
 
     public void createMenuOnlyExit(String menuName, String ... elements) {
         createMenu(menuName, elements);
-        System.out.println("X : 시스템 종료");
+        System.out.println("exit : 시스템 종료");
     }
 
     public boolean selectInsuranceType() {
@@ -155,7 +154,7 @@ public class UWViewLogic implements ViewLogic {
                     case "2"-> { insuranceType = InsuranceType.CAR; readContract(insuranceType); }
                     case "3"-> { insuranceType = InsuranceType.FIRE; readContract(insuranceType); }
                     case "0" -> isExit = true;
-                    case "X" -> throw new MySystemExitException();
+                    case "exit" -> throw new MyCloseSequence();
                     default -> throw new InputException.InvalidMenuException();
                 }
             } catch (InputException.InvalidMenuException e) {
@@ -178,7 +177,7 @@ public class UWViewLogic implements ViewLogic {
                 String contractId = sc.next();
 
                 if (contractId.equals("0")) break;
-                if (contractId.equals("X")) throw new MySystemExitException();
+                if (contractId.equals("exit")) throw new MyCloseSequence();
 
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
                 Contract contract = printContractInfo(Integer.parseInt(contractId));
@@ -187,6 +186,8 @@ public class UWViewLogic implements ViewLogic {
 
             } catch (NumberFormatException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+            } catch (MyIllegalArgumentException e) {
+                System.out.println("계약 정보가 존재하지 않습니다.");
             }
         }
     }
@@ -219,8 +220,8 @@ public class UWViewLogic implements ViewLogic {
 
                     case "4":
                         return false;
-                    case "X":
-                        throw new MySystemExitException();
+                    case "exit":
+                        throw new MyCloseSequence();
                     default:
                         throw new InputException.InvalidMenuException();
                 }
@@ -253,8 +254,8 @@ public class UWViewLogic implements ViewLogic {
                         break;
                     case "2":
                         return false;
-                    case "X":
-                        throw new MySystemExitException();
+                    case "exit":
+                        throw new MyCloseSequence();
                     default:
                         throw new InputException.InvalidMenuException();
                 }
