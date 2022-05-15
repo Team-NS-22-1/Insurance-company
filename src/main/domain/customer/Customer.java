@@ -145,14 +145,14 @@ public class Customer {
 	@Override
 	public String toString() {
 		return "고객정보 {" +
-				"주소: '" + address + '\'' +
-				", 이메일: '" + email + '\'' +
-				", 고객ID: " + id +
-				", 직업: '" + job + '\'' +
+				"고객 ID: " + id +
 				", 이름: '" + name + '\'' +
-				", 결제수단: " + paymentList +
+				", 주소: '" + address + '\'' +
+				", 이메일: '" + email + '\'' +
 				", 전화번호: '" + phone + '\'' +
+				", 직업: '" + job + '\'' +
 				", 주민등록번호: '" + ssn + '\'' +
+				", 결제수단: " + paymentList +
 				'}';
 	}
 }
