@@ -35,7 +35,7 @@ public class TestData {
 
         createContract();
         createCustomerData();
-        createInsurance();
+//        createInsurance();
         createPayment();
 
 
