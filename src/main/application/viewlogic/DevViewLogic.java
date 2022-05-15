@@ -7,8 +7,7 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
-import main.exception.ReturnMenuException;
-import main.exception.SystemExitException;
+import main.exception.MyCloseSequence;
 import main.utility.MyBufferedReader;
 import main.exception.InputException;
 import main.application.ViewLogic;
@@ -54,7 +53,7 @@ public class DevViewLogic implements ViewLogic {
     }
 
     @Override
-    public void work(String command) throws SystemExitException, ReturnMenuException {
+    public void work(String command) throws MyCloseSequence {
         try {
             testInitEmployee();
             showInsuranceByEmployee(employee.getId());
@@ -62,6 +61,9 @@ public class DevViewLogic implements ViewLogic {
                 case "1" -> this.menuDevelop(this.menuInsuranceType());
                 case "2" -> {}
             }
+        }
+        catch (IllegalStateException e){
+            System.out.println(e.getMessage());
         }
         catch (IOException ex) {
             ex.printStackTrace();
@@ -100,7 +102,7 @@ public class DevViewLogic implements ViewLogic {
         System.out.println("---------------------------------");
     }
 
-    private InsuranceType menuInsuranceType() throws IOException, SystemExitException {
+    private InsuranceType menuInsuranceType() throws IOException, MyCloseSequence {
         int insType = 0;
         boolean forWhile = true;
         while(forWhile){
@@ -122,7 +124,7 @@ public class DevViewLogic implements ViewLogic {
         };
     }
 
-    private void menuDevelop(InsuranceType type) throws IOException, SystemExitException {
+    private void menuDevelop(InsuranceType type) throws IOException, MyCloseSequence {
         if (type == null) return;
         Insurance insurance = employee.develop(
                 formInputBasicInfo(), // return Basic Info of Insurance
@@ -134,7 +136,7 @@ public class DevViewLogic implements ViewLogic {
         formRegisterInsurance(insurance, premium);
     }
 
-    private DtoBasicInfo formInputBasicInfo() throws IOException, SystemExitException{
+    private DtoBasicInfo formInputBasicInfo() throws IOException, MyCloseSequence{
         boolean forWhile = true;
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
@@ -155,7 +157,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException, SystemExitException {
+    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException, MyCloseSequence {
         return switch (type) {
             case HEALTH -> formDtoHealth(br);
             case CAR -> formDtoCar(br);
@@ -229,7 +231,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoFire(buildingType, collateralAmount);
     }
 
-    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException, SystemExitException {
+    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException, MyCloseSequence {
         boolean isAdd = true, forWhile = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         while(forWhile){
@@ -264,7 +266,7 @@ public class DevViewLogic implements ViewLogic {
         return guaranteeListInfo;
     }
 
-    private boolean isCalcPremium() throws IOException, SystemExitException {
+    private boolean isCalcPremium() throws IOException, MyCloseSequence {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
@@ -290,7 +292,7 @@ public class DevViewLogic implements ViewLogic {
         return isCalcPremium;
     }
 
-    private int formCalculatePremium(boolean isCalcPremium) throws IOException, SystemExitException {
+    private int formCalculatePremium(boolean isCalcPremium) throws IOException, MyCloseSequence {
         int premium = -1;
 
         if(!isCalcPremium) return premium;
@@ -303,11 +305,11 @@ public class DevViewLogic implements ViewLogic {
                 System.out.println("2. 손해율법 산출");
                 switch (br.verifyMenu(2)){
                     case 1 -> {
-                        premium = calcPurePremiumMethod(br);
+                        premium = calcPurePremiumMethod();
                         forWhile = false;
                     }
                     case 2 -> {
-                        premium = calcLossRatioMethod(br);
+                        premium = calcLossRatioMethod();
                         forWhile = false;
                     }
                 }
@@ -319,7 +321,7 @@ public class DevViewLogic implements ViewLogic {
         return premium;
     }
 
-    private int calcPurePremiumMethod(MyBufferedReader br) throws IOException, SystemExitException {
+    private int calcPurePremiumMethod() throws IOException, MyCloseSequence {
         boolean forWhile = true;
         int premium= -1;
         while(forWhile) {
@@ -330,7 +332,7 @@ public class DevViewLogic implements ViewLogic {
                 System.out.print("발생손해액(원): "); damageAmount = (long) br.verifyRead(damageAmount);
                 System.out.print("계약건수(건): "); countContract = (long) br.verifyRead(countContract);
                 System.out.print("사업비(원): "); businessExpense = (long) br.verifyRead(businessExpense);
-                System.out.print("이익률(%): "); profitMargin = (int) br.verifyRead(profitMargin);
+                System.out.print("이익률(1~99%): "); profitMargin = (int) br.verifyRead(profitMargin);
                 premium = employee.calcPurePremiumMethod(damageAmount, countContract, businessExpense, profitMargin);
                 System.out.printf("총보험료: %d(원)\n", premium);
                 System.out.println("<< 다시 산출하시겠습니까? >>\n1.예 2. 아니오");
@@ -346,7 +348,7 @@ public class DevViewLogic implements ViewLogic {
         return premium;
     }
 
-    private int calcLossRatioMethod(MyBufferedReader br) throws IOException, SystemExitException {
+    private int calcLossRatioMethod() throws IOException, MyCloseSequence {
         boolean forWhile = true;
         Object[] premium = null;
         while(forWhile){
@@ -373,7 +375,7 @@ public class DevViewLogic implements ViewLogic {
     }
 
 
-    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException, SystemExitException {
+    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException, MyCloseSequence {
         boolean forWhile = true;
         while(forWhile){
             try {

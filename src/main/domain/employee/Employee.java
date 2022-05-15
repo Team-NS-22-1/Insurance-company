@@ -142,14 +142,6 @@ public class Employee {
 		insuranceList.create(insurance);
 	}
 
-	public String readMyInsurance(InsuranceListImpl insuranceList){
-		ArrayList<Insurance> eInsuranceList = insuranceList.readByEid(this.id);
-		String value = "";
-		for(Insurance insurance : eInsuranceList)
-			value += insurance.toString()+"\n";
-		return value;
-	}
-
 	public void registerAuthInfo(){
 
 	}
