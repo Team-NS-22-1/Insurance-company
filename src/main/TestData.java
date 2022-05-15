@@ -4,8 +4,11 @@ import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
-import main.domain.insurance.HealthInsurance;
-import main.domain.insurance.InsuranceListImpl;
+import main.domain.employee.Department;
+import main.domain.employee.Employee;
+import main.domain.employee.EmployeeListImpl;
+import main.domain.employee.Position;
+import main.domain.insurance.*;
 import main.domain.payment.*;
 
 import java.time.LocalDate;
@@ -26,17 +29,20 @@ public class TestData {
     private PaymentList paymentList;
     private InsuranceListImpl insuranceList;
     private ContractListImpl contractList;
+    private EmployeeListImpl employeeList;
 
     public TestData() {
         this.customerList = new CustomerListImpl();
         this.paymentList = new PaymentListImpl();
         this.insuranceList = new InsuranceListImpl();
         this.contractList = new ContractListImpl();
+        this.employeeList = new EmployeeListImpl();
 
         createContract();
         createCustomerData();
         createInsurance();
         createPayment();
+        createEmployee();
 
 
     }
@@ -48,8 +54,11 @@ public class TestData {
     }
     private void createInsurance() {
         HealthInsurance h = new HealthInsurance();
+        h.setId(1);
         h.setName("테스트 보험");
+        h.setInsuranceType(InsuranceType.FIRE);
         h.setPremium(100000);
+        h.setDevInfo(new DevInfo().setSalesAuthState(SalesAuthState.PERMISSION));
         insuranceList.create(h);
     }
     private void createPayment() {
@@ -68,5 +77,13 @@ public class TestData {
         con.setPremium(100000);
         con.setInsuranceId(1);
         contractList.create(con);
+    }
+    private void createEmployee() {
+        Employee em = new Employee();
+        em.setId(1);
+        em.setName("t1");
+        em.setPhone("01032123154");
+        em.setPosition(Position.MEMBER);
+        em.setDepartment(Department.SALES);
     }
 }

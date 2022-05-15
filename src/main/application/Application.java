@@ -6,8 +6,6 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.PaymentListImpl;
-import main.application.viewlogic.*;
-import main.utility.MessageUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,9 +36,9 @@ public class Application {
         ContractListImpl contractList = new ContractListImpl();
         PaymentListImpl paymentList = new PaymentListImpl();
 
-        map.put(UserType.GUEST,new GuestViewLogic());
+        map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
-        map.put(UserType.SALES, new SalesViewLogic());
+        map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic());

@@ -11,7 +11,6 @@ import main.domain.insurance.SalesAuthState;
 import java.util.Scanner;
 
 import static main.domain.contract.BuildingType.*;
-import static main.domain.contract.BuildingType.INSTITUTIONAL;
 import static main.domain.contract.CarType.*;
 import static main.utility.MessageUtil.createMenu;
 
@@ -27,11 +26,15 @@ import static main.utility.MessageUtil.createMenu;
  * 2022-05-10                규현             최초 생성
  */
 public class GuestViewLogic implements ViewLogic {
-    Scanner sc = new Scanner(System.in);
     int command;
-    InsuranceListImpl insuranceList = new InsuranceListImpl();
-    ContractListImpl contractList = new ContractListImpl();
-    CustomerListImpl customerList = new CustomerListImpl();
+    Scanner sc = new Scanner(System.in);
+
+    private InsuranceListImpl insuranceList = new InsuranceListImpl();
+    private ContractListImpl contractList = new ContractListImpl();
+    private CustomerListImpl customerList = new CustomerListImpl();
+
+    public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList) {
+    }
 
     @Override
     public void showMenu() {
@@ -43,23 +46,16 @@ public class GuestViewLogic implements ViewLogic {
         boolean isLoop = true;
 
         while (isLoop) {
-            try {
-                command = sc.next();
+
                 switch (command) {
                     // 보험가입
                     case "1":
                         selectInsurance();
-                        break;
                     // 뒤로
                     case "2":
                         isLoop = false;
                         break;
-                    default:
-                        throw new Exception();
                 }
-            } catch (Exception e) {
-                System.out.println("잘못된 입력입니다.");
-            }
         }
     }
 
@@ -68,14 +64,14 @@ public class GuestViewLogic implements ViewLogic {
 
         while(isLoop) {
             for (Insurance insurance : insuranceList.readAll()) {
-                System.out.println("보험코드: " + insurance.getId() + " 보험이름: " + insurance.getName() + " 보험종류: " + insurance.getInsuranceType());
+                System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
             }
 
             System.out.println("가입할 보험상품의 보험코드를 입력하세요.");
+            command =sc.nextInt();
+            Insurance insurance = insuranceList.read(command);
 
-            try {
-                command = sc.nextInt();
-                Insurance insurance = insuranceList.read(command);
+            // System.out.println(insurance.getId());
 
                 if (insurance == null) {
                     System.out.println("선택된 보험상품이 없습니다.");
@@ -83,11 +79,12 @@ public class GuestViewLogic implements ViewLogic {
                 } else if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
                     createMenu("해당 보험상품을 가입하시겠습니까?","가입", "취소");
-                    int command = sc.nextInt();
+                    command = sc.nextInt();
 
                     switch (command) {
                         // 가입
                         case 1:
+                            isLoop = false;
                             signContract(insurance.getId());
                             break;
                         // 취소
@@ -98,18 +95,17 @@ public class GuestViewLogic implements ViewLogic {
                             System.out.println("잘못된 입력입니다.");
                             break;
                     }
+
                 } else {
                     System.out.println("해당 상품은 준비중입니다.");
                     break;
                 }
-            } catch (Exception e) {
-                System.out.println("잘못된 입력입니다.");
-                break;
-            }
         }
+
     }
 
     private void signContract(int insuranceId) {
+
         Customer customer = new Customer();
         Contract contract = new Contract();
 
@@ -317,6 +313,7 @@ public class GuestViewLogic implements ViewLogic {
     }
 
     private void signUp(int insuranceId, Contract contract, Customer customer) {
+
         int premium = insuranceList.readPremium(insuranceId);
         System.out.println("조회된 귀하의 보험료는: " + premium + "원입니다.");
         createMenu("보험가입을 신청하시겠습니까?","가입", "취소");
