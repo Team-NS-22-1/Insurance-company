@@ -327,19 +327,22 @@ public class DevViewLogic implements ViewLogic {
             int profitMargin = 0;
             try {
                 System.out.println("<< 순보험료법 산출 방식 >> (exit: 시스템 종료)");
-                System.out.print("발생손해액(원): "); damageAmount = (long) br.verifyRead(damageAmount);
-                System.out.print("계약건수(건): "); countContract = (long) br.verifyRead(countContract);
-                System.out.print("사업비(원): "); businessExpense = (long) br.verifyRead(businessExpense);
-                System.out.print("이익률(%): "); profitMargin = (int) br.verifyRead(profitMargin);
+                System.out.print("발생손해액(원): ");
+                damageAmount = (long) br.verifyRead(damageAmount);
+                System.out.print("계약건수(건): ");
+                countContract = (long) br.verifyRead(countContract);
+                System.out.print("사업비(원): ");
+                businessExpense = (long) br.verifyRead(businessExpense);
+                System.out.print("이익률(%): ");
+                profitMargin = (int) br.verifyRead(profitMargin);
                 premium = employee.calcPurePremiumMethod(damageAmount, countContract, businessExpense, profitMargin);
                 System.out.printf("총보험료: %d(원)\n", premium);
                 System.out.println("<< 다시 산출하시겠습니까? >>\n1.예 2. 아니오");
-                switch (br.verifyMenu(2)){
+                switch (br.verifyMenu(2)) {
                     case 2 -> forWhile = false;
                 }
-            }
-            catch (InputException.InputNullDataException |
-                    InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException |
+                    InputException.InputInvalidDataException e) {
                 System.out.println(e.getMessage());
             }
         }
