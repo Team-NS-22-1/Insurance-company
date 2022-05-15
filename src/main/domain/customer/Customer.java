@@ -44,60 +44,80 @@ public class Customer {
 		return housePrice;
 	}
 
-	
+
 	public String getAddress() {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public Customer setAddress(String address) {
 		this.address = address;
+		return this;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
+	public Customer setEmail(String email) {
 		this.email = email;
+		return this;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public Customer setId(int id) {
 		this.id = id;
+		return this;
 	}
+<<<<<<< HEAD
+=======
+
+	public boolean isContract() {
+		return isContract;
+	}
+
+	public Customer setContract(boolean isContract) {
+		this.isContract = isContract;
+		return this;
+	}
+
+>>>>>>> mincheol
 	public String getJob() {
 		return job;
 	}
 
-	public void setJob(String job) {
+	public Customer setJob(String job) {
 		this.job = job;
+		return this;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Customer setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
+	public Customer setPhone(String phone) {
 		this.phone = phone;
+		return this;
 	}
 
 	public String getSsn() {
 		return ssn;
 	}
 
-	public void setSsn(String ssn) {
+	public Customer setSsn(String ssn) {
 		this.ssn = ssn;
+		return this;
 	}
 
 	public Accident getM_Accident() {
@@ -185,5 +205,4 @@ public class Customer {
 				", 주민등록번호: '" + ssn + '\'' +
 				'}';
 	}
-
 }

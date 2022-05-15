@@ -1,6 +1,7 @@
 package main.domain.employee;
 
 
+import main.domain.contract.BuildingType;
 import main.domain.contract.ConditionOfUw;
 import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
@@ -162,8 +163,16 @@ public class Employee {
 
 	}
 
-	public void planInsurance(){
+	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion){
+		return 0;
+	}
 
+	public int planFireInsurance(BuildingType buildingType, int collateralAmount){
+		return 0;
+	}
+
+	public int planCarInsurance(int targetAge, int value){
+		return 0;
 	}
 
 	public void readAccident(){
