@@ -113,19 +113,12 @@ public class Insurance {
 		return this;
 	}
 
-	public String toString(){
-		String value = "";
-		value += this.getId()+" "+this.getName()+" "+this.getDescription();
-		return value;
-	}
-
 	public String print() {
 		return "보험 정보 {" +
 				"보험ID: " + id +
 				", 보험유형:" + insuranceType.getName() +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
-				", 보험유형:" + insuranceType +
 				", 보험료: " + premium +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
