@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class CustomerInfoFormatUtil {
 
     public static boolean isName(String name){
-        return Pattern.matches("^[가-하]+$", name);
+        return Pattern.matches("^[가-힣]*$", name);
     }
 
     public static boolean isSsn(String ssn){
