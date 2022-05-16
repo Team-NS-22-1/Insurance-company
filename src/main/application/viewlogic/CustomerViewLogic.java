@@ -74,8 +74,13 @@ public class CustomerViewLogic implements ViewLogic {
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
     public void login(int customerId) {
         this.customer  = customerList.read(customerId);
-        List<Payment> payments = paymentList.findAllByCustomerId(customerId);
-        this.customer.setPaymentList((ArrayList<Payment>) payments);
+        try {
+            List<Payment> payments = paymentList.findAllByCustomerId(customerId);
+            this.customer.setPaymentList((ArrayList<Payment>) payments);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            System.out.println("결제 수단을 추가한 후, 계약에 결제 수단을 등록해주세요.");
+        }
     }
 
     // 보험료 납입 버튼을 클릭했을 경우, 그 이후 작업들에 대해서 보여준다
@@ -167,6 +172,7 @@ public class CustomerViewLogic implements ViewLogic {
     public void showContractInfoForPay(Contract contract) {
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
+        contract.setPremium(insurance.getPremium());
         sb.append("[ID]").append(" : ").append(contract.getId())
                 .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
                 .append("\n");
@@ -195,7 +201,8 @@ public class CustomerViewLogic implements ViewLogic {
     private void setPaymentOnContract(Contract contract) {
         ArrayList<Payment> paymentList = this.customer.getPaymentList();
         if (paymentList.size() == 0) {
-            System.out.println("등록된 결제 수단이 없습니다. 새로 추가해주세요");
+            System.out.println("등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요");
+            addnewPayment();
             return;
         }
         while (true) {
@@ -216,7 +223,7 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
-            } catch (IllegalArgumentException e ) {
+            } catch (IllegalArgumentException| MyIllegalArgumentException e ) {
                 System.out.println(e.getMessage());
             }
         }
@@ -238,6 +245,8 @@ public class CustomerViewLogic implements ViewLogic {
                     break loop;
                 case "exit" :
                     throw new MyCloseSequence();
+                default:
+                    System.out.println("정확한 값을 입력해주세요.");
             }
         }
     }
@@ -245,7 +254,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 결제수단 중 카드를 새로 추가하는 기능
     private void createCard() {
-        Card card = null;
+        PaymentDto card = new PaymentDto();
         while (true) {
             try {
                 System.out.println("카드 등록하기");
@@ -253,23 +262,32 @@ public class CustomerViewLogic implements ViewLogic {
                 CardType cardType = selectCardType();
                 if(cardType==null)
                     return;
-                System.out.println("카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}");
-                String cardNo = validateCardNoFormat(sc.next());
-                System.out.println("CVC : (예시 : *** {3자리 숫자})");
-                String cvc = validateCVCFormat(sc.next());
-                System.out.println("만료일");
-                System.out.print("월 : ");
-                int month = validateMonthFormat(sc.nextInt());
-                System.out.print("년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}");
-                int year = validateYearFormat(sc.nextInt());
-                LocalDate expireDate = createExpireDate(month, year);
-                card = new Card();
-                card.setCardNo(cardNo)
-                        .setCvcNo(cvc)
-                        .setCardType(cardType)
-                        .setExpiryDate(expireDate)
-                        .setCustomerId(this.customer.getId())
-                        .setPaytype(PayType.CARD);
+
+                while (true) {
+                    try {
+                        System.out.println("카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}");
+                        String cardNo = validateCardNoFormat(sc.next());
+                        System.out.println("CVC : (예시 : *** {3자리 숫자})");
+                        String cvc = validateCVCFormat(sc.next());
+                        System.out.println("만료일");
+                        System.out.print("월 : ");
+                        int month = validateMonthFormat(sc.nextInt());
+                        System.out.print("년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}");
+                        int year = validateYearFormat(sc.nextInt());
+                        LocalDate expireDate = createExpireDate(month, year);
+
+                        card.setCardNo(cardNo)
+                                .setCvcNo(cvc)
+                                .setCardType(cardType)
+                                .setExpiryDate(expireDate)
+                                .setCustomerId(this.customer.getId())
+                                .setPayType(PayType.CARD);
+                        break;
+                    } catch ( MyInadequateFormatException e) {
+                        System.out.println("정확한 값을 입력해주세요");
+                    }
+                }
+
 
                 while (true) {
                     System.out.println("카드 정보를 등록하시겠습니까? (Y/N)");
@@ -289,8 +307,9 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        paymentList.create(card);
-        customer.addPayment(card);
+        Payment payment = customer.createPayment(card);
+        paymentList.create(payment);
+        customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
 
     }
@@ -342,23 +361,34 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계좌 결제 수단을 추가하는 기능
     private void createAccount() {
-        Account account;
-        while (true) {
+        PaymentDto account = new PaymentDto();
+       loop: while (true) {
             try{
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
                 BankType bankType = selectBankType();
                 if(bankType==null)
                     return;
+                while (true) {
+                    try {
+                        System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
+                        System.out.println("0. 취소하기");
+                        String command = sc.next();
+                        if (command.equals("0")) {
+                            continue loop;
+                        }
+                        String accountNo = checkAccountFormat(bankType,command);
 
-                System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
-                String accountNo = checkAccountFormat(bankType, sc.next());
 
-                account = new Account();
-                account.setBankType(bankType)
-                        .setAccountNo(accountNo)
-                        .setCustomerId(this.customer.getId())
-                        .setPaytype(PayType.ACCOUNT);
+                        account.setBankType(bankType)
+                                .setAccountNo(accountNo)
+                                .setCustomerId(this.customer.getId())
+                                .setPayType(PayType.ACCOUNT);
+                        break;
+                    } catch (MyInadequateFormatException e) {
+                        System.out.println("정확한 값을 입력해주세요");
+                    }
+                }
 
                 while (true) {
                     System.out.println("계좌 정보를 등록하시겠습니까? (Y/N)");
@@ -378,8 +408,9 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        paymentList.create(account);
-        customer.addPayment(account);
+        Payment payment = customer.createPayment(account);
+        paymentList.create(payment);
+        customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
     }
 
