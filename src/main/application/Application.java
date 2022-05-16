@@ -13,7 +13,7 @@ import main.exception.MyIllegalArgumentException;
 
 import java.util.*;
 
-import static main.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.createMenuAndClose;
 
 /**
  * packageName :  main.application
@@ -53,8 +53,7 @@ public class Application {
         while (true) {
             Scanner sc = new Scanner(System.in);
             try {
-                createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
-                System.out.println("0. 종료하기");
+                createMenuAndClose("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
                 int userType = sc.nextInt();
                 UserType[] values = UserType.values();
 
@@ -63,20 +62,14 @@ public class Application {
                 }
                 UserType type = values[userType - 1];
                 while (true) {
-                    try {
-                        ViewLogic viewLogic = map.get(type);
-                        viewLogic.showMenu();
-                        System.out.println("0 : 취소하기");
-                        System.out.println("exit : 시스템 종료");
-                        String command = sc.next();
-                        if (command.equals("0"))
-                            break;
-                        if (command.equals("exit"))
-                            throw new MyCloseSequence();
-                        viewLogic.work(command);
-                    } catch (MyIllegalArgumentException e) {
-                        System.out.println("정확한 값을 입력해주세요.");
-                    }
+                    ViewLogic viewLogic = map.get(type);
+                    viewLogic.showMenu();
+                    String command = sc.next();
+                    if (command.equals("0"))
+                        break;
+                    if (command.equals("exit"))
+                        throw new MyCloseSequence();
+                    viewLogic.work(command);
                 }
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해주세요.");

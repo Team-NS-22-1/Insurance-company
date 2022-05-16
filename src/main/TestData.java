@@ -70,6 +70,11 @@ public class TestData {
                 .setPhone("010-5678-5678")
                 .setDepartment(Department.EXEC)
                 .setPosition(Position.CEO));
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원6")
+                .setPhone("010-5678-5678")
+                .setDepartment(Department.DEV)
+                .setPosition(Position.MEMBER));
     }
 
     private void createCustomerData() {
@@ -102,41 +107,56 @@ public class TestData {
     private void createInsurance() {
         HealthInsurance h1 = new HealthInsurance();
         h1.setName("테스트 건강보험1");
+        h1.setDescription("테스트 건강보험1의 설명입니다.");
         h1.setInsuranceType(InsuranceType.HEALTH);
         h1.setPremium(100000);
         h1.setDevInfo(new DevInfo()
                 .setEmployeeId(1)
-                .setSalesAuthState(SalesAuthState.PERMISSION));
+                .setDevDate(LocalDate.now())
+                .setSalesAuthState(SalesAuthState.PERMISSION)
+                .setSalesStartDate(LocalDate.now()));
         insuranceList.create(h1);
         HealthInsurance h2 = new HealthInsurance();
         h2.setName("테스트 건강보험2");
+        h2.setDescription("테스트 건강보험2의 설명입니다.");
         h2.setInsuranceType(InsuranceType.HEALTH);
         h2.setPremium(100000);
         h2.setDevInfo(new DevInfo()
-                .setEmployeeId(2)
-                .setSalesAuthState(SalesAuthState.PERMISSION));
+                .setEmployeeId(1)
+                .setDevDate(LocalDate.now())
+                .setSalesAuthState(SalesAuthState.PERMISSION)
+                .setSalesStartDate(LocalDate.now()));
         insuranceList.create(h2);
 
         insuranceList.create(new CarInsurance().setName("테스트 자동차보험1")
                 .setInsuranceType(InsuranceType.CAR)
+                .setDescription("테스트 자동차보험1의 설명입니다.")
                 .setPremium(20000000)
-                .setDevInfo(new DevInfo().setEmployeeId(3)
+                .setDevInfo(new DevInfo().setEmployeeId(1)
+                        .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.WAIT)));
         insuranceList.create(new CarInsurance().setName("테스트 자동차보험2")
                 .setInsuranceType(InsuranceType.CAR)
+                .setDescription("테스트 자동차보험2의 설명입니다.")
                 .setPremium(20000000)
-                .setDevInfo(new DevInfo().setEmployeeId(3)
+                .setDevInfo(new DevInfo().setEmployeeId(1)
+                        .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.DISALLOWANCE)));
 
         insuranceList.create(new FireInsurance().setName("테스트 화재보험1")
                 .setInsuranceType(InsuranceType.FIRE)
+                .setDescription("테스트 화재보험1의 설명입니다.")
                 .setPremium(10000000)
-                .setDevInfo(new DevInfo().setEmployeeId(4)
-                        .setSalesAuthState(SalesAuthState.PERMISSION)));
+                .setDevInfo(new DevInfo().setEmployeeId(6)
+                        .setDevDate(LocalDate.now())
+                        .setSalesAuthState(SalesAuthState.PERMISSION)
+                        .setSalesStartDate(LocalDate.now())));
         insuranceList.create(new FireInsurance().setName("테스트 화재보험2")
                 .setInsuranceType(InsuranceType.FIRE)
+                .setDescription("테스트 화재보험2의 설명입니다.")
                 .setPremium(20000000)
-                .setDevInfo(new DevInfo().setEmployeeId(5)
+                .setDevInfo(new DevInfo().setEmployeeId(6)
+                        .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.WAIT)));
     }
 
