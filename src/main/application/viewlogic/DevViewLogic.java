@@ -8,7 +8,6 @@ import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
 import main.domain.insurance.inputDto.*;
-import main.exception.MyCloseSequence;
 import main.utility.MyBufferedReader;
 import main.exception.InputException;
 import main.application.ViewLogic;
@@ -54,7 +53,7 @@ public class DevViewLogic implements ViewLogic {
     }
 
     @Override
-    public void work(String command) throws MyCloseSequence {
+    public void work(String command) {
         try {
             switch (command){
                 case "1" -> {
@@ -116,7 +115,7 @@ public class DevViewLogic implements ViewLogic {
         System.out.println("---------------------------------");
     }
 
-    private InsuranceType menuInsuranceType() throws IOException, MyCloseSequence {
+    private InsuranceType menuInsuranceType() throws IOException {
         int insType = 0;
         createMenuAndClose("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
         insType = br.verifyMenu("",3);
@@ -129,7 +128,7 @@ public class DevViewLogic implements ViewLogic {
         };
     }
 
-    private void menuDevelop(InsuranceType type) throws IOException, MyCloseSequence {
+    private void menuDevelop(InsuranceType type) throws IOException {
         if (type == null) return;
         Insurance insurance = employee.develop(
                 formInputBasicInfo(), // return Basic Info of Insurance
@@ -141,7 +140,7 @@ public class DevViewLogic implements ViewLogic {
         formRegisterInsurance(insurance, premium);
     }
 
-    private DtoBasicInfo formInputBasicInfo() throws IOException, MyCloseSequence{
+    private DtoBasicInfo formInputBasicInfo() throws IOException {
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
         System.out.println("<< 보험 기본 정보 >> (exit: 시스템 종료)");
@@ -153,7 +152,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException, MyCloseSequence {
+    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException {
         return switch (type) {
             case HEALTH -> formDtoHealth();
             case CAR -> formDtoCar();
@@ -199,7 +198,7 @@ public class DevViewLogic implements ViewLogic {
         return new DtoFire(buildingType, collateralAmount);
     }
 
-    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException, MyCloseSequence {
+    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException {
         boolean isAddGuarantee = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         String gName = "", gDescription = "";
@@ -216,7 +215,7 @@ public class DevViewLogic implements ViewLogic {
         return guaranteeListInfo;
     }
 
-    private boolean isCalcPremium() throws IOException, MyCloseSequence {
+    private boolean isCalcPremium() throws IOException {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
@@ -235,7 +234,7 @@ public class DevViewLogic implements ViewLogic {
         return isCalcPremium;
     }
 
-    private int formCalculatePremium(boolean isCalcPremium) throws IOException, MyCloseSequence {
+    private int formCalculatePremium(boolean isCalcPremium) throws IOException {
         int premium = -1;
 
         if(!isCalcPremium) return premium;
@@ -264,7 +263,7 @@ public class DevViewLogic implements ViewLogic {
         return premium;
     }
 
-    private int calcPurePremiumMethod() throws IOException, MyCloseSequence {
+    private int calcPurePremiumMethod() throws IOException {
         boolean forWhile = true;
         int premium= -1;
         while(forWhile) {
@@ -284,7 +283,7 @@ public class DevViewLogic implements ViewLogic {
         return premium;
     }
 
-    private int calcLossRatioMethod() throws IOException, MyCloseSequence {
+    private int calcLossRatioMethod() throws IOException {
         boolean forWhile = true;
         Object[] premium = null;
         while(forWhile){
@@ -305,7 +304,7 @@ public class DevViewLogic implements ViewLogic {
         return (int) premium[1];
     }
 
-    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException, MyCloseSequence {
+    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException {
         boolean forWhile = true;
         while(forWhile){
             switch (br.verifyMenu("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
