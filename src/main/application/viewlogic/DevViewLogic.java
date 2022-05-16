@@ -1,6 +1,7 @@
 package main.application.viewlogic;
 
 import main.domain.contract.BuildingType;
+import main.domain.employee.Department;
 import main.domain.employee.Employee;
 import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.Insurance;
@@ -56,11 +57,17 @@ public class DevViewLogic implements ViewLogic {
     @Override
     public void work(String command) throws MyCloseSequence {
         try {
-            testInitEmployee();
-            showInsuranceByEmployee(employee.getId());
             switch (command){
-                case "1" -> this.menuDevelop(this.menuInsuranceType());
-//                case "2" -> {}
+                case "1" -> {
+                    testInitEmployee();
+                    showInsuranceByEmployee();
+                    if(employee!=null)
+                        this.menuDevelop(this.menuInsuranceType());
+                }
+                case "2" -> {
+                    System.out.println("메뉴 준비중입니다.");
+                    return;
+                }
             }
         }
         catch (IllegalStateException e){
@@ -81,7 +88,12 @@ public class DevViewLogic implements ViewLogic {
                 }
                 System.out.println("---------------------------------");
                 int employeeId = br.verifyMenu(employeeArrayList.size());
+                if(employeeId == 0) break;
                 this.employee = this.employeeList.read(employeeId);
+                if(this.employee.getDepartment() != Department.DEV){
+                    System.out.println("해당 직원은 개발팀 직원이 아닙니다!");
+                    continue;
+                }
                 break;
             }
             catch (InputException e) {
@@ -90,9 +102,10 @@ public class DevViewLogic implements ViewLogic {
         }
     }
 
-    private void showInsuranceByEmployee(int eid) {
+    private void showInsuranceByEmployee() {
+        if(employee == null) return;
         System.out.println("<< "+employee.getName()+" 직원 보험 개발 리스트 >>");
-        ArrayList<Insurance> insuranceArrayList = insuranceList.readByEid(eid);
+        ArrayList<Insurance> insuranceArrayList = insuranceList.readByEid(employee.getId());
         if(insuranceArrayList.size() == 0) {
             System.out.println("--------------NONE---------------");
             return;
@@ -271,7 +284,7 @@ public class DevViewLogic implements ViewLogic {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
-            System.out.println("<< 보험료를 산출하시겠습니까? >>\n 1.예 2.아니오 ");
+            System.out.println("<< 보험료를 산출하시겠습니까? >>\n1.예 2.아니오 ");
             try {
                 switch (br.verifyMenu(2)) {
                     case 1 -> {
@@ -327,17 +340,16 @@ public class DevViewLogic implements ViewLogic {
         int premium= -1;
         while(forWhile) {
             long damageAmount = 0, countContract = 0, businessExpense = 0;
-            int profitMargin = 0;
+            double profitMargin = 0;
             try {
                 System.out.println("<< 순보험료법 산출 방식 >> (exit: 시스템 종료)");
-                System.out.print("발생손해액(원): "); damageAmount = (long) br.verifyRead(damageAmount);
+                System.out.print("발생손해액(단위:만원): "); damageAmount = (long) br.verifyRead(damageAmount);
                 System.out.print("계약건수(건): "); countContract = (long) br.verifyRead(countContract);
-                System.out.print("사업비(원): "); businessExpense = (long) br.verifyRead(businessExpense);
-                System.out.print("이익률(1~99%): "); profitMargin = (int) br.verifyRead(profitMargin);
+                System.out.print("사업비(단위:만원): "); businessExpense = (long) br.verifyRead(businessExpense);
+                System.out.print("이익률(1-99%): "); profitMargin = (Double) br.verifyRead(profitMargin);
                 premium = employee.calcPurePremiumMethod(damageAmount, countContract, businessExpense, profitMargin);
                 System.out.printf("총보험료: %d(원)\n", premium);
-                // TODO 보험료 산출을 확정하시겠습까?
-                System.out.println("<< 다시 산출하시겠습니까? >>\n1.예 2. 아니오");
+                System.out.println("<< 산출된 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오");
                 switch (br.verifyMenu(2)){
                     case 1 -> forWhile = false;
                 }
@@ -354,18 +366,19 @@ public class DevViewLogic implements ViewLogic {
         boolean forWhile = true;
         Object[] premium = null;
         while(forWhile){
-            int lossRatio = 0, expectedBusinessRatio = 0, curTotalPremium = 0;
+            double lossRatio = 0, expectedBusinessRatio = 0;
+            int curTotalPremium = 0;
             try {
                 System.out.println("<< 손해율법 산출 방식 >> (exit: 시스템 종료)");
-                System.out.print("실제손해율(%): "); lossRatio = (int) br.verifyRead(lossRatio);
-                System.out.print("예정사업비율(%): "); expectedBusinessRatio = (int) br.verifyRead(expectedBusinessRatio);
+                System.out.print("실제손해율(1-99%): "); lossRatio = (Double) br.verifyRead(lossRatio);
+                System.out.print("예정사업비율(1-99%): "); expectedBusinessRatio = (Double) br.verifyRead(expectedBusinessRatio);
                 System.out.print("현재총보험료(원): "); curTotalPremium = (int) br.verifyRead(curTotalPremium);
                 premium = employee.calcLossRatioMethod(lossRatio, expectedBusinessRatio, curTotalPremium);
                 System.out.println("요율조정값: "+(Math.round((double) premium[0]*1000)/1000.0)*100+"%");
                 System.out.println("조정보험료: "+premium[1]+"원");
-                System.out.println("<< 다시 산출하시겠습니까? >>\n1.예 2. 아니오");
+                System.out.println("<< 산출된 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오");
                 switch (br.verifyMenu(2)){
-                    case 2 -> forWhile = false;
+                    case 1 -> forWhile = false;
                 }
             }
             catch (InputException.InputNullDataException |
@@ -387,10 +400,12 @@ public class DevViewLogic implements ViewLogic {
                     case 1 -> {
                         employee.registerInsurance(insuranceList, insurance, premium);
                         System.out.println("정상적으로 보험이 저장되었습니다!");
+                        System.out.println("개발 보험 정보");
+                        System.out.println(insurance.print()+"\n");
                         forWhile = false;
                     }
                     case 2 -> {
-                        System.out.println("정말 취소하시겠습니까?\n1. 예\t2. 아니오");
+                        System.out.println("<< 정말 취소하시겠습니까? >>\n1. 예\t2. 아니오");
                         switch (br.verifyMenu(2)){
                             case 1 -> forWhile = false;
                         }

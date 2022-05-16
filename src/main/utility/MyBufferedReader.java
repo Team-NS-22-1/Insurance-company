@@ -12,14 +12,10 @@ public class MyBufferedReader extends BufferedReader {
         super(in);
     }
 
-    public Object verifyRead(Object returnType) throws IOException,
-                                                    InputException.InputNullDataException,
-                                                    InputException.InputInvalidDataException,
-            MyCloseSequence {
-        String value = this.readLine();
-        checkBlankOrExit(value);
-
+    public Object verifyRead(Object returnType) throws IOException {
         try {
+            String value = this.readLine();
+            checkBlankOrExit(value);
             if(returnType instanceof String)
                 return value;
             else if(returnType instanceof Integer){
@@ -49,8 +45,7 @@ public class MyBufferedReader extends BufferedReader {
             throw new MyCloseSequence();
     }
 
-    public int verifyMenu(int categorySize) throws IOException,
-                                                    InputException.InvalidMenuException, MyCloseSequence {
+    public int verifyMenu(int categorySize) throws IOException {
         String value = this.readLine();
         checkBlankOrExit(value);
 

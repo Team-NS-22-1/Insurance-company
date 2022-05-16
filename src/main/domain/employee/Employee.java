@@ -111,21 +111,26 @@ public class Employee {
 		return insurance;
 	}
 
-	// TODO 단위 만원
-	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
+	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, double profitMargin){
 		if(damageAmount <=0 || countContract <=0 || businessExpense <=0 || profitMargin <= 0 || profitMargin>=100)
 			throw new InputInvalidDataException();
+
+		damageAmount *= 10000;
+		businessExpense *= 10000;
+		profitMargin /= 100;
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
-		int premium = (purePremium + riskCost) / (100 - profitMargin);
+		int premium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return premium;
 	}
 
-	public Object[] calcLossRatioMethod(int lossRatio, int expectedBusinessRatio, int curTotalPremium){
+	public Object[] calcLossRatioMethod(double lossRatio, double expectedBusinessRatio, int curTotalPremium){
 		if (expectedBusinessRatio >= 100 || lossRatio <=0 || curTotalPremium <= 0) {
 			throw new InputInvalidDataException();
 		}
-		double adjustedRate = (double) (lossRatio - (100 - expectedBusinessRatio)) / (100 - expectedBusinessRatio);
+		lossRatio /= 100;
+		expectedBusinessRatio /= 100;
+		double adjustedRate = (lossRatio - (1 - expectedBusinessRatio)) / (1 - expectedBusinessRatio);
 		int premium = (int) (curTotalPremium + (curTotalPremium * adjustedRate));
 		return new Object[]{ adjustedRate, premium };
 	}
@@ -134,8 +139,7 @@ public class Employee {
 		insurance.setPremium(premium)
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
-										.setSalesAuthState(SalesAuthState.PERMISSION)
-										.setSalesStartDate(null)
+										.setSalesAuthState(SalesAuthState.WAIT)
 				);
 		insuranceList.create(insurance);
 	}

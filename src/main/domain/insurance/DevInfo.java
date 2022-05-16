@@ -10,7 +10,6 @@ import java.time.LocalDate;
  */
 public class DevInfo {
 
-	//TODO toString
 	private int employeeId;
 	private LocalDate devDate;
 	private SalesAuthState salesAuthState;
@@ -19,6 +18,20 @@ public class DevInfo {
 	public DevInfo(){
 	}
 
+	public String print() {
+		String value =
+				"{개발직원ID: " + employeeId +
+				", 개발일자: " + devDate.getYear() + "년 " +
+							devDate.getMonthValue() + "월 "+
+							devDate.getDayOfMonth() + "일" +
+				", 판매인가상태: " +salesAuthState.getName();
+		if(salesAuthState == SalesAuthState.PERMISSION) {
+			value += ", 판매시작일자: " + salesStartDate.getYear() + "년 " +
+									salesStartDate.getMonthValue() + "월 " +
+									salesStartDate.getDayOfMonth() + "일";
+		}
+		return value;
+	}
 	public int getEmployeeId() {
 		return employeeId;
 	}
