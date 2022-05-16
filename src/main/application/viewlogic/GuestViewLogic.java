@@ -151,9 +151,7 @@ public class GuestViewLogic implements ViewLogic {
                 System.out.println("이름을 입력해주세요.");
                 name = validateNameFormat(sc.nextLine());
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch(InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -163,9 +161,7 @@ public class GuestViewLogic implements ViewLogic {
                 System.out.println("주민번호를 입력해주세요. \t(______-*******)");
                 ssn = validateSsnFormat(sc.nextLine());
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -175,9 +171,7 @@ public class GuestViewLogic implements ViewLogic {
                 System.out.println("연락처를 입력해주세요. \t(0__-____-____)");
                 phone = validatePhoneFormat(sc.nextLine());
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -185,45 +179,18 @@ public class GuestViewLogic implements ViewLogic {
         question = "주소를 입력해주세요.";
         String address = validateStringFormat(question);
 
-//        while (true){
-//            try{
-//                System.out.println("주소를 입력해주세요.");
-//                address = sc.nextLine();
-//                if(address.isBlank())
-//                    throw new InputException.InputNullDataException();
-//                break;
-//            } catch (InputException.InputNullDataException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
-
-
         while (true){
             try{
                 System.out.println("이메일을 입력해주세요. \t(_____@_____.___)");
                 email = validateEmailFormat(sc.nextLine());
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
 
         question = "직업을 입력해주세요.";
         String job = validateStringFormat(question);
-
-//        while (true){
-//            try{
-//                System.out.println("직업을 입력해주세요.");
-//                job = sc.nextLine();
-//                if(job.isBlank())
-//                    throw new InputException.InputNullDataException();
-//                break;
-//            } catch (InputException.InputNullDataException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
 
         customer.setName(name)
                 .setSsn(ssn)
@@ -248,12 +215,6 @@ public class GuestViewLogic implements ViewLogic {
     private void inputHealthInfo(Contract contract, Customer customer) {
         int count = 0;
         String question;
-//        boolean isDrinking;
-//        boolean isSmoking;
-//        boolean isDriving;
-//        boolean isDangerActivity;
-//        boolean isTakingDrug;
-//        boolean isHavingDisease;
         String diseaseDetail;
 
         question = "키를 입력해주세요. \t(단위: cm)";
@@ -262,17 +223,6 @@ public class GuestViewLogic implements ViewLogic {
         question = "몸무게를 입력해주세요. \t(단위: kg)";
         int weight = validateIntFormat(question);
 
-//        while (true) {
-//            try {
-//                System.out.println("음주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isDrinking = validateBooleanFormat(sc.nextLine());
-//                if (isDrinking)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
         question = "음주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isDrinking = validateBooleanFormat(question);
         if (isDrinking)
@@ -283,101 +233,29 @@ public class GuestViewLogic implements ViewLogic {
         if (isSmoking)
             count++;
 
-//        while (true) {
-//            try {
-//                System.out.println("흡연 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isSmoking = validateBooleanFormat(sc.nextLine());
-//                if (isSmoking)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-
         question = "운전 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isDriving = validateBooleanFormat(question);
         if (isDriving)
             count++;
-
-//        while (true) {
-//            try {
-//                System.out.println("운전 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isDriving = validateBooleanFormat(sc.nextLine());
-//                if (isDriving)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
 
         question = "위험 취미 활동 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isDangerActivity = validateBooleanFormat(question);
         if (isDangerActivity)
             count++;
 
-//        while (true) {
-//            try {
-//                System.out.println("위험 취미 활동 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isDangerActivity = validateBooleanFormat(sc.nextLine());
-//                if (isDangerActivity)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-
         question = "약물 복용 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isTakingDrug = validateBooleanFormat(question);
         if (isTakingDrug)
             count++;
-
-//        while (true) {
-//            try {
-//                System.out.println("약물 복용 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isTakingDrug = validateBooleanFormat(sc.nextLine());
-//                if (isTakingDrug)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
 
         question = "질병 이력 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isHavingDisease = validateBooleanFormat(question);
         if (isHavingDisease)
             count++;
 
-//        while (true) {
-//            try {
-//                System.out.println("질병 이력 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)");
-//                isHavingDisease = validateBooleanFormat(sc.nextLine());
-//                if (isHavingDisease)
-//                    count++;
-//                break;
-//            } catch (InputException.InputInvalidDataException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-
         if (isHavingDisease) {
             question = "질병에 대한 상세 내용를 입력해주세요.";
             diseaseDetail = validateStringFormat(question);
-
-//            while(true) {
-//                try {
-//                    System.out.println("질병에 대한 상세 내용를 입력해주세요.");
-//                    diseaseDetail = sc.nextLine();
-//                    if (diseaseDetail.isBlank())
-//                        throw new InputException.InputNullDataException();
-//                    break;
-//                } catch (InputException.InputNullDataException e) {
-//                    System.out.println(e.getMessage());
-//                }
-//            }
         } else
             diseaseDetail = null;
 
@@ -422,9 +300,7 @@ public class GuestViewLogic implements ViewLogic {
                         throw new InputException.InputInvalidDataException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -465,9 +341,7 @@ public class GuestViewLogic implements ViewLogic {
                 System.out.println("차량번호를 입력해주세요. \t(지역명:__-**_-****))");
                 carNo = validateCarNoFormat(sc.nextLine());
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -504,24 +378,10 @@ public class GuestViewLogic implements ViewLogic {
                         throw new InputException.InputInvalidDataException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e){
-                System.out.println(e.getMessage());
-            } catch (InputException.InputInvalidDataException e){
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
                 System.out.println(e.getMessage());
             }
         }
-
-//        while (true){
-//            try{
-//                System.out.println("모델이름을 입력해주세요.");
-//                modelName = sc.nextLine();
-//                if(modelName.isBlank())
-//                    throw new InputException.InputNullDataException();
-//                break;
-//            } catch (InputException.InputNullDataException e){
-//                System.out.println(e.getMessage());
-//            }
-//        }
 
         question = "모델이름을 입력해주세요.";
         String modelName = validateStringFormat(question);
@@ -623,31 +483,15 @@ public class GuestViewLogic implements ViewLogic {
         return carNo;
     }
 
-//    private boolean validateBooleanFormat(String input) {
-//        boolean temp = false;
-//        switch (input) {
-//            case "1":
-//                temp = true;
-//                break;
-//            case "2":
-//            case "":
-//                break;
-//            default:
-//                throw new InputException.InputInvalidDataException();
-//        }
-//        return temp;
-//    }
-
-    private int validateIntFormat(String q) {
+    private int validateIntFormat(String question) {
         while (true) {
             try {
-                System.out.println(q);
+                System.out.println(question);
                 String temp = sc.nextLine();
                 if (temp.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                int a = Integer.parseInt(temp);
-                return a;
+                return Integer.parseInt(temp);
             } catch (InputException.InputNullDataException e) {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
@@ -656,10 +500,10 @@ public class GuestViewLogic implements ViewLogic {
         }
     }
 
-    private boolean validateBooleanFormat(String q) {
+    private boolean validateBooleanFormat(String question) {
         while (true) {
             try {
-                System.out.println(q);
+                System.out.println(question);
                 String input = sc.nextLine();
                 boolean temp = false;
                 switch (input) {
@@ -679,10 +523,10 @@ public class GuestViewLogic implements ViewLogic {
         }
     }
 
-    private String validateStringFormat(String q){
+    private String validateStringFormat(String question){
         while (true){
             try{
-                System.out.println(q);
+                System.out.println(question);
                 String temp = sc.nextLine();
                 if(temp.isBlank())
                     throw new InputException.InputNullDataException();
