@@ -13,15 +13,15 @@ public class SalesAuthFile {
 	 */
 	private String dirFSSOfficialDoc;
 	/**
-	 *
+	 * 보험요율산출기관 검증확인서
 	 */
 	private String dirISOVerification;
 	/**
-	 *
+	 * 보험상품신고서
 	 */
 	private String dirProdDeclaration;
 	/**
-	 *
+	 * 선임계리사 검증기초서류
 	 */
 	private String dirSrActuaryVerification;
 
