@@ -63,16 +63,20 @@ public class Application {
                 }
                 UserType type = values[userType - 1];
                 while (true) {
-                    ViewLogic viewLogic = map.get(type);
-                    viewLogic.showMenu();
-                    System.out.println("0 : 취소하기");
-                    System.out.println("exit : 시스템 종료");
-                    String command = sc.next();
-                    if (command.equals("0"))
-                        break;
-                    if (command.equals("exit"))
-                        throw new MyCloseSequence();
-                    viewLogic.work(command);
+                    try {
+                        ViewLogic viewLogic = map.get(type);
+                        viewLogic.showMenu();
+                        System.out.println("0 : 취소하기");
+                        System.out.println("exit : 시스템 종료");
+                        String command = sc.next();
+                        if (command.equals("0"))
+                            break;
+                        if (command.equals("exit"))
+                            throw new MyCloseSequence();
+                        viewLogic.work(command);
+                    } catch (MyIllegalArgumentException e) {
+                        System.out.println("정확한 값을 입력해주세요.");
+                    }
                 }
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해주세요.");
