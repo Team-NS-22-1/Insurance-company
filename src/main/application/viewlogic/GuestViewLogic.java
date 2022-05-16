@@ -52,13 +52,19 @@ public class GuestViewLogic implements ViewLogic {
     public void work(String command) {
 
         try {
-            if ("1".equals(command)) {
-                selectInsurance();
-            } else {
-                throw new InputException.InvalidMenuException();
+            switch (command) {
+                case "1":
+                    selectInsurance();
+                // 해결을?
+                case "":
+                    throw new InputException.InputNullDataException();
+                default:
+                    throw new InputException.InvalidMenuException();
             }
+        } catch (InputException.InputNullDataException e) {
+            System.out.println(e.getMessage());
         } catch (InputException.InvalidMenuException e){
-            System.out.println("올바른 메뉴를 입력해주세요");
+            System.out.println("올바른 메뉴번호를 입력해주세요");
         }
     }
 
