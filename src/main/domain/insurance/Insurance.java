@@ -122,15 +122,15 @@ public class Insurance {
 	public String print() {
 		return "보험 정보 {" +
 				"보험ID: " + id +
+				", 보험유형:" + insuranceType.getName() +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
 				", 보험료: " + premium +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
 				", 보장정보: " + guaranteeList +
-				", 개발정보: " + devInfo +
+				", 개발정보: " + devInfo.print() +
 				", 인가파일: " + salesAuthFile +
-				", 보험유형:" + insuranceType +
 				'}';
 	}
 }

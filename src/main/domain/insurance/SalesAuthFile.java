@@ -9,24 +9,27 @@ package main.domain.insurance;
 public class SalesAuthFile {
 
 	/**
-	 * ���������� �������� �ּ�
+	 * 금융감독원 인가허가파일
 	 */
 	private String dirFSSOfficialDoc;
 	/**
-	 * �������������� ����Ȯ�μ� �ּ�
+	 *
 	 */
 	private String dirISOVerification;
 	/**
-	 * �����ǰ�Ű� �����ּ�
+	 *
 	 */
 	private String dirProdDeclaration;
 	/**
-	 * ���Ӱ踮�� �������ʼ��� �ּ�
+	 *
 	 */
 	private String dirSrActuaryVerification;
 
 	public SalesAuthFile(){
+	}
 
+	public String print() {
+		return "null";
 	}
 
 }

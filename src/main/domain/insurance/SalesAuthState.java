@@ -7,7 +7,18 @@ package main.domain.insurance;
  * @created 09-5-2022 오전 2:42:25
  */
 public enum SalesAuthState {
-	PERMISSION,
-	WAIT,
-	DISALLOWANCE
+	PERMISSION("허가"),
+	WAIT("대기"),
+	DISALLOWANCE("불허");
+
+	String name;
+
+	SalesAuthState(String name){
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 }
