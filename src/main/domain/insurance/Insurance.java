@@ -125,6 +125,7 @@ public class Insurance {
 				", 보험유형:" + insuranceType.getName() +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
+				", 보험유형:" + insuranceType +
 				", 보험료: " + premium +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +

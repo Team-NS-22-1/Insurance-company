@@ -63,12 +63,12 @@ public class HealthInfo {
 		return this;
 	}
 
-	public boolean isDangerousActivity() {
+	public boolean isDangerActivity() {
 		return isDangerActivity;
 	}
 
-	public HealthInfo setDangerousActivity(boolean dangerousActivity) {
-		isDangerActivity = dangerousActivity;
+	public HealthInfo setDangerActivity(boolean dangerActivity) {
+		isDangerActivity = dangerActivity;
 		return this;
 	}
 

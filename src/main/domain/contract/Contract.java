@@ -141,14 +141,15 @@ public class Contract {
 	public String toString() {
 		String text =
 		 "계약 정보 {" +
-				"자동차정보: " + carInfo +
+				 "계약 ID: " + id +
 				", 인수심사상태: " + conditionOfUw +
-				", 화재정보: " + buildingInfo +
-				", 건강정보: " + healthInfo +
-				", 증권발행여부: " + isPublishStock +
+				 ", 인수사유: '" + reasonOfUw + '\'' +
+				 ", 증권발행여부: " + isPublishStock +
+				 ", 보험료: " + premium +
 				", 결제수단: " + payment +
-				", 보험료: " + premium +
-				", 인수사유: '" + reasonOfUw + '\'' +
+				 ", 건강정보: " + healthInfo +
+				 ", 자동차정보: " + carInfo +
+				 ", 화재정보: " + buildingInfo + '\'' +
 				'}';
 
 		if (carInfo != null) text.concat(carInfo.toString());
@@ -156,13 +157,6 @@ public class Contract {
 		if (healthInfo != null) text.concat(healthInfo.toString());
 
 		 return text;
-	}
-
-	public String print() {
-		CustomerListImpl customerList = new CustomerListImpl();
-		Customer customer = customerList.read(this.customerId);
-
-		return id + "        " + customer.getName() + "        " + conditionOfUw;
 	}
 
 }

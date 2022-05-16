@@ -188,13 +188,13 @@ public class TestData {
         testContract.setConditionOfUw(ConditionOfUw.WAIT);
 
         Contract testContract1 =  new Contract();
-        testContract1.setCustomerId(3);
+        testContract1.setCustomerId(2);
         testContract1.setInsuranceId(3);
         testContract1.setCarInfo(carInfo);
         testContract1.setConditionOfUw(ConditionOfUw.WAIT);
 
         Contract testContract2 =  new Contract();
-        testContract2.setCustomerId(5);
+        testContract2.setCustomerId(3);
         testContract2.setInsuranceId(6);
         testContract2.setBuildingInfo(buildingInfo);
         testContract2.setConditionOfUw(ConditionOfUw.WAIT);

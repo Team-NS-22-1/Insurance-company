@@ -13,7 +13,6 @@ import main.exception.MyIllegalArgumentException;
 
 import java.util.*;
 
-import static main.utility.MessageUtil.createMenu;
 import static main.utility.MessageUtil.createMenuAndClose;
 
 /**

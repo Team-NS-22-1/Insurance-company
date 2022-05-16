@@ -7,11 +7,14 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.SalesAuthState;
+import main.exception.InputException;
+import main.exception.MyInadequateFormatException;
 
 import java.util.Scanner;
 
 import static main.domain.contract.BuildingType.*;
 import static main.domain.contract.CarType.*;
+import static main.utility.CustomerInfoFormatUtil.*;
 import static main.utility.MessageUtil.createMenu;
 
 /**
@@ -26,106 +29,168 @@ import static main.utility.MessageUtil.createMenu;
  * 2022-05-10                규현             최초 생성
  */
 public class GuestViewLogic implements ViewLogic {
-    int command;
-    Scanner sc = new Scanner(System.in);
+    String command;
+    private Scanner sc;
 
-    private InsuranceListImpl insuranceList = new InsuranceListImpl();
-    private ContractListImpl contractList = new ContractListImpl();
-    private CustomerListImpl customerList = new CustomerListImpl();
+    private InsuranceListImpl insuranceList;
+    private ContractListImpl contractList;
+    private CustomerListImpl customerList;
 
     public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList) {
+        this.sc = new Scanner(System.in);
+        this.insuranceList = insuranceList;
+        this.contractList = contractList;
+        this.customerList = customerList;
     }
 
     @Override
     public void showMenu() {
-        createMenu("보험가입희망자메뉴", "보험가입", "뒤로가기");
+        createMenu("보험가입희망자메뉴", "보험가입");
     }
 
     @Override
     public void work(String command) {
-        boolean isLoop = true;
 
-        while (isLoop) {
-
-                switch (command) {
-                    // 보험가입
-                    case "1":
-                        selectInsurance();
-                    // 뒤로
-                    case "2":
-                        isLoop = false;
-                        break;
-                }
+        try {
+            switch (command) {
+                case "1":
+                    selectInsurance();
+                // 해결을?
+                case "":
+                    throw new InputException.InputNullDataException();
+                default:
+                    throw new InputException.InvalidMenuException();
+            }
+        } catch (InputException.InputNullDataException e) {
+            System.out.println(e.getMessage());
+        } catch (InputException.InvalidMenuException e){
+            System.out.println("올바른 메뉴번호를 입력해주세요");
         }
     }
 
     private void selectInsurance() {
         boolean isLoop = true;
 
-        while(isLoop) {
+        while (isLoop) {
+
             for (Insurance insurance : insuranceList.readAll()) {
-                System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
+                    System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
             }
 
-            System.out.println("가입할 보험상품의 보험코드를 입력하세요.");
-            command =sc.nextInt();
-            Insurance insurance = insuranceList.read(command);
-
-            // System.out.println(insurance.getId());
-
-                if (insurance == null) {
-                    System.out.println("선택된 보험상품이 없습니다.");
-                    break;
-                } else if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
-                    createMenu("해당 보험상품을 가입하시겠습니까?","가입", "취소");
-                    command = sc.nextInt();
-
-                    switch (command) {
-                        // 가입
-                        case 1:
-                            isLoop = false;
-                            signContract(insurance.getId());
-                            break;
-                        // 취소
-                        case 2:
-                            isLoop = false;
-                            break;
-                        default:
-                            System.out.println("잘못된 입력입니다.");
-                            break;
-                    }
-
-                } else {
-                    System.out.println("해당 상품은 준비중입니다.");
+            try {
+                System.out.println("가입할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
+                command = sc.nextLine();
+                if (command.equals("0")) {
                     break;
                 }
+                if (command.isBlank()){
+                    throw new InputException.InputNullDataException();
+                }
+                Insurance insurance = insuranceList.read(Integer.parseInt(command));
+                if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
+                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
+                    decideSigning(insurance);
+                }
+                else {
+                    throw new InputException.NoResultantException();
+                }
+            } catch (InputException.InputNullDataException e) {
+                System.out.println("보험 코드를 입력해주세요");
+            } catch (NumberFormatException e) {
+                System.out.println("형식에 맞는 코드를 입력해주세요");
+            } catch (InputException.NoResultantException e) {
+                System.out.println("조회된 보험상품이 없습니다. 다시 입력해주세요.");
+            }
         }
+    }
+    private void decideSigning(Insurance insurance) {
+        boolean isLoop = true;
+        while (isLoop) {
+            try {
+                createMenu("해당 보험상품을 가입하시겠습니까?", "가입", "취소");
+                command = sc.nextLine();
 
+                switch (command) {
+                    // 가입
+                    case "1":
+                        isLoop = false;
+                        Contract contract = new Contract();
+                        contract.setInsuranceId(insurance.getId());
+                        inputCustomerInfo(contract);
+                        break;
+                    // 취소
+                    case "2":
+                        isLoop = false;
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InvalidMenuException();
+                }
+            } catch (InputException.InputNullDataException e) {
+                System.out.println(e.getMessage());
+            } catch (InputException.InvalidMenuException e) {
+                System.out.println("올바른 메뉴번호를 입력해주세요");
+            }
+        }
     }
 
-    private void signContract(int insuranceId) {
-
+    private void inputCustomerInfo(Contract contract) {
         Customer customer = new Customer();
-        Contract contract = new Contract();
+        String question;
+        String ssn;
+        String email;
+        String phone;
+        String name;
+//        String address;
+//        String job;
 
-        System.out.println("이름을 입력해주세요.");
-        String name = sc.next();
+        while(true) {
+            try {
+                System.out.println("이름을 입력해주세요.");
+                name = validateNameFormat(sc.nextLine());
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("주민번호를 입력해주세요.");
-        String ssn = sc.next();
+        while(true){
+            try{
+                System.out.println("주민번호를 입력해주세요. \t(______-*******)");
+                ssn = validateSsnFormat(sc.nextLine());
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("연락처를 입력해주세요.");
-        String phone = sc.next();
+        while(true){
+            try{
+                System.out.println("연락처를 입력해주세요. \t(0__-____-____)");
+                phone = validatePhoneFormat(sc.nextLine());
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("주소를 입력해주세요.");
-        String address = sc.next();
+        question = "주소를 입력해주세요.";
+        String address = validateStringFormat(question);
 
-        System.out.println("이메일을 입력해주세요.");
-        String email = sc.next();
+        while (true){
+            try{
+                System.out.println("이메일을 입력해주세요. \t(_____@_____.___)");
+                email = validateEmailFormat(sc.nextLine());
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
 
-        System.out.println("직업을 입력해주세요.");
-        String job = sc.next();
+        question = "직업을 입력해주세요.";
+        String job = validateStringFormat(question);
 
         customer.setName(name)
                 .setSsn(ssn)
@@ -134,208 +199,341 @@ public class GuestViewLogic implements ViewLogic {
                 .setEmail(email)
                 .setJob(job);
 
-        switch (insuranceList.read(insuranceId).getInsuranceType()) {
+        switch (insuranceList.read(contract.getInsuranceId()).getInsuranceType()) {
             case HEALTH:
-                int count = 0;
-                String diseaseDetail;
-
-                System.out.println("키를 입력해주세요.");
-                int height = sc.nextInt();
-
-                System.out.println("몸무게를 입력해주세요.");
-                int weight = sc.nextInt();
-
-                createMenu("음주 여부를 입력해주세요.","예", "아니요");
-                command = sc.nextInt();
-                boolean isDrinking = false;
-                if(command == 1) {
-                    isDrinking = true;
-                    count++;
-                }
-
-                createMenu("흡연 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isSmoking = false;
-                if(command == 1) {
-                    isSmoking = true;
-                    count++;
-                }
-
-                createMenu("운전 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isDriving = false;
-                if(command == 1) {
-                    isDriving = true;
-                    count++;
-                }
-
-                createMenu("위험 취미 활동 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isDangerousActivity = false;
-                if(command == 1) {
-                    isDangerousActivity = true;
-                    count++;
-                }
-
-                createMenu("약물 복용 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isTakingDrug = false;
-                if(command == 1) {
-                    isTakingDrug = true;
-                    count++;
-                }
-
-                createMenu("질병 이력 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isHavingDisease = false;
-                if(command == 1) {
-                    isHavingDisease = true;
-                    count++;
-                }
-
-                if (isHavingDisease) {
-                    System.out.println("질병에 대한 상세 내용를 입력해주세요.");
-                    diseaseDetail = sc.next();
-                } else {
-                    diseaseDetail = null;
-                }
-
-                contract.setHealthInfo(new HealthInfo().setHeight(height)
-                        .setWeight(weight)
-                        .setDrinking(isDrinking)
-                        .setSmoking(isSmoking)
-                        .setDriving(isDriving)
-                        .setDangerousActivity(isDangerousActivity)
-                        .setTakingDrug(isTakingDrug)
-                        .setHavingDisease(isHavingDisease)
-                        .setDiseaseDetail(diseaseDetail)
-                );
-
-                signUp(insuranceId, contract, customer);
-
+                inputHealthInfo(contract, customer);
                 break;
-
             case FIRE:
-                BuildingType buildingType = null;
-                createMenu("건물종류를 입력해주세요.","주거용", "상업용", "산업용", "공업용");
-                command  = sc.nextInt();
-                switch (command) {
-                    case 1:
-                        buildingType = RESIDENTIAL;
-                        break;
-                    case 2:
-                        buildingType = COMMERCIAL;
-                        break;
-                    case 3:
-                        buildingType = INDUSTRIAL;
-                        break;
-                    case 4:
-                        buildingType = INSTITUTIONAL;
-                        break;
-                }
-
-                System.out.println("건물면적을 입력해주세요.");
-                int buildingArea = sc.nextInt();
-
-                System.out.println("담보 금액을 입력해주세요.");
-                int collateralAmount = sc.nextInt();
-
-                createMenu("자가 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isSelfOwned = command == 1;
-
-                createMenu("실거주 여부를 입력해주세요","예", "아니요");
-                command = sc.nextInt();
-                boolean isActualResidence = command == 1;
-
-                contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
-                        .setBuildingArea(buildingArea)
-                        .setCollateralAmount(collateralAmount)
-                        .setSelfOwned(isSelfOwned)
-                        .setActualResidence(isActualResidence)
-                );
-
-                signUp(insuranceId, contract, customer);
-
+                inputFireInfo(contract, customer);
                 break;
-
             case CAR:
-                System.out.println("차량번호를 입력해주세요.");
-                String carNo  = sc.next();
-
-                CarType carType = null;
-                createMenu("차종을 입력해주세요.","경형", "소형", "준중형", "중형", "준대형", "대형", "스포츠카");
-                command  = sc.nextInt();
-                switch (command) {
-                    case 1:
-                        carType = URBAN;
-                        break;
-                    case 2:
-                        carType = SUBCOMPACT;
-                        break;
-                    case 3:
-                        carType = COMPACT;
-                        break;
-                    case 4:
-                        carType = MIDSIZE;
-                        break;
-                    case 5:
-                        carType = LARGESIZE;
-                        break;
-                    case 6:
-                        carType = FULLSIZE;
-                        break;
-                    case 7:
-                        carType = SPORTS;
-                        break;
-                }
-
-                System.out.println("모델이름을 입력해주세요.");
-                String modelName = sc.next();
-
-                System.out.println("차량연식을 입력해주세요.");
-                int modelYear = sc.nextInt();
-
-                System.out.println("차량가액을 입력해주세요.");
-                int value = sc.nextInt();
-
-                contract.setCarInfo(new CarInfo().setCarNo(carNo)
-                        .setCarType(carType)
-                        .setModelName(modelName)
-                        .setModelYear(modelYear)
-                        .setValue(value)
-                );
-
-                signUp(insuranceId, contract, customer);
-
+                inputCarInfo(contract, customer);
                 break;
         }
     }
 
-    private void signUp(int insuranceId, Contract contract, Customer customer) {
+    private void inputHealthInfo(Contract contract, Customer customer) {
+        int count = 0;
+        String question;
+        String diseaseDetail;
 
-        int premium = insuranceList.readPremium(insuranceId);
+        question = "키를 입력해주세요. \t(단위: cm)";
+        int height = validateIntFormat(question);
+
+        question = "몸무게를 입력해주세요. \t(단위: kg)";
+        int weight = validateIntFormat(question);
+
+        question = "음주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isDrinking = validateBooleanFormat(question);
+        if (isDrinking)
+            count++;
+
+        question = "흡연 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isSmoking = validateBooleanFormat(question);
+        if (isSmoking)
+            count++;
+
+        question = "운전 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isDriving = validateBooleanFormat(question);
+        if (isDriving)
+            count++;
+
+        question = "위험 취미 활동 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isDangerActivity = validateBooleanFormat(question);
+        if (isDangerActivity)
+            count++;
+
+        question = "약물 복용 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isTakingDrug = validateBooleanFormat(question);
+        if (isTakingDrug)
+            count++;
+
+        question = "질병 이력 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isHavingDisease = validateBooleanFormat(question);
+        if (isHavingDisease)
+            count++;
+
+        if (isHavingDisease) {
+            question = "질병에 대한 상세 내용를 입력해주세요.";
+            diseaseDetail = validateStringFormat(question);
+        } else
+            diseaseDetail = null;
+
+        contract.setHealthInfo(new HealthInfo().setHeight(height)
+                .setWeight(weight)
+                .setDrinking(isDrinking)
+                .setSmoking(isSmoking)
+                .setDriving(isDriving)
+                .setDangerActivity(isDangerActivity)
+                .setTakingDrug(isTakingDrug)
+                .setHavingDisease(isHavingDisease)
+                .setDiseaseDetail(diseaseDetail)
+        );
+
+        signContract(contract, customer);
+    }
+
+    private void inputFireInfo(Contract contract, Customer customer) {
+        String question;
+        BuildingType buildingType;
+
+        while(true) {
+            try {
+                createMenu("건물종류를 입력해주세요.","주거용", "상업용", "산업용", "공업용");
+                command  = sc.nextLine();
+                switch (command) {
+                    case "1":
+                        buildingType = RESIDENTIAL;
+                        break;
+                    case "2":
+                        buildingType = COMMERCIAL;
+                        break;
+                    case "3":
+                        buildingType = INDUSTRIAL;
+                        break;
+                    case "4":
+                        buildingType = INSTITUTIONAL;
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InputInvalidDataException();
+                }
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+        question = "건물면적을 입력해주세요. \t(단위: m^2 )";
+        int buildingArea = validateIntFormat(question);
+
+        question = "담보 금액을 입력해주세요. \t(단워: 원)";
+        int collateralAmount = validateIntFormat(question);
+
+        question = "자가 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isSelfOwned = validateBooleanFormat(question);
+
+        question = "실거주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        boolean isActualResidence = validateBooleanFormat(question);
+
+        System.out.println(isSelfOwned);
+        System.out.println(isActualResidence);
+
+        contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
+                .setBuildingArea(buildingArea)
+                .setCollateralAmount(collateralAmount)
+                .setSelfOwned(isSelfOwned)
+                .setActualResidence(isActualResidence)
+        );
+
+        signContract(contract, customer);
+    }
+
+    private void inputCarInfo(Contract contract, Customer customer) {
+        String question;
+        CarType carType;
+        String carNo;
+//        String modelName;
+
+        while (true){
+            try{
+                System.out.println("차량번호를 입력해주세요. \t(지역명:__-**_-****))");
+                carNo = validateCarNoFormat(sc.nextLine());
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+        while(true) {
+            try {
+                createMenu("차종을 입력해주세요.", "경형", "소형", "준중형", "중형", "준대형", "대형", "스포츠카");
+                command = sc.nextLine();
+                switch (command) {
+                    case "1":
+                        carType = URBAN;
+                        break;
+                    case "2":
+                        carType = SUBCOMPACT;
+                        break;
+                    case "3":
+                        carType = COMPACT;
+                        break;
+                    case "4":
+                        carType = MIDSIZE;
+                        break;
+                    case "5":
+                        carType = LARGESIZE;
+                        break;
+                    case "6":
+                        carType = FULLSIZE;
+                        break;
+                    case "7":
+                        carType = SPORTS;
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InputInvalidDataException();
+                }
+                break;
+            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+                System.out.println(e.getMessage());
+            }
+        }
+
+        question = "모델이름을 입력해주세요.";
+        String modelName = validateStringFormat(question);
+
+        question = "차량연식을 입력해주세요. \t(단위: 년)";
+        int modelYear = validateIntFormat(question);
+
+        question = "차량가액을 입력해주세요. \t(단위: 년)";
+        int value = validateIntFormat(question);
+
+        contract.setCarInfo(new CarInfo().setCarNo(carNo)
+                .setCarType(carType)
+                .setModelName(modelName)
+                .setModelYear(modelYear)
+                .setValue(value)
+        );
+
+        signContract(contract, customer);
+    }
+
+    private void signContract(Contract contract, Customer customer) {
+        boolean isLoop = true;
+        int premium = insuranceList.readPremium(contract.getInsuranceId());
+        // premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
+        // premium = employee.planFireInsurance(buildingType, collateralAmount);
+        // premium = employee.planCarInsurance(driverAge, value);
+
         System.out.println("조회된 귀하의 보험료는: " + premium + "원입니다.");
-        createMenu("보험가입을 신청하시겠습니까?","가입", "취소");
-        command = sc.nextInt();
-        switch (command) {
-            case 1:
-                customerList.create(customer);
-                contract.setPremium(premium)
-                        .setCustomerId(customer.getId())
-                        .setInsuranceId(insuranceId)
-                        .setConditionOfUw(ConditionOfUw.WAIT);
-                contractList.create(contract);
-                System.out.println(customerList.read(customer.getId()));
-                System.out.println(contractList.read(contract.getId()));
-                System.out.println("가입이 완료되었습니다.");
+        while (isLoop) {
+            try {
+                createMenu("보험가입을 신청하시겠습니까?", "가입", "취소");
+                command = sc.nextLine();
+                switch (command) {
+                    case "1":
+                        isLoop = false;
+                        customerList.create(customer);
+                        contract.setPremium(premium)
+                                .setCustomerId(customer.getId())
+                                .setConditionOfUw(ConditionOfUw.WAIT);
+                        contractList.create(contract);
+                        System.out.println(customerList.read(customer.getId()));
+                        System.out.println(contractList.read(contract.getId()));
+                        System.out.println("가입이 완료되었습니다.");
+                        break;
+                    case "2":
+                        System.out.println("가입이 취소되었습니다.");
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InvalidMenuException();
+                }
                 break;
-            case 2:
-                System.out.println("가입이 취소되었습니다.");
-                break;
-            default:
-                System.out.println("잘못된 입력입니다.");
-                break;
+            } catch (InputException.InputNullDataException e) {
+                System.out.println(e.getMessage());
+            } catch (InputException.InvalidMenuException e) {
+                    System.out.println("올바른 메뉴번호를 입력해주세요");
+            }
+        }
+    }
+
+    private String validateNameFormat(String name) {
+        if(name.isBlank())
+            throw new InputException.InputNullDataException();
+        if(!isName(name))
+            throw new InputException.InputInvalidDataException();
+        return name;
+    }
+
+    private String validateSsnFormat(String ssn) {
+        if(ssn.isBlank())
+            throw new InputException.InputNullDataException();
+        if(!isSsn(ssn))
+            throw new InputException.InputInvalidDataException();
+        return ssn;
+    }
+
+    private String validatePhoneFormat(String phone) {
+        if(phone.isBlank())
+            throw new InputException.InputNullDataException();
+        if(!isPhone(phone))
+            throw new MyInadequateFormatException();
+        return phone;
+    }
+
+    private String validateEmailFormat(String email) {
+        if(email.isBlank())
+            throw new InputException.InputNullDataException();
+        if(!isEmail(email))
+            throw new MyInadequateFormatException();
+        return email;
+    }
+
+    private String validateCarNoFormat(String carNo) {
+        if(carNo.isBlank())
+            throw new InputException.InputNullDataException();
+        if(!isEmail(carNo))
+            throw new MyInadequateFormatException();
+        return carNo;
+    }
+
+    private int validateIntFormat(String question) {
+        while (true) {
+            try {
+                System.out.println(question);
+                String temp = sc.nextLine();
+                if (temp.isBlank()){
+                    throw new InputException.InputNullDataException();
+                }
+                return Integer.parseInt(temp);
+            } catch (InputException.InputNullDataException e) {
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
+            }
+        }
+    }
+
+    private boolean validateBooleanFormat(String question) {
+        while (true) {
+            try {
+                System.out.println(question);
+                String input = sc.nextLine();
+                boolean temp = false;
+                switch (input) {
+                    case "1":
+                        temp = true;
+                        break;
+                    case "2":
+                    case "":
+                        break;
+                    default:
+                        throw new InputException.InputInvalidDataException();
+                }
+                return temp;
+            } catch (InputException.InputInvalidDataException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    private String validateStringFormat(String question){
+        while (true){
+            try{
+                System.out.println(question);
+                String temp = sc.nextLine();
+                if(temp.isBlank())
+                    throw new InputException.InputNullDataException();
+                return temp;
+            } catch (InputException.InputNullDataException e){
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
