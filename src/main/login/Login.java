@@ -22,8 +22,8 @@ public class Login {
         while(forWhile){
             try {
                 System.out.println("<< 로그인 >>");
-                System.out.print("아이디: "); inputUserId = (String) br.verifyRead(inputUserId);
-                System.out.print("비밀번호: "); inputPw = (String) br.verifyRead(inputPw);
+                inputUserId = (String) br.verifyRead("아이디: ", inputUserId);
+                inputPw = (String) br.verifyRead("비밀번호: ", inputPw);
                 int loginId = login(inputUserId, inputPw);
                 result = (loginId > 0) ? checkUser(loginId) : (
                         (loginId == -1) ? "패스워드 실패" :
