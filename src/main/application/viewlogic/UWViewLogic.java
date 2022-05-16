@@ -52,53 +52,6 @@ public class UWViewLogic implements ViewLogic {
                 .setDepartment(Department.UW)
                 .setPhone("010-1111-2222")
                 .setPosition(Position.DEPTMANAGER);
-
-        Customer customer = new Customer();
-        customer.setId(1);
-        customer.setAddress("서울시");
-        customer.setEmail("test@gmail.com");
-        customer.setJob("학생");
-        customer.setName("홍길동");
-        customer.setPhone("01044445555");
-        customer.setSsn("992837-1010223");
-
-        Insurance insurance = new Insurance();
-        insurance.setId(1);
-        insurance.setName("보험이름");
-        insurance.setDescription("보험설명");
-        insurance.setInsuranceType(InsuranceType.HEALTH);
-
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
-
-        Contract testContract =  new Contract();
-        testContract.setId(1);
-        testContract.setCustomerId(1);
-        testContract.setInsuranceId(1);
-        testContract.setHealthInfo(healthInfo);
-        testContract.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract1 =  new Contract();
-        testContract1.setId(2);
-        testContract1.setCustomerId(1);
-        testContract1.setInsuranceId(1);
-        testContract1.setCarInfo(carInfo);
-        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract2 =  new Contract();
-        testContract2.setId(3);
-        testContract2.setCustomerId(1);
-        testContract2.setInsuranceId(1);
-        testContract2.setBuildingInfo(buildingInfo);
-        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
-
-//        this.employeeList.create(employee);
-//        this.customerList.create(customer);
-//        this.insuranceList.create(insurance);
-//        this.contractList.create(testContract);
-//        this.contractList.create(testContract1);
-//        this.contractList.create(testContract2);
     }
 
     @Override
@@ -170,8 +123,11 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
+                createMenu("-------------------------------");
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
-                printContractList(this.employeeList.read(1).readContract(insuranceType));
+                Map<Integer, Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
+                printContractList(contractList);
+                createMenu("-------------------------------");
 
                 createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
                 String contractId = sc.next();
@@ -180,7 +136,9 @@ public class UWViewLogic implements ViewLogic {
                 if (contractId.equals("exit")) throw new MyCloseSequence();
 
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
-                Contract contract = printContractInfo(Integer.parseInt(contractId));
+                if (!contractList.containsKey(Integer.parseInt(contractId))) throw new MyIllegalArgumentException();
+
+                Contract contract = printContractInfo(contractList.get(Integer.parseInt(contractId)));
 
                 selectUwState(contract);
 
@@ -199,7 +157,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "재심사", "계약 목록 조회");
+                createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
                 String command = sc.next();
 
                 switch (command) {
@@ -267,18 +225,15 @@ public class UWViewLogic implements ViewLogic {
 
     }
 
-
-
     public void printContractList(Map<Integer, Contract> contractList) {
 
         for (Contract contract : contractList.values()) {
-            System.out.println(contract.print());
+            Customer customer = this.customerList.read(contract.getCustomerId());
+            System.out.println(contract.getId() + "        " + customer.getName() + "        " + contract.getConditionOfUw());
         }
     }
 
-    // TODO 보험 타입에 따른 리스트 조회 필요
-    public Contract printContractInfo(int customerId) {
-        Contract contract = this.contractList.read(customerId);
+    public Contract printContractInfo(Contract contract) {
         System.out.println(contract.toString());
 
         Customer customer = this.customerList.read(contract.getCustomerId());
