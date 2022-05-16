@@ -3,7 +3,7 @@ package main.domain.customer;
 
 import main.domain.accident.Accident;
 import main.domain.contract.Contract;
-import main.domain.payment.Payment;
+import main.domain.payment.*;
 
 import java.util.ArrayList;
 
@@ -116,6 +116,27 @@ public class Customer {
 	}
 
 	public void readPayment(){
+
+	}
+
+	public Payment createPayment(PaymentDto paymentDto) {
+		PayType payType = paymentDto.getPayType();
+		Payment payment;
+		if (payType.equals(PayType.CARD)) {
+			payment = new Card();
+			((Card)payment).setCardNo(paymentDto.getCardNo())
+					.setCvcNo(paymentDto.getCvcNo())
+					.setCardType(paymentDto.getCardType())
+					.setExpiryDate(paymentDto.getExpiryDate());
+
+		} else {
+			payment = new Account();
+			((Account)payment).setAccountNo(paymentDto.getAccountNo())
+					.setBankType(paymentDto.getBankType());
+		}
+		payment.setPaytype(payType)
+				.setCustomerId(paymentDto.getCustomerId());
+		return payment;
 
 	}
 
