@@ -13,6 +13,7 @@ import main.exception.MyIllegalArgumentException;
 
 import java.util.*;
 
+import static main.utility.MessageUtil.createMenu;
 import static main.utility.MessageUtil.createMenuAndClose;
 
 /**
@@ -53,7 +54,8 @@ public class Application {
         while (true) {
             Scanner sc = new Scanner(System.in);
             try {
-                createMenuAndClose("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
+                createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
+                System.out.println("0.종료하기");
                 int userType = sc.nextInt();
                 UserType[] values = UserType.values();
 
@@ -67,8 +69,6 @@ public class Application {
                     String command = sc.next();
                     if (command.equals("0"))
                         break;
-                    if (command.equals("exit"))
-                        throw new MyCloseSequence();
                     viewLogic.work(command);
                 }
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
