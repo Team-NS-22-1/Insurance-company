@@ -64,7 +64,7 @@ public class BuildingInfo {
 
 	@Override
 	public String toString() {
-		return "화재정보 {" +
+		return "{" +
 				"주택면적: " + buildingArea +
 				", 건물종류: " + buildingType +
 				", 담보금액: " + collateralAmount +

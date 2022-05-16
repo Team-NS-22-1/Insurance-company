@@ -14,23 +14,14 @@ import java.util.ArrayList;
  */
 public class Customer {
 
-	private String address;
-	private String email;
 	private int id;
-	private boolean isContract;
-	private String job;
 	private String name;
-
-	private ArrayList<Payment> paymentList = new ArrayList<>();
-
-	private String phone;
 	private String ssn;
-	public Accident m_Accident;
-	public Contract m_Contract;
-	public Payment m_Payment;
-	// Ȯ��
-	private String housePrice;
-	private String homeOwner;
+	private String address;
+	private String phone;
+	private String email;
+	private String job;
+	private ArrayList<Payment> paymentList = new ArrayList<>();
 
 	public ArrayList<Payment> getPaymentList() {
 		return paymentList;
@@ -40,11 +31,6 @@ public class Customer {
 		this.paymentList = paymentList;
 		return this;
 	}
-
-	public String getHousePrice() {
-		return housePrice;
-	}
-
 
 	public String getAddress() {
 		return address;
@@ -70,15 +56,6 @@ public class Customer {
 
 	public Customer setId(int id) {
 		this.id = id;
-		return this;
-	}
-
-	public boolean isContract() {
-		return isContract;
-	}
-
-	public Customer setContract(boolean isContract) {
-		this.isContract = isContract;
 		return this;
 	}
 
@@ -117,31 +94,6 @@ public class Customer {
 		this.ssn = ssn;
 		return this;
 	}
-
-	public Accident getM_Accident() {
-		return m_Accident;
-	}
-
-	public void setM_Accident(Accident m_Accident) {
-		this.m_Accident = m_Accident;
-	}
-
-	public Contract getM_Contract() {
-		return m_Contract;
-	}
-
-	public void setM_Contract(Contract m_Contract) {
-		this.m_Contract = m_Contract;
-	}
-
-	public Payment getM_Payment() {
-		return m_Payment;
-	}
-
-	public void setM_Payment(Payment m_Payment) {
-		this.m_Payment = m_Payment;
-	}
-
 
 	public Customer(){
 
@@ -196,7 +148,6 @@ public class Customer {
 				"주소: '" + address + '\'' +
 				", 이메일: '" + email + '\'' +
 				", 고객ID: " + id +
-				", 인수심사여부: " + isContract +
 				", 직업: '" + job + '\'' +
 				", 이름: '" + name + '\'' +
 				", 결제수단: " + paymentList +
@@ -204,5 +155,4 @@ public class Customer {
 				", 주민등록번호: '" + ssn + '\'' +
 				'}';
 	}
-
 }

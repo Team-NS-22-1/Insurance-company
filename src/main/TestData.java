@@ -1,11 +1,13 @@
 package main;
 
-import main.domain.contract.Contract;
-import main.domain.contract.ContractListImpl;
+import main.domain.contract.*;
 import main.domain.customer.Customer;
 import main.domain.customer.CustomerListImpl;
-import main.domain.insurance.HealthInsurance;
-import main.domain.insurance.InsuranceListImpl;
+import main.domain.employee.Department;
+import main.domain.employee.Employee;
+import main.domain.employee.EmployeeListImpl;
+import main.domain.employee.Position;
+import main.domain.insurance.*;
 import main.domain.payment.*;
 
 import java.time.LocalDate;
@@ -26,32 +28,118 @@ public class TestData {
     private PaymentList paymentList;
     private InsuranceListImpl insuranceList;
     private ContractListImpl contractList;
+    private EmployeeListImpl employeeList;
 
     public TestData() {
         this.customerList = new CustomerListImpl();
         this.paymentList = new PaymentListImpl();
         this.insuranceList = new InsuranceListImpl();
         this.contractList = new ContractListImpl();
+        this.employeeList = new EmployeeListImpl();
 
+        createEmployee();
         createContract();
         createCustomerData();
         createInsurance();
         createPayment();
 
-
+    }
+    public void createEmployee() {
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원1")
+                .setPhone("010-1234-1234")
+                .setDepartment(Department.DEV)
+                .setPosition(Position.TEAMLEADER));
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원2")
+                .setPhone("010-2345-2345")
+                .setDepartment(Department.SALES)
+                .setPosition(Position.MEMBER));
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원3")
+                .setPhone("010-3456-3456")
+                .setDepartment(Department.COMP)
+                .setPosition(Position.MEMBER));
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원4")
+                .setPhone("010-4567-4567")
+                .setDepartment(Department.UW)
+                .setPosition(Position.DEPTMANAGER));
+        this.employeeList.create(new Employee()
+                .setName("테스터 직원5")
+                .setPhone("010-5678-5678")
+                .setDepartment(Department.EXEC)
+                .setPosition(Position.CEO));
     }
 
     private void createCustomerData() {
-        Customer customer = new Customer();
-        customer.setName("Tester");
-        customerList.create(customer);
+        this.customerList.create(new Customer()
+                .setName("테스터 고객1")
+                .setSsn("123456-1234567")
+                .setPhone("010-1234-1234")
+                .setEmail("test@naver.com")
+                .setJob("테스터"));
+        this.customerList.create(new Customer()
+                .setName("테스터 고객2")
+                .setSsn("123456-1234567")
+                .setPhone("010-1234-1234")
+                .setEmail("test@naver.com")
+                .setJob("테스터"));
+        this.customerList.create(new Customer()
+                .setName("테스터 고객3")
+                .setSsn("123456-1234567")
+                .setPhone("010-1234-1234")
+                .setEmail("test@naver.com")
+                .setJob("테스터"));
+        this.customerList.create(new Customer()
+                .setName("테스터 고객4")
+                .setSsn("123456-1234567")
+                .setPhone("010-1234-1234")
+                .setEmail("test@naver.com")
+                .setJob("테스터"));
+
     }
     private void createInsurance() {
-        HealthInsurance h = new HealthInsurance();
-        h.setName("테스트 보험");
-        h.setPremium(100000);
-        insuranceList.create(h);
+        HealthInsurance h1 = new HealthInsurance();
+        h1.setName("테스트 건강보험1");
+        h1.setInsuranceType(InsuranceType.HEALTH);
+        h1.setPremium(100000);
+        h1.setDevInfo(new DevInfo()
+                .setEmployeeId(1)
+                .setSalesAuthState(SalesAuthState.PERMISSION));
+        insuranceList.create(h1);
+        HealthInsurance h2 = new HealthInsurance();
+        h2.setName("테스트 건강보험2");
+        h2.setInsuranceType(InsuranceType.HEALTH);
+        h2.setPremium(100000);
+        h2.setDevInfo(new DevInfo()
+                .setEmployeeId(2)
+                .setSalesAuthState(SalesAuthState.PERMISSION));
+        insuranceList.create(h2);
+
+        insuranceList.create(new CarInsurance().setName("테스트 자동차보험1")
+                .setInsuranceType(InsuranceType.CAR)
+                .setPremium(20000000)
+                .setDevInfo(new DevInfo().setEmployeeId(3)
+                        .setSalesAuthState(SalesAuthState.WAIT)));
+        insuranceList.create(new CarInsurance().setName("테스트 자동차보험2")
+                .setInsuranceType(InsuranceType.CAR)
+                .setPremium(20000000)
+                .setDevInfo(new DevInfo().setEmployeeId(3)
+                        .setSalesAuthState(SalesAuthState.DISALLOWANCE)));
+
+        insuranceList.create(new FireInsurance().setName("테스트 화재보험1")
+                .setInsuranceType(InsuranceType.FIRE)
+                .setPremium(10000000)
+                .setDevInfo(new DevInfo().setEmployeeId(4)
+                        .setSalesAuthState(SalesAuthState.PERMISSION)));
+        insuranceList.create(new FireInsurance().setName("테스트 화재보험2")
+                .setInsuranceType(InsuranceType.FIRE)
+                .setPremium(20000000)
+                .setDevInfo(new DevInfo().setEmployeeId(5)
+                        .setSalesAuthState(SalesAuthState.WAIT)));
     }
+
     private void createPayment() {
         Card card = new Card();
         card.setCustomerId(1);
@@ -61,12 +149,38 @@ public class TestData {
         card.setCardType(CardType.BC);
         card.setPaytype(PayType.CARD);
         paymentList.create(card);
+
+        paymentList.create(new Account().setAccountNo("1111-1111-1111-1111")
+                .setBankType(BankType.HANA)
+                .setPaytype(PayType.ACCOUNT)
+                .setCustomerId(2));
     }
+
     private void createContract() {
-        Contract con = new Contract();
-        con.setCustomerId(1);
-        con.setPremium(100000);
-        con.setInsuranceId(1);
-        contractList.create(con);
+        HealthInfo healthInfo = new HealthInfo();
+        CarInfo carInfo = new CarInfo();
+        BuildingInfo buildingInfo = new BuildingInfo();
+
+        Contract testContract =  new Contract();
+        testContract.setCustomerId(1);
+        testContract.setInsuranceId(1);
+        testContract.setHealthInfo(healthInfo);
+        testContract.setConditionOfUw(ConditionOfUw.WAIT);
+
+        Contract testContract1 =  new Contract();
+        testContract1.setCustomerId(3);
+        testContract1.setInsuranceId(3);
+        testContract1.setCarInfo(carInfo);
+        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
+
+        Contract testContract2 =  new Contract();
+        testContract2.setCustomerId(5);
+        testContract2.setInsuranceId(6);
+        testContract2.setBuildingInfo(buildingInfo);
+        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
+
+        this.contractList.create(testContract);
+        this.contractList.create(testContract1);
+        this.contractList.create(testContract2);
     }
 }

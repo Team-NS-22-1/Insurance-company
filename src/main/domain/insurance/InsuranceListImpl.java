@@ -59,13 +59,6 @@ public class InsuranceListImpl implements InsuranceList {
 		else return false;
 	}
 
-	// 나중에 수정
-	public boolean add(Insurance insurance) {
-		insurance.setId(++id);
-		insuranceList.put(insurance.getId(), insurance);
-		return true;
-	}
-
 
 //	public void update(){}
 

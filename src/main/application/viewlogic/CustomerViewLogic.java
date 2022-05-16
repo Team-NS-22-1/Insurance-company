@@ -11,6 +11,7 @@ import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.payment.*;
 import main.application.ViewLogic;
+import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
 
@@ -43,40 +44,30 @@ public class CustomerViewLogic implements ViewLogic {
     private PaymentList paymentList;
     private Customer customer;
     private Scanner sc;
+
     public CustomerViewLogic() {
-        this.sc = new Scanner(System.in);
-        this.contractList = new ContractListImpl();
-        this.insuranceList = new InsuranceListImpl();
-        this.customerList = new CustomerListImpl();
-        this.paymentList = new PaymentListImpl();
     }
 
     public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList) {
+        this.sc = new Scanner(System.in);
+        this.contractList = contractList;
+        this.insuranceList = insuranceList;
+        this.customerList = customerList;
+        this.paymentList = paymentList;
     }
-
     @Override
     public void showMenu() {
-        createMenu("고객메뉴", "보험가입", "보험료납입", "사고접수", "보상금청구", "기타등등");
+        createMenu("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
     }
 
     @Override
     public void work(String command) {
-        while (true) {
-            try {
-                System.out.println("고객 ID 입력 : ");
-                int customerId = sc.nextInt();
-                login(customerId);
-                break;
-            } catch (MyIllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            } catch (InputMismatchException e) {
-                System.out.println("올바른 값을 입력해주세요");
-            }
-        }
         switch (command) {
             case "2" :
                 payPremiumButton();
                 break;
+            default:
+                throw new MyIllegalArgumentException();
         }
 
     }
@@ -91,6 +82,9 @@ public class CustomerViewLogic implements ViewLogic {
     // 이후 진행될 작업으로 보험료를 납입할 계약을 선택하고, 해당 계약으로 즉시 결제를 할지, 계약에 기존에 등록된 결제수단을 등록할지,
     // 고객에게 새로운 결제 수단을 추가할지 정할 수 있다.
     private void payPremiumButton() {
+        if (!login()) return;
+
+
         while (true) {
             Contract contract = selectContract();
             if (contract == null) {
@@ -98,7 +92,9 @@ public class CustomerViewLogic implements ViewLogic {
                 return;
             }
             loop : while (true) {
-                createMenu("결제 선택","결제하기","결제수단등록하기","결제수단추가하기","취소하기");
+                createMenu("결제 선택","결제하기","결제수단등록하기","결제수단추가하기");
+                System.out.println("0. 취소하기");
+                System.out.println("exit. 종료하기");
                 String next = sc.next();
                 switch (next) {
                     case "1" :
@@ -110,12 +106,37 @@ public class CustomerViewLogic implements ViewLogic {
                     case"3":
                         addnewPayment();
                         break;
-                    case "4" :
+                    case "0" :
                         break loop;
+                    case "exit" :
+                        throw new MyCloseSequence();
+                    default:
+                        System.out.println("입력 값을 다시 확인해주세요");
                 }
             }
         }
     }
+
+    private boolean login() {
+        while (true) {
+            try {
+                System.out.println("고객 ID 입력 : ");
+                System.out.println("0. 취소하기");
+                String id = sc.next();
+                if (id.equals("0")) {
+                    return false;
+                }
+                login(Integer.parseInt(id));
+                break;
+            } catch (MyIllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            } catch (InputMismatchException| NumberFormatException e) {
+                System.out.println("올바른 값을 입력해주세요");
+            }
+        }
+        return true;
+    }
+
     // 고객이 보험료 납입 버튼을 클릭한 이후 사용할 계약을 선택하는 기능이다.
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
@@ -127,9 +148,9 @@ public class CustomerViewLogic implements ViewLogic {
                 for (Contract con : contracts) {
                     showContractInfoForPay(con);
                 }
-                System.out.println("뒤로가기 : X");
+                System.out.println("0. 취소하기");
                 String key = sc.next();
-                if (key.equals("X"))
+                if (key.equals("0"))
                     break;
                 contract = contractList.read(Integer.parseInt(key));
                 break;
@@ -182,11 +203,14 @@ public class CustomerViewLogic implements ViewLogic {
                 for (Payment payment : paymentList) {
                     System.out.println(payment);
                 }
-                System.out.println("X : 취소하기");
+                System.out.println("0 : 취소하기");
+                System.out.println("exit : 시스템 종료");
                 String key = sc.next();
                 key = key.toUpperCase();
-                if (key.equals("X"))
+                if (key.equals("0"))
                     return;
+                if(key.equals("exit"))
+                    throw new MyCloseSequence();
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
                 break;
@@ -195,13 +219,14 @@ public class CustomerViewLogic implements ViewLogic {
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
             }
-
         }
     }
     // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
     public void addnewPayment() {
         loop :while (true) {
-            createMenu("결제수단추가하기","카드추가하기","계좌추가하기","취소하기");
+            createMenu("결제수단추가하기","카드추가하기","계좌추가하기");
+            System.out.println("0. 취소하기");
+            System.out.println("exit : 종료하기");
             switch (sc.next()) {
                 case "1" :
                     createCard();
@@ -209,8 +234,10 @@ public class CustomerViewLogic implements ViewLogic {
                 case "2":
                     createAccount();
                     break;
-                case "3":
+                case "0":
                     break loop;
+                case "exit" :
+                    throw new MyCloseSequence();
             }
         }
     }
@@ -224,6 +251,8 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("카드 등록하기");
                 System.out.println("카드사 선택");
                 CardType cardType = selectCardType();
+                if(cardType==null)
+                    return;
                 System.out.println("카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}");
                 String cardNo = validateCardNoFormat(sc.next());
                 System.out.println("CVC : (예시 : *** {3자리 숫자})");
@@ -272,10 +301,12 @@ public class CustomerViewLogic implements ViewLogic {
         for (int i = 0; i < values.length; i++) {
             System.out.println((i+1) + " " + values[i]);
         }
-        System.out.println("뒤로 가기 X");
+        System.out.println("0. 취소하기");
         System.out.println("카드사 번호 : ");
         String key = sc.next();
-        return values[Integer.parseInt(key)];
+        if(key.equals("0"))
+            return null;
+        return values[Integer.parseInt(key)-1];
     }
     // 카드 결제 수단을 추가하는 과정에서 만료기간 중 연도를 형식에 맞게 입력했는지 검증하는 기능
     private int validateYearFormat(int year) {
@@ -317,6 +348,9 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
                 BankType bankType = selectBankType();
+                if(bankType==null)
+                    return;
+
                 System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
                 String accountNo = checkAccountFormat(bankType, sc.next());
 
@@ -355,9 +389,14 @@ public class CustomerViewLogic implements ViewLogic {
         for (int i = 0; i < values.length; i++) {
             System.out.println((i+1) + " " + values[i]);
         }
-        System.out.println("뒤로 가기 X");
+        System.out.println("0. 취소하기");
         System.out.println("은행 번호 : ");
         String key = sc.next();
+        
+        if(key.equals("0"))
+            return null;
+
+
         return values[Integer.parseInt(key)-1];
     }
 

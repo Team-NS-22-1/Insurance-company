@@ -1,6 +1,7 @@
 package main.utility;
 
 import main.exception.InputException;
+import main.exception.MyCloseSequence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,10 +14,10 @@ public class MyBufferedReader extends BufferedReader {
 
     public Object verifyRead(Object returnType) throws IOException,
                                                     InputException.InputNullDataException,
-                                                    InputException.InputInvalidDataException {
+                                                    InputException.InputInvalidDataException,
+            MyCloseSequence {
         String value = this.readLine();
-        if(value.equals("") || value == null || value.isBlank())
-            throw new InputException.InputNullDataException();
+        checkBlankOrExit(value);
 
         try {
             if(returnType instanceof String)
@@ -41,21 +42,27 @@ public class MyBufferedReader extends BufferedReader {
         }
     }
 
-    public int verifyMenu(int categorySize) throws IOException, InputException.InvalidMenuException {
-        String value = this.readLine();
+    private void checkBlankOrExit(String value) {
         if(value.equals("") || value == null || value.isBlank())
-            throw new InputException.InvalidMenuException();
+            throw new InputException.InputNullDataException();
+        if(value.equalsIgnoreCase("EXIT"))
+            throw new MyCloseSequence();
+    }
+
+    public int verifyMenu(int categorySize) throws IOException,
+                                                    InputException.InvalidMenuException, MyCloseSequence {
+        String value = this.readLine();
+        checkBlankOrExit(value);
 
         int selectedMenu;
         try {
             selectedMenu = Integer.parseInt(value);
+            if(selectedMenu > categorySize || selectedMenu < 0)
+                throw new InputException.InvalidMenuException();
         }
         catch (NumberFormatException e){
             throw new InputException.InvalidMenuException();
         }
-        if(selectedMenu > categorySize || selectedMenu < 1)
-            throw new InputException.InvalidMenuException();
-
         return selectedMenu;
     }
 

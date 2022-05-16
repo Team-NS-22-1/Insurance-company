@@ -63,12 +63,12 @@ public class HealthInfo {
 		return this;
 	}
 
-	public boolean isDangerousActivity() {
+	public boolean isDangerActivity() {
 		return isDangerActivity;
 	}
 
-	public HealthInfo setDangerousActivity(boolean dangerousActivity) {
-		isDangerActivity = dangerousActivity;
+	public HealthInfo setDangerActivity(boolean dangerActivity) {
+		isDangerActivity = dangerActivity;
 		return this;
 	}
 
@@ -101,7 +101,7 @@ public class HealthInfo {
 
 	@Override
 	public String toString() {
-		return "건강정보 {" +
+		return "{" +
 				"키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +

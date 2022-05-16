@@ -7,6 +7,8 @@ import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
 import main.domain.insurance.inputDto.*;
+import main.exception.InputException;
+import main.exception.InputException.InputInvalidDataException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,11 +29,6 @@ public class Employee {
 	private Position position;
 
 	public Employee(){
-	}
-
-	@Override
-	public String toString() {
-		return this.id+"'"+this.name+"'"+this.phone+"'"+this.department.getName()+"'"+this.position.getName();
 	}
 
 	public int getId() {
@@ -85,58 +82,49 @@ public class Employee {
 			guaranteeList.add(
 					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription())
 			);
+
+		Insurance insurance=null;
 		if(typeInfo instanceof DtoHealth){
-			HealthInsurance insurance = new HealthInsurance();
-			insurance.setTargetAge(((DtoHealth) typeInfo).getTargetAge())
+			insurance = new HealthInsurance();
+			((HealthInsurance) insurance).setTargetAge(((DtoHealth) typeInfo).getTargetAge())
 					.setTargetSex(((DtoHealth) typeInfo).isTargetSex())
 					.setRiskPremiumCriterion(((DtoHealth) typeInfo).getRiskCriterion())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.HEALTH);
-			return insurance;
 		}
 		else if(typeInfo instanceof DtoCar){
-			CarInsurance insurance = new CarInsurance();
-			insurance.setTargetAge(((DtoCar) typeInfo).getTargetAge())
+			insurance = new CarInsurance();
+			((CarInsurance)insurance).setTargetAge(((DtoCar) typeInfo).getTargetAge())
 					.setValueCriterion(((DtoCar) typeInfo).getTargetAge())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.CAR);;
-			return insurance;
 		}
 		else if(typeInfo instanceof DtoFire){
-			FireInsurance insurance = new FireInsurance();
-			insurance.setBuildingType(((DtoFire) typeInfo).getBuildingType())
+			insurance = new FireInsurance();
+			((FireInsurance)insurance).setBuildingType(((DtoFire) typeInfo).getBuildingType())
 					.setCollateralAmount(((DtoFire) typeInfo).getCollateralAmount())
-					.setName(basicInfo.getName())
-					.setDescription(basicInfo.getDescription())
-					.setPaymentPeriod(basicInfo.getPaymentPeriod())
-					.setContractPeriod(basicInfo.getContractPeriod())
-					.setGuarantee(guaranteeList)
 					.setInsuranceType(InsuranceType.FIRE);;
-			return insurance;
 		}
-		return null;
+		insurance.setName(basicInfo.getName())
+				.setDescription(basicInfo.getDescription())
+				.setPaymentPeriod(basicInfo.getPaymentPeriod())
+				.setContractPeriod(basicInfo.getContractPeriod())
+				.setGuarantee(guaranteeList);
+		return insurance;
 	}
 
-	public void calculatePremium(Insurance insurance){
-		// Not Used...?
-	}
-
-	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, double profitMargin){
+	// TODO 단위 만원
+	public int calcPurePremiumMethod(long damageAmount, long countContract, long businessExpense, int profitMargin){
+		if(damageAmount <=0 || countContract <=0 || businessExpense <=0 || profitMargin <= 0 || profitMargin>=100)
+			throw new InputInvalidDataException();
 		int purePremium = (int) (damageAmount / countContract);
 		int riskCost = (int) (businessExpense / countContract);
-		int premium = (int) ((purePremium + riskCost) / (1 - profitMargin));
+		int premium = (purePremium + riskCost) / (100 - profitMargin);
 		return premium;
 	}
 
 	public Object[] calcLossRatioMethod(int lossRatio, int expectedBusinessRatio, int curTotalPremium){
+		if (expectedBusinessRatio >= 100 || lossRatio <=0 || curTotalPremium <= 0) {
+			throw new InputInvalidDataException();
+		}
 		double adjustedRate = (double) (lossRatio - (100 - expectedBusinessRatio)) / (100 - expectedBusinessRatio);
 		int premium = (int) (curTotalPremium + (curTotalPremium * adjustedRate));
 		return new Object[]{ adjustedRate, premium };
@@ -146,18 +134,10 @@ public class Employee {
 		insurance.setPremium(premium)
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
-										.setSalesAuthState(SalesAuthState.WAIT)
+										.setSalesAuthState(SalesAuthState.PERMISSION)
 										.setSalesStartDate(null)
 				);
 		insuranceList.create(insurance);
-	}
-
-	public String readMyInsurance(InsuranceListImpl insuranceList){
-		ArrayList<Insurance> eInsuranceList = insuranceList.readByEid(this.id);
-		String value = "";
-		for(Insurance insurance : eInsuranceList)
-			value += insurance.toString()+"\n";
-		return value;
 	}
 
 	public void registerAuthInfo(){
@@ -225,7 +205,15 @@ public class Employee {
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
-
 	}
 
+	public String print() {
+		return "직원 정보 {" +
+				"직원ID: " + id +
+				", 이름: '" + name + '\'' +
+				", 연락처: '" + phone + '\'' +
+				", 부서: " + department.getName() +
+				", 직책: " + position.getName() +
+				'}';
+	}
 }
