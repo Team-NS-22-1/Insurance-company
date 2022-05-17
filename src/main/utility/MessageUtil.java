@@ -23,6 +23,16 @@ public class MessageUtil {
         System.out.print(sb);
     }
 
+    public static void createMenuAndExit(String menuName, String ... elements) {
+        createMenu(menuName, elements);
+        System.out.println("0 : 취소하기");
+        System.out.println("exit : 시스템 종료");
+    }
+    public static void createMenuOnlyExit(String menuName, String ... elements) {
+        createMenu(menuName, elements);
+        System.out.println("exit : 시스템 종료");
+    }
+
     public static void createMenuAndClose(String menuName, String ... elements) {
         StringBuilder sb = new StringBuilder();
         sb.append(menuName).append("\n");
