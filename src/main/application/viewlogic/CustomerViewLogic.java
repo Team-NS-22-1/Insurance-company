@@ -1,5 +1,10 @@
 package main.application.viewlogic;
 
+import main.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import main.domain.accident.Accident;
+import main.domain.accident.AccidentList;
+import main.domain.accident.AccidentListImpl;
+import main.domain.accident.AccidentType;
 import main.domain.contract.Contract;
 import main.domain.contract.ContractList;
 import main.domain.contract.ContractListImpl;
@@ -9,20 +14,27 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
+import main.domain.insurance.InsuranceType;
 import main.domain.payment.*;
 import main.application.ViewLogic;
 import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
+import main.utility.CustomMyBufferedReader;
+import main.utility.MyBufferedReader;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import static main.utility.MessageUtil.createMenu;
+import static main.utility.MessageUtil.*;
 import static main.utility.PaymentFormatUtil.*;
 
 /**
@@ -42,22 +54,26 @@ public class CustomerViewLogic implements ViewLogic {
     private InsuranceList insuranceList;
     private CustomerList customerList;
     private PaymentList paymentList;
+    private AccidentList accidentList;
     private Customer customer;
     private Scanner sc;
+    private CustomMyBufferedReader br;
 
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList) {
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList) {
+        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
         this.insuranceList = insuranceList;
         this.customerList = customerList;
         this.paymentList = paymentList;
+        this.accidentList = accidentList;
     }
     @Override
     public void showMenu() {
-        createMenu("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
+        createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
     }
 
     @Override
@@ -66,11 +82,153 @@ public class CustomerViewLogic implements ViewLogic {
             case "2" :
                 payPremiumButton();
                 break;
+            case "3":
+                reportAccident();
+                break;
             default:
                 throw new MyIllegalArgumentException();
         }
 
     }
+
+    private void reportAccident()  {
+        if (!login()) return;
+
+        while (true) {
+            try {
+                AccidentType accidentType = selectAccidentType();
+                if (accidentType == null)
+                    return;
+                inputAccidentInfo(accidentType);
+                break;
+            } catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
+
+
+    }
+
+    private void inputAccidentInfo(AccidentType selectAccidentType) {
+
+        AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
+        Accident accident = customer.reportAccident(accidentReportDto);
+        accidentList.create(accident);
+
+        accident.printForCustomer();
+
+    }
+
+    private AccidentReportDto inputDetailAccidentInfo(AccidentReportDto accidentReportDto) {
+        AccidentType accidentType = accidentReportDto.getAccidentType();
+        return switch (accidentType) {
+            case INJURYACCIDENT ->inputInjuryAccidentInfo(accidentReportDto);
+            case CARBREAKDOWN -> inputCarBreakdown(accidentReportDto);
+            case CARACCIDENT -> inputCarAccident(accidentReportDto);
+            case FIREACCIDENT -> inputFireAccidentInfo(accidentReportDto);
+        };
+    }
+
+    private AccidentReportDto inputPlaceAddress(AccidentReportDto accidentReportDto) {
+        String placeAddress = "";
+         placeAddress= (String) br.verifyRead("사고 장소 : ", placeAddress);
+         return accidentReportDto.setPlaceAddress(placeAddress);
+    }
+
+    private AccidentReportDto inputCarNo(AccidentReportDto accidentReportDto) {
+        String carNo = "";
+        carNo= (String) br.verifyRead("차 번호 : ", carNo);
+        return accidentReportDto.setCarNo(carNo);
+    }
+
+    private AccidentReportDto inputCarAccident(AccidentReportDto accidentReportDto) {
+        inputPlaceAddress(accidentReportDto);
+        inputCarNo(accidentReportDto);
+
+        String opposingDriverPhone = "";
+        opposingDriverPhone= (String) br.verifyRead("상대방 연락처 : ", opposingDriverPhone);
+        accidentReportDto.setOpposingDriverPhone(opposingDriverPhone);
+
+
+        String isRequestOnSite = "";
+        isRequestOnSite= (String) br.verifyRead("현장 출동 요청을 하시겠습니까? (Y/N) : ", isRequestOnSite);
+        boolean request = isRequestOnSite.equals("Y");
+
+        return accidentReportDto.setRequestOnSite(request);
+    }
+
+    private AccidentReportDto inputCarBreakdown(AccidentReportDto accidentReportDto) {
+        inputPlaceAddress(accidentReportDto);
+        inputCarNo(accidentReportDto);
+
+        String symptom = "";
+        symptom= (String) br.verifyRead("고장 증상 : ", symptom);
+        return accidentReportDto.setSymptom(symptom);
+    }
+
+    private AccidentReportDto inputInjuryAccidentInfo(AccidentReportDto accidentReportDto) {
+        String injurySite = "";
+
+        injurySite = (String)br.verifyRead("부상 부위 : ",injurySite);
+        return accidentReportDto.setInjurySite(injurySite);
+    }
+
+    private AccidentReportDto inputFireAccidentInfo(AccidentReportDto accidentReportDto) {
+        return inputPlaceAddress(accidentReportDto);
+    }
+
+    private AccidentReportDto inputCommonAccidentInfo(AccidentType selectAccidentType) {
+
+
+        int year = 0; int month = 0; int day = 0;int  hour = 0; int min = 0;
+        System.out.println("<< 사고 접수 정보 >> (exit: 시스템 종료)");
+        System.out.println("사고 일시를 입력해주세요");
+        year = (int) br.verifyRead("연도 : ", year);
+        month = (int) br.verifyRead("월 : ", month);
+        day = (int) br.verifyRead("일 : ", day);
+        hour = (int) br.verifyRead("시 : ", hour);
+        min = (int) br.verifyRead("분 : ", min);
+
+        String M = dateFormatter(month);
+        String d = dateFormatter(day);
+        String h = dateFormatter(hour);
+        String m = dateFormatter(min);
+
+        String dateFormat = year+"/"+M+"/"+d+" "+h+":"+m;
+
+        LocalDateTime accidentDate = LocalDateTime.parse(dateFormat, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+
+        return new AccidentReportDto().setAccidentType(selectAccidentType)
+                .setDateOfAccident(accidentDate)
+                .setDateOfReport(LocalDateTime.now());
+    }
+
+    private String dateFormatter(int time) {
+        String date = Integer.toString(time);
+        if (time < 10) {
+            date = "0"+time;
+        }
+        return date;
+    }
+
+    private AccidentType selectAccidentType() {
+            int insType = 0;
+            createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
+            insType = br.verifyMenu("", 4);
+
+
+            return switch (insType) {
+                case 1 -> AccidentType.CARACCIDENT;
+                case 2 -> AccidentType.CARBREAKDOWN;
+                case 3 -> AccidentType.INJURYACCIDENT;
+                case 4 -> AccidentType.FIREACCIDENT;
+                case 0 -> null;
+                default -> throw new IllegalStateException("Unexpected value: " + insType);
+            };
+
+    }
+
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
     public void login(int customerId) {
         this.customer  = customerList.read(customerId);

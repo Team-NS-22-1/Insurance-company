@@ -1,7 +1,7 @@
 package main.domain.accident;
 
 
-
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author 규현
@@ -10,14 +10,77 @@ package main.domain.accident;
  */
 public class CarAccident extends Accident {
 
+
 	private String carNo;
 	private double errorRate;
-	private boolean isRequestOnSite;
+	private boolean isRequestOnSite; // 현장 출동 요청
 	private String opposingDriverPhone;
 	private String placeAddress;
 
 	public CarAccident(){
 
+	}
+
+	public String getCarNo() {
+		return carNo;
+	}
+
+	public CarAccident setCarNo(String carNo) {
+		this.carNo = carNo;
+		return this;
+	}
+
+	public double getErrorRate() {
+		return errorRate;
+	}
+
+	public CarAccident setErrorRate(double errorRate) {
+		this.errorRate = errorRate;
+		return this;
+	}
+
+	public boolean isRequestOnSite() {
+		return isRequestOnSite;
+	}
+
+	public CarAccident setRequestOnSite(boolean requestOnSite) {
+		isRequestOnSite = requestOnSite;
+		return this;
+	}
+
+	public String getOpposingDriverPhone() {
+		return opposingDriverPhone;
+	}
+
+	public CarAccident setOpposingDriverPhone(String opposingDriverPhone) {
+		this.opposingDriverPhone = opposingDriverPhone;
+		return this;
+	}
+
+	public String getPlaceAddress() {
+		return placeAddress;
+	}
+
+	public CarAccident setPlaceAddress(String placeAddress) {
+		this.placeAddress = placeAddress;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return null;
+	}
+
+	@Override
+	public void printForCustomer() {
+		String accidentDate = this.dateOfAccident.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+		String reportDate = this.dateOfReport.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+
+		String accidentInfo ="사고번호 : "+id +"\n사고 일시 : " + accidentDate + "\n접수 일시 : " + reportDate
+				+"\n사고 장소 : " + placeAddress
+				+"\n차량번호 : " + carNo +"\n상대방 연락처 : " + opposingDriverPhone
+				+"\n 현장 출동 여부" + isRequestOnSite;
+		System.out.println(accidentInfo);
 	}
 
 

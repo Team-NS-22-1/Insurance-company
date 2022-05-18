@@ -62,16 +62,17 @@ public class MyBufferedReader extends BufferedReader {
                 try {
                     int selectedMenu;
                     selectedMenu = Integer.parseInt(value);
-                    if(selectedMenu > categorySize || selectedMenu < 0)
+                    if (selectedMenu > categorySize || selectedMenu < 0)
                         throw new InputException.InvalidMenuException();
                     return selectedMenu;
-                }
-                catch (NumberFormatException e){
+                } catch (NumberFormatException e) {
                     throw new InputException.InvalidMenuException();
                 }
-            }
-            catch (InputException e) {
+            } catch (InputException e) {
                 System.out.println(e.getMessage());
+            }
+            catch (IOException e) {
+                throw new InputException(e);
             }
         }
     }

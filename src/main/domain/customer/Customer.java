@@ -1,7 +1,8 @@
 package main.domain.customer;
 
 
-import main.domain.accident.Accident;
+import main.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import main.domain.accident.*;
 import main.domain.contract.Contract;
 import main.domain.payment.*;
 
@@ -149,8 +150,32 @@ public class Customer {
 		contract.setPayment(payment);
 	}
 
-	public void reportAccident(){
+	public Accident reportAccident(AccidentReportDto accidentReportDto){
+		AccidentType accidentType = accidentReportDto.getAccidentType();
 
+		Accident accident = null;
+		if (accidentType == AccidentType.INJURYACCIDENT) {
+			accident = new InjuryAccident();
+			((InjuryAccident) accident).setInjurySite(accidentReportDto.getInjurySite());
+		} else if(accidentType == AccidentType.CARACCIDENT) {
+			accident = new CarAccident();
+			((CarAccident)accident).setCarNo(accidentReportDto.getCarNo())
+					.setPlaceAddress(accidentReportDto.getPlaceAddress())
+					.setOpposingDriverPhone(accidentReportDto.getOpposingDriverPhone())
+					.setRequestOnSite(accidentReportDto.isRequestOnSite());
+		} else if (accidentType == AccidentType.CARBREAKDOWN) {
+			accident = new CarBreakdown();
+			((CarBreakdown) accident).setCarNo(accidentReportDto.getCarNo())
+					.setPlaceAddress(accidentReportDto.getPlaceAddress())
+					.setSymptom(accidentReportDto.getSymptom());
+		} else {
+			accident = new FireAccident();
+			((FireAccident)accident).setPlaceAddress(accidentReportDto.getPlaceAddress());
+		}
+		return accident.setAccidentType(accidentType)
+				.setDateOfAccident(accidentReportDto.getDateOfAccident())
+				.setDateOfReport(accidentReportDto.getDateOfReport())
+				.setCustomerId(accidentReportDto.getCustomerId());
 	}
 
 	public void signUp(){

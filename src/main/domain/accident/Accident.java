@@ -1,6 +1,7 @@
 package main.domain.accident;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 
@@ -9,17 +10,17 @@ import java.util.ArrayList;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:22
  */
-public class Accident {
+public abstract class Accident {
 
-	private ArrayList<AccDocFile> accDocFileList;
-	private AccidentType accidentType;
-	private int customerId;
-	private LocalDate dateOfAccident;
-	private LocalDate dateOfReport;
-	private int employeeId;
-	private int id;
-	private int lossReserves;
-	public AccDocFile m_AccDocFile;
+	protected ArrayList<AccDocFile> accDocFileList;
+	protected AccidentType accidentType;
+	protected int customerId;
+	protected LocalDateTime dateOfAccident;
+	protected LocalDateTime dateOfReport;
+	protected int employeeId;
+	protected int id;
+	protected int lossReserves;
+	protected AccDocFile m_AccDocFile;
 
 	public Accident(){
 
@@ -52,20 +53,20 @@ public class Accident {
 		return this;
 	}
 
-	public LocalDate getDateOfAccident() {
+	public LocalDateTime getDateOfAccident() {
 		return dateOfAccident;
 	}
 
-	public Accident setDateOfAccident(LocalDate dateOfAccident) {
+	public Accident setDateOfAccident(LocalDateTime dateOfAccident) {
 		this.dateOfAccident = dateOfAccident;
 		return this;
 	}
 
-	public LocalDate getDateOfReport() {
+	public LocalDateTime getDateOfReport() {
 		return dateOfReport;
 	}
 
-	public Accident setDateOfReport(LocalDate dateOfReport) {
+	public Accident setDateOfReport(LocalDateTime dateOfReport) {
 		this.dateOfReport = dateOfReport;
 		return this;
 	}
@@ -105,4 +106,8 @@ public class Accident {
 		this.m_AccDocFile = m_AccDocFile;
 		return this;
 	}
+
+	public abstract String toString();
+
+	public abstract void printForCustomer();
 }

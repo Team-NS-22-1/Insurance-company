@@ -2,6 +2,7 @@ package main.application;
 
 import main.TestData;
 import main.application.viewlogic.*;
+import main.domain.accident.AccidentListImpl;
 import main.domain.contract.ContractListImpl;
 import main.domain.customer.CustomerListImpl;
 import main.domain.employee.EmployeeListImpl;
@@ -37,12 +38,13 @@ public class Application {
         InsuranceListImpl insuranceList = new InsuranceListImpl();
         ContractListImpl contractList = new ContractListImpl();
         PaymentListImpl paymentList = new PaymentListImpl();
+        AccidentListImpl accidentList = new AccidentListImpl();
 
         // 테스트 더미 데이터 생성
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
@@ -71,7 +73,7 @@ public class Application {
                         break;
                     viewLogic.work(command);
                 }
-            } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
+            } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             } catch (MyCloseSequence e) {
                 System.out.println(e.getMessage());

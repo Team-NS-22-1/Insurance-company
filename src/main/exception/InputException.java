@@ -6,6 +6,14 @@ public class InputException extends MyException {
         super(message);
     }
 
+    public InputException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InputException(Throwable cause) {
+        super(cause);
+    }
+
     public static class InputNullDataException extends InputException {
         public InputNullDataException() {
             super("ERROR!! : 입력창에 값을 입력해주세요.\n");
