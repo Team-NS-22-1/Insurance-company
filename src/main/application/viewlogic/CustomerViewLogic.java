@@ -85,6 +85,8 @@ public class CustomerViewLogic implements ViewLogic {
             case "3":
                 reportAccident();
                 break;
+            case "4":
+                break;
             default:
                 throw new MyIllegalArgumentException();
         }

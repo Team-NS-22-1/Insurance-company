@@ -27,9 +27,9 @@ public class AccidentListImpl implements AccidentList {
 	@Override
 	public Accident read(int id) {
 		Accident accident = accidentList.get(id);
-		//TODO accident search실패 시, exception 뭘로 할지 생각하기 - PaymentlistImpl에도 같은 것으로 설정ㅊ할지 말지 고민해야 함. 아마 customerId랑은 다르게 해야 할 듯.
-		if (accident == null) {
 
+		if (accident == null) {
+			throw new IllegalArgumentException(id+"에 해당하는 사고 정보가 존재하지 않습니다.");
 		}
 		return accident;
 	}
@@ -40,21 +40,26 @@ public class AccidentListImpl implements AccidentList {
 			accidentList.remove(id);
 			return true;
 		}
-		//TODO 마찬가지로 exception 정해주기.
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException(id+"에 해당하는 사고 정보가 존재하지 않습니다.");
 	}
 
 	@Override
 	public List<Accident> readAllByCustomerId(int customerId) {
 		List<Accident> list = new ArrayList<>(accidentList.values());
-		return list.stream().filter(a -> a.getCustomerId()==customerId)
+		List<Accident> collect = list.stream().filter(a -> a.getCustomerId() == customerId)
 				.collect(Collectors.toList());
+		if(collect.size()==0)
+			throw new IllegalArgumentException(customerId+"에 해당하는 사고 정보가 존재하지 않습니다.");
+		return collect;
 	}
 
 	@Override
 	public List<Accident> readAllByEmployeeId(int employeeId) {
 		List<Accident> list = new ArrayList<>(accidentList.values());
-		return list.stream().filter(a -> a.getEmployeeId()==employeeId)
+		List<Accident> collect =list.stream().filter(a -> a.getEmployeeId()==employeeId)
 				.collect(Collectors.toList());
+		if(collect.size()==0)
+			throw new IllegalArgumentException(employeeId+"에 해당하는 사고 정보가 존재하지 않습니다.");
+		return collect;
 	}
 }
