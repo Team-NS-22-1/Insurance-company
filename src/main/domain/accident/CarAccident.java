@@ -75,11 +75,16 @@ public class CarAccident extends Accident {
 	public void printForCustomer() {
 		String accidentDate = this.dateOfAccident.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
 		String reportDate = this.dateOfReport.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+		String request = "거절";
+		if(isRequestOnSite)
+			request = "요청";
+		
+
 
 		String accidentInfo ="사고번호 : "+id +"\n사고 일시 : " + accidentDate + "\n접수 일시 : " + reportDate
 				+"\n사고 장소 : " + placeAddress
 				+"\n차량번호 : " + carNo +"\n상대방 연락처 : " + opposingDriverPhone
-				+"\n 현장 출동 여부" + isRequestOnSite;
+				+"\n 현장 출동 여부 : " + request;
 		System.out.println(accidentInfo);
 	}
 

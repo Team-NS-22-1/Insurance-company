@@ -34,8 +34,10 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import static main.utility.CustomerInfoFormatUtil.isCarNo;
+import static main.utility.CustomerInfoFormatUtil.isPhone;
 import static main.utility.MessageUtil.*;
-import static main.utility.PaymentFormatUtil.*;
+import static main.utility.FormatUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -138,7 +140,12 @@ public class CustomerViewLogic implements ViewLogic {
 
     private AccidentReportDto inputCarNo(AccidentReportDto accidentReportDto) {
         String carNo = "";
-        carNo= (String) br.verifyRead("차 번호 : ", carNo);
+        while (true) {
+            carNo= (String) br.verifyRead("차 번호 (ex : __-**_-**** (_ : 한글, * : 숫자)) : ", carNo);
+            if(isCarNo(carNo))
+                break;
+            System.out.println("양식에 맞게 입력해주세요.");
+        }
         return accidentReportDto.setCarNo(carNo);
     }
 
@@ -147,13 +154,26 @@ public class CustomerViewLogic implements ViewLogic {
         inputCarNo(accidentReportDto);
 
         String opposingDriverPhone = "";
-        opposingDriverPhone= (String) br.verifyRead("상대방 연락처 : ", opposingDriverPhone);
+        while (true) {
+            opposingDriverPhone= (String) br.verifyRead("상대방 연락처 : ", opposingDriverPhone);
+            if(isPhone(opposingDriverPhone))
+                break;
+            System.out.println("양식에 맞게 입력해주세요.");
+        }
         accidentReportDto.setOpposingDriverPhone(opposingDriverPhone);
 
 
         String isRequestOnSite = "";
-        isRequestOnSite= (String) br.verifyRead("현장 출동 요청을 하시겠습니까? (Y/N) : ", isRequestOnSite);
-        boolean request = isRequestOnSite.equals("Y");
+        while (true) {
+            isRequestOnSite= (String) br.verifyRead("현장 출동 요청을 하시겠습니까? (Y/N) : ", isRequestOnSite);
+            isRequestOnSite = isRequestOnSite.toUpperCase();
+            if(isRequestOnSite.equals("Y")||isRequestOnSite.equals("N"))
+                break;
+        }
+        boolean request = false;
+        if (isRequestOnSite.equals("Y")) {
+            request = true;
+        }
 
         return accidentReportDto.setRequestOnSite(request);
     }
@@ -184,11 +204,13 @@ public class CustomerViewLogic implements ViewLogic {
         int year = 0; int month = 0; int day = 0;int  hour = 0; int min = 0;
         System.out.println("<< 사고 접수 정보 >> (exit: 시스템 종료)");
         System.out.println("사고 일시를 입력해주세요");
-        year = (int) br.verifyRead("연도 : ", year);
-        month = (int) br.verifyRead("월 : ", month);
-        day = (int) br.verifyRead("일 : ", day);
-        hour = (int) br.verifyRead("시 : ", hour);
-        min = (int) br.verifyRead("분 : ", min);
+
+        year = validateYear(year);
+        month = vadliateMonth(month);
+        day = validateDay(day);
+
+        hour = validateHour(hour);
+        min = validateMinute(min);
 
         String M = dateFormatter(month);
         String d = dateFormatter(day);
@@ -202,6 +224,56 @@ public class CustomerViewLogic implements ViewLogic {
         return new AccidentReportDto().setAccidentType(selectAccidentType)
                 .setDateOfAccident(accidentDate)
                 .setDateOfReport(LocalDateTime.now());
+    }
+
+    private int validateYear(int year) {
+        while (true) {
+            year = (int) br.verifyRead("연도 (예시 : 20xx 4자리 전부 입력.): ", year);
+            if(isYear(Integer.toString(year)))
+                break;
+            System.out.println("정확한 값을 입력해주세요.");
+        }
+        return year;
+    }
+
+    private int vadliateMonth(int month) {
+        while (true) {
+            month = (int) br.verifyRead("달 : ", month);
+            if(isMonth(month))
+                break;
+            System.out.println("정확한 값을 입력해주세요.");
+        }
+        return month;
+    }
+
+    private int validateDay(int day) {
+        while (true) {
+            day = (int) br.verifyRead("일 : ", day);
+            if(isDay(day))
+                break;
+            System.out.println("정확한 값을 입력해주세요.");
+        }
+        return day;
+    }
+
+    private int validateHour(int hour) {
+        while (true) {
+            hour = (int) br.verifyRead("시 : ", hour);
+            if(isHour(hour))
+                break;
+            System.out.println("정확한 값을 입력해주세요.");
+        }
+        return hour;
+    }
+
+    private int validateMinute(int min) {
+        while (true) {
+            min = (int) br.verifyRead("분 : ", min);
+            if(isMinute(min))
+                break;
+            System.out.println("정확한 값을 입력해주세요.");
+        }
+        return min;
     }
 
     private String dateFormatter(int time) {

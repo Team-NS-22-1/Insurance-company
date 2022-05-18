@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
  * -----------------------------------------------------------
  * 2022-05-14                규현             최초 생성
  */
-public class PaymentFormatUtil {
+public class FormatUtil {
 
     public static boolean isCardNo(String str) {
         return Pattern.matches("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$",str);
@@ -29,6 +29,15 @@ public class PaymentFormatUtil {
         return Pattern.matches("^20[2-3][0-9]$", str);
     }
 
+    public static boolean isDay(int day) {
+        return day>0 && day<32;
+    }
+    public static boolean isHour(int hour) {
+        return hour>=0 && hour<24;
+    }
+    public static boolean isMinute(int min) {
+        return min>=0 && min<60;
+    }
 
 
     public static boolean isNH(String str) {
