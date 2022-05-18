@@ -1,6 +1,7 @@
 package main.domain.accident;
 
-import java.time.LocalDate;
+import main.domain.accident.accDocFile.AccDocFile;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
