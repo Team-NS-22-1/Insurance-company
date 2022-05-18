@@ -1,10 +1,7 @@
 package main.application.viewlogic;
 
 import main.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import main.domain.accident.Accident;
-import main.domain.accident.AccidentList;
-import main.domain.accident.AccidentListImpl;
-import main.domain.accident.AccidentType;
+import main.domain.accident.*;
 import main.domain.contract.Contract;
 import main.domain.contract.ContractList;
 import main.domain.contract.ContractListImpl;
@@ -20,6 +17,7 @@ import main.application.ViewLogic;
 import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
+import main.outerSystem.CarAccidentService;
 import main.utility.CustomMyBufferedReader;
 import main.utility.MyBufferedReader;
 
@@ -119,6 +117,15 @@ public class CustomerViewLogic implements ViewLogic {
         accidentList.create(accident);
 
         accident.printForCustomer();
+
+        AccidentType accidentType = accident.getAccidentType();
+        if (accidentType == AccidentType.CARACCIDENT) {
+            if (((CarAccident) accident).isRequestOnSite()) {
+                CarAccidentService.connectWorker();
+            }
+        } else if (accidentType == AccidentType.CARBREAKDOWN) {
+            CarAccidentService.connectWorker();
+        }
 
     }
 
@@ -238,7 +245,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     private int vadliateMonth(int month) {
         while (true) {
-            month = (int) br.verifyRead("달 : ", month);
+            month = (int) br.verifyRead("월 : ", month);
             if(isMonth(month))
                 break;
             System.out.println("정확한 값을 입력해주세요.");
