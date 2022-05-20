@@ -3,8 +3,11 @@ package domain.customer;
 
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import domain.accident.*;
+import domain.accident.accDocFile.AccDocFile;
+import domain.accident.accDocFile.AccDocType;
 import domain.contract.Contract;
 import domain.payment.*;
+import utility.DocUtil;
 
 import java.util.ArrayList;
 
@@ -103,8 +106,12 @@ public class Customer {
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
-	public void claimCompensation(){
-
+	public AccDocFile claimCompensation(Contract contract,AccDocFile accDocFile){
+		DocUtil docUtil = DocUtil.getInstance();
+		String path = this.id+"/"+ contract.getId();
+		String directory = docUtil.upload(path, accDocFile.getType());
+		accDocFile.setFileAddress(directory);
+		return accDocFile;
 	}
 
 	public void pay(Contract contract){

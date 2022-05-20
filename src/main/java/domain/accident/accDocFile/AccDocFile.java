@@ -11,7 +11,7 @@ public class AccDocFile {
 	private int accidentId;
 	private String fileAddress;
 	private int id;
-	private String type;
+	private AccDocType type;
 
 	public AccDocFile(){
 
@@ -44,11 +44,11 @@ public class AccDocFile {
 		return this;
 	}
 
-	public String getType() {
+	public AccDocType getType() {
 		return type;
 	}
 
-	public AccDocFile setType(String type) {
+	public AccDocFile setType(AccDocType type) {
 		this.type = type;
 		return this;
 	}

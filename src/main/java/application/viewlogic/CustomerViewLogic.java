@@ -123,7 +123,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
     private void showCommonAccidentDoc() {
         System.out.println("보험금 청구 서류를 제출해주세요");
-        customer.claimCompensation();
+//        customer.claimCompensation();
 
         System.out.println("계좌 번호를 입력해주세요");
 //        createAccountDto();
