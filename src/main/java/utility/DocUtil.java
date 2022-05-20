@@ -34,8 +34,8 @@ public class DocUtil extends JFrame {
     }
 
     public void download(AccDocType accDocType) {
-        String path = "asdasdasd"; // path
-        String fileName = accDocType.getDesc()+"(예시)";
+        String path = "./AccDocFile/Example"; // path
+        String fileName = accDocType.getDesc()+"(예시).hwp";
 
         String filePath = path+"/"+fileName;
         JFileChooser chooser = new JFileChooser();
@@ -43,10 +43,6 @@ public class DocUtil extends JFrame {
         int returnVal = chooser.showOpenDialog(this);
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("now directory : " + chooser.getCurrentDirectory());
-            System.out.println("You chose to open this file: " +
-                    chooser.getSelectedFile().getAbsolutePath());
-
             String newPath = chooser.getSelectedFile().getAbsolutePath();
             Scanner sc = new Scanner(System.in);
             System.out.println("저장할 파일 이름을 정해주세요");
@@ -57,7 +53,7 @@ public class DocUtil extends JFrame {
                 HWPFile hwpFile = HWPReader.fromFile((filePath));
                 if (hwpFile != null) {
                     HWPFile clonedHWPFile = hwpFile.clone(false);
-                    String filename2 = name;
+                    String filename2 = name+".hwp";
                     HWPWriter.toFile(clonedHWPFile, newPath + "/" + filename2);
                     System.out.println(filename2 + "이 성공적으로 다운로드 되었습니다.");
                 }
@@ -125,7 +121,7 @@ public class DocUtil extends JFrame {
             HWPFile hwpFile = HWPReader.fromFile((path));
             if (hwpFile != null) {
                 HWPFile clonedHWPFile = hwpFile.clone(false);
-                String filename2 = accDocType.name();
+                String filename2 = accDocType.name()+".hwp";
                 HWPWriter.toFile(clonedHWPFile, "./src/download/"+directory+filename2);
                 dir = "./src/download/"+directory+filename2+".hwp";
                 System.out.println(filename2 + " ok !!!");

@@ -2,8 +2,10 @@ package application.viewlogic;
 
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import domain.accident.*;
+import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.accident.accDocFile.AccDocType;
 import domain.contract.Contract;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
@@ -15,12 +17,10 @@ import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.payment.*;
 import application.ViewLogic;
-import exception.InputException;
-import exception.MyCloseSequence;
-import exception.MyIllegalArgumentException;
-import exception.MyInadequateFormatException;
+import exception.*;
 import outerSystem.CarAccidentService;
 import utility.CustomMyBufferedReader;
+import utility.DocUtil;
 
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -115,62 +115,65 @@ public class CustomerViewLogic implements ViewLogic {
     private void showRequiredDocFile(Accident accident) {
         AccidentType accidentType = accident.getAccidentType();
         switch (accidentType) {
-            case CARACCIDENT -> showCarAccidentDoc();
-            case FIREACCIDENT -> showFireAccidentDoc();
-            case INJURYACCIDENT ->showInjuryAccidentDoc();
+            case CARACCIDENT -> showCarAccidentDoc(accident);
+            case FIREACCIDENT -> showFireAccidentDoc(accident);
+            case INJURYACCIDENT ->showInjuryAccidentDoc(accident);
             case CARBREAKDOWN -> throw new IllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
         }
     }
-    private void showCommonAccidentDoc() {
+    private void showCommonAccidentDoc(Accident accident) {
+        DocUtil instance = DocUtil.getInstance();
         System.out.println("보험금 청구 서류를 제출해주세요");
-//        customer.claimCompensation();
-
-        System.out.println("계좌 번호를 입력해주세요");
-//        createAccountDto();
-    }
-    private void createAccountDto(Account account) {
-        loop:
+        String claimDown = "";
         while (true) {
             try {
-                System.out.println("계좌 추가하기");
-                System.out.println("은행사 선택하기");
-                BankType bankType = selectBankType();
-                if (bankType == null)
-                    return;
-                while (true) {
-                    try {
-                        System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
-                        System.out.println("0. 취소하기");
-                        String command = sc.next();
-                        if (command.equals("0")) {
-                            continue loop;
-                        }
-                        String accountNo = checkAccountFormat(bankType, command);
+                claimDown = (String) br.verifyRead("보상금 청구 서류 양식을 다운로드 받겠습니까?(Y/N)", claimDown);
+                if (claimDown.equals("Y")) {
 
-
-                        account.setBankType(bankType)
-                                .setAccountNo(accountNo);
-                        break;
-                    } catch (MyInadequateFormatException e) {
-                        System.out.println("정확한 값을 입력해주세요");
-                    }
+                    instance.download(AccDocType.CLAIMCOMP);
+                    break;
+                } else if (claimDown.equals("N")) {
+                    break;
                 }
 
-            }catch (ArrayIndexOutOfBoundsException | NumberFormatException| MyInadequateFormatException e) {
-                System.out.println("정확한 값을 입력해주세요");
+            } catch (MyFileException e) {
+                System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
+        String uploadClaim = "";
+        while (true) {
+            try {
+                uploadClaim = (String) br.verifyRead("보상금 청구 서류를 제출하시겠습니까?(Y/N)",uploadClaim);
+                if (claimDown.equals("Y")) {
+
+                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
+                            .setType(AccDocType.CLAIMCOMP));
+                    accDocFileList.create(accDocFile);
+                    break;
+                } else if (claimDown.equals("N")) {
+                    break;
+                }
+            } catch (MyFileException e) {
+                System.out.println("파일 다운로드에 이상이 생겼습니다.");
+            }
+        }
+
+//        customer.claimCompensation();
+
+//        System.out.println("계좌 번호를 입력해주세요");
+//        createAccountDto();
     }
-    private void showCarAccidentDoc() {
 
+    private void showCarAccidentDoc(Accident accident) {
+        showCommonAccidentDoc(accident);
     }
 
-    private void showFireAccidentDoc() {
-
+    private void showFireAccidentDoc(Accident accident) {
+        showCommonAccidentDoc(accident);
     }
 
-    private void showInjuryAccidentDoc() {
-
+    private void showInjuryAccidentDoc(Accident accident) {
+        showCommonAccidentDoc(accident);
     }
 
 

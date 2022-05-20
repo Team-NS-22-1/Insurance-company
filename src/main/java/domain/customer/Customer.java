@@ -106,9 +106,9 @@ public class Customer {
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
-	public AccDocFile claimCompensation(Contract contract,AccDocFile accDocFile){
+	public AccDocFile claimCompensation(Accident accident,AccDocFile accDocFile){
 		DocUtil docUtil = DocUtil.getInstance();
-		String path = this.id+"/"+ contract.getId();
+		String path = this.id+"/"+ accident.getId();
 		String directory = docUtil.upload(path, accDocFile.getType());
 		accDocFile.setFileAddress(directory);
 		return accDocFile;
