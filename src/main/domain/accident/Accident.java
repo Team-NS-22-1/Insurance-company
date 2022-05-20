@@ -1,6 +1,7 @@
 package main.domain.accident;
 
 import main.domain.accident.accDocFile.AccDocFile;
+import main.domain.payment.Account;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public abstract class Accident {
 	protected int employeeId;
 	protected int id;
 	protected int lossReserves;
+	protected Account account;
 	protected AccDocFile m_AccDocFile;
 
 	public Accident(){
@@ -99,12 +101,12 @@ public abstract class Accident {
 		return this;
 	}
 
-	public AccDocFile getM_AccDocFile() {
-		return m_AccDocFile;
+	public Account getAccount() {
+		return account;
 	}
 
-	public Accident setM_AccDocFile(AccDocFile m_AccDocFile) {
-		this.m_AccDocFile = m_AccDocFile;
+	public Accident setAccount(Account account) {
+		this.account = account;
 		return this;
 	}
 

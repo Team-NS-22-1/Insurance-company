@@ -2,6 +2,8 @@ package main.application.viewlogic;
 
 import main.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import main.domain.accident.*;
+import main.domain.accident.accDocFile.AccDocFileList;
+import main.domain.accident.accDocFile.AccDocFileListImpl;
 import main.domain.contract.Contract;
 import main.domain.contract.ContractList;
 import main.domain.contract.ContractListImpl;
@@ -11,18 +13,15 @@ import main.domain.customer.CustomerListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceList;
 import main.domain.insurance.InsuranceListImpl;
-import main.domain.insurance.InsuranceType;
 import main.domain.payment.*;
 import main.application.ViewLogic;
+import main.exception.InputException;
 import main.exception.MyCloseSequence;
 import main.exception.MyIllegalArgumentException;
 import main.exception.MyInadequateFormatException;
 import main.outerSystem.CarAccidentService;
 import main.utility.CustomMyBufferedReader;
-import main.utility.MyBufferedReader;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -55,6 +54,7 @@ public class CustomerViewLogic implements ViewLogic {
     private CustomerList customerList;
     private PaymentList paymentList;
     private AccidentList accidentList;
+    private AccDocFileList accDocFileList;
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
@@ -62,7 +62,7 @@ public class CustomerViewLogic implements ViewLogic {
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList) {
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
@@ -70,6 +70,7 @@ public class CustomerViewLogic implements ViewLogic {
         this.customerList = customerList;
         this.paymentList = paymentList;
         this.accidentList = accidentList;
+        this.accDocFileList = accDocFileList;
     }
     @Override
     public void showMenu() {
@@ -86,6 +87,7 @@ public class CustomerViewLogic implements ViewLogic {
                 reportAccident();
                 break;
             case "4":
+                claimCompensation();
                 break;
             default:
                 throw new MyIllegalArgumentException();
@@ -93,9 +95,106 @@ public class CustomerViewLogic implements ViewLogic {
 
     }
 
+    private void claimCompensation() {
+        if (!login()) return;
+        while (true) {
+            try {
+                Accident accident = selectAccident();
+                if (accident == null)
+                    return;
+                showRequiredDocFile(accident);
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+
+        }
+    }
+
+    private void showRequiredDocFile(Accident accident) {
+        AccidentType accidentType = accident.getAccidentType();
+        switch (accidentType) {
+            case CARACCIDENT -> showCarAccidentDoc();
+            case FIREACCIDENT -> showFireAccidentDoc();
+            case INJURYACCIDENT ->showInjuryAccidentDoc();
+            case CARBREAKDOWN -> throw new IllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
+        }
+    }
+    private void showCommonAccidentDoc() {
+        System.out.println("보험금 청구 서류를 제출해주세요");
+        customer.claimCompensation();
+
+        System.out.println("계좌 번호를 입력해주세요");
+//        createAccountDto();
+    }
+    private void createAccountDto(Account account) {
+        loop:
+        while (true) {
+            try {
+                System.out.println("계좌 추가하기");
+                System.out.println("은행사 선택하기");
+                BankType bankType = selectBankType();
+                if (bankType == null)
+                    return;
+                while (true) {
+                    try {
+                        System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
+                        System.out.println("0. 취소하기");
+                        String command = sc.next();
+                        if (command.equals("0")) {
+                            continue loop;
+                        }
+                        String accountNo = checkAccountFormat(bankType, command);
+
+
+                        account.setBankType(bankType)
+                                .setAccountNo(accountNo);
+                        break;
+                    } catch (MyInadequateFormatException e) {
+                        System.out.println("정확한 값을 입력해주세요");
+                    }
+                }
+
+            }catch (ArrayIndexOutOfBoundsException | NumberFormatException| MyInadequateFormatException e) {
+                System.out.println("정확한 값을 입력해주세요");
+            }
+        }
+    }
+    private void showCarAccidentDoc() {
+
+    }
+
+    private void showFireAccidentDoc() {
+
+    }
+
+    private void showInjuryAccidentDoc() {
+
+    }
+
+
+    private Accident selectAccident() {
+        Accident retAccident = null;
+        while (true) {
+            List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
+            for (Accident accident : accidents) {
+                accident.printForCustomer();
+            }
+            try {
+                int accidentId = 0;
+                 accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
+                 retAccident = accidentList.read(accidentId);
+                 break;
+            } catch (InputException | IllegalArgumentException e) {
+                System.out.println("정확한 값을 입력해 주세요");
+            }
+        }
+        return retAccident;
+    }
+
     private void reportAccident()  {
         if (!login()) return;
-
         while (true) {
             try {
                 AccidentType accidentType = selectAccidentType();
@@ -106,10 +205,7 @@ public class CustomerViewLogic implements ViewLogic {
             } catch (IllegalStateException e) {
                 System.out.println(e.getMessage());
             }
-
         }
-
-
     }
 
     private void inputAccidentInfo(AccidentType selectAccidentType) {
@@ -597,6 +693,8 @@ public class CustomerViewLogic implements ViewLogic {
             throw new MyInadequateFormatException();
         return cvc;
     }
+
+
 
     // 계좌 결제 수단을 추가하는 기능
     private void createAccount() {

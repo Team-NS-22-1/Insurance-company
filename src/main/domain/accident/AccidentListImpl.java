@@ -29,7 +29,7 @@ public class AccidentListImpl implements AccidentList {
 		Accident accident = accidentList.get(id);
 
 		if (accident == null) {
-			throw new IllegalArgumentException(id+"에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		}
 		return accident;
 	}
@@ -40,7 +40,7 @@ public class AccidentListImpl implements AccidentList {
 			accidentList.remove(id);
 			return true;
 		}
-		throw new IllegalArgumentException(id+"에 해당하는 사고 정보가 존재하지 않습니다.");
+		throw new IllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class AccidentListImpl implements AccidentList {
 		List<Accident> collect = list.stream().filter(a -> a.getCustomerId() == customerId)
 				.collect(Collectors.toList());
 		if(collect.size()==0)
-			throw new IllegalArgumentException(customerId+"에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new IllegalArgumentException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		return collect;
 	}
 
@@ -59,7 +59,7 @@ public class AccidentListImpl implements AccidentList {
 		List<Accident> collect =list.stream().filter(a -> a.getEmployeeId()==employeeId)
 				.collect(Collectors.toList());
 		if(collect.size()==0)
-			throw new IllegalArgumentException(employeeId+"에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new IllegalArgumentException("직원 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		return collect;
 	}
 }

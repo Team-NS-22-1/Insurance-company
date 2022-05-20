@@ -102,6 +102,7 @@ public class Customer {
 
 	}
 
+	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
 	public void claimCompensation(){
 
 	}
@@ -175,7 +176,7 @@ public class Customer {
 		return accident.setAccidentType(accidentType)
 				.setDateOfAccident(accidentReportDto.getDateOfAccident())
 				.setDateOfReport(accidentReportDto.getDateOfReport())
-				.setCustomerId(accidentReportDto.getCustomerId());
+				.setCustomerId(this.id);
 	}
 
 	public void signUp(){
