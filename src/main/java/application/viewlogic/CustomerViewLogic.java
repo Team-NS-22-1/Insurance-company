@@ -129,13 +129,11 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 claimDown = (String) br.verifyRead("보상금 청구 서류 양식을 다운로드 받겠습니까?(Y/N)", claimDown);
                 if (claimDown.equals("Y")) {
-
                     instance.download(AccDocType.CLAIMCOMP);
                     break;
                 } else if (claimDown.equals("N")) {
                     break;
                 }
-
             } catch (MyFileException e) {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
@@ -149,6 +147,7 @@ public class CustomerViewLogic implements ViewLogic {
                     AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
                             .setType(AccDocType.CLAIMCOMP));
                     accDocFileList.create(accDocFile);
+                    customer.claimCompensation(accident, accDocFile);
                     break;
                 } else if (claimDown.equals("N")) {
                     break;
@@ -157,6 +156,7 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
+        System.out.println("아아아..");
 
 //        customer.claimCompensation();
 
@@ -186,7 +186,14 @@ public class CustomerViewLogic implements ViewLogic {
             }
             try {
                 int accidentId = 0;
+                System.out.println("0. 취소하기");
+                System.out.println("exit. 종료하기");
                  accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
+
+                if (accidentId == 0) {
+                    break;
+                }
+
                  retAccident = accidentList.read(accidentId);
                  break;
             } catch (InputException | IllegalArgumentException e) {

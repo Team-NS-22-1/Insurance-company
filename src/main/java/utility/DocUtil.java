@@ -24,6 +24,7 @@ import java.util.Scanner;
 public class DocUtil extends JFrame {
 
     private static DocUtil instance;
+    private String submitPath = "./AccDocFile/submit/";
 
     static {
         instance = new DocUtil();
@@ -49,7 +50,6 @@ public class DocUtil extends JFrame {
             String name = sc.next();
 
             try {
-
                 HWPFile hwpFile = HWPReader.fromFile((filePath));
                 if (hwpFile != null) {
                     HWPFile clonedHWPFile = hwpFile.clone(false);
@@ -65,6 +65,13 @@ public class DocUtil extends JFrame {
     }
 
     public String upload(String directory, AccDocType accDocType) {
+
+        File folder = new File(submitPath+directory);
+        if (!folder.exists()) {
+
+            folder.mkdirs();
+        }
+
 
         if (accDocType == AccDocType.PICTUREOFSITE) {
             return uploadImg(directory);
@@ -94,8 +101,8 @@ public class DocUtil extends JFrame {
 
                 byte[] readBuffer = new byte[1024 * 1024];
 
-                File copy = new File("./src/download/"+directory+"/교통사고현장사진"+extension);
-                dir = "./src/download/"+directory+"/교통사고현장사진"+extension;
+                File copy = new File(submitPath+directory+"/교통사고현장사진"+extension);
+                dir =submitPath+directory+"/교통사고현장사진"+extension;
                 BufferedOutputStream bs = null;
 
                 bs = new BufferedOutputStream(new FileOutputStream(copy));
@@ -122,11 +129,12 @@ public class DocUtil extends JFrame {
             if (hwpFile != null) {
                 HWPFile clonedHWPFile = hwpFile.clone(false);
                 String filename2 = accDocType.name()+".hwp";
-                HWPWriter.toFile(clonedHWPFile, "./src/download/"+directory+filename2);
-                dir = "./src/download/"+directory+filename2+".hwp";
+                HWPWriter.toFile(clonedHWPFile, submitPath+directory+"/"+filename2);
+                dir = submitPath+directory+filename2+".hwp";
                 System.out.println(filename2 + " ok !!!");
             }
             } catch (Exception e) {
+                System.out.println(e.getMessage());
                 throw new MyFileException(e);
             }
         }

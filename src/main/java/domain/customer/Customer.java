@@ -111,6 +111,7 @@ public class Customer {
 		String path = this.id+"/"+ accident.getId();
 		String directory = docUtil.upload(path, accDocFile.getType());
 		accDocFile.setFileAddress(directory);
+		System.out.println(accDocFile);
 		return accDocFile;
 	}
 

@@ -52,4 +52,14 @@ public class AccDocFile {
 		this.type = type;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		return "AccDocFile{" +
+				"accidentId=" + accidentId +
+				", fileAddress='" + fileAddress + '\'' +
+				", id=" + id +
+				", type=" + type +
+				'}';
+	}
 }
