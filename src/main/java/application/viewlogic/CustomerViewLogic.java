@@ -129,11 +129,41 @@ public class CustomerViewLogic implements ViewLogic {
 
         submitDocFile(accident,AccDocType.CLAIMCOMP);
 
-        //TODO 계좌번호 입력 추가하기.
-//        customer.claimCompensation();
+        System.out.println("계좌 번호를 입력해주세요");
+        Account compAccount = createCompAccount();
+        if (compAccount != null) {
+            accident.setAccount(compAccount);
+        }
+    }
 
-//        System.out.println("계좌 번호를 입력해주세요");
-//        createAccountDto();
+    private Account createCompAccount() {
+        Account account = null;
+        loop : while (true) {
+
+            System.out.println("계좌 추가하기");
+            System.out.println("은행사 선택하기");
+            BankType bankType = selectBankType();
+            if(bankType==null)
+                break ;
+            while (true) {
+                try {
+                    System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
+                    System.out.println("0. 취소하기");
+                    String command = sc.next();
+                    if (command.equals("0")) {
+                        continue loop;
+                    }
+                    String accountNo = checkAccountFormat(bankType,command);
+                    account = new Account();
+                    account.setBankType(bankType)
+                            .setAccountNo(accountNo);
+                    break loop;
+                } catch (MyInadequateFormatException e) {
+                    System.out.println("정확한 값을 입력해주세요");
+                }
+            }
+        }
+        return account;
     }
 
     private void submitMedicalConfirmation(Accident accident) {
@@ -200,8 +230,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void isFinishedClaimComp(Accident accident, boolean submitted) {
-//        if (submitted && accident.getAccount() != null) {
-        if(submitted){
+        if (submitted && accident.getAccount() != null) {
             connectCompEmployee(accident);
         } else {
             System.out.println("추후에 미제출한 정보들을 제출해주세요.");

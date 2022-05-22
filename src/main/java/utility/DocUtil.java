@@ -25,7 +25,7 @@ import java.util.Scanner;
 public class DocUtil extends JFrame {
 
     private static DocUtil instance;
-    private static String submitPath = "./AccDocFile/submit/";
+    private static final String submitPath = "./AccDocFile/submit/";
 
     static {
         instance = new DocUtil();
@@ -34,6 +34,8 @@ public class DocUtil extends JFrame {
     public static DocUtil getInstance() {
         return instance;
     }
+
+    //TODO 보상담당자가 제출된 파일들을 다운로드 받을 수 있는 기능도 만들어야함.
 
     public void download(AccDocType accDocType) {
         String path = "./AccDocFile/Example"; // path
@@ -87,6 +89,7 @@ public class DocUtil extends JFrame {
 
     }
 
+    //TODO 확장자가 달라도 같은 파일로 인식하도록 하고싶은데.
     private String uploadImg(String directory) {
         String dir = "";
         try {
@@ -107,7 +110,6 @@ public class DocUtil extends JFrame {
                 }
 
                 byte[] readBuffer = new byte[1024 * 1024];
-
                 File copy = new File(submitPath + directory + "/교통사고현장사진" + extension);
                 dir = submitPath + directory + "/교통사고현장사진" + extension;
                 BufferedOutputStream bs = null;
