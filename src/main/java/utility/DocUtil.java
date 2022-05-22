@@ -1,5 +1,6 @@
 package utility;
 
+import domain.accident.Accident;
 import domain.accident.accDocFile.AccDocType;
 import exception.MyFileException;
 import kr.dogfoot.hwplib.object.HWPFile;
@@ -24,7 +25,7 @@ import java.util.Scanner;
 public class DocUtil extends JFrame {
 
     private static DocUtil instance;
-    private String submitPath = "./AccDocFile/submit/";
+    private static String submitPath = "./AccDocFile/submit/";
 
     static {
         instance = new DocUtil();
@@ -64,6 +65,14 @@ public class DocUtil extends JFrame {
         }
     }
 
+    public static void isExist(Accident accident, AccDocType accDocType) {
+        String directory =  accident.getCustomerId()+"/"+ accident.getId();
+        File folder = new File(submitPath+directory+"/"+accDocType.getDesc()+".hwp");
+        if (!folder.exists()) {
+            System.out.println(accDocType.getDesc() + "파일이 존재하지 않습니다. ");
+        }
+    }
+
     public String upload(String directory, AccDocType accDocType) {
 
         File folder = new File(submitPath+directory);
@@ -71,7 +80,6 @@ public class DocUtil extends JFrame {
 
             folder.mkdirs();
         }
-
 
         if (accDocType == AccDocType.PICTUREOFSITE) {
             return uploadImg(directory);
@@ -128,9 +136,9 @@ public class DocUtil extends JFrame {
             HWPFile hwpFile = HWPReader.fromFile((path));
             if (hwpFile != null) {
                 HWPFile clonedHWPFile = hwpFile.clone(false);
-                String filename2 = accDocType.name()+".hwp";
+                String filename2 = accDocType.getDesc()+".hwp";
                 HWPWriter.toFile(clonedHWPFile, submitPath+directory+"/"+filename2);
-                dir = submitPath+directory+filename2+".hwp";
+                dir = submitPath+directory+"/"+filename2;
                 System.out.println(filename2 + " ok !!!");
             }
             } catch (Exception e) {

@@ -33,6 +33,7 @@ import java.util.Scanner;
 
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
+import static utility.DocUtil.isExist;
 import static utility.MessageUtil.*;
 import static utility.FormatUtil.*;
 
@@ -122,41 +123,9 @@ public class CustomerViewLogic implements ViewLogic {
         }
     }
     private void showCommonAccidentDoc(Accident accident) {
-        DocUtil instance = DocUtil.getInstance();
-        System.out.println("보험금 청구 서류를 제출해주세요");
-        String claimDown = "";
-        while (true) {
-            try {
-                claimDown = (String) br.verifyRead("보상금 청구 서류 양식을 다운로드 받겠습니까?(Y/N)", claimDown);
-                if (claimDown.equals("Y")) {
-                    instance.download(AccDocType.CLAIMCOMP);
-                    break;
-                } else if (claimDown.equals("N")) {
-                    break;
-                }
-            } catch (MyFileException e) {
-                System.out.println("파일 다운로드에 이상이 생겼습니다.");
-            }
-        }
-        String uploadClaim = "";
-        while (true) {
-            try {
-                uploadClaim = (String) br.verifyRead("보상금 청구 서류를 제출하시겠습니까?(Y/N)",uploadClaim);
-                if (claimDown.equals("Y")) {
 
-                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
-                            .setType(AccDocType.CLAIMCOMP));
-                    accDocFileList.create(accDocFile);
-                    customer.claimCompensation(accident, accDocFile);
-                    break;
-                } else if (claimDown.equals("N")) {
-                    break;
-                }
-            } catch (MyFileException e) {
-                System.out.println("파일 다운로드에 이상이 생겼습니다.");
-            }
-        }
-        System.out.println("아아아..");
+        submit(accident,AccDocType.CLAIMCOMP);
+
 
 //        customer.claimCompensation();
 
@@ -164,16 +133,66 @@ public class CustomerViewLogic implements ViewLogic {
 //        createAccountDto();
     }
 
+    private void submitMedicalConfirmation(Accident accident) {
+        submit(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
+        submit(accident, AccDocType.CONFIRMADMISSIONDISCHARGE); // 입퇴원 확인서 제출
+    }
+
+    private void submit(Accident accident, AccDocType accDocType) {
+        System.out.println(accDocType.getDesc()+"를 제출해주세요");
+
+        while (true) {
+            try {
+                String medicalCertification = "";
+                medicalCertification = (String) br.verifyRead(accDocType.getDesc()+" 양식을 다운로드 받겠습니까?(Y/N)", medicalCertification);
+                if (medicalCertification.equals("Y")) {
+                    DocUtil instance = DocUtil.getInstance();
+                    instance.download(accDocType);
+                    break;
+                } else if (medicalCertification.equals("N")) {
+                    break;
+                }
+            } catch (MyFileException e) {
+                System.out.println("파일 다운로드에 이상이 생겼습니다.");
+            }
+        }
+
+        while (true) {
+            try {
+                String uploadMedicalCertification = "";
+                isExist(accident,accDocType);
+                uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
+                if (uploadMedicalCertification.equals("Y")) {
+                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
+                            .setType(accDocType));
+                    accDocFileList.create(accDocFile);
+                    break;
+                } else if (uploadMedicalCertification.equals("N")) {
+                    break;
+                }
+            } catch (MyFileException e) {
+                System.out.println("파일 다운로드에 이상이 생겼습니다.");
+            }
+        }
+    }
+
     private void showCarAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
+        submitMedicalConfirmation(accident);
+        submit(accident,AccDocType.CARACCIDENTFACTCONFIRMATION); // 교통사고 사실 확인원
+        submit(accident,AccDocType.PAYMENTRESOLUTION); // 자동차 보험금 지급 결의서
     }
 
     private void showFireAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
+        submit(accident, AccDocType.PICTUREOFSITE); // 사고현장사진
+        submit(accident, AccDocType.REPAIRESTIMATE); // 수리비 견적서
+        submit(accident,AccDocType.REPAIRRECEIPT); // 수리비 영수증
     }
 
     private void showInjuryAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
+        submitMedicalConfirmation(accident);
     }
 
 
