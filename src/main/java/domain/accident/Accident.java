@@ -1,10 +1,13 @@
 package domain.accident;
 
 import domain.accident.accDocFile.AccDocFile;
+import domain.accident.accDocFile.AccDocType;
 import domain.payment.Account;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -14,7 +17,7 @@ import java.util.ArrayList;
  */
 public abstract class Accident {
 
-	protected ArrayList<AccDocFile> accDocFileList;
+	protected Map<AccDocType, AccDocFile> accDocFileList = new HashMap<>();
 	protected AccidentType accidentType;
 	protected int customerId;
 	protected LocalDateTime dateOfAccident;
@@ -23,17 +26,27 @@ public abstract class Accident {
 	protected int id;
 	protected int lossReserves;
 	protected Account account;
-	protected AccDocFile m_AccDocFile;
+	protected boolean isFinishSubmitDocFile;
+
 
 	public Accident(){
 
 	}
 
-	public ArrayList<AccDocFile> getAccDocFileList() {
+	public boolean isFinishSubmitDocFile() {
+		return isFinishSubmitDocFile;
+	}
+
+	public Accident setFinishSubmitDocFile(boolean finishSubmitDocFile) {
+		isFinishSubmitDocFile = finishSubmitDocFile;
+		return this;
+	}
+
+	public Map<AccDocType, AccDocFile> getAccDocFileList() {
 		return accDocFileList;
 	}
 
-	public Accident setAccDocFileList(ArrayList<AccDocFile> accDocFileList) {
+	public Accident setAccDocFileList(Map<AccDocType, AccDocFile> accDocFileList) {
 		this.accDocFileList = accDocFileList;
 		return this;
 	}

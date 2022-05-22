@@ -61,7 +61,6 @@ public class DocUtil extends JFrame {
             } catch (Exception e) {
                 throw new MyFileException(e);
             }
-
         }
     }
 
@@ -109,8 +108,8 @@ public class DocUtil extends JFrame {
 
                 byte[] readBuffer = new byte[1024 * 1024];
 
-                File copy = new File(submitPath+directory+"/교통사고현장사진"+extension);
-                dir =submitPath+directory+"/교통사고현장사진"+extension;
+                File copy = new File(submitPath + directory + "/교통사고현장사진" + extension);
+                dir = submitPath + directory + "/교통사고현장사진" + extension;
                 BufferedOutputStream bs = null;
 
                 bs = new BufferedOutputStream(new FileOutputStream(copy));
@@ -118,6 +117,8 @@ public class DocUtil extends JFrame {
                     bs.write(readBuffer); //Byte형으로만 넣을 수 있음
                 }
                 bs.flush();
+            } else {
+                dir = "close";
             }
         } catch (IOException e) {
             throw new MyFileException(e);
@@ -133,18 +134,20 @@ public class DocUtil extends JFrame {
 
             String path = chooser.getSelectedFile().getAbsolutePath();
             try {
-            HWPFile hwpFile = HWPReader.fromFile((path));
-            if (hwpFile != null) {
-                HWPFile clonedHWPFile = hwpFile.clone(false);
-                String filename2 = accDocType.getDesc()+".hwp";
-                HWPWriter.toFile(clonedHWPFile, submitPath+directory+"/"+filename2);
-                dir = submitPath+directory+"/"+filename2;
-                System.out.println(filename2 + " ok !!!");
-            }
+                HWPFile hwpFile = HWPReader.fromFile((path));
+                if (hwpFile != null) {
+                    HWPFile clonedHWPFile = hwpFile.clone(false);
+                    String filename2 = accDocType.getDesc() + ".hwp";
+                    HWPWriter.toFile(clonedHWPFile, submitPath + directory + "/" + filename2);
+                    dir = submitPath + directory + "/" + filename2;
+                    System.out.println(filename2 + " ok !!!");
+                }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
                 throw new MyFileException(e);
             }
+        } else {
+            dir = "close";
         }
         return dir;
     }

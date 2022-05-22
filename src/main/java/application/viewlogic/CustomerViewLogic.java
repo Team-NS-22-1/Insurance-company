@@ -12,6 +12,9 @@ import domain.contract.ContractListImpl;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
+import domain.employee.Employee;
+import domain.employee.EmployeeList;
+import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
@@ -26,11 +29,9 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
+import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
@@ -56,6 +57,7 @@ public class CustomerViewLogic implements ViewLogic {
     private PaymentList paymentList;
     private AccidentList accidentList;
     private AccDocFileList accDocFileList;
+    private EmployeeList employeeList;
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
@@ -63,7 +65,7 @@ public class CustomerViewLogic implements ViewLogic {
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList) {
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
@@ -72,6 +74,7 @@ public class CustomerViewLogic implements ViewLogic {
         this.paymentList = paymentList;
         this.accidentList = accidentList;
         this.accDocFileList = accDocFileList;
+        this.employeeList = employeeList;
     }
     @Override
     public void showMenu() {
@@ -124,9 +127,9 @@ public class CustomerViewLogic implements ViewLogic {
     }
     private void showCommonAccidentDoc(Accident accident) {
 
-        submit(accident,AccDocType.CLAIMCOMP);
+        submitDocFile(accident,AccDocType.CLAIMCOMP);
 
-
+        //TODO 계좌번호 입력 추가하기.
 //        customer.claimCompensation();
 
 //        System.out.println("계좌 번호를 입력해주세요");
@@ -134,11 +137,36 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void submitMedicalConfirmation(Accident accident) {
-        submit(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
-        submit(accident, AccDocType.CONFIRMADMISSIONDISCHARGE); // 입퇴원 확인서 제출
+        submitDocFile(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
+        submitDocFile(accident, AccDocType.CONFIRMADMISSIONDISCHARGE); // 입퇴원 확인서 제출
     }
 
-    private void submit(Accident accident, AccDocType accDocType) {
+    private void submitFile(Accident accident, AccDocType accDocType) {
+        while (true) {
+            try {
+                String uploadMedicalCertification = "";
+                isExist(accident,accDocType);
+                uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
+                if (uploadMedicalCertification.equals("Y")) {
+                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
+                            .setType(accDocType));
+                    if (accDocFile == null) {
+                        System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
+                        break;
+                    }
+                    accDocFileList.create(accDocFile);
+                    break;
+                } else if (uploadMedicalCertification.equals("N")) {
+                    break;
+                }
+            } catch (MyFileException e) {
+                System.out.println("파일 다운로드에 이상이 생겼습니다.");
+            }
+        }
+
+    }
+
+    private void submitDocFile(Accident accident, AccDocType accDocType) {
         System.out.println(accDocType.getDesc()+"를 제출해주세요");
 
         while (true) {
@@ -156,43 +184,67 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
-
-        while (true) {
-            try {
-                String uploadMedicalCertification = "";
-                isExist(accident,accDocType);
-                uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
-                if (uploadMedicalCertification.equals("Y")) {
-                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
-                            .setType(accDocType));
-                    accDocFileList.create(accDocFile);
-                    break;
-                } else if (uploadMedicalCertification.equals("N")) {
-                    break;
-                }
-            } catch (MyFileException e) {
-                System.out.println("파일 다운로드에 이상이 생겼습니다.");
-            }
-        }
+        submitFile(accident,accDocType);
     }
 
     private void showCarAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
         submitMedicalConfirmation(accident);
-        submit(accident,AccDocType.CARACCIDENTFACTCONFIRMATION); // 교통사고 사실 확인원
-        submit(accident,AccDocType.PAYMENTRESOLUTION); // 자동차 보험금 지급 결의서
+        submitDocFile(accident,AccDocType.CARACCIDENTFACTCONFIRMATION); // 교통사고 사실 확인원
+        submitDocFile(accident,AccDocType.PAYMENTRESOLUTION); // 자동차 보험금 지급 결의서
+
+        boolean submitted = isAllDocSubmitted(accident, AccDocType.CLAIMCOMP, AccDocType.MEDICALCERTIFICATION, AccDocType.CONFIRMADMISSIONDISCHARGE
+                , AccDocType.CARACCIDENTFACTCONFIRMATION, AccDocType.PAYMENTRESOLUTION);
+
+        isFinishedClaimComp(accident, submitted);
+    }
+
+    private void isFinishedClaimComp(Accident accident, boolean submitted) {
+//        if (submitted && accident.getAccount() != null) {
+        if(submitted){
+            connectCompEmployee(accident);
+        } else {
+            System.out.println("추후에 미제출한 정보들을 제출해주세요.");
+        }
+    }
+
+    private void connectCompEmployee(Accident accident) {
+        accident.setFinishSubmitDocFile(true);
+        Employee compEmployee = assignCompEmployee(employeeList, accidentList);
+        System.out.println(compEmployee.print());
+
+        //TODO 보상담당자 변경 기능 추가
+        
+        accident.setEmployeeId(compEmployee.getId());
+
     }
 
     private void showFireAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
-        submit(accident, AccDocType.PICTUREOFSITE); // 사고현장사진
-        submit(accident, AccDocType.REPAIRESTIMATE); // 수리비 견적서
-        submit(accident,AccDocType.REPAIRRECEIPT); // 수리비 영수증
+        submitFile(accident, AccDocType.PICTUREOFSITE); // 사고현장사진
+        submitDocFile(accident, AccDocType.REPAIRESTIMATE); // 수리비 견적서
+        submitDocFile(accident,AccDocType.REPAIRRECEIPT); // 수리비 영수증
+
+        boolean submitted = isAllDocSubmitted(accident, AccDocType.CLAIMCOMP, AccDocType.PICTUREOFSITE, AccDocType.REPAIRESTIMATE, AccDocType.REPAIRRECEIPT);
+        isFinishedClaimComp(accident, submitted);
     }
 
     private void showInjuryAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);
         submitMedicalConfirmation(accident);
+
+        boolean submitted = isAllDocSubmitted(accident, AccDocType.CLAIMCOMP, AccDocType.MEDICALCERTIFICATION, AccDocType.CONFIRMADMISSIONDISCHARGE);
+        isFinishedClaimComp(accident, submitted);
+    }
+
+    private boolean isAllDocSubmitted(Accident accident, AccDocType ... accDocTypes) {
+        Map<AccDocType, AccDocFile> accDocFileList = accident.getAccDocFileList();
+        for (AccDocType accDocType : accDocTypes) {
+            if (!accDocFileList.containsKey(accDocType)) {
+                return false;
+            }
+        }
+        return true;
     }
 
 

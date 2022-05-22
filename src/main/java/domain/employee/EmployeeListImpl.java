@@ -3,6 +3,8 @@ package domain.employee;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author SeungHo
@@ -40,4 +42,11 @@ public class EmployeeListImpl implements EmployeeList {
 		else return false;
 	}
 
+	@Override
+	public List<Employee> readAllCompEmployee() {
+		List<Employee> allEmployee = new ArrayList<>(employeeList.values());
+		return allEmployee.stream()
+				.filter(e -> e.getDepartment() == Department.COMP)
+				.collect(Collectors.toList());
+	}
 }

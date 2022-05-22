@@ -110,8 +110,11 @@ public class Customer {
 		DocUtil docUtil = DocUtil.getInstance();
 		String path = this.id+"/"+ accident.getId();
 		String directory = docUtil.upload(path, accDocFile.getType());
+		if (directory.equals("close")) {
+			return null;
+		}
 		accDocFile.setFileAddress(directory);
-		System.out.println(accDocFile);
+		accident.getAccDocFileList().put(accDocFile.getType(), accDocFile);
 		return accDocFile;
 	}
 

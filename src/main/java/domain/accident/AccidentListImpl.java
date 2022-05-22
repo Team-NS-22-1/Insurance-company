@@ -58,8 +58,6 @@ public class AccidentListImpl implements AccidentList {
 		List<Accident> list = new ArrayList<>(accidentList.values());
 		List<Accident> collect =list.stream().filter(a -> a.getEmployeeId()==employeeId)
 				.collect(Collectors.toList());
-		if(collect.size()==0)
-			throw new IllegalArgumentException("직원 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		return collect;
 	}
 }

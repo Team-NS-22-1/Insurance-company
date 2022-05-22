@@ -48,7 +48,7 @@ public class Application {
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
@@ -75,6 +75,9 @@ public class Application {
                     String command = sc.next();
                     if (command.equals("0"))
                         break;
+                    if (command.equals("exit")) {
+                        throw new MyCloseSequence();
+                    }
                     viewLogic.work(command);
                 }
             } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
