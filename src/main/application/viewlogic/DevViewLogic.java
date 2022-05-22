@@ -7,13 +7,14 @@ import main.domain.employee.EmployeeListImpl;
 import main.domain.insurance.Insurance;
 import main.domain.insurance.InsuranceListImpl;
 import main.domain.insurance.InsuranceType;
+import main.domain.insurance.SalesAuthFile;
 import main.domain.insurance.inputDto.*;
 import main.utility.MyBufferedReader;
 import main.exception.InputException;
 import main.application.ViewLogic;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 
 import static main.utility.MessageUtil.createMenuAndClose;
@@ -58,12 +59,16 @@ public class DevViewLogic implements ViewLogic {
             switch (command){
                 case "1" -> {
                     testInitEmployee();
-                    showInsuranceByEmployee();
-                    if(employee!=null)
+                    if(employee!=null){
+                        showInsuranceByEmployee();
                         this.menuDevelop(this.menuInsuranceType());
+                    }
                 }
                 case "2" -> {
-                    System.out.println("메뉴 준비중입니다.");
+                    testInitEmployee();
+                    if(employee!=null){
+                        this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
+                    }
                     return;
                 }
             }
@@ -100,21 +105,29 @@ public class DevViewLogic implements ViewLogic {
         }
     }
 
-    private void showInsuranceByEmployee() {
-        if(employee == null) return;
-
-        System.out.println("<< "+employee.getName()+" 직원 보험 개발 리스트 >>");
+    private ArrayList<Insurance> showInsuranceByEmployee() {
+        System.out.println("<< "+employee.getName()+" 보험 개발 리스트 >>");
         ArrayList<Insurance> insuranceArrayList = insuranceList.readByEid(employee.getId());
         if(insuranceArrayList.size() == 0) {
             System.out.println("--------------NONE---------------");
-            return;
         }
-        for(Insurance insurance : insuranceArrayList){
-            System.out.println(insurance.print());
+        else{
+            for(Insurance insurance : insuranceArrayList){
+                System.out.println(insurance.print());
+            }
+            System.out.println("---------------------------------");
         }
-        System.out.println("---------------------------------");
+        return insuranceArrayList;
     }
 
+    private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
+        ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
+        System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
+        int insuranceId = br.verifyMenu("보험 ID: ", insuranceArrayList.size());
+        Insurance insurance = insuranceList.read(insuranceId);
+        System.out.println(insurance.print());
+        return insurance;
+    }
     private InsuranceType menuInsuranceType() throws IOException {
         int insType = 0;
         createMenuAndClose("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
@@ -321,6 +334,29 @@ public class DevViewLogic implements ViewLogic {
                     }
                 }
             }
+        }
+    }
+
+    private void menuSalesAuthFile(Insurance insurance) throws IOException {
+        System.out.println("<< 해당 보험의 추가할 파일을 선택하세요. >>");
+        String query = "1. 보험상품신고서\n"
+                + "2. 선임계리사 검증기초서류\n"
+                + "3. 보험요율산출기관 검증확인서\n"
+                + "4. 금융감독원 판매인가서\n";
+        switch (br.verifyMenu(query, 4)){
+            case 1 -> {
+                if(employee.registerAuthProdDeclaration(insurance) > 0) {
+                    System.out.println("정상적으로 업로드되었습니다!");
+                }
+                else {
+                    // 존재할 경우 변경하는 메소드? 어디서? FileUtil에서? 가능?
+                    System.out.println("이미 파일이 존재합니다! 변경하시겠습니까?");
+                    System.out.println("1. 예 2. 아니오");
+                }
+            }
+            case 2 -> employee.registerAuthSrActuaryVerification(insurance);
+            case 3 -> employee.registerAuthISOVerification(insurance);
+            case 4 -> employee.registerAuthFSSOfficialDoc(insurance);
         }
     }
 }

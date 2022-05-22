@@ -7,9 +7,10 @@ import main.domain.contract.Contract;
 import main.domain.contract.ContractListImpl;
 import main.domain.insurance.*;
 import main.domain.insurance.inputDto.*;
-import main.exception.InputException;
 import main.exception.InputException.InputInvalidDataException;
+import main.utility.FileDialogUtil;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -137,6 +138,7 @@ public class Employee {
 
 	public void registerInsurance(InsuranceListImpl insuranceList, Insurance insurance, int premium){
 		insurance.setPremium(premium)
+				.setSalesAuthFile(new SalesAuthFile())
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
 										.setSalesAuthState(SalesAuthState.WAIT)
@@ -144,7 +146,30 @@ public class Employee {
 		insuranceList.create(insurance);
 	}
 
-	public void registerAuthInfo(){
+	public int registerAuthProdDeclaration(Insurance insurance) {
+		// 이 검증을 여기서 하는게 맞을까? DevViewLogic에서 하는게 맞을까?
+		if(insurance.getSalesAuthFile().getDirProdDeclaration() != null) {
+			return -1;
+		}
+		try {
+			String dirInsurance = insurance.getId()+". "+insurance.getName();
+			String path = FileDialogUtil.upload(dirInsurance);
+			insurance.getSalesAuthFile().setDirProdDeclaration(path);
+		} catch (IOException e) {
+			throw new RuntimeException("ERROR :: IO 시스템 오류 발생!!");
+		}
+		return 1;
+	}
+
+	public void registerAuthISOVerification(Insurance insurance) {
+
+	}
+
+	public void registerAuthSrActuaryVerification(Insurance insurance) {
+
+	}
+
+	public void registerAuthFSSOfficialDoc(Insurance insurance) {
 
 	}
 

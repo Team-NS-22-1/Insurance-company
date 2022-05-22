@@ -25,7 +25,42 @@ public class SalesAuthFile {
 	 */
 	private String dirSrActuaryVerification;
 
-	public SalesAuthFile(){
+	public SalesAuthFile() {}
+
+	public String getDirFSSOfficialDoc() {
+		return dirFSSOfficialDoc;
+	}
+
+	public SalesAuthFile setDirFSSOfficialDoc(String dirFSSOfficialDoc) {
+		this.dirFSSOfficialDoc = dirFSSOfficialDoc;
+		return this;
+	}
+
+	public String getDirISOVerification() {
+		return dirISOVerification;
+	}
+
+	public SalesAuthFile setDirISOVerification(String dirISOVerification) {
+		this.dirISOVerification = dirISOVerification;
+		return this;
+	}
+
+	public String getDirProdDeclaration() {
+		return dirProdDeclaration;
+	}
+
+	public SalesAuthFile setDirProdDeclaration(String dirProdDeclaration) {
+		this.dirProdDeclaration = dirProdDeclaration;
+		return this;
+	}
+
+	public String getDirSrActuaryVerification() {
+		return dirSrActuaryVerification;
+	}
+
+	public SalesAuthFile setDirSrActuaryVerification(String dirSrActuaryVerification) {
+		this.dirSrActuaryVerification = dirSrActuaryVerification;
+		return this;
 	}
 
 	public String print() {
