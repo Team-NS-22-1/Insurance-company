@@ -3,6 +3,7 @@ package application;
 import application.viewlogic.*;
 import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.complain.ComplainListImpl;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerListImpl;
 import domain.employee.EmployeeListImpl;
@@ -43,12 +44,13 @@ public class Application {
         PaymentListImpl paymentList = new PaymentListImpl();
         AccidentListImpl accidentList = new AccidentListImpl();
         AccDocFileListImpl accDocFileList = new AccDocFileListImpl();
+        ComplainListImpl complainList = new ComplainListImpl();
 
         // 테스트 더미 데이터 생성
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));

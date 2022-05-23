@@ -18,6 +18,12 @@ import static utility.MessageUtil.createMenu;
  * 2022-05-10                규현             최초 생성
  */
 public class CompVIewLogic implements ViewLogic {
+
+//    private final
+
+    public CompVIewLogic() {
+    }
+
     @Override
     public void showMenu() {
        createMenu("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
@@ -25,6 +31,8 @@ public class CompVIewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
+//        switch ()
+
 
     }
 }

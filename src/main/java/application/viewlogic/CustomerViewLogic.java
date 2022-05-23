@@ -8,6 +8,7 @@ import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.accident.accDocFile.AccDocType;
 import domain.complain.Complain;
 import domain.complain.ComplainList;
+import domain.complain.ComplainListImpl;
 import domain.contract.Contract;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
@@ -68,7 +69,7 @@ public class CustomerViewLogic implements ViewLogic {
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList) {
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList, ComplainListImpl complainList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
@@ -78,6 +79,7 @@ public class CustomerViewLogic implements ViewLogic {
         this.accidentList = accidentList;
         this.accDocFileList = accDocFileList;
         this.employeeList = employeeList;
+        this.complainList = complainList;
     }
     @Override
     public void showMenu() {
@@ -179,6 +181,7 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 String uploadMedicalCertification = "";
                 isExist(accident,accDocType);
+                // TODO isExist라면 update를 해줘야 하는데..
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
                     AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
