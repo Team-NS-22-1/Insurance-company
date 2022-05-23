@@ -1,6 +1,6 @@
 package login;
 
-import domain.ifs.CrudInterface;
+import ifs.CrudInterface;
 
 public interface UserList extends CrudInterface<User> {
 }
