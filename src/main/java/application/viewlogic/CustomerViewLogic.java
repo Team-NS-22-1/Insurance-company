@@ -262,9 +262,7 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
             }
         }
-
         accident.setEmployeeId(compEmployee.getId());
-
     }
 
     private void showFireAccidentDoc(Accident accident) {
