@@ -110,6 +110,7 @@ public class TestData {
         h1.setDescription("테스트 건강보험1의 설명입니다.");
         h1.setInsuranceType(InsuranceType.HEALTH);
         h1.setPremium(100000);
+        h1.setSalesAuthFile(new SalesAuthFile());
         h1.setDevInfo(new DevInfo()
                 .setEmployeeId(1)
                 .setDevDate(LocalDate.now())
@@ -121,6 +122,7 @@ public class TestData {
         h2.setDescription("테스트 건강보험2의 설명입니다.");
         h2.setInsuranceType(InsuranceType.HEALTH);
         h2.setPremium(100000);
+        h2.setSalesAuthFile(new SalesAuthFile());
         h2.setDevInfo(new DevInfo()
                 .setEmployeeId(1)
                 .setDevDate(LocalDate.now())
@@ -132,6 +134,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.CAR)
                 .setDescription("테스트 자동차보험1의 설명입니다.")
                 .setPremium(20000000)
+                .setSalesAuthFile(new SalesAuthFile())
                 .setDevInfo(new DevInfo().setEmployeeId(1)
                         .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.WAIT)));
@@ -139,6 +142,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.CAR)
                 .setDescription("테스트 자동차보험2의 설명입니다.")
                 .setPremium(20000000)
+                .setSalesAuthFile(new SalesAuthFile())
                 .setDevInfo(new DevInfo().setEmployeeId(1)
                         .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.DISALLOWANCE)));
@@ -147,6 +151,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.FIRE)
                 .setDescription("테스트 화재보험1의 설명입니다.")
                 .setPremium(10000000)
+                .setSalesAuthFile(new SalesAuthFile())
                 .setDevInfo(new DevInfo().setEmployeeId(6)
                         .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.PERMISSION)
@@ -155,6 +160,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.FIRE)
                 .setDescription("테스트 화재보험2의 설명입니다.")
                 .setPremium(20000000)
+                .setSalesAuthFile(new SalesAuthFile())
                 .setDevInfo(new DevInfo().setEmployeeId(6)
                         .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.WAIT)));

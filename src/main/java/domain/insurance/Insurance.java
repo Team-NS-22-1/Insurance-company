@@ -124,7 +124,7 @@ public class Insurance {
 				", 납입기간: " + paymentPeriod +
 				", 보장정보: " + guaranteeList +
 				", 개발정보: " + devInfo.print() +
-				", 인가파일: " + salesAuthFile +
+				", 인가파일: " + salesAuthFile.print() +
 				'}';
 	}
 }

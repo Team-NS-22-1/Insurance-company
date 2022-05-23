@@ -75,7 +75,7 @@ public class Application {
                     String command = sc.next();
                     if (command.equals("0"))
                         break;
-                    if (command.equals("exit")) {
+                    if (command.equalsIgnoreCase("EXIT")) {
                         throw new MyCloseSequence();
                     }
                     viewLogic.work(command);
