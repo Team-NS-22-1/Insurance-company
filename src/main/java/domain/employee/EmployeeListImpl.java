@@ -31,6 +31,11 @@ public class EmployeeListImpl implements EmployeeList {
 		else return null;
 	}
 
+	@Override
+	public boolean update(int id) {
+		return false;
+	}
+
 	public ArrayList<Employee> readAll() {
 		return new ArrayList<>(employeeList.values());
 	}

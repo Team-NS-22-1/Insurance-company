@@ -1,7 +1,7 @@
 package domain.customer;
 
 
-import domain.ifs.CrudInterface;
+import ifs.CrudInterface;
 
 /**
  * @author ����

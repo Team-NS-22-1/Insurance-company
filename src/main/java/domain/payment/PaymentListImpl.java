@@ -40,6 +40,11 @@ public class PaymentListImpl implements PaymentList{
     }
 
     @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+    @Override
     public boolean delete(int id) {
         Payment payment = paymentList.remove(id);
         if (payment == null) {

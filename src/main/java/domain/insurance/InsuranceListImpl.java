@@ -29,6 +29,11 @@ public class InsuranceListImpl implements InsuranceList {
 		else return null;
 	}
 
+	@Override
+	public boolean update(int id) {
+		return false;
+	}
+
 	public ArrayList<Insurance> readByEid(int eid){
 		ArrayList<Insurance> insuranceArrayList = new ArrayList<>(this.insuranceList.values());
 		ArrayList<Insurance> eInsuranceList = new ArrayList<>();
