@@ -81,7 +81,7 @@ public class Employee {
 		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 		for(int i=0; i<guaranteeListInfo.size(); i++)
 			guaranteeList.add(
-					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription())
+					new Guarantee(guaranteeListInfo.get(i).getName(), guaranteeListInfo.get(i).getDescription(), guaranteeListInfo.get(i).getGuaranteeAmount())
 			);
 
 		Insurance insurance=null;
@@ -164,6 +164,7 @@ public class Employee {
 
 	public void registerAuthFSSOfficialDoc(Insurance insurance) {
 	}
+
 	public void assessDamage(){
 
 	}

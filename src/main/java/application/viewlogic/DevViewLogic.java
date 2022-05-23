@@ -214,12 +214,14 @@ public class DevViewLogic implements ViewLogic {
         boolean isAddGuarantee = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         String gName = "", gDescription = "";
+        long gAmount = 0;
         while(isAddGuarantee) {
             System.out.println("<< 보장 상세 내용 >> (exit: 시스템 종료)");
             gName = (String) br.verifyRead("보장명: ", gName);
             gDescription = (String) br.verifyRead("보장 상세 내용: ", gDescription);
-            System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription);
-            guaranteeListInfo.add(new DtoGuarantee(gName, gDescription));
+            gAmount = (Long) br.verifyRead("보장금액: ", gAmount);
+            System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription+"\t보장금액: "+gAmount);
+            guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
             switch (br.verifyMenu("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddGuarantee = false;
             }
