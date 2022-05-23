@@ -1,10 +1,11 @@
-package main.utility;
-
-import main.domain.insurance.Insurance;
+package utility;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -26,6 +27,9 @@ public class FileDialogUtil {
         String saveDirectory = serverPath + dirInsurance;
         Files.createDirectories(Paths.get(saveDirectory));
         String savePath = saveDirectory + "/" + dialog.getFile();
+
+        if(dialog.getDirectory() == null)
+            return null;
 
         try {
             in = new FileInputStream(originPath);

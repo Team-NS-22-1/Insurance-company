@@ -1,6 +1,5 @@
 package domain.insurance;
 
-
 /**
  * @author ����
  * @version 1.0
@@ -64,7 +63,12 @@ public class SalesAuthFile {
 	}
 
 	public String print() {
-		return "null";
+		String print = "";
+		if(dirProdDeclaration != null) print += "보험상품신고서 ";
+		if(dirISOVerification != null) print += "보험요율산출기관 검증확인서 ";
+		if(dirSrActuaryVerification != null) print += "선임계리사 검증기초서류 ";
+		if(dirFSSOfficialDoc != null) print += "금융감독원 인가허가파일 ";
+		return print;
 	}
 
 }

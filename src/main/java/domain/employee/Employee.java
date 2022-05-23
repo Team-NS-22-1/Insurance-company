@@ -7,8 +7,8 @@ import domain.contract.Contract;
 import domain.contract.ContractListImpl;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
-import exception.InputException;
 import exception.InputException.InputInvalidDataException;
+import utility.FileDialogUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -138,7 +138,6 @@ public class Employee {
 
 	public void registerInsurance(InsuranceListImpl insuranceList, Insurance insurance, int premium){
 		insurance.setPremium(premium)
-				.setSalesAuthFile(new SalesAuthFile())
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())
 										.setSalesAuthState(SalesAuthState.WAIT)
@@ -146,33 +145,25 @@ public class Employee {
 		insuranceList.create(insurance);
 	}
 
-	public int registerAuthProdDeclaration(Insurance insurance) {
-		// 이 검증을 여기서 하는게 맞을까? DevViewLogic에서 하는게 맞을까?
-		if(insurance.getSalesAuthFile().getDirProdDeclaration() != null) {
+	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getDirProdDeclaration()!=null) {
 			return -1;
 		}
-		try {
-			String dirInsurance = insurance.getId()+". "+insurance.getName();
-			String path = FileDialogUtil.upload(dirInsurance);
-			insurance.getSalesAuthFile().setDirProdDeclaration(path);
-		} catch (IOException e) {
-			throw new RuntimeException("ERROR :: IO 시스템 오류 발생!!");
-		}
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return 0;
+		insurance.getSalesAuthFile().setDirProdDeclaration(savePath);
 		return 1;
 	}
 
-	public void registerAuthISOVerification(Insurance insurance) {
-
+	public void registerAuthSrActuaryVerification(Insurance insurance) {
 	}
 
-	public void registerAuthSrActuaryVerification(Insurance insurance) {
-
+	public void registerAuthISOVerification(Insurance insurance) {
 	}
 
 	public void registerAuthFSSOfficialDoc(Insurance insurance) {
-
 	}
-
 	public void assessDamage(){
 
 	}
@@ -245,4 +236,5 @@ public class Employee {
 				", 직책: " + position.getName() +
 				'}';
 	}
+
 }

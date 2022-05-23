@@ -1,5 +1,6 @@
 package application.viewlogic;
 
+import application.ViewLogic;
 import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -8,12 +9,11 @@ import domain.insurance.Insurance;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
 import domain.insurance.inputDto.*;
-import utility.MyBufferedReader;
 import exception.InputException;
-import application.ViewLogic;
+import utility.MyBufferedReader;
 
-import java.awt.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static utility.MessageUtil.createMenuAndClose;
@@ -344,13 +344,16 @@ public class DevViewLogic implements ViewLogic {
                 + "4. 금융감독원 판매인가서\n";
         switch (br.verifyMenu(query, 4)){
             case 1 -> {
-                if(employee.registerAuthProdDeclaration(insurance) > 0) {
-                    System.out.println("정상적으로 업로드되었습니다!");
-                }
-                else {
-                    // 존재할 경우 변경하는 메소드? 어디서? FileUtil에서? 가능?
-                    System.out.println("이미 파일이 존재합니다! 변경하시겠습니까?");
-                    System.out.println("1. 예 2. 아니오");
+                switch (employee.registerAuthProdDeclaration(insurance)) {
+                    case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                    case 0 -> {
+                        return;
+                    }
+                    case -1 -> {
+                        // 존재할 경우 변경하는 메소드? 어디서? FileUtil에서? 가능?
+                        System.out.println("이미 파일이 존재합니다! 변경하시겠습니까?");
+                        System.out.println("1. 예 2. 아니오");
+                    }
                 }
             }
             case 2 -> employee.registerAuthSrActuaryVerification(insurance);
