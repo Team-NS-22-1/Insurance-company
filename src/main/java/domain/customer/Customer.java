@@ -5,6 +5,7 @@ import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocType;
+import domain.complain.Complain;
 import domain.contract.Contract;
 import domain.payment.*;
 import utility.DocUtil;
@@ -26,6 +27,17 @@ public class Customer {
 	private String email;
 	private String job;
 	private ArrayList<Payment> paymentList = new ArrayList<>();
+	private ArrayList<Complain> complainList = new ArrayList<>();
+
+	public ArrayList<Complain> getComplainList() {
+		return complainList;
+	}
+
+	public Customer setComplainList(ArrayList<Complain> complainList) {
+		this.complainList = complainList;
+		return this;
+	}
+
 	public ArrayList<Payment> getPaymentList() {
 		return paymentList;
 	}
@@ -101,8 +113,12 @@ public class Customer {
 
 	}
 
-	public void changeCompEmp(){
+	public Complain changeCompEmp(String reason){
+		Complain complain = Complain.builder().reason(reason)
+				.customerId(this.id).build();
 
+		this.complainList.add(complain);
+		return complain;
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?

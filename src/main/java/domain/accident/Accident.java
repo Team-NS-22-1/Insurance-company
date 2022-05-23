@@ -26,20 +26,11 @@ public abstract class Accident {
 	protected int id;
 	protected int lossReserves;
 	protected Account account;
-	protected boolean isFinishSubmitDocFile;
+
 
 
 	public Accident(){
 
-	}
-
-	public boolean isFinishSubmitDocFile() {
-		return isFinishSubmitDocFile;
-	}
-
-	public Accident setFinishSubmitDocFile(boolean finishSubmitDocFile) {
-		isFinishSubmitDocFile = finishSubmitDocFile;
-		return this;
 	}
 
 	public Map<AccDocType, AccDocFile> getAccDocFileList() {
