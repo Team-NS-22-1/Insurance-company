@@ -1,6 +1,8 @@
 package domain.accident.accDocFile;
 
 
+import java.util.Objects;
+
 /**
  * @author 규현
  * @version 1.0
@@ -61,5 +63,18 @@ public class AccDocFile {
 				", id=" + id +
 				", type=" + type +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AccDocFile that = (AccDocFile) o;
+		return Objects.equals(getFileAddress(), that.getFileAddress()) && getType() == that.getType();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getFileAddress(), getType());
 	}
 }

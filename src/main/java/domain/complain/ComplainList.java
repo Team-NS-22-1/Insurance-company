@@ -1,6 +1,6 @@
 package domain.complain;
 
-import domain.ifs.CrudInterface;
+import ifs.CrudInterface;
 
 import java.util.List;
 
