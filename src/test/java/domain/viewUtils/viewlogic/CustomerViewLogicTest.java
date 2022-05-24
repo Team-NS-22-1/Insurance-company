@@ -1,13 +1,12 @@
-package main.domain.viewUtils.viewlogic;
+package domain.viewUtils.viewlogic;
 
-import main.domain.contract.Contract;
-import main.domain.contract.ContractListImpl;
-import main.domain.insurance.Insurance;
-import main.domain.insurance.InsuranceListImpl;
-import main.domain.payment.*;
-import main.application.viewlogic.CustomerViewLogic;
-import org.junit.jupiter.api.*;
-import main.application.viewlogic.CustomerViewLogic;
+
+import application.viewlogic.CustomerViewLogic;
+import domain.contract.Contract;
+import domain.contract.ContractListImpl;
+import domain.insurance.Insurance;
+import domain.insurance.InsuranceListImpl;
+import domain.payment.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
