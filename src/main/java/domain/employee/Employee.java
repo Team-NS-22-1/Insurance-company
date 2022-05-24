@@ -137,7 +137,7 @@ public class Employee {
 		return new Object[]{ adjustedRate, premium };
 	}
 
-	public void registerInsurance(InsuranceListImpl insuranceList, Insurance insurance, int premium){
+	public void registerInsurance(InsuranceList insuranceList, Insurance insurance, int premium){
 		insurance.setPremium(premium)
 				.setDevInfo(new DevInfo().setEmployeeId(this.id)
 										.setDevDate(LocalDate.now())

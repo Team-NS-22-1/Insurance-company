@@ -6,7 +6,9 @@ import domain.contract.ContractListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceListImpl;
 import domain.payment.*;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 

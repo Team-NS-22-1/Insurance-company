@@ -1,4 +1,4 @@
-package main.domain.viewUtils.viewlogic;
+package domain.viewUtils.viewlogic;
 
 import org.junit.jupiter.api.*;
 

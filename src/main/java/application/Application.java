@@ -1,13 +1,22 @@
 package application;
 
 import application.viewlogic.*;
+import domain.accident.AccidentList;
 import domain.accident.AccidentListImpl;
+import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.complain.ComplainList;
 import domain.complain.ComplainListImpl;
+import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
+import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
+import domain.customer.JDBCCustomerListImpl;
+import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
+import domain.payment.PaymentList;
 import domain.payment.PaymentListImpl;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
@@ -37,20 +46,20 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        CustomerListImpl customerList = new CustomerListImpl();
-        EmployeeListImpl employeeList = new EmployeeListImpl();
-        InsuranceListImpl insuranceList = new InsuranceListImpl();
-        ContractListImpl contractList = new ContractListImpl();
-        PaymentListImpl paymentList = new PaymentListImpl();
-        AccidentListImpl accidentList = new AccidentListImpl();
-        AccDocFileListImpl accDocFileList = new AccDocFileListImpl();
-        ComplainListImpl complainList = new ComplainListImpl();
+        CustomerList customerList = new JDBCCustomerListImpl();
+        EmployeeList employeeList = new EmployeeListImpl();
+        InsuranceList insuranceList = new InsuranceListImpl();
+        ContractList contractList = new ContractListImpl();
+        PaymentList paymentList = new PaymentListImpl();
+        AccidentList accidentList = new AccidentListImpl();
+        AccDocFileList accDocFileList = new AccDocFileListImpl();
+        ComplainList complainList = new ComplainListImpl();
 
         // 테스트 더미 데이터 생성
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));

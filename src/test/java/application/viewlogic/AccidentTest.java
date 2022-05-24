@@ -1,4 +1,4 @@
-package main.application.viewlogic;
+package application.viewlogic;
 
 import static org.junit.jupiter.api.Assertions.*;
 

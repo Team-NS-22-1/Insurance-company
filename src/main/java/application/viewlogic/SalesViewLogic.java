@@ -4,11 +4,14 @@ package application.viewlogic;
 import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
+import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
+import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 
@@ -33,14 +36,14 @@ public class SalesViewLogic implements ViewLogic {
     int command;
     private Scanner sc;
 
-    private InsuranceListImpl insuranceList;
-    private ContractListImpl contractList;
-    private CustomerListImpl customerList;
-    private EmployeeListImpl employeeList;
+    private InsuranceList insuranceList;
+    private ContractList contractList;
+    private CustomerList customerList;
+    private EmployeeList employeeList;
     private Employee employee;
     private Customer customer;
 
-    public SalesViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList, EmployeeListImpl employeeList) {
+    public SalesViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList, EmployeeList employeeList) {
         this.sc = new Scanner(System.in);
         this.insuranceList = insuranceList;
         this.contractList = contractList;

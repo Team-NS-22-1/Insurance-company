@@ -101,6 +101,8 @@ class PaymentListImplTest {
                 , () -> paymentList.delete(999));
     }
 
+
+
     @DisplayName("고객ID로 결제수단 조회하기")
     @Test
     void findAllByCustomerId() {
