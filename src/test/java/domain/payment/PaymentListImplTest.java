@@ -1,7 +1,6 @@
-package main.domain.payment;
+package domain.payment;
 
-import domain.payment.PaymentListImpl;
-import main.exception.MyIllegalArgumentException;
+import exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -100,17 +99,6 @@ class PaymentListImplTest {
     void delete_exception() {
         assertThrows(MyIllegalArgumentException.class
                 , () -> paymentList.delete(999));
-    }
-
-    @DisplayName("모든 결제 수단 조회하기")
-    @Test
-    void findAll() {
-        List<Payment> all = paymentList.findAll();
-
-        assertEquals(all.size(),3);
-        for (Payment payment : all) {
-            System.out.println(payment);
-        }
     }
 
     @DisplayName("고객ID로 결제수단 조회하기")
