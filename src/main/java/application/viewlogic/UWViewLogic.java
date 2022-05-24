@@ -4,11 +4,9 @@ import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
-import domain.employee.Department;
-import domain.employee.Employee;
-import domain.employee.EmployeeListImpl;
-import domain.employee.Position;
+import domain.employee.*;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
 import application.ViewLogic;
@@ -35,12 +33,12 @@ import static utility.MessageUtil.createMenu;
 public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
-    private EmployeeListImpl employeeList;
+    private EmployeeList employeeList;
     private CustomerList customerList;
-    private InsuranceListImpl insuranceList;
-    private ContractListImpl contractList;
+    private InsuranceList insuranceList;
+    private ContractList contractList;
 
-    public UWViewLogic(EmployeeListImpl employeeList, CustomerList customerList, InsuranceListImpl insuranceList, ContractListImpl contractList) {
+    public UWViewLogic(EmployeeList employeeList, CustomerList customerList, InsuranceList insuranceList, ContractList contractList) {
         this.sc = new Scanner(System.in);
         this.employeeList = employeeList;
         this.customerList = customerList;

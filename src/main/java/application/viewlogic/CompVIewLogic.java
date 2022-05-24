@@ -45,7 +45,7 @@ public class CompVIewLogic implements ViewLogic {
     private CustomMyBufferedReader br;
     private Employee employee;
 
-    public CompVIewLogic(EmployeeListImpl employeeList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, CustomerList customerList) {
+    public CompVIewLogic(EmployeeList employeeList, AccidentList accidentList, AccDocFileList accDocFileList, CustomerList customerList) {
         this.employeeList = employeeList;
         this.accidentList = accidentList;
         this.accDocFileList = accDocFileList;

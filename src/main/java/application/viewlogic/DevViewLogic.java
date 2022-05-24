@@ -4,8 +4,10 @@ import application.ViewLogic;
 import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
+import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
 import domain.insurance.inputDto.*;
@@ -32,8 +34,8 @@ import static utility.MessageUtil.createMenuAndClose;
  */
 public class DevViewLogic implements ViewLogic {
 
-    private EmployeeListImpl employeeList;
-    private InsuranceListImpl insuranceList;
+    private EmployeeList employeeList;
+    private InsuranceList insuranceList;
 
     private Employee employee;
 
@@ -41,7 +43,7 @@ public class DevViewLogic implements ViewLogic {
 
     public DevViewLogic() {}
 
-    public DevViewLogic(EmployeeListImpl employeeList, InsuranceListImpl insuranceList) {
+    public DevViewLogic(EmployeeList employeeList, InsuranceList insuranceList) {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employeeList = employeeList;
         this.insuranceList = insuranceList;

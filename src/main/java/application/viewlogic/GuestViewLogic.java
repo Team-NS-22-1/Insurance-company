@@ -6,6 +6,7 @@ import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
@@ -33,11 +34,11 @@ public class GuestViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
 
-    private InsuranceListImpl insuranceList;
-    private ContractListImpl contractList;
+    private InsuranceList insuranceList;
+    private ContractList contractList;
     private CustomerList customerList;
 
-    public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerList customerList) {
+    public GuestViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList) {
         this.sc = new Scanner(System.in);
         this.insuranceList = insuranceList;
         this.contractList = contractList;
