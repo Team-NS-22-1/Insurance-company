@@ -32,7 +32,7 @@ hs_err_pid*
 out
 gen
 
-.gradle
+.gradle/**
 **/build/
 !src/**/build/
 
