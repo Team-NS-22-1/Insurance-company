@@ -31,3 +31,9 @@ hs_err_pid*
 *.iml
 out
 gen
+
+# Gradle
+.gradle
+/build/
+.gradletasknamecache
+

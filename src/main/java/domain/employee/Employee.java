@@ -244,12 +244,11 @@ public class Employee {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Employee employee = (Employee) o;
-		return getId() == employee.getId() && Objects.equals(getName(), employee.getName()) && Objects.equals(getPhone(), employee.getPhone()) && getDepartment() == employee.getDepartment() && getPosition() == employee.getPosition();
+		return getId() == employee.getId();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getId(), getName(), getPhone(), getDepartment(), getPosition());
+		return Objects.hash(getId());
 	}
-
 }

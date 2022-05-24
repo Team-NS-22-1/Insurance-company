@@ -41,6 +41,11 @@ public class ComplainListImpl implements ComplainList{
     }
 
     @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+    @Override
     public boolean delete(int id) {
         Complain remove = complainlist.remove(id);
         if (remove == null)

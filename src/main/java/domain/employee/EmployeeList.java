@@ -3,6 +3,7 @@ package domain.employee;
 
 import ifs.CrudInterface;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,4 +14,6 @@ import java.util.List;
 public interface EmployeeList extends CrudInterface<Employee> {
 
     public List<Employee> readAllCompEmployee();
+
+    public ArrayList<Employee> readAll();
 }
