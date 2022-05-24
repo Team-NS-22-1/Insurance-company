@@ -37,6 +37,11 @@ public class AccDocFileListImpl implements AccDocFileList{
     }
 
     @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+    @Override
     public boolean delete(int id) {
         AccDocFile accDocFile = accDocFilelist.remove(id);
         if(accDocFile==null)

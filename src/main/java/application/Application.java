@@ -52,7 +52,7 @@ public class Application {
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
-        map.put(UserType.COMP, new CompVIewLogic());
+        map.put(UserType.COMP, new CompVIewLogic(employeeList,accidentList,accDocFileList,customerList));
     }
 
 
