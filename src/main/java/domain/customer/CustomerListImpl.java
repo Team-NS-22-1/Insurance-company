@@ -34,6 +34,11 @@ public class CustomerListImpl implements CustomerList {
 	}
 
 	@Override
+	public boolean update(int id) {
+		return false;
+	}
+
+	@Override
 	public boolean delete(int id) {
 		Customer remove = customerList.remove(id);
 		return remove != null;

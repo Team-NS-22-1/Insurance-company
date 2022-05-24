@@ -35,6 +35,11 @@ public class AccidentListImpl implements AccidentList {
 	}
 
 	@Override
+	public boolean update(int id) {
+		return false;
+	}
+
+	@Override
 	public boolean delete(int id) {
 		if (accidentList.containsKey(id)) {
 			accidentList.remove(id);

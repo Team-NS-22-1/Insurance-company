@@ -38,6 +38,11 @@ public class ContractListImpl implements ContractList {
 	}
 
 	@Override
+	public boolean update(int id) {
+		return false;
+	}
+
+	@Override
 	public boolean delete(int id) {
 		Contract contract = contractList.remove(id);
 		if (contract != null)

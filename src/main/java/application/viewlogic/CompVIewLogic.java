@@ -1,6 +1,22 @@
 package application.viewlogic;
 
 import application.ViewLogic;
+import domain.accident.AccidentList;
+import domain.accident.AccidentListImpl;
+import domain.accident.accDocFile.AccDocFileList;
+import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.customer.CustomerList;
+import domain.customer.CustomerListImpl;
+import domain.employee.Department;
+import domain.employee.Employee;
+import domain.employee.EmployeeList;
+import domain.employee.EmployeeListImpl;
+import exception.InputException;
+import exception.MyIllegalArgumentException;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 import static utility.MessageUtil.createMenu;
 
@@ -19,10 +35,20 @@ import static utility.MessageUtil.createMenu;
  */
 public class CompVIewLogic implements ViewLogic {
 
-//    private final
 
-    public CompVIewLogic() {
+    private final EmployeeList employeeList;
+    private final AccidentList accidentList;
+    private final AccDocFileList accDocFileList;
+    private final CustomerList customerList;
+
+    public CompVIewLogic(EmployeeListImpl employeeList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, CustomerListImpl customerList) {
+        this.employeeList = employeeList;
+        this.accidentList = accidentList;
+        this.accDocFileList = accDocFileList;
+        this.customerList = customerList;
     }
+
+
 
     @Override
     public void showMenu() {
@@ -31,8 +57,45 @@ public class CompVIewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
-//        switch ()
 
 
+        switch (command) {
+            case "1" :
+                break;
+            case "2":
+                break;
+            case"3":
+                break;
+            default:
+                throw new MyIllegalArgumentException();
+
+
+        }
     }
+
+//    private void testInitEmployee() throws IOException {
+//        while(true){
+//            try {
+//                System.out.println("<< 직원을 선택하세요. >>");
+//                ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
+//                for(Employee employee : employeeArrayList){
+//                    System.out.println(employee.print());
+//                }
+//                System.out.println("---------------------------------");
+//                int employeeId = br.verifyMenu("직원 ID: ", employeeArrayList.size());
+//                if(employeeId == 0) break;
+//                this.employee = this.employeeList.read(employeeId);
+//                if(this.employee.getDepartment() != Department.DEV){
+//                    System.out.println("해당 직원은 개발팀 직원이 아닙니다!");
+//                    continue;
+//                }
+//                break;
+//            }
+//            catch (InputException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//    }
+
+
 }

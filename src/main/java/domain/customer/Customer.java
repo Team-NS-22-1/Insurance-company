@@ -4,8 +4,9 @@ package domain.customer;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
-import domain.accident.accDocFile.AccDocType;
+
 import domain.complain.Complain;
+
 import domain.contract.Contract;
 import domain.payment.*;
 import utility.DocUtil;

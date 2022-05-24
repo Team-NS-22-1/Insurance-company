@@ -7,9 +7,10 @@ import domain.contract.Contract;
 import domain.contract.ContractListImpl;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
-import exception.InputException;
 import exception.InputException.InputInvalidDataException;
+import utility.FileDialogUtil;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,10 +146,25 @@ public class Employee {
 		insuranceList.create(insurance);
 	}
 
-	public void registerAuthInfo(){
-
+	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getDirProdDeclaration()!=null) {
+			return -1;
+		}
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return 0;
+		insurance.getSalesAuthFile().setDirProdDeclaration(savePath);
+		return 1;
 	}
 
+	public void registerAuthSrActuaryVerification(Insurance insurance) {
+	}
+
+	public void registerAuthISOVerification(Insurance insurance) {
+	}
+
+	public void registerAuthFSSOfficialDoc(Insurance insurance) {
+	}
 	public void assessDamage(){
 
 	}
@@ -222,6 +238,7 @@ public class Employee {
 				'}';
 	}
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -234,4 +251,5 @@ public class Employee {
 	public int hashCode() {
 		return Objects.hash(getId(), getName(), getPhone(), getDepartment(), getPosition());
 	}
+
 }

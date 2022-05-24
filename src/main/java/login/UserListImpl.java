@@ -42,6 +42,11 @@ public class UserListImpl implements UserList {
     }
 
     @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+    @Override
     public boolean delete(int id) {
         User user = this.userList.remove(id);
         if(user != null) return true;
