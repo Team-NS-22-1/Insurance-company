@@ -1,5 +1,6 @@
 package main.domain.payment;
 
+import domain.payment.PaymentListImpl;
 import main.exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

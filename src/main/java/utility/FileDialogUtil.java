@@ -41,6 +41,7 @@ public class FileDialogUtil {
         return savePath;
     }
 
+    /*
     public static void download(String filePath) throws IOException {
         String originFileName = "보험상품신고서.pdf";
         String originFilePath = "src/보험상품신고서.pdf";
@@ -64,6 +65,7 @@ public class FileDialogUtil {
             throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
         }
     }
+    */
 
     private static void readIOBuffer() throws IOException {
         try {
