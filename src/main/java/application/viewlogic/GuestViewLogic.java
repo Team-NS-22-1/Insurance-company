@@ -3,6 +3,7 @@ package application.viewlogic;
 import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
+import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceListImpl;
@@ -34,9 +35,9 @@ public class GuestViewLogic implements ViewLogic {
 
     private InsuranceListImpl insuranceList;
     private ContractListImpl contractList;
-    private CustomerListImpl customerList;
+    private CustomerList customerList;
 
-    public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList) {
+    public GuestViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerList customerList) {
         this.sc = new Scanner(System.in);
         this.insuranceList = insuranceList;
         this.contractList = contractList;

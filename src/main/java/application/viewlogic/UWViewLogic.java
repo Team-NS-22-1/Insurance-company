@@ -2,6 +2,7 @@ package application.viewlogic;
 
 import domain.contract.*;
 import domain.customer.Customer;
+import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -35,11 +36,11 @@ public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
     private EmployeeListImpl employeeList;
-    private CustomerListImpl customerList;
+    private CustomerList customerList;
     private InsuranceListImpl insuranceList;
     private ContractListImpl contractList;
 
-    public UWViewLogic(EmployeeListImpl employeeList, CustomerListImpl customerList, InsuranceListImpl insuranceList, ContractListImpl contractList) {
+    public UWViewLogic(EmployeeListImpl employeeList, CustomerList customerList, InsuranceListImpl insuranceList, ContractListImpl contractList) {
         this.sc = new Scanner(System.in);
         this.employeeList = employeeList;
         this.customerList = customerList;

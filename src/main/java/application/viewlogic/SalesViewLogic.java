@@ -4,6 +4,7 @@ package application.viewlogic;
 import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
+import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -35,12 +36,12 @@ public class SalesViewLogic implements ViewLogic {
 
     private InsuranceListImpl insuranceList;
     private ContractListImpl contractList;
-    private CustomerListImpl customerList;
+    private CustomerList customerList;
     private EmployeeListImpl employeeList;
     private Employee employee;
     private Customer customer;
 
-    public SalesViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerListImpl customerList, EmployeeListImpl employeeList) {
+    public SalesViewLogic(InsuranceListImpl insuranceList, ContractListImpl contractList, CustomerList customerList, EmployeeListImpl employeeList) {
         this.sc = new Scanner(System.in);
         this.insuranceList = insuranceList;
         this.contractList = contractList;

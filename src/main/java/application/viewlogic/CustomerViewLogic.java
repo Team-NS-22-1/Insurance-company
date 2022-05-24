@@ -69,7 +69,7 @@ public class CustomerViewLogic implements ViewLogic {
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList, ComplainListImpl complainList) {
+    public CustomerViewLogic(CustomerList customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList, ComplainListImpl complainList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
