@@ -5,6 +5,7 @@ import domain.accident.accDocFile.AccDocType;
 import domain.payment.Account;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,22 +25,13 @@ public abstract class Accident {
 	protected LocalDateTime dateOfReport;
 	protected int employeeId;
 	protected int id;
-	protected int lossReserves;
+	protected int lossReserves; // 지급준비금
 	protected Account account;
-	protected boolean isFinishSubmitDocFile;
+
 
 
 	public Accident(){
 
-	}
-
-	public boolean isFinishSubmitDocFile() {
-		return isFinishSubmitDocFile;
-	}
-
-	public Accident setFinishSubmitDocFile(boolean finishSubmitDocFile) {
-		isFinishSubmitDocFile = finishSubmitDocFile;
-		return this;
 	}
 
 	public Map<AccDocType, AccDocFile> getAccDocFileList() {
@@ -126,4 +118,10 @@ public abstract class Accident {
 	public abstract String toString();
 
 	public abstract void printForCustomer();
+
+	public void printForComEmployee() {
+		String reportTime = dateOfReport.format(DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분"));
+
+		System.out.println("ID : " + this.id + " 사고 유형 : " + accidentType.name() + " 접수 일시 : " + reportTime);
+	}
 }

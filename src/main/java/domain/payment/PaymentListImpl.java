@@ -53,10 +53,7 @@ public class PaymentListImpl implements PaymentList{
         return true;
     }
 
-    @Override
-    public List<Payment> findAll() {
-        return new ArrayList<>(paymentList.values());
-    }
+
 
     @Override
     public List<Payment> findAllByCustomerId(int customerId) {

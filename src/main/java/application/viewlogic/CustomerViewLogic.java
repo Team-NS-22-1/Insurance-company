@@ -6,6 +6,9 @@ import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.accident.accDocFile.AccDocType;
+import domain.complain.Complain;
+import domain.complain.ComplainList;
+import domain.complain.ComplainListImpl;
 import domain.contract.Contract;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
@@ -58,6 +61,7 @@ public class CustomerViewLogic implements ViewLogic {
     private AccidentList accidentList;
     private AccDocFileList accDocFileList;
     private EmployeeList employeeList;
+    private ComplainList complainList;
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
@@ -65,7 +69,7 @@ public class CustomerViewLogic implements ViewLogic {
     public CustomerViewLogic() {
     }
 
-    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList) {
+    public CustomerViewLogic(CustomerListImpl customerList, ContractListImpl contractList, InsuranceListImpl insuranceList, PaymentListImpl paymentList, AccidentListImpl accidentList, AccDocFileListImpl accDocFileList, EmployeeListImpl employeeList, ComplainListImpl complainList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.contractList = contractList;
@@ -75,6 +79,7 @@ public class CustomerViewLogic implements ViewLogic {
         this.accidentList = accidentList;
         this.accDocFileList = accDocFileList;
         this.employeeList = employeeList;
+        this.complainList = complainList;
     }
     @Override
     public void showMenu() {
@@ -176,6 +181,7 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 String uploadMedicalCertification = "";
                 isExist(accident,accDocType);
+                // TODO isExist라면 update를 해줘야 하는데..
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
                     AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
@@ -238,14 +244,28 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void connectCompEmployee(Accident accident) {
-        accident.setFinishSubmitDocFile(true);
+
         Employee compEmployee = assignCompEmployee(employeeList, accidentList);
         System.out.println(compEmployee.print());
 
-        //TODO 보상담당자 변경 기능 추가
-        
-        accident.setEmployeeId(compEmployee.getId());
 
+        while (true) {
+            String rtVal = "";
+            rtVal = (String) br.verifyRead("보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)",rtVal);
+            if (rtVal.equals("Y")) {
+                String reasons = "";
+                reasons=(String)br.verifyRead("변경 사유를 입력해주세요",reasons);
+                Complain complain = this.customer.changeCompEmp(reasons);
+                complainList.create(complain);
+                compEmployee = assignCompEmployee(employeeList, accidentList);
+                System.out.println(compEmployee.print());
+                System.out.println("보상처리담당자 변경이 완료되었습니다.");
+                break;
+            }else if(rtVal.equals("N")){
+                break;
+            }
+        }
+        accident.setEmployeeId(compEmployee.getId());
     }
 
     private void showFireAccidentDoc(Accident accident) {

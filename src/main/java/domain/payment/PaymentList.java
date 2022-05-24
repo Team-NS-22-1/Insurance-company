@@ -17,6 +17,5 @@ import java.util.List;
  */
 public interface PaymentList extends CrudInterface<Payment> {
 
-    List<Payment> findAll();
     List<Payment> findAllByCustomerId(int customerId);
 }

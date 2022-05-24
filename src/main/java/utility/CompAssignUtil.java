@@ -20,6 +20,21 @@ import java.util.List;
  */
 public class CompAssignUtil {
 
+    public static Employee changeCompEmployee(EmployeeList employeeList, AccidentList accidentList, Employee employee) {
+        List<Employee> compEmployees = employeeList.readAllCompEmployee();
+        compEmployees.remove(employee);
+        int min = Integer.MAX_VALUE;
+        int minId = 0;
+        for (Employee compEmployee : compEmployees) {
+            List<Accident> accidents = accidentList.readAllByEmployeeId(compEmployee.getId());
+            if (min > accidents.size()) {
+                min = accidents.size();
+                minId = compEmployee.getId();
+            }
+        }
+        return employeeList.read(minId);
+    }
+
     public static Employee assignCompEmployee(EmployeeList employeeList, AccidentList accidentList) {
         List<Employee> compEmployees = employeeList.readAllCompEmployee();
         int min = Integer.MAX_VALUE;
