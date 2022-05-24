@@ -23,7 +23,7 @@ public class JDBCCustomerListImpl implements CustomerList{
         PreparedStatement pstm = null;
 
         try {
-            String query = "insert into customer (name, job, ssn, phone, email) values (?,?,?,?,?)";
+            String query = "insert into customer (name, job, ssn, phone, email,address) values (?,?,?,?,?,?)";
             Class.forName(DbConst.JDBC_DRIVER);
              conn = DBUtil.getConnection();
              pstm = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
@@ -32,6 +32,7 @@ public class JDBCCustomerListImpl implements CustomerList{
             pstm.setString(3, customer.getSsn());
             pstm.setString(4, customer.getPhone());
             pstm.setString(5, customer.getEmail());
+            pstm.setString(6, customer.getAddress());
             pstm.executeUpdate();
             try (ResultSet generatedKeys = pstm.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
@@ -74,6 +75,7 @@ public class JDBCCustomerListImpl implements CustomerList{
                 customer.setEmail(rs.getString("email"));
                 customer.setPhone(rs.getString("phone"));
                 customer.setSsn(rs.getString("ssn"));
+                customer.setAddress(rs.getString("address"));
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
