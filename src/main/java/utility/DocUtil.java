@@ -81,7 +81,7 @@ public class DocUtil extends JFrame {
         dialog.setModal(true);
         dialog.setVisible(true);
 
-        String savePath = path +  dialog.getFile();
+        String savePath = path +  fileName;
         String originPath = dialog.getDirectory()+dialog.getFile();
         if(dialog.getDirectory() == null)
             return null;

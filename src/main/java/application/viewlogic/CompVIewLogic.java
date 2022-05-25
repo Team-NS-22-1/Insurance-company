@@ -204,10 +204,10 @@ public class CompVIewLogic implements ViewLogic {
             }
         }
         Bank.sendCompensation(accident.getAccount(),compensation);
+        //TODO 손해 사정이 끝나면 정보 삭제하기.
 
-        // 다운로드할지 물음.
-
-
+        // TODO 손해 사정이 반려되었을 때, 다시 작성한다면 손해사정서 정보를 읽어서 있다면 create 하지 않기. update를 해야 하나? 그럼 파일들 업로드 날을 필드로 추가하던가 해야 할 거 같다.
+        //
     }
 
     private void inputLossReserve(Accident accident) {
