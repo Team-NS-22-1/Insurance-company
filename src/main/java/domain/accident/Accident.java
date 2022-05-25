@@ -25,7 +25,7 @@ public abstract class Accident {
 	protected LocalDateTime dateOfReport;
 	protected int employeeId;
 	protected int id;
-	protected int lossReserves; // 지급준비금
+	protected long lossReserves; // 지급준비금
 	protected Account account;
 
 
@@ -97,11 +97,11 @@ public abstract class Accident {
 		return this;
 	}
 
-	public int getLossReserves() {
+	public long getLossReserves() {
 		return lossReserves;
 	}
 
-	public Accident setLossReserves(int lossReserves) {
+	public Accident setLossReserves(long lossReserves) {
 		this.lossReserves = lossReserves;
 		return this;
 	}

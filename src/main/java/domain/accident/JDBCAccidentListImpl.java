@@ -29,6 +29,11 @@ public class JDBCAccidentListImpl implements AccidentList{
     }
 
     @Override
+    public void update(Accident accident) {
+
+    }
+
+    @Override
     public void create(Accident accident) {
 
         Connection conn = null;

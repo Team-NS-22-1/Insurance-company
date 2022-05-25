@@ -61,8 +61,12 @@ public class AccidentListImpl implements AccidentList {
 	@Override
 	public List<Accident> readAllByEmployeeId(int employeeId) {
 		List<Accident> list = new ArrayList<>(accidentList.values());
-		List<Accident> collect =list.stream().filter(a -> a.getEmployeeId()==employeeId)
+		return list.stream().filter(a -> a.getEmployeeId()==employeeId)
 				.collect(Collectors.toList());
-		return collect;
+	}
+
+	@Override
+	public void update(Accident accident) {
+
 	}
 }

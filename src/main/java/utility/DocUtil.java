@@ -8,6 +8,7 @@ import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.Scanner;
 
@@ -26,9 +27,11 @@ public class DocUtil extends JFrame {
 
     private static DocUtil instance;
     private static final String submitPath = "./AccDocFile/submit/";
-
+    private FileInputStream in;
+    private FileOutputStream out;
     static {
         instance = new DocUtil();
+
     }
 
     public static DocUtil getInstance() {
@@ -36,6 +39,53 @@ public class DocUtil extends JFrame {
     }
 
     //TODO 보상담당자가 제출된 파일들을 다운로드 받을 수 있는 기능도 만들어야함.
+    public void download(Accident accident, AccDocType accDocType) {
+        String path = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"; // path
+        String fileName = "";
+        if (accDocType == AccDocType.PICTUREOFSITE) {
+            fileName = accDocType.getDesc()+".jpg";
+        }else{
+            fileName = accDocType.getDesc()+".hwp";
+        }
+        FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
+        dialog.setFile(fileName);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        if(dialog.getDirectory() == null)
+            return;
+        String saveFilePath = dialog.getDirectory()+dialog.getFile();
+        try {
+            in = new FileInputStream(path+fileName);
+            out = new FileOutputStream(saveFilePath);
+            readIOBuffer();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void readIOBuffer() throws IOException {
+        try {
+            int read, bytebuffer=0;
+            byte[] buffer = new byte[8192];
+            while((read=in.read(buffer)) != -1){
+                out.write(buffer, 0 ,read);
+                bytebuffer += read;
+                if(bytebuffer > 1024*1024){
+                    bytebuffer = 0;
+                    out.flush();
+                }
+            }
+        } finally {
+            out.close();
+            in.close();
+
+        }
+    }
+
 
     public void download(AccDocType accDocType) {
         String path = "./AccDocFile/Example"; // path

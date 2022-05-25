@@ -15,12 +15,15 @@ import domain.employee.EmployeeListImpl;
 import exception.InputException;
 import exception.MyIllegalArgumentException;
 import utility.CustomMyBufferedReader;
+import utility.DocUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import static utility.FormatUtil.isErrorRate;
 import static utility.MessageUtil.createMenu;
+import static utility.MessageUtil.createMenuAndExit;
 
 
 /**
@@ -57,7 +60,7 @@ public class CompVIewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-       createMenu("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+       createMenuAndExit("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
     }
 
     @Override
@@ -68,6 +71,7 @@ public class CompVIewLogic implements ViewLogic {
             case "1" :
                 break;
             case "2":
+                investigateDamage();
                 break;
             case"3":
                 break;
@@ -86,6 +90,10 @@ public class CompVIewLogic implements ViewLogic {
 
     private void selectAccident() {
         List<Accident> accidents = this.accidentList.readAllByEmployeeId(this.employee.getId());
+        if (accidents.size() == 0) {
+            System.out.println("현재 배당된 사고가 없습니다.");
+            return;
+        }
         while (true) {
             System.out.println("<< 사고를 선택하세요. >>");
             for (Accident accident : accidents) {
@@ -100,7 +108,7 @@ public class CompVIewLogic implements ViewLogic {
                 continue;
             }
             showAccidentDetail(accident);
-
+            break;
 
         }
     }
@@ -129,7 +137,63 @@ public class CompVIewLogic implements ViewLogic {
             }
 //            default ->
         }
+        //다운로드 하기.
+        downloadAccDocFile(accident, accDocFiles);
+        System.out.println("다운로드 종료");
+        inputErrorRate((CarAccident) accident, accidentType);
+        // 지급 준비금 입력.
+        inputLossReserve(accident);
 
+        // update 해주기.
+//        accidentList.update()
+
+        // TODO 손해사정으로 넘어가기.
+
+    }
+
+    private void inputLossReserve(Accident accident) {
+        while (true) {
+            long loss_reserve = -1;
+            loss_reserve = (long) br.verifyRead("지급 준비금을 입력해주세요 ",loss_reserve);
+            if (loss_reserve< 0 ) {
+                System.out.println("정확한 값을 입력해주세요");
+                continue;
+            }
+            accident.setLossReserves(loss_reserve);
+            break;
+        }
+    }
+
+    private void inputErrorRate(CarAccident accident, AccidentType accidentType) {
+        if (accidentType == AccidentType.CARACCIDENT) {
+            while (true) {
+                int errorRate = -1;
+                errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
+                if (isErrorRate(errorRate)) {
+                    accident.setErrorRate(errorRate);
+                    break;
+                } else {
+                    System.out.println("범위에 맞게 입력해주세요.");
+                }
+            }
+        }
+    }
+
+    private void downloadAccDocFile(Accident accident, List<AccDocFile> accDocFiles) {
+        DocUtil instance = DocUtil.getInstance();
+        for (AccDocFile accDocFile : accDocFiles) {
+            while (true) {
+                String query = accDocFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N)";
+                String result = "";
+                result = (String) br.verifyRead(query,result);
+                if (result.equals("Y")) {
+                    instance.download(accident, accDocFile.getType());
+                    break;
+                } else if (result.equals("N")) {
+                    break;
+                }
+            }
+        }
     }
 
     private void loginCompEmployee() {
@@ -141,7 +205,8 @@ public class CompVIewLogic implements ViewLogic {
                     System.out.println(employee.print());
                 }
                 System.out.println("---------------------------------");
-                int employeeId = br.verifyMenu("직원 ID: ", employeeArrayList.size());
+                int employeeId = 0;
+                employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
                 if(employeeId == 0) break;
                 this.employee = this.employeeList.read(employeeId);
                 if(this.employee.getDepartment() != Department.COMP){
