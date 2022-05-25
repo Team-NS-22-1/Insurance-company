@@ -1,6 +1,9 @@
 package domain.employee;
 
 
+import domain.accident.Accident;
+import domain.accident.accDocFile.AccDocFile;
+import domain.accident.accDocFile.AccDocType;
 import domain.contract.BuildingType;
 import domain.contract.ConditionOfUw;
 import domain.contract.Contract;
@@ -8,6 +11,7 @@ import domain.contract.ContractListImpl;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException.InputInvalidDataException;
+import utility.DocUtil;
 import utility.FileDialogUtil;
 
 import java.io.IOException;
@@ -165,8 +169,22 @@ public class Employee {
 
 	public void registerAuthFSSOfficialDoc(Insurance insurance) {
 	}
-	public void assessDamage(){
+	public AccDocFile assessDamage(Accident accident){
+		return uploadLossAssessment(accident);
+	}
 
+	private AccDocFile uploadLossAssessment(Accident accident) {
+		DocUtil instance = DocUtil.getInstance();
+		String fileDir = instance.upload(accident, AccDocType.LOSSASSESSMENT);
+		if (fileDir == null) {
+			return null;
+		}
+		AccDocFile accDocFile = new AccDocFile();
+		accDocFile.setFileAddress(fileDir)
+				.setAccidentId(accident.getId())
+				.setType(AccDocType.LOSSASSESSMENT);
+		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT,accDocFile);
+		return accDocFile;
 	}
 
 	public void concludeContract(){

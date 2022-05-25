@@ -5,6 +5,7 @@ import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.accident.accDocFile.AccDocType;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.customer.CustomerListImpl;
@@ -14,6 +15,7 @@ import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import exception.InputException;
 import exception.MyIllegalArgumentException;
+import outerSystem.Bank;
 import utility.CustomMyBufferedReader;
 import utility.DocUtil;
 
@@ -83,19 +85,51 @@ public class CompVIewLogic implements ViewLogic {
     }
 
     private void investigateDamage() {
+        System.out.println("CompVIewLogic.investigateDamage 시작");
         loginCompEmployee();
-        selectAccident();
+
+        Accident accident = selectAccident();
+        if(accident == null)
+            return;
+
+        showAccidentDetail(accident);
+        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
+        //다운로드 하기.
+
+        downloadAccDocFile(accident, accDocFiles);
+        System.out.println("다운로드 종료");
+        if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+        inputErrorRate((CarAccident) accident, accident.getAccidentType());
+        // 지급 준비금 입력.
+        inputLossReserve(accident);
+
+        //TODO accident update하기.
+//        accidentList.update()
+
+        // TODO 손해사정으로 넘어가기.
+        while (true) {
+            String rtVal = "";
+            rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
+            if (rtVal.equals("Y")) {
+                assessDamage();
+                break;
+            } else if (rtVal.equals("N")) {
+                break;
+            }
+        }
 
     }
 
-    private void selectAccident() {
+    private Accident selectAccident() {
+        System.out.println("CompVIewLogic.selectAccident");
         List<Accident> accidents = this.accidentList.readAllByEmployeeId(this.employee.getId());
         if (accidents.size() == 0) {
             System.out.println("현재 배당된 사고가 없습니다.");
-            return;
+            return null;
         }
         while (true) {
             System.out.println("<< 사고를 선택하세요. >>");
+            System.out.println(accidents.size());
             for (Accident accident : accidents) {
                 accident.printForComEmployee();
             }
@@ -107,15 +141,13 @@ public class CompVIewLogic implements ViewLogic {
                 System.out.println("현재 직원에게 배당된 사건이 아닙니다. 정확한 값을 입력해주세요.");
                 continue;
             }
-            showAccidentDetail(accident);
-            break;
-
+            return accident;
         }
     }
 
     private void showAccidentDetail(Accident accident) {
         Customer customer = customerList.read(accident.getCustomerId());
-        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
+
 
         accident.printForComEmployee();
         System.out.println("접수자 명 : " + customer.getName());
@@ -137,17 +169,44 @@ public class CompVIewLogic implements ViewLogic {
             }
 //            default ->
         }
+
+    }
+
+    private void assessDamage() {
+        loginCompEmployee();
+        Accident accident = selectAccident();
+        if(accident == null)
+            return;
+
+        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
         downloadAccDocFile(accident, accDocFiles);
-        System.out.println("다운로드 종료");
-        inputErrorRate((CarAccident) accident, accidentType);
-        // 지급 준비금 입력.
-        inputLossReserve(accident);
 
-        // update 해주기.
-//        accidentList.update()
+        AccDocFile accDocFile = this.employee.assessDamage(accident);
+        accDocFileList.create(accDocFile);
+        long lossReserves = accident.getLossReserves();
+        long compensation = 0L;
+        compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
 
-        // TODO 손해사정으로 넘어가기.
+        if (compensation > lossReserves * 1.5) {
+            System.out.println("손해 사정서가 반려되었습니다.");
+            return;
+        }
+
+        if (accident.getAccidentType() == AccidentType.CARACCIDENT) {
+            int errorRate = 0;
+            errorRate = ((CarAccident)accident).getErrorRate();
+            compensation = compensation * (errorRate/100);
+
+            if (compensation == 0) {
+                System.out.println("고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.");
+                return;
+            }
+        }
+        Bank.sendCompensation(accident.getAccount(),compensation);
+
+        // 다운로드할지 물음.
+
 
     }
 
@@ -183,7 +242,7 @@ public class CompVIewLogic implements ViewLogic {
         DocUtil instance = DocUtil.getInstance();
         for (AccDocFile accDocFile : accDocFiles) {
             while (true) {
-                String query = accDocFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N)";
+                String query = accDocFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 if (result.equals("Y")) {
@@ -191,6 +250,8 @@ public class CompVIewLogic implements ViewLogic {
                     break;
                 } else if (result.equals("N")) {
                     break;
+                } else if (result.equals("0")) {
+                    return;
                 }
             }
         }

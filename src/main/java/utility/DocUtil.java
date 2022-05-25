@@ -67,6 +67,39 @@ public class DocUtil extends JFrame {
 
     }
 
+    public String upload(Accident accident, AccDocType accDocType) {
+        String path = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"; // path
+        String fileName = "";
+        if (accDocType == AccDocType.PICTUREOFSITE) {
+            fileName = accDocType.getDesc()+".jpg";
+        }else{
+            fileName = accDocType.getDesc()+".hwp";
+        }
+
+        FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
+        dialog.setFile(fileName);
+        dialog.setModal(true);
+        dialog.setVisible(true);
+
+        String savePath = path +  dialog.getFile();
+        String originPath = dialog.getDirectory()+dialog.getFile();
+        if(dialog.getDirectory() == null)
+            return null;
+
+        try {
+            in = new FileInputStream(originPath);
+            out = new FileOutputStream(savePath);
+            readIOBuffer();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return savePath;
+    }
+
+
+
     private void readIOBuffer() throws IOException {
         try {
             int read, bytebuffer=0;
