@@ -1,21 +1,33 @@
-package main.application;
+package application;
 
-import main.TestData;
-import main.application.viewlogic.*;
-import main.domain.contract.ContractListImpl;
-import main.domain.customer.CustomerListImpl;
-import main.domain.employee.EmployeeListImpl;
-import main.domain.insurance.InsuranceListImpl;
-import main.domain.payment.PaymentListImpl;
-import main.exception.InputException;
-import main.exception.MyCloseSequence;
-import main.exception.MyIllegalArgumentException;
+import application.viewlogic.*;
+import domain.accident.AccidentList;
+import domain.accident.AccidentListImpl;
+import domain.accident.accDocFile.AccDocFileList;
+import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.complain.ComplainList;
+import domain.complain.ComplainListImpl;
+import domain.contract.ContractList;
+import domain.contract.ContractListImpl;
+import domain.customer.CustomerList;
+import domain.customer.CustomerListImpl;
+import domain.customer.JDBCCustomerListImpl;
+import domain.employee.EmployeeList;
+import domain.employee.EmployeeListImpl;
+import domain.insurance.*;
+import domain.payment.PaymentList;
+import domain.payment.PaymentListImpl;
+import exception.MyCloseSequence;
+import exception.MyIllegalArgumentException;
+import test.TestData;
 
+import java.util.HashMap;
+import java.util.InputMismatchException;
+import java.util.Map;
+import java.util.Scanner;
 
-import java.util.*;
+import static utility.MessageUtil.createMenu;
 
-import static main.utility.MessageUtil.createMenu;
-import static main.utility.MessageUtil.createMenuAndClose;
 
 /**
  * packageName :  main.application
@@ -33,37 +45,35 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        CustomerListImpl customerList = new CustomerListImpl();
-        EmployeeListImpl employeeList = new EmployeeListImpl();
-        InsuranceListImpl insuranceList = new InsuranceListImpl();
-        ContractListImpl contractList = new ContractListImpl();
-        PaymentListImpl paymentList = new PaymentListImpl();
+        CustomerList customerList = new JDBCCustomerListImpl();
+        EmployeeList employeeList = new EmployeeListImpl();
+        InsuranceList insuranceList = new InsuranceListImpl();
+        InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
+        ContractList contractList = new ContractListImpl();
+        PaymentList paymentList = new PaymentListImpl();
+        AccidentList accidentList = new AccidentListImpl();
+        AccDocFileList accDocFileList = new AccDocFileListImpl();
+        ComplainList complainList = new ComplainListImpl();
 
         // 테스트 더미 데이터 생성
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList,insuranceDetailList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
-        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
+        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
-        map.put(UserType.COMP, new CompVIewLogic());
+        map.put(UserType.COMP, new CompVIewLogic(employeeList,accidentList,accDocFileList,customerList));
     }
 
 
     public void run() {
         while (true) {
             Scanner sc = new Scanner(System.in);
-            String command;
             try {
                 createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
                 System.out.println("0.종료하기");
-                command = sc.nextLine();
-
-                if (command.isBlank())
-                    throw new InputException.InputNullDataException();
-
-                int userType = Integer.parseInt(command);
+                int userType = sc.nextInt();
                 UserType[] values = UserType.values();
 
                 if (userType == 0) {
@@ -71,24 +81,17 @@ public class Application {
                 }
                 UserType type = values[userType - 1];
                 while (true) {
-                    try {
-                        ViewLogic viewLogic = map.get(type);
-                        viewLogic.showMenu();
-                        command = sc.nextLine();
-                        if (command.equals("0"))
-                            break;
-                        if (command.isBlank())
-                            throw new InputException.InputNullDataException();
-                        viewLogic.work(command);
-                    } catch (InputException.InputNullDataException e) {
-                        System.out.println(e.getMessage());
-                    } catch (MyIllegalArgumentException e) {
-                        System.out.println("정확한 값을 입력해주세요.");
+                    ViewLogic viewLogic = map.get(type);
+                    viewLogic.showMenu();
+                    String command = sc.next();
+                    if (command.equals("0"))
+                        break;
+                    if (command.equalsIgnoreCase("EXIT")) {
+                        throw new MyCloseSequence();
                     }
+                    viewLogic.work(command);
                 }
-            } catch (InputException.InputNullDataException e) {
-                System.out.println(e.getMessage());
-            } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             } catch (MyCloseSequence e) {
                 System.out.println(e.getMessage());

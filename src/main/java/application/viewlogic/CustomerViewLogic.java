@@ -18,6 +18,7 @@ import domain.customer.CustomerList;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceDetailList;
 import domain.insurance.InsuranceList;
 import domain.payment.*;
 import exception.*;
