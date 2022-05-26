@@ -6,8 +6,9 @@ import java.sql.*;
 public class InsuranceDao extends Dao {
 
     public InsuranceDao() {
-        super.connet();
+        super.connect();
     }
+
 
     public void create(Insurance insurance) {
         String query = "insert into insuracne (user_name, user_phone) value (" +

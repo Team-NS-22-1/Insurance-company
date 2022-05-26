@@ -13,6 +13,7 @@ import application.ViewLogic;
 import exception.InputException;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
+import utility.MessageUtil;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -80,24 +81,13 @@ public class UWViewLogic implements ViewLogic {
 
     }
 
-    public void createMenuAndExit(String menuName, String ... elements) {
-        createMenu(menuName, elements);
-        System.out.println("0 : 취소하기");
-        System.out.println("exit : 시스템 종료");
-    }
-
-    public void createMenuOnlyExit(String menuName, String ... elements) {
-        createMenu(menuName, elements);
-        System.out.println("exit : 시스템 종료");
-    }
-
     public boolean selectInsuranceType() {
         boolean isExit = false;
 
         while (isExit != true) {
 
             try {
-                createMenuAndExit("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험");
+                MessageUtil.createMenuAndExit("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험");
 
                 InsuranceType insuranceType = null;
 
@@ -128,7 +118,7 @@ public class UWViewLogic implements ViewLogic {
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
-                createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
+                MessageUtil.createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
                 String contractId = sc.next();
 
                 if (contractId.equals("0")) break;
@@ -156,7 +146,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
+                MessageUtil.createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
                 String command = sc.next();
 
                 switch (command) {
@@ -199,7 +189,7 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
+                MessageUtil.createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
 
                 switch (sc.next()) {
                     case "1":

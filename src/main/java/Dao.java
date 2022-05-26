@@ -1,29 +1,46 @@
 import application.Application;
+import utility.db.DBUtil;
 
 import java.sql.*;
 
 public class Dao {
 
-    private Connection connect = null;
+    private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultSet = null;
 
-    public void connet() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            connect = DriverManager.getConnection("", "", "");
-        } catch (Exception e) {
-
-        }
+    public void connect() {
+        connection = DBUtil.getConnection();
     }
 
-    public void create(String query) {
+    public int create(String query) {
+        connect();
+        int id = 0;
         try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next())
+                id = generatedKeys.getInt(1);
 
-            if (!statement.execute(query));
+
+
+            //if (!statement.execute(query));
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
+        return id;
+    }
+
+    public ResultSet read(String query) {
+        connect();
+        try {
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return resultSet;
     }
 
     public void update(String query) {
@@ -32,16 +49,5 @@ public class Dao {
 
     public void delete(String query) {
 
-    }
-
-    public ResultSet retrieve(String query) {
-        try {
-            statement = connect.createStatement();
-            resultSet = statement.executeQuery(query);
-            return resultSet;
-        } catch (SQLException e) {
-
-        }
-        return resultSet;
     }
 }
