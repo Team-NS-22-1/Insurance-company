@@ -1,28 +1,25 @@
 package application.viewlogic;
 
+import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
-import domain.accident.*;
+import domain.accident.Accident;
+import domain.accident.AccidentList;
+import domain.accident.AccidentType;
+import domain.accident.CarAccident;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
-import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.accident.accDocFile.AccDocType;
 import domain.complain.Complain;
 import domain.complain.ComplainList;
-import domain.complain.ComplainListImpl;
 import domain.contract.Contract;
 import domain.contract.ContractList;
-import domain.contract.ContractListImpl;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.payment.*;
-import application.ViewLogic;
 import exception.*;
 import outerSystem.CarAccidentService;
 import utility.CustomMyBufferedReader;
@@ -38,8 +35,8 @@ import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
-import static utility.MessageUtil.*;
 import static utility.FormatUtil.*;
+import static utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -637,9 +634,8 @@ public class CustomerViewLogic implements ViewLogic {
     public void showContractInfoForPay(Contract contract) {
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
-        contract.setPremium(insurance.getPremium());
         sb.append("[ID]").append(" : ").append(contract.getId())
-                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
+                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(contract.getPremium())
                 .append("\n");
         System.out.println(sb.toString());
     }

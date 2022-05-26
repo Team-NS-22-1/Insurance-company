@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class PremiumInfoFinder {
 
-    public int customerAgeFinder(String ssn) {
+    public static int customerAgeFinder(String ssn) {
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
         String today = date.format(new Date());
 
@@ -33,7 +33,7 @@ public class PremiumInfoFinder {
         return age;
     }
 
-    public boolean customerSexFinder(String ssn) {
+    public static boolean customerSexFinder(String ssn) {
         boolean sex;
         int num = Integer.parseInt(ssn.substring(7, 8));
         if(num == 1 || num == 3)

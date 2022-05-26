@@ -4,10 +4,9 @@ import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
+import domain.employee.Employee;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
 import exception.MyInadequateFormatException;
@@ -17,7 +16,9 @@ import java.util.Scanner;
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
 import static utility.CustomerInfoFormatUtil.*;
-import static utility.MessageUtil.createMenu;
+import static utility.MessageUtil.*;
+import static utility.PremiumInfoFinder.customerAgeFinder;
+import static utility.PremiumInfoFinder.customerSexFinder;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -37,6 +38,7 @@ public class GuestViewLogic implements ViewLogic {
     private InsuranceList insuranceList;
     private ContractList contractList;
     private CustomerList customerList;
+    private Employee employee = new Employee();
 
     public GuestViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList) {
         this.sc = new Scanner(System.in);
@@ -47,7 +49,7 @@ public class GuestViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-        createMenu("보험가입희망자메뉴", "보험가입");
+        createMenuAndClose("보험가입희망자메뉴", "보험가입");
     }
 
     @Override
@@ -63,18 +65,17 @@ public class GuestViewLogic implements ViewLogic {
                 default:
                     throw new InputException.InvalidMenuException();
             }
-        } catch (InputException.InputNullDataException e) {
+        } catch (InputException e) {
             System.out.println(e.getMessage());
-        } catch (InputException.InvalidMenuException e){
-            System.out.println("올바른 메뉴번호를 입력해주세요");
         }
+        selectInsurance();
     }
 
     private void selectInsurance() {
-        boolean isLoop = true;
+        if(insuranceList.readAll().size() == 0)
+            throw new InputException.NoResultantException();
 
-        while (isLoop) {
-
+        while (true) {
             for (Insurance insurance : insuranceList.readAll()) {
                 if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
@@ -97,18 +98,15 @@ public class GuestViewLogic implements ViewLogic {
                 else {
                     throw new InputException.NoResultantException();
                 }
-            } catch (InputException.InputNullDataException e) {
-                System.out.println("보험 코드를 입력해주세요");
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("형식에 맞는 코드를 입력해주세요");
-            } catch (InputException.NoResultantException e) {
-                System.out.println("조회된 보험상품이 없습니다. 다시 입력해주세요.");
             }
         }
     }
     private void decideSigning(Insurance insurance) {
-        boolean isLoop = true;
-        while (isLoop) {
+        while (true) {
             try {
                 createMenu("해당 보험상품을 가입하시겠습니까?", "가입", "취소");
                 command = sc.nextLine();
@@ -116,14 +114,12 @@ public class GuestViewLogic implements ViewLogic {
                 switch (command) {
                     // 가입
                     case "1":
-                        isLoop = false;
                         Contract contract = new Contract();
                         contract.setInsuranceId(insurance.getId());
                         inputCustomerInfo(contract);
                         break;
                     // 취소
                     case "2":
-                        isLoop = false;
                         break;
                     case "":
                         throw new InputException.InputNullDataException();
@@ -139,14 +135,12 @@ public class GuestViewLogic implements ViewLogic {
     }
 
     private void inputCustomerInfo(Contract contract) {
-        Customer customer = new Customer();
+        Customer customer;
         String question;
         String ssn;
         String email;
         String phone;
         String name;
-//        String address;
-//        String job;
 
         while(true) {
             try {
@@ -194,12 +188,7 @@ public class GuestViewLogic implements ViewLogic {
         question = "직업을 입력해주세요.";
         String job = validateStringFormat(question);
 
-        customer.setName(name)
-                .setSsn(ssn)
-                .setPhone(phone)
-                .setAddress(address)
-                .setEmail(email)
-                .setJob(job);
+        customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
 
         switch (insuranceList.read(contract.getInsuranceId()).getInsuranceType()) {
             case HEALTH:
@@ -218,6 +207,7 @@ public class GuestViewLogic implements ViewLogic {
         int count = 0;
         String question;
         String diseaseDetail;
+        boolean riskPremiumCriterion;
 
         question = "키를 입력해주세요. \t(단위: cm)";
         int height = validateIntFormat(question);
@@ -261,22 +251,18 @@ public class GuestViewLogic implements ViewLogic {
         } else
             diseaseDetail = null;
 
+        int age = customerAgeFinder(customer.getSsn());
+        boolean sex = customerSexFinder(customer.getSsn());
+        riskPremiumCriterion = count >= 4;
 
-//        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
+        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
 
-        contract.setHealthInfo(new HealthInfo().setHeight(height)
-                .setWeight(weight)
-                .setDrinking(isDrinking)
-                .setSmoking(isSmoking)
-                .setDriving(isDriving)
-                .setDangerActivity(isDangerActivity)
-                .setTakingDrug(isTakingDrug)
-                .setHavingDisease(isHavingDisease)
-                .setDiseaseDetail(diseaseDetail)
-        );
-
+        contract = employee.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
+                                            isTakingDrug, isHavingDisease, diseaseDetail, premium);
         signContract(contract, customer);
     }
+
+
 
     private void inputFireInfo(Contract contract, Customer customer) {
         String question;
@@ -322,16 +308,9 @@ public class GuestViewLogic implements ViewLogic {
         question = "실거주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isActualResidence = validateBooleanFormat(question);
 
-        System.out.println(isSelfOwned);
-        System.out.println(isActualResidence);
+        int premium = employee.planFireInsurance(buildingType, collateralAmount);
 
-        contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
-                .setBuildingArea(buildingArea)
-                .setCollateralAmount(collateralAmount)
-                .setSelfOwned(isSelfOwned)
-                .setActualResidence(isActualResidence)
-        );
-
+        contract = employee.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, premium);
         signContract(contract, customer);
     }
 
@@ -339,7 +318,6 @@ public class GuestViewLogic implements ViewLogic {
         String question;
         CarType carType;
         String carNo;
-//        String modelName;
 
         while (true){
             try{
@@ -397,36 +375,22 @@ public class GuestViewLogic implements ViewLogic {
         question = "차량가액을 입력해주세요. \t(단위: 년)";
         int value = validateIntFormat(question);
 
-        contract.setCarInfo(new CarInfo().setCarNo(carNo)
-                .setCarType(carType)
-                .setModelName(modelName)
-                .setModelYear(modelYear)
-                .setValue(value)
-        );
+        int age = customerAgeFinder(customer.getSsn());
+        int premium = employee.planCarInsurance(age, value);
 
+        contract = employee.inputCarInfo(carNo, carType, modelName, modelYear, value, premium);
         signContract(contract, customer);
     }
 
     private void signContract(Contract contract, Customer customer) {
-        boolean isLoop = true;
-        // premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
-        // premium = employee.planFireInsurance(buildingType, collateralAmount);
-        // premium = employee.planCarInsurance(driverAge, value);
-        int premium = 0;
-
-        System.out.println("조회된 귀하의 보험료는: " + premium + "원입니다.");
-        while (isLoop) {
+        System.out.println("조회된 귀하의 보험료는: " + contract.getPremium() + "원입니다.");
+        while (true) {
             try {
                 createMenu("보험가입을 신청하시겠습니까?", "가입", "취소");
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-                        isLoop = false;
-                        customerList.create(customer);
-                        contract.setPremium(premium)
-                                .setCustomerId(customer.getId())
-                                .setConditionOfUw(ConditionOfUw.WAIT);
-                        contractList.create(contract);
+                        employee.registerContract(customerList, contractList, customer , contract);
                         System.out.println(customerList.read(customer.getId()));
                         System.out.println(contractList.read(contract.getId()));
                         System.out.println("가입이 완료되었습니다.");

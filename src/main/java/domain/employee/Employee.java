@@ -1,10 +1,9 @@
 package domain.employee;
 
 
-import domain.contract.BuildingType;
-import domain.contract.ConditionOfUw;
-import domain.contract.Contract;
-import domain.contract.ContractListImpl;
+import domain.contract.*;
+import domain.customer.Customer;
+import domain.customer.CustomerList;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException.InputInvalidDataException;
@@ -270,6 +269,63 @@ public class Employee {
 
 	public void investigateDamage(){
 
+	}
+
+	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job) {
+		Customer customer = new Customer();
+		customer.setName(name)
+				.setSsn(ssn)
+				.setPhone(phone)
+				.setAddress(address)
+				.setEmail(email)
+				.setJob(job);
+		return customer;
+	};
+
+	public Contract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
+									Boolean isTakingDrug, boolean isHavingDisease, String diseaseDetail, int premium){
+		Contract contract = new Contract();
+		contract.setHealthInfo(new HealthInfo().setHeight(height)
+				.setWeight(weight)
+				.setDrinking(isDrinking)
+				.setSmoking(isSmoking)
+				.setDriving(isDriving)
+				.setDangerActivity(isDangerActivity)
+				.setTakingDrug(isTakingDrug)
+				.setHavingDisease(isHavingDisease)
+				.setDiseaseDetail(diseaseDetail))
+				.setPremium(premium);
+		return contract;
+	}
+
+	public Contract inputFireInfo(BuildingType buildingType, int buildingArea, int collateralAmount, boolean isSelfOwned, boolean isActualResidence, int premium){
+		Contract contract = new Contract();
+		contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
+				.setBuildingArea(buildingArea)
+				.setCollateralAmount(collateralAmount)
+				.setSelfOwned(isSelfOwned)
+				.setActualResidence(isActualResidence))
+				.setPremium(premium);
+		return contract;
+	}
+
+	public Contract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, int value, int premium) {
+		Contract contract = new Contract();
+		contract.setCarInfo(new CarInfo().setCarNo(carNo)
+				.setCarType(carType)
+				.setModelName(modelName)
+				.setModelYear(modelYear)
+				.setValue(value))
+				.setPremium(premium);
+		return contract;
+	}
+
+	public void registerContract(CustomerList customerList, ContractList contractList , Customer customer, Contract contract){
+
+		customerList.create(customer);
+		contract.setCustomerId(customer.getId())
+				.setConditionOfUw(ConditionOfUw.WAIT);
+		contractList.create(contract);
 	}
 
 	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion){
