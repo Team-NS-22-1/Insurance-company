@@ -13,7 +13,6 @@ public class Insurance {
 	public int id;
 	public String name;
 	public String description;
-	public int premium;
 	public int contractPeriod;
 	public int paymentPeriod;
 	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
@@ -48,15 +47,6 @@ public class Insurance {
 
 	public Insurance setDescription(String description) {
 		this.description = description;
-		return this;
-	}
-
-	public int getPremium() {
-		return premium;
-	}
-
-	public Insurance setPremium(int premium) {
-		this.premium = premium;
 		return this;
 	}
 
@@ -119,7 +109,6 @@ public class Insurance {
 				", 보험유형:" + insuranceType.getName() +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
-				", 보험료: " + premium +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
 				", 보장정보: " + guaranteeList +
