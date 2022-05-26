@@ -78,7 +78,6 @@ public class DocUtil extends JFrame {
 
         File folder = new File(submitPath+directory);
         if (!folder.exists()) {
-
             folder.mkdirs();
         }
 
@@ -142,7 +141,6 @@ public class DocUtil extends JFrame {
                     String filename2 = accDocType.getDesc() + ".hwp";
                     HWPWriter.toFile(clonedHWPFile, submitPath + directory + "/" + filename2);
                     dir = submitPath + directory + "/" + filename2;
-                    System.out.println(filename2 + " ok !!!");
                 }
             } catch (Exception e) {
                 System.out.println(e.getMessage());
