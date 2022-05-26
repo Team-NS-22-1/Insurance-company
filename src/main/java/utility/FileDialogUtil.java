@@ -22,11 +22,12 @@ public class FileDialogUtil {
         dialog = new FileDialog(frame, "파일 업로드", FileDialog.LOAD);
         dialog.setModal(true);
         dialog.setVisible(true);
-        String originPath = dialog.getDirectory()+dialog.getFile();
+        String fileName = dialog.getFile();
+        String originPath = dialog.getDirectory()+fileName;
 
         String saveDirectory = serverPath + dirInsurance;
         Files.createDirectories(Paths.get(saveDirectory));
-        String savePath = saveDirectory + "/" + dialog.getFile();
+        String savePath = saveDirectory + "/" + fileName;
 
         if(dialog.getDirectory() == null)
             return null;
@@ -38,7 +39,7 @@ public class FileDialogUtil {
         } catch (FileNotFoundException e) {
             throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
         }
-        return savePath;
+        return fileName;
     }
 
     /*

@@ -7,67 +7,82 @@ package domain.insurance;
  */
 public class SalesAuthFile {
 
-	/**
-	 * 금융감독원 인가허가파일
-	 */
-	private String dirFSSOfficialDoc;
-	/**
-	 * 보험요율산출기관 검증확인서
-	 */
-	private String dirISOVerification;
+	private int id;
+
 	/**
 	 * 보험상품신고서
 	 */
-	private String dirProdDeclaration;
+	private String prodDeclaration;
+	/**
+	 * 보험요율산출기관 검증확인서
+	 */
+	private String isoVerification;
+
 	/**
 	 * 선임계리사 검증기초서류
 	 */
-	private String dirSrActuaryVerification;
+	private String srActuaryVerification;
+	/**
+	 * 금융감독원 인가허가파일
+	 */
+	private String fSSOfficialDoc;
 
-	public SalesAuthFile() {}
+	private int insuranceId;
 
-	public String getDirFSSOfficialDoc() {
-		return dirFSSOfficialDoc;
+	public int getId() {
+		return id;
 	}
 
-	public SalesAuthFile setDirFSSOfficialDoc(String dirFSSOfficialDoc) {
-		this.dirFSSOfficialDoc = dirFSSOfficialDoc;
-		return this;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public String getDirISOVerification() {
-		return dirISOVerification;
+	public String getProdDeclaration() {
+		return prodDeclaration;
 	}
 
-	public SalesAuthFile setDirISOVerification(String dirISOVerification) {
-		this.dirISOVerification = dirISOVerification;
-		return this;
+	public void setProdDeclaration(String prodDeclaration) {
+		this.prodDeclaration = prodDeclaration;
 	}
 
-	public String getDirProdDeclaration() {
-		return dirProdDeclaration;
+	public String getIsoVerification() {
+		return isoVerification;
 	}
 
-	public SalesAuthFile setDirProdDeclaration(String dirProdDeclaration) {
-		this.dirProdDeclaration = dirProdDeclaration;
-		return this;
+	public void setIsoVerification(String isoVerification) {
+		this.isoVerification = isoVerification;
 	}
 
-	public String getDirSrActuaryVerification() {
-		return dirSrActuaryVerification;
+	public String getSrActuaryVerification() {
+		return srActuaryVerification;
 	}
 
-	public SalesAuthFile setDirSrActuaryVerification(String dirSrActuaryVerification) {
-		this.dirSrActuaryVerification = dirSrActuaryVerification;
-		return this;
+	public void setSrActuaryVerification(String srActuaryVerification) {
+		this.srActuaryVerification = srActuaryVerification;
+	}
+
+	public String getfSSOfficialDoc() {
+		return fSSOfficialDoc;
+	}
+
+	public void setfSSOfficialDoc(String fSSOfficialDoc) {
+		this.fSSOfficialDoc = fSSOfficialDoc;
+	}
+
+	public int getInsuranceId() {
+		return insuranceId;
+	}
+
+	public void setInsuranceId(int insuranceId) {
+		this.insuranceId = insuranceId;
 	}
 
 	public String print() {
 		String print = "";
-		if(dirProdDeclaration != null) print += "보험상품신고서 ";
-		if(dirISOVerification != null) print += "보험요율산출기관 검증확인서 ";
-		if(dirSrActuaryVerification != null) print += "선임계리사 검증기초서류 ";
-		if(dirFSSOfficialDoc != null) print += "금융감독원 인가허가파일 ";
+		if(prodDeclaration != null) print += "보험상품신고서 ";
+		if(isoVerification != null) print += "보험요율산출기관 검증확인서 ";
+		if(srActuaryVerification != null) print += "선임계리사 검증기초서류 ";
+		if(fSSOfficialDoc != null) print += "금융감독원 인가허가파일 ";
 		return print;
 	}
 
