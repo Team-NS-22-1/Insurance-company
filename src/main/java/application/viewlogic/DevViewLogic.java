@@ -1,6 +1,7 @@
 package application.viewlogic;
 
 import application.ViewLogic;
+import dao.InsuranceDao;
 import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -84,7 +85,7 @@ public class DevViewLogic implements ViewLogic {
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
                 ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
-                for(Employee employee : employeeArrayList){
+                for(Employee employee : employeeArrayList) {
                     System.out.println(employee.print());
                 }
                 System.out.println("---------------------------------");

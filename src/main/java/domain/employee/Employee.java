@@ -1,6 +1,7 @@
 package domain.employee;
 
 
+import dao.InsuranceDao;
 import domain.contract.BuildingType;
 import domain.contract.ConditionOfUw;
 import domain.contract.Contract;
@@ -79,28 +80,44 @@ public class Employee {
 	}
 
 	public Insurance develop(InsuranceList insuranceList, InsuranceDetailList insuranceDetailList, InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
-		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-		for(int i=0; i<guaranteeInfoList.size(); i++)
-			guaranteeList.add(
-					new Guarantee(guaranteeInfoList.get(i).getName(), guaranteeInfoList.get(i).getDescription(), guaranteeInfoList.get(i).getGuaranteeAmount())
-			);
 		Insurance insurance = new Insurance();
 		insurance.setName(basicInfo.getName())
 				.setDescription(basicInfo.getDescription())
 				.setContractPeriod(basicInfo.getContractPeriod())
-				.setPaymentPeriod(basicInfo.getPaymentPeriod())
-				.setGuarantee(guaranteeList)
-				.setDevInfo(new DevInfo().setEmployeeId(this.id)
-						.setDevDate(LocalDate.now())
-						.setSalesAuthState(SalesAuthState.WAIT)
-				)
-				.setSalesAuthFile(new SalesAuthFile());
+				.setPaymentPeriod(basicInfo.getPaymentPeriod());
+//		new InsuranceDao().create(insurance);
 		insuranceList.create(insurance);
+
+		insurance = developGuarantee(insurance, guaranteeInfoList);
+		insurance = developDevInfo(insurance);
+
 		return switch (type) {
 			case HEALTH -> developHealth(insuranceDetailList, insurance, typeInfoList);
 			case CAR -> developCar(insuranceDetailList, insurance, typeInfoList);
 			case FIRE -> developFire(insuranceDetailList, insurance, typeInfoList);
 		};
+	}
+
+	private Insurance developGuarantee(Insurance insurance, ArrayList<DtoGuarantee> guaranteeInfoList) {
+		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+		for(int i=0; i<guaranteeInfoList.size(); i++) {
+			guaranteeList.add(new Guarantee().setName(guaranteeInfoList.get(i).getName())
+					.setDescription(guaranteeInfoList.get(i).getDescription())
+					.setGuaranteeAmount(guaranteeInfoList.get(i).getGuaranteeAmount())
+					.setInsuranceId(insurance.getId())
+			);
+			// Guarantee DB 저장
+		}
+		return insurance.setGuarantee(guaranteeList);
+	}
+
+	private Insurance developDevInfo(Insurance insurance) {
+		DevInfo devInfo = new DevInfo().setEmployeeId(this.id)
+				.setInsuranceId(insurance.getId())
+				.setDevDate(LocalDate.now())
+				.setSalesAuthState(SalesAuthState.WAIT);
+		// DevInfo DB 저장
+		return insurance.setDevInfo(devInfo);
 	}
 
 	private Insurance developHealth(InsuranceDetailList insuranceDetailList, Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
@@ -241,13 +258,13 @@ public class Employee {
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getDirProdDeclaration()!=null) {
+		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) {
 			return -1;
 		}
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
 		if(savePath == null) return 0;
-		insurance.getSalesAuthFile().setDirProdDeclaration(savePath);
+		insurance.getSalesAuthFile().setProdDeclaration(savePath);
 		return 1;
 	}
 

@@ -42,7 +42,7 @@ public class TestData {
         createEmployee();
         createContract();
         createCustomerData();
-//        createInsurance();
+        createInsurance();
         createPayment();
 
     }
