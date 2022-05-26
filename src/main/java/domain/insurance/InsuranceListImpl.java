@@ -49,13 +49,13 @@ public class InsuranceListImpl implements InsuranceList {
 		return insuranceArrayList;
 	}
 
-	// 임시
-	public int readPremium(int id) {
-		Insurance insurance = this.insuranceList.get(id);
-		if(insurance != null) return insurance.premium;
-		else return 0;
-	}
-	//
+//	// 임시
+//	public int readPremium(int id) {
+//		Insurance insurance = this.insuranceList.get(id);
+//		if(insurance != null) return insurance.premium;
+//		else return 0;
+//	}
+//	//
 
 	@Override
 	public boolean delete(int id) {

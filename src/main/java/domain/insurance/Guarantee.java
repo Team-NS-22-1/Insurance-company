@@ -11,10 +11,12 @@ public class Guarantee {
 	private int insurranceId;
 	private String name;
 	private String description;
+	private Long guaranteeAmount;
 
-	public Guarantee(String name, String description){
+	public Guarantee(String name, String description, Long guaranteeAmount){
 		this.name = name;
 		this.description = description;
+		this.guaranteeAmount = guaranteeAmount;
 	}
 
 	public String getName(){
@@ -24,6 +26,9 @@ public class Guarantee {
 	public String getDescription(){
 		return this.description;
 	}
+
+	public Long getGuaranteeAmount() { return this.guaranteeAmount; }
+
 	@Override
 	public String toString() {
 		return "이름 : " + name + " 설명 : " + description;
