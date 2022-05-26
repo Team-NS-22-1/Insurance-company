@@ -77,4 +77,8 @@ public class MyBufferedReader extends BufferedReader {
         }
     }
 
+    // 범주형 질문에 대한
+    public void verifyCategory(String query, int categorySize) {
+
+    }
 }

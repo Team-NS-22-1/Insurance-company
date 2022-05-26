@@ -5,11 +5,7 @@ import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
-import domain.insurance.Insurance;
-import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
-import domain.insurance.InsuranceType;
+import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException;
 import utility.MyBufferedReader;
@@ -36,17 +32,18 @@ public class DevViewLogic implements ViewLogic {
 
     private EmployeeList employeeList;
     private InsuranceList insuranceList;
+    private InsuranceDetailList insuranceDetailList;
 
     private Employee employee;
 
     private MyBufferedReader br;
 
-    public DevViewLogic() {}
 
-    public DevViewLogic(EmployeeList employeeList, InsuranceList insuranceList) {
+    public DevViewLogic(EmployeeList employeeList, InsuranceList insuranceList, InsuranceDetailList insuranceDetailList) {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employeeList = employeeList;
         this.insuranceList = insuranceList;
+        this.insuranceDetailList = insuranceDetailList;
     }
 
     @Override
@@ -129,6 +126,7 @@ public class DevViewLogic implements ViewLogic {
         System.out.println(insurance.print());
         return insurance;
     }
+
     private InsuranceType menuInsuranceType() throws IOException {
         int insType = 0;
         createMenuAndClose("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
@@ -144,14 +142,15 @@ public class DevViewLogic implements ViewLogic {
 
     private void menuDevelop(InsuranceType type) throws IOException {
         if (type == null) return;
-        Insurance insurance = employee.develop(
-                formInputBasicInfo(), // return Basic Info of Insurance
-                formInputTypeInfo(type), // return Type Info of Insurance (Type is Health, Car, Fire)
-                formInputGuaranteeInfo() // return Guarantee Info of Insurance (Guarantee Info is list)
-        );
-        int premium = formCalculatePremium(isCalcPremium());
-        if(premium < 0) return;
-        formRegisterInsurance(insurance, premium);
+
+        DtoBasicInfo dtoBasicInfo = formInputBasicInfo();
+        ArrayList<DtoGuarantee> dtoGuarantees = formInputGuaranteeInfo();
+        int stPremium = formCalculatePremium(isCalcPremium());
+        if(stPremium < 0) return;
+
+        ArrayList<DtoTypeInfo> dtoTypeInfo = formInputTypeInfo(type, stPremium);
+
+        formRegisterInsurance(type, dtoBasicInfo, dtoGuarantees,  dtoTypeInfo);
     }
 
     private DtoBasicInfo formInputBasicInfo() throws IOException {
@@ -166,62 +165,110 @@ public class DevViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private DtoTypeInfo formInputTypeInfo(InsuranceType type) throws IOException {
+    private ArrayList<DtoTypeInfo> formInputTypeInfo(InsuranceType type, int stPremium) throws IOException {
         return switch (type) {
-            case HEALTH -> formDtoHealth();
-            case CAR -> formDtoCar();
-            case FIRE -> formDtoFire();
+            case HEALTH -> formDtoHealth(stPremium);
+            case CAR -> formDtoCar(stPremium);
+            case FIRE -> formDtoFire(stPremium);
             default -> null;
         };
     }
 
-    private DtoHealth formDtoHealth() throws IOException {
-        int targetAge = 0, riskCriterion = -1;
-        boolean targetSex;
-        System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
-        targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
-        targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
-        riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", riskCriterion);
-        System.out.println("대상나이: "+targetAge+"\t대상성별: "+targetSex+"\t위험부담 기준: "+riskCriterion);
-        return new DtoHealth(targetAge, targetSex, riskCriterion);
-    }
+    private ArrayList<DtoTypeInfo> formDtoHealth(int stPremium) throws IOException {
+        boolean isAddHealth = true;
+        ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
+        while(isAddHealth){
+            int targetAge = 0, riskCriterion = -1, premium = -1;
+            boolean targetSex;
+            System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
+            targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
+            targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
+            while(true) {
+                riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", riskCriterion);
+                if(riskCriterion > 6){
+                    System.out.println("위험부담 기준은 6개 이하여야 합니다.");
+                }
+                else break;
+            }
+            System.out.println("대상나이: "+targetAge+"\t대상성별: "+targetSex+"\t위험부담 기준: "+riskCriterion);
+            DtoHealth dtoHealth = new DtoHealth(targetAge, targetSex, riskCriterion);
 
-    private DtoCar formDtoCar() throws IOException {
-        int targetAge = 0;
-        long valueCriterion = -1;
-        System.out.println("<< 자동차 보험 정보 >> (exit: 시스템 종료)");
-        targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
-        valueCriterion = (long) br.verifyRead("차량가액 기준(원): ", valueCriterion);
-        System.out.println("대상나이: "+targetAge+"\t차량가액 기준: "+valueCriterion);
-        return new DtoCar(targetAge, valueCriterion);
-    }
+            premium = employee.calcSpecificPremium(stPremium, dtoHealth);
+            System.out.printf("보험료: %d(원)\n", premium);
+            healthListInfo.add(dtoHealth.setPremium(premium));
 
-    private DtoFire formDtoFire() throws IOException {
-        BuildingType buildingType = null;
-        long collateralAmount = -1;
-        System.out.println("<< 화재 보험 정보 >> (exit: 시스템 종료)");
-        System.out.println();
-        switch (br.verifyMenu("건물종류 선택: 1. 상업용 2. 산업용 3. 기관용 4. 거주용\n", 4)){
-            case 1 -> buildingType = BuildingType.COMMERCIAL;
-            case 2 -> buildingType = BuildingType.INDUSTRIAL;
-            case 3 -> buildingType = BuildingType.INSTITUTIONAL;
-            case 4 -> buildingType = BuildingType.RESIDENTIAL;
+            switch (br.verifyMenu("<< 건강 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                case 2 -> isAddHealth = false;
+            }
         }
-        collateralAmount = (long) br.verifyRead("담보금액: ", collateralAmount);
-        System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
-        return new DtoFire(buildingType, collateralAmount);
+        return healthListInfo;
+    }
+
+    private ArrayList<DtoTypeInfo> formDtoCar(int stPremium) throws IOException {
+        boolean isAddCar = true;
+        ArrayList<DtoTypeInfo> carListInfo = new ArrayList<>();
+        while(isAddCar) {
+            int targetAge = 0, premium = -1;
+            long valueCriterion = -1;
+            System.out.println("<< 자동차 보험 정보 >> (exit: 시스템 종료)");
+            targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
+            valueCriterion = (long) br.verifyRead("차량가액 기준(원): ", valueCriterion);
+            System.out.println("대상나이: "+targetAge+"\t차량가액 기준: "+valueCriterion);
+            DtoCar dtoCar = new DtoCar(targetAge, valueCriterion);
+
+            premium = employee.calcSpecificPremium(stPremium, dtoCar);
+            System.out.printf("보험료: %d(원)\n", premium);
+            carListInfo.add(dtoCar.setPremium(premium));
+
+            switch (br.verifyMenu("<< 자동차 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                case 2 -> isAddCar = false;
+            }
+        }
+        return carListInfo;
+    }
+
+    private ArrayList<DtoTypeInfo> formDtoFire(int stPremium) throws IOException {
+        boolean isAddFire = true;
+        ArrayList<DtoTypeInfo> fireListInfo = new ArrayList<>();
+        while(isAddFire){
+            BuildingType buildingType = null;
+            long collateralAmount = -1;
+            int premium = -1;
+            System.out.println("<< 화재 보험 정보 >> (exit: 시스템 종료)");
+            System.out.println();
+            switch (br.verifyMenu("건물종류 선택: 1. 상업용 2. 산업용 3. 기관용 4. 거주용\n", 4)){
+                case 1 -> buildingType = BuildingType.COMMERCIAL;
+                case 2 -> buildingType = BuildingType.INDUSTRIAL;
+                case 3 -> buildingType = BuildingType.INSTITUTIONAL;
+                case 4 -> buildingType = BuildingType.RESIDENTIAL;
+            }
+            collateralAmount = (long) br.verifyRead("담보금액: ", collateralAmount);
+            System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
+            DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
+
+            premium = employee.calcSpecificPremium(stPremium, dtoFire);
+            System.out.printf("보험료: %d(원)\n", premium);
+            fireListInfo.add(dtoFire.setPremium(premium));
+
+            switch (br.verifyMenu("<< 화재 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                case 2 -> isAddFire = false;
+            }
+        }
+        return fireListInfo;
     }
 
     private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException {
         boolean isAddGuarantee = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
-        String gName = "", gDescription = "";
         while(isAddGuarantee) {
+            String gName = "", gDescription = "";
+            long gAmount = 0;
             System.out.println("<< 보장 상세 내용 >> (exit: 시스템 종료)");
             gName = (String) br.verifyRead("보장명: ", gName);
             gDescription = (String) br.verifyRead("보장 상세 내용: ", gDescription);
-            System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription);
-            guaranteeListInfo.add(new DtoGuarantee(gName, gDescription));
+            gAmount = (Long) br.verifyRead("보장금액: ", gAmount);
+            System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription+"\t보장금액: "+gAmount);
+            guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
             switch (br.verifyMenu("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddGuarantee = false;
             }
@@ -249,84 +296,41 @@ public class DevViewLogic implements ViewLogic {
     }
 
     private int formCalculatePremium(boolean isCalcPremium) throws IOException {
-        int premium = -1;
-
-        if(!isCalcPremium) return premium;
-
-        boolean forWhile = true;
-        while(forWhile){
-            try {
-                String query = "<< 보험료 산출 방식 선택>> (exit: 시스템 종료)\n"
-                        + "1. 순보험료법 산출\n"
-                        + "2. 손해율법 산출\n";
-                switch (br.verifyMenu(query, 2)){
-                    case 1 -> {
-                        premium = calcPurePremiumMethod();
-                        forWhile = false;
-                    }
-                    case 2 -> {
-                        premium = calcLossRatioMethod();
-                        forWhile = false;
-                    }
-                }
-            }
-            catch (InputException.InvalidMenuException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-        return premium;
+        if(!isCalcPremium) return -1;
+        return calcStandardPremium();
     }
 
-    private int calcPurePremiumMethod() throws IOException {
+    private int calcStandardPremium() throws IOException {
         boolean forWhile = true;
-        int premium= -1;
+        int stPremium= -1;
         while(forWhile) {
             long damageAmount = 0, countContract = 0, businessExpense = 0;
             double profitMargin = 0;
-            System.out.println("<< 순보험료법 산출 방식 >> (exit: 시스템 종료)");
+            System.out.println("<< 기준 보험료 산출 >> (exit: 시스템 종료)");
             damageAmount = (long) br.verifyRead("발생손해액(단위:만원): ", damageAmount);
             countContract = (long) br.verifyRead("계약건수(건): ", countContract);
             businessExpense = (long) br.verifyRead("사업비(단위:만원): ", businessExpense);
             profitMargin = (Double) br.verifyRead("이익률(1-99%): ", profitMargin);
-            premium = employee.calcPurePremiumMethod(damageAmount, countContract, businessExpense, profitMargin);
-            System.out.printf("총보험료: %d(원)\n", premium);
-            switch (br.verifyMenu("<< 산출된 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
+            stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
+            System.out.printf("기준 보험료: %d(원)\n", stPremium);
+            switch (br.verifyMenu("<< 산출된 기준 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
                 case 1 -> forWhile = false;
             }
         }
-        return premium;
+        return stPremium;
     }
 
-    private int calcLossRatioMethod() throws IOException {
-        boolean forWhile = true;
-        Object[] premium = null;
-        while(forWhile){
-            double lossRatio = 0, expectedBusinessRatio = 0;
-            int curTotalPremium = 0;
-            System.out.println("<< 손해율법 산출 방식 >> (exit: 시스템 종료)");
-            lossRatio = (Double) br.verifyRead("실제손해율(1-99%): ", lossRatio);
-            expectedBusinessRatio = (Double) br.verifyRead("예정사업비율(1-99%): ", expectedBusinessRatio);
-            curTotalPremium = (int) br.verifyRead("현재총보험료(원): ", curTotalPremium);
-            premium = employee.calcLossRatioMethod(lossRatio, expectedBusinessRatio, curTotalPremium);
-            System.out.println("요율조정값: "+(Math.round((double) premium[0]*1000)/1000.0)*100+"%");
-            System.out.println("조정보험료: "+premium[1]+"원");
-            System.out.println();
-            switch (br.verifyMenu("<< 산출된 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
-                case 1 -> forWhile = false;
-            }
-        }
-        return (int) premium[1];
-    }
-
-    private void formRegisterInsurance(Insurance insurance, int premium) throws IOException {
+    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) throws IOException {
         boolean forWhile = true;
         while(forWhile){
             switch (br.verifyMenu("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 1 -> {
-                    employee.registerInsurance(insuranceList, insurance, premium);
+                    Insurance insurance = employee.develop(insuranceList, insuranceDetailList, type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
                     System.out.println("정상적으로 보험이 저장되었습니다!");
-                    System.out.println("개발 보험 정보");
-                    System.out.println(insurance.print()+"\n");
+                    System.out.println(insuranceList.read(insurance.getId()).print());
+                    for(InsuranceDetail insuranceDetail : insuranceDetailList.readByInsuranceId(insurance.getId())) {
+                        System.out.println(insuranceDetail.print());
+                    }
                     forWhile = false;
                 }
                 case 2 -> {

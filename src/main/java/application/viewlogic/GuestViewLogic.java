@@ -56,7 +56,7 @@ public class GuestViewLogic implements ViewLogic {
         try {
             switch (command) {
                 case "1":
-                    selectInsurance();
+//                    selectInsurance();
                 // 해결을?
                 case "":
                     throw new InputException.InputNullDataException();
@@ -261,6 +261,9 @@ public class GuestViewLogic implements ViewLogic {
         } else
             diseaseDetail = null;
 
+
+//        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
+
         contract.setHealthInfo(new HealthInfo().setHeight(height)
                 .setWeight(weight)
                 .setDrinking(isDrinking)
@@ -406,10 +409,10 @@ public class GuestViewLogic implements ViewLogic {
 
     private void signContract(Contract contract, Customer customer) {
         boolean isLoop = true;
-        int premium = insuranceList.readPremium(contract.getInsuranceId());
         // premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
         // premium = employee.planFireInsurance(buildingType, collateralAmount);
         // premium = employee.planCarInsurance(driverAge, value);
+        int premium = 0;
 
         System.out.println("조회된 귀하의 보험료는: " + premium + "원입니다.");
         while (isLoop) {

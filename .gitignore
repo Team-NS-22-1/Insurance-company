@@ -32,8 +32,9 @@ hs_err_pid*
 out
 gen
 
-.gradle
+.gradle/**
 **/build/
+build/**
 !src/**/build/
 .gradle/**
 .gradle/

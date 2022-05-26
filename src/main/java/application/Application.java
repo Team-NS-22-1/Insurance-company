@@ -13,8 +13,7 @@ import domain.customer.CustomerList;
 import domain.customer.JDBCCustomerListImpl;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
-import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
+import domain.insurance.*;
 import domain.payment.PaymentList;
 import domain.payment.PaymentListImpl;
 import exception.MyCloseSequence;
@@ -48,6 +47,7 @@ public class Application {
         CustomerList customerList = new JDBCCustomerListImpl();
         EmployeeList employeeList = new EmployeeListImpl();
         InsuranceList insuranceList = new InsuranceListImpl();
+        InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
         ContractList contractList = new ContractListImpl();
         PaymentList paymentList = new PaymentListImpl();
         AccidentList accidentList = new AccidentListImpl();
@@ -60,7 +60,7 @@ public class Application {
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
-        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList));
+        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic(employeeList,accidentList,accDocFileList,customerList));
     }

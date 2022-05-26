@@ -5,14 +5,11 @@ import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 
 import java.util.Scanner;
@@ -62,8 +59,8 @@ public class SalesViewLogic implements ViewLogic {
         switch (command) {
             // 보험상품설계
             case "1":
-                initEmployee();
-                planInsurance();
+//                initEmployee();
+//                planInsurance();
                 break;
             default:
                 System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
@@ -113,8 +110,6 @@ public class SalesViewLogic implements ViewLogic {
                         planCarInsurance(insurance.getId());
                         break;
                 }
-
-
             }
         }
     }
@@ -181,8 +176,7 @@ public class SalesViewLogic implements ViewLogic {
 
         riskPremiumCriterion = count >= 4;
 
-        // premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
-        premium = insuranceList.readPremium(insuranceId);
+        premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
 
         System.out.println("귀하의 보험료는 " + premium + " 입니다.");
         createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
@@ -238,8 +232,7 @@ public class SalesViewLogic implements ViewLogic {
         System.out.println("담보금액을 입력하세요.");
         int collateralAmount = sc.nextInt();
 
-        // premium = employee.planFireInsurance(buildingType, collateralAmount);
-        premium = insuranceList.readPremium(insuranceId);
+        premium = employee.planFireInsurance(buildingType, collateralAmount);
 
         System.out.println("귀하의 보험료는 " + premium + " 입니다.");
         createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
@@ -275,8 +268,7 @@ public class SalesViewLogic implements ViewLogic {
         System.out.println("차량가액을 입력하세요.");
         int value = sc.nextInt();
 
-        // premium = employee.planCarInsurance(driverAge, value);
-        premium = insuranceList.readPremium(insuranceId);
+        premium = employee.planCarInsurance(driverAge, value);
 
         System.out.println("귀하의 보험료는 " + premium + " 입니다.");
         createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
