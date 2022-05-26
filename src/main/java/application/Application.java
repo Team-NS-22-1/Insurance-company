@@ -10,7 +10,6 @@ import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.customer.JDBCCustomerListImpl;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
