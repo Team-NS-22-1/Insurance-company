@@ -15,5 +15,7 @@ public interface AccidentList extends CrudInterface<Accident> {
     List<Accident> readAllByCustomerId(int customerId);
 
     List<Accident> readAllByEmployeeId(int employeeid);
-    void update(Accident accident);
+    void updateLossReserve(Accident accident);
+
+    void updateLossReserveAndErrorRate(Accident accident);
 }

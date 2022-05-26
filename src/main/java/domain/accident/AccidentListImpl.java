@@ -66,7 +66,12 @@ public class AccidentListImpl implements AccidentList {
 	}
 
 	@Override
-	public void update(Accident accident) {
+	public void updateLossReserve(Accident accident) {
+
+	}
+
+	@Override
+	public void updateLossReserveAndErrorRate(Accident accident) {
 
 	}
 }

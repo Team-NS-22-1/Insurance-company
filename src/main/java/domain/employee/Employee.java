@@ -1,7 +1,12 @@
 package domain.employee;
 
 
+import application.viewlogic.dto.compDto.AccountRequestDto;
+import application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import domain.accident.Accident;
+import domain.accident.AccidentType;
+import domain.accident.CarAccident;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocType;
 import domain.contract.BuildingType;
@@ -10,6 +15,7 @@ import domain.contract.Contract;
 import domain.contract.ContractListImpl;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
+import domain.payment.Account;
 import exception.InputException.InputInvalidDataException;
 import utility.DocUtil;
 import utility.FileDialogUtil;
@@ -169,8 +175,10 @@ public class Employee {
 
 	public void registerAuthFSSOfficialDoc(Insurance insurance) {
 	}
-	public AccDocFile assessDamage(Accident accident){
-		return uploadLossAssessment(accident);
+	public AssessDamageResponseDto assessDamage(Accident accident, AccountRequestDto accountRequestDto){
+		return AssessDamageResponseDto.builder().accDocFile(uploadLossAssessment(accident))
+				.account(new Account().setBankType(accountRequestDto.getBankType()).setAccountNo(accountRequestDto.getAccountNo()))
+				.build();
 	}
 
 	private AccDocFile uploadLossAssessment(Accident accident) {
@@ -187,11 +195,16 @@ public class Employee {
 		return accDocFile;
 	}
 
+
+
 	public void concludeContract(){
 
 	}
 
-	public void investigateDamage(){
+	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
+		accident.setLossReserves(dto.getLossReserves());
+		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+			((CarAccident)accident).setErrorRate(dto.getErrorRate());
 
 	}
 

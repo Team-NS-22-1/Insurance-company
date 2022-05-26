@@ -1,30 +1,32 @@
 package application.viewlogic;
 
 import application.ViewLogic;
+import application.viewlogic.dto.compDto.AccountRequestDto;
+import application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
-import domain.accident.accDocFile.AccDocFileListImpl;
-import domain.accident.accDocFile.AccDocType;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
+import domain.payment.Account;
+import domain.payment.BankType;
 import exception.InputException;
 import exception.MyIllegalArgumentException;
+import exception.MyInadequateFormatException;
 import outerSystem.Bank;
 import utility.CustomMyBufferedReader;
 import utility.DocUtil;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import static utility.BankUtil.checkAccountFormat;
+import static utility.BankUtil.selectBankType;
 import static utility.FormatUtil.isErrorRate;
-import static utility.MessageUtil.createMenu;
 import static utility.MessageUtil.createMenuAndExit;
 
 
@@ -76,6 +78,7 @@ public class CompVIewLogic implements ViewLogic {
                 investigateDamage();
                 break;
             case"3":
+                assessDamage();
                 break;
             default:
                 throw new MyIllegalArgumentException();
@@ -98,20 +101,29 @@ public class CompVIewLogic implements ViewLogic {
 
         downloadAccDocFile(accident, accDocFiles);
         System.out.println("다운로드 종료");
+        // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
+
+        InvestigateDamageRequestDto dto = new InvestigateDamageRequestDto();
+        dto.setAccidentType(accident.getAccidentType());
+
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-        inputErrorRate((CarAccident) accident, accident.getAccidentType());
+        inputErrorRate(dto);
         // 지급 준비금 입력.
-        inputLossReserve(accident);
+        inputLossReserve(dto);
 
-        //TODO accident update하기.
-//        accidentList.update()
+        employee.investigateDamage(dto,accident);
 
-        // TODO 손해사정으로 넘어가기.
+        if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+            accidentList.updateLossReserveAndErrorRate(accident);
+        else
+            accidentList.updateLossReserve(accident);
+
+
         while (true) {
             String rtVal = "";
             rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
             if (rtVal.equals("Y")) {
-                assessDamage();
+                assessDamagewithoutLogin();
                 break;
             } else if (rtVal.equals("N")) {
                 break;
@@ -174,16 +186,26 @@ public class CompVIewLogic implements ViewLogic {
 
     private void assessDamage() {
         loginCompEmployee();
+        assessDamagewithoutLogin();
+        //TODO 손해 사정이 끝나면 정보 삭제하기.
+
+        // TODO 손해 사정이 반려되었을 때, 다시 작성한다면 손해사정서 정보를 읽어서 있다면 create 하지 않기. update를 해야 하나? 그럼 파일들 업로드 날을 필드로 추가하던가 해야 할 거 같다.
+        //
+    }
+
+    private void assessDamagewithoutLogin() {
         Accident accident = selectAccident();
         if(accident == null)
             return;
 
         List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
+
         downloadAccDocFile(accident, accDocFiles);
 
-        AccDocFile accDocFile = this.employee.assessDamage(accident);
-        accDocFileList.create(accDocFile);
+        AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,createCompAccount());
+
+        accDocFileList.create(assessDamageResponseDto.getAccDocFile());
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
@@ -203,14 +225,45 @@ public class CompVIewLogic implements ViewLogic {
                 return;
             }
         }
-        Bank.sendCompensation(accident.getAccount(),compensation);
-        //TODO 손해 사정이 끝나면 정보 삭제하기.
-
-        // TODO 손해 사정이 반려되었을 때, 다시 작성한다면 손해사정서 정보를 읽어서 있다면 create 하지 않기. update를 해야 하나? 그럼 파일들 업로드 날을 필드로 추가하던가 해야 할 거 같다.
-        //
+        Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
     }
 
-    private void inputLossReserve(Accident accident) {
+    private AccountRequestDto createCompAccount() {
+        AccountRequestDto account = null;
+        loop : while (true) {
+
+            System.out.println("계좌 추가하기");
+            System.out.println("은행사 선택하기");
+            BankType bankType = selectBankType(br);
+            if(bankType==null)
+                break ;
+            while (true) {
+                try {
+                    StringBuilder query = new StringBuilder();
+                    query.append("계좌 번호 입력하기 : (예시 -> ").append(bankType.getFormat()).append(")\n")
+                            .append("0. 취소하기\n");
+
+                    String command = "";
+                    command = (String) br.verifyRead(query.toString(),command);
+                    if (command.equals("0")) {
+                        continue loop;
+                    }
+                    String accountNo = checkAccountFormat(bankType,command);
+                    account = AccountRequestDto.builder().bankType(bankType)
+                            .accountNo(accountNo)
+                            .build();
+                    break loop;
+                } catch (MyInadequateFormatException e) {
+                    System.out.println("정확한 값을 입력해주세요");
+                }
+            }
+        }
+        return account;
+    }
+
+
+
+    private void inputLossReserve(InvestigateDamageRequestDto accident) {
         while (true) {
             long loss_reserve = -1;
             loss_reserve = (long) br.verifyRead("지급 준비금을 입력해주세요 ",loss_reserve);
@@ -223,8 +276,8 @@ public class CompVIewLogic implements ViewLogic {
         }
     }
 
-    private void inputErrorRate(CarAccident accident, AccidentType accidentType) {
-        if (accidentType == AccidentType.CARACCIDENT) {
+    private void inputErrorRate(InvestigateDamageRequestDto accident) {
+
             while (true) {
                 int errorRate = -1;
                 errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
@@ -235,7 +288,7 @@ public class CompVIewLogic implements ViewLogic {
                     System.out.println("범위에 맞게 입력해주세요.");
                 }
             }
-        }
+
     }
 
     private void downloadAccDocFile(Accident accident, List<AccDocFile> accDocFiles) {
@@ -246,7 +299,11 @@ public class CompVIewLogic implements ViewLogic {
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 if (result.equals("Y")) {
+                    //TODO parameter로 accdocfile을 넣어주도록 하라.
+                    // 그리고 CompEmployee가 다운로드를 해야 하지 않을까...
                     instance.download(accident, accDocFile.getType());
+
+
                     break;
                 } else if (result.equals("N")) {
                     break;

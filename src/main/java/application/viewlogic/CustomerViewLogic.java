@@ -34,6 +34,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static utility.BankUtil.checkAccountFormat;
+import static utility.BankUtil.selectBankType;
 import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
@@ -133,43 +135,9 @@ public class CustomerViewLogic implements ViewLogic {
     private void showCommonAccidentDoc(Accident accident) {
 
         submitDocFile(accident,AccDocType.CLAIMCOMP);
-
-        System.out.println("계좌 번호를 입력해주세요");
-        Account compAccount = createCompAccount();
-        if (compAccount != null) {
-            accident.setAccount(compAccount);
-        }
     }
 
-    private Account createCompAccount() {
-        Account account = null;
-        loop : while (true) {
 
-            System.out.println("계좌 추가하기");
-            System.out.println("은행사 선택하기");
-            BankType bankType = selectBankType();
-            if(bankType==null)
-                break ;
-            while (true) {
-                try {
-                    System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
-                    System.out.println("0. 취소하기");
-                    String command = sc.next();
-                    if (command.equals("0")) {
-                        continue loop;
-                    }
-                    String accountNo = checkAccountFormat(bankType,command);
-                    account = new Account();
-                    account.setBankType(bankType)
-                            .setAccountNo(accountNo);
-                    break loop;
-                } catch (MyInadequateFormatException e) {
-                    System.out.println("정확한 값을 입력해주세요");
-                }
-            }
-        }
-        return account;
-    }
 
     private void submitMedicalConfirmation(Accident accident) {
         submitDocFile(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
@@ -313,7 +281,6 @@ public class CustomerViewLogic implements ViewLogic {
                 if (accidentId == 0) {
                     break;
                 }
-
                  retAccident = accidentList.read(accidentId);
                  break;
             } catch (InputException | IllegalArgumentException e) {
@@ -833,7 +800,7 @@ public class CustomerViewLogic implements ViewLogic {
             try{
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
-                BankType bankType = selectBankType();
+                BankType bankType = selectBankType(br);
                 if(bankType==null)
                     return;
                 while (true) {
@@ -880,63 +847,6 @@ public class CustomerViewLogic implements ViewLogic {
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
     }
-
-    // 계좌 결제 수단 추가 과정에서 은행을 선택하는 기능
-    private BankType selectBankType() {
-        BankType[] values = BankType.values();
-        for (int i = 0; i < values.length; i++) {
-            System.out.println((i+1) + " " + values[i]);
-        }
-        System.out.println("0. 취소하기");
-        System.out.println("은행 번호 : ");
-        String key = sc.next();
-        
-        if(key.equals("0"))
-            return null;
-
-
-        return values[Integer.parseInt(key)-1];
-    }
-
-    // 계좌 결제 수단 추가 과정에서 은행사에 따라서 계좌 번호를 검증하는 기능
-    private String checkAccountFormat(BankType bankType, String accountNo) {
-        boolean result = false;
-        switch (bankType) {
-            case KB :
-                result = isKB(accountNo);
-                break;
-            case NH:
-                result = isNH(accountNo);
-                break;
-            case KAKAOBANK:
-                result = isKakaoBank(accountNo);
-                break;
-            case SINHAN:
-                result = isSinhan(accountNo);
-                break;
-            case WOORI:
-                result = isWoori(accountNo);
-                break;
-            case IBK:
-                result = isIBK(accountNo);
-                break;
-            case HANA:
-                result = isHana(accountNo);
-                break;
-            case CITY:
-                result = isCity(accountNo);
-                break;
-            case SAEMAUL:
-                result = isSaemaul(accountNo);
-                break;
-        }
-        if (!result)
-            throw new MyInadequateFormatException("정확한 형식의 값을 입력해주세요");
-
-        return accountNo;
-
-    }
-
 
 
     public void payLogicforTest(Contract contract) {
