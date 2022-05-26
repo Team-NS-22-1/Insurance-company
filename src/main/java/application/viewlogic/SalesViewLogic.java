@@ -62,8 +62,8 @@ public class SalesViewLogic implements ViewLogic {
         switch (command) {
             // 보험상품설계
             case "1":
-                initEmployee();
-                planInsurance();
+//                initEmployee();
+//                planInsurance();
                 break;
             default:
                 System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");

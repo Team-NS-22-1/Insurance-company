@@ -1,6 +1,5 @@
 package domain.viewUtils.viewlogic;
 
-
 import application.viewlogic.CustomerViewLogic;
 import domain.contract.Contract;
 import domain.contract.ContractListImpl;
@@ -38,7 +37,7 @@ class CustomerViewLogicTest {
 
         Insurance insurance = new Insurance();
         insurance.setName("test1");
-        insurance.setPremium(10000);
+//        insurance.setPremium(10000);
         insurance.setDescription("this is test");
         insuranceList.create(insurance);
 
@@ -56,7 +55,7 @@ class CustomerViewLogicTest {
     void createInsuranceData() {
         Insurance insurance = new Insurance();
         insurance.setName("test1");
-        insurance.setPremium(10000);
+//        insurance.setPremium(10000);
         insurance.setDescription("this is test");
         insuranceList.create(insurance);
     }

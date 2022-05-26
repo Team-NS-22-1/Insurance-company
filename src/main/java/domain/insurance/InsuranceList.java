@@ -12,6 +12,6 @@ import java.util.ArrayList;
  */
 public interface InsuranceList extends CrudInterface<Insurance> {
     ArrayList<Insurance> readAll();
-    int readPremium(int id);
+//    int readPremium(int id);
     ArrayList<Insurance> readByEid(int eid);
 }

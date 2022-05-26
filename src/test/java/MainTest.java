@@ -1,4 +1,3 @@
-
 import application.Application;
 import domain.contract.*;
 import domain.customer.Customer;
@@ -6,7 +5,7 @@ import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 class MainTest {
 
