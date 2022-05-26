@@ -207,12 +207,10 @@ public class Customer {
 				.setCustomerId(this.id);
 	}
 
-	public void signUp(){
+	public void signUp() {
 
 	}
-
 	public void terminate(){
-
 	}
 
 	@Override
