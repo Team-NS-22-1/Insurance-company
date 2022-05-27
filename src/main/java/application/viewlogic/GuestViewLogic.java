@@ -15,7 +15,8 @@ import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
-import static utility.CustomerInfoFormatUtil.*;
+import static main.utility.CustomerInfoFormatUtil.*;
+
 import static utility.MessageUtil.*;
 import static utility.PremiumInfoFinder.customerAgeFinder;
 import static utility.PremiumInfoFinder.customerSexFinder;
@@ -59,7 +60,7 @@ public class GuestViewLogic implements ViewLogic {
             switch (command) {
                 case "1":
 //                    selectInsurance();
-                // 해결을?
+                    // 해결을?
                 case "":
                     throw new InputException.InputNullDataException();
                 default:
@@ -207,7 +208,6 @@ public class GuestViewLogic implements ViewLogic {
         int count = 0;
         String question;
         String diseaseDetail;
-        boolean riskPremiumCriterion;
 
         question = "키를 입력해주세요. \t(단위: cm)";
         int height = validateIntFormat(question);
@@ -253,12 +253,12 @@ public class GuestViewLogic implements ViewLogic {
 
         int age = customerAgeFinder(customer.getSsn());
         boolean sex = customerSexFinder(customer.getSsn());
-        riskPremiumCriterion = count >= 4;
+        boolean riskPremiumCriterion = count >= 4;
 
         int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
 
         contract = employee.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
-                                            isTakingDrug, isHavingDisease, diseaseDetail, premium);
+                isTakingDrug, isHavingDisease, diseaseDetail, premium);
         signContract(contract, customer);
     }
 
@@ -407,7 +407,7 @@ public class GuestViewLogic implements ViewLogic {
             } catch (InputException.InputNullDataException e) {
                 System.out.println(e.getMessage());
             } catch (InputException.InvalidMenuException e) {
-                    System.out.println("올바른 메뉴번호를 입력해주세요");
+                System.out.println("올바른 메뉴번호를 입력해주세요");
             }
         }
     }

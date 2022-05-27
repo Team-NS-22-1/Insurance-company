@@ -32,9 +32,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static main.utility.CustomerInfoFormatUtil.*;
 import static utility.CompAssignUtil.assignCompEmployee;
-import static utility.CustomerInfoFormatUtil.isCarNo;
-import static utility.CustomerInfoFormatUtil.isPhone;
+//import static utility.CustomerInfoFormatUtil.isCarNo;
+//import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
 import static utility.FormatUtil.*;
 import static utility.MessageUtil.*;
