@@ -1,6 +1,8 @@
 package domain.employee;
 
 
+import dao.ContractDao;
+import dao.Dao;
 import dao.InsuranceDao;
 import domain.contract.BuildingType;
 import domain.contract.ConditionOfUw;
@@ -13,10 +15,7 @@ import utility.FileDialogUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author SeungHo
@@ -305,7 +304,10 @@ public class Employee {
 
 	}
 
-	public Map<Integer, Contract> readContract(InsuranceType insuranceType){
+	public List<Contract> readContract(InsuranceType insuranceType){
+		ContractDao contractDao = new ContractDao();
+
+		/**
 		Map<Integer, Contract> contractList = new HashMap<>();
 
 		for (Contract contract : ContractListImpl.getContractList().values()) {
@@ -328,16 +330,17 @@ public class Employee {
 
 
 		}
-
-		return contractList;
+		**/
+		return contractDao.readAll(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractListImpl contractList = new ContractListImpl();
-		Contract contract = contractList.read(contractId);
+		ContractDao contractDao = new ContractDao();
+		Contract contract = contractDao.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
+		contractDao.update(contract);
 	}
 
 	public String print() {

@@ -1,5 +1,7 @@
 package application.viewlogic;
 
+import dao.ContractDao;
+import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
@@ -15,6 +17,7 @@ import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 import utility.MessageUtil;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -114,7 +117,9 @@ public class UWViewLogic implements ViewLogic {
             try {
                 createMenu("-------------------------------");
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
-                Map<Integer, Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
+
+                // read
+                List<Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
@@ -125,8 +130,9 @@ public class UWViewLogic implements ViewLogic {
                 if (contractId.equals("exit")) throw new MyCloseSequence();
 
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
-                if (!contractList.containsKey(Integer.parseInt(contractId))) throw new MyIllegalArgumentException();
+                if (!contractList.contains(Integer.parseInt(contractId))) throw new MyIllegalArgumentException();
 
+                // read
                 Contract contract = printContractInfo(contractList.get(Integer.parseInt(contractId)));
 
                 selectUwState(contract);
@@ -193,6 +199,7 @@ public class UWViewLogic implements ViewLogic {
 
                 switch (sc.next()) {
                     case "1":
+                        // update
                         this.employeeList.read(1).underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
@@ -214,22 +221,25 @@ public class UWViewLogic implements ViewLogic {
 
     }
 
-    public void printContractList(Map<Integer, Contract> contractList) {
+    public void printContractList(List<Contract> contractList) {
 
-        for (Contract contract : contractList.values()) {
+        for (Contract contract : contractList) {
             Customer customer = this.customerList.read(contract.getCustomerId());
             System.out.println(contract.getId() + "        " + customer.getName() + "        " + contract.getConditionOfUw());
         }
     }
 
     public Contract printContractInfo(Contract contract) {
+        //CustomerDao customerDao = new CustomerDao();
+        InsuranceDao insuranceDao =  new InsuranceDao();
+
         System.out.println(contract.toString());
 
         Customer customer = this.customerList.read(contract.getCustomerId());
         System.out.println(customer.toString());
 
-        Insurance insurance = this.insuranceList.read(contract.getInsuranceId());
-        System.out.println(insurance.print());
+        //Insurance insurance = insuranceDao.read(contract.getInsuranceId());
+        //System.out.println(insurance.print());
 
         return contract;
 
