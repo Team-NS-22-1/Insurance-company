@@ -10,6 +10,8 @@ import kr.dogfoot.hwplib.writer.HWPWriter;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 /**
@@ -38,17 +40,10 @@ public class DocUtil extends JFrame {
         return instance;
     }
 
-    //TODO 보상담당자가 제출된 파일들을 다운로드 받을 수 있는 기능도 만들어야함.
-    public void download(Accident accident, AccDocType accDocType) {
-        String path = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"; // path
-        String fileName = "";
-        if (accDocType == AccDocType.PICTUREOFSITE) {
-            fileName = accDocType.getDesc()+".jpg";
-        }else{
-            fileName = accDocType.getDesc()+".hwp";
-        }
+
+    public void download(String dir) {
         FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
-        dialog.setFile(fileName);
+        dialog.setAlwaysOnTop(true);
         dialog.setModal(true);
         dialog.setVisible(true);
 
@@ -56,7 +51,7 @@ public class DocUtil extends JFrame {
             return;
         String saveFilePath = dialog.getDirectory()+dialog.getFile();
         try {
-            in = new FileInputStream(path+fileName);
+            in = new FileInputStream(dir);
             out = new FileOutputStream(saveFilePath);
             readIOBuffer();
         } catch (FileNotFoundException e) {
@@ -67,35 +62,31 @@ public class DocUtil extends JFrame {
 
     }
 
-    public String upload(Accident accident, AccDocType accDocType) {
-        String path = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"; // path
-        String fileName = "";
-        if (accDocType == AccDocType.PICTUREOFSITE) {
-            fileName = accDocType.getDesc()+".jpg";
-        }else{
-            fileName = accDocType.getDesc()+".hwp";
-        }
-
-        FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
-        dialog.setFile(fileName);
-        dialog.setModal(true);
-        dialog.setVisible(true);
-
-        String savePath = path +  fileName;
-        String originPath = dialog.getDirectory()+dialog.getFile();
-        if(dialog.getDirectory() == null)
-            return null;
+    public String upload(String dir) {
 
         try {
+            File folder = new File(dir);
+            if (!folder.getParentFile().exists()) {
+                folder.getParentFile().mkdirs();
+            }
+
+            FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
+            dialog.setModal(true);
+            dialog.setVisible(true);
+
+            String originPath = dialog.getDirectory()+dialog.getFile();
+            if(dialog.getDirectory() == null)
+                return null;
             in = new FileInputStream(originPath);
-            out = new FileOutputStream(savePath);
+            out = new FileOutputStream(dir);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+//            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return savePath;
+        return dir;
     }
 
 
@@ -119,36 +110,6 @@ public class DocUtil extends JFrame {
         }
     }
 
-
-    public void download(AccDocType accDocType) {
-        String path = "./AccDocFile/Example"; // path
-        String fileName = accDocType.getDesc()+"(예시).hwp";
-
-        String filePath = path+"/"+fileName;
-        JFileChooser chooser = new JFileChooser();
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int returnVal = chooser.showOpenDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            String newPath = chooser.getSelectedFile().getAbsolutePath();
-            Scanner sc = new Scanner(System.in);
-            System.out.println("저장할 파일 이름을 정해주세요");
-            String name = sc.next();
-
-            try {
-                HWPFile hwpFile = HWPReader.fromFile((filePath));
-                if (hwpFile != null) {
-                    HWPFile clonedHWPFile = hwpFile.clone(false);
-                    String filename2 = name+".hwp";
-                    HWPWriter.toFile(clonedHWPFile, newPath + "/" + filename2);
-                    System.out.println(filename2 + "이 성공적으로 다운로드 되었습니다.");
-                }
-            } catch (Exception e) {
-                throw new MyFileException(e);
-            }
-        }
-    }
-
     public static void isExist(Accident accident, AccDocType accDocType) {
         String directory =  accident.getCustomerId()+"/"+ accident.getId();
         File folder = new File(submitPath+directory+"/"+accDocType.getDesc()+".hwp");
@@ -157,83 +118,4 @@ public class DocUtil extends JFrame {
         }
     }
 
-    public String upload(String directory, AccDocType accDocType) {
-
-        File folder = new File(submitPath+directory);
-        if (!folder.exists()) {
-
-            folder.mkdirs();
-        }
-
-        if (accDocType == AccDocType.PICTUREOFSITE) {
-            return uploadImg(directory);
-        }else
-            return uploadHWP(directory,accDocType);
-
-    }
-
-    //TODO 확장자가 달라도 같은 파일로 인식하도록 하고싶은데.
-    private String uploadImg(String directory) {
-        String dir = "";
-        try {
-            JFileChooser chooser = new JFileChooser();
-            int returnVal = chooser.showSaveDialog(this);
-            if (returnVal == JFileChooser.APPROVE_OPTION) {
-                String path = chooser.getSelectedFile().getAbsolutePath();
-                FileInputStream fileStream = null; // 파일 스트림
-
-                fileStream = new FileInputStream(path);// 파일 스트림 생성
-                //버퍼 선언
-                BufferedInputStream bis = new BufferedInputStream(fileStream);
-
-                String extension = "";
-                int i = path.lastIndexOf('.');
-                if (i > 0) {
-                    extension = path.substring(i);
-                }
-
-                byte[] readBuffer = new byte[1024 * 1024];
-                File copy = new File(submitPath + directory + "/교통사고현장사진" + extension);
-                dir = submitPath + directory + "/교통사고현장사진" + extension;
-                BufferedOutputStream bs = null;
-
-                bs = new BufferedOutputStream(new FileOutputStream(copy));
-                while (bis.read(readBuffer) != -1) {
-                    bs.write(readBuffer); //Byte형으로만 넣을 수 있음
-                }
-                bs.flush();
-            } else {
-                dir = "close";
-            }
-        } catch (IOException e) {
-            throw new MyFileException(e);
-        }
-        return dir;
-    }
-
-    private String uploadHWP(String directory,AccDocType accDocType) {
-        String dir = "";
-        JFileChooser chooser = new JFileChooser();
-        int returnVal = chooser.showSaveDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-            String path = chooser.getSelectedFile().getAbsolutePath();
-            try {
-                HWPFile hwpFile = HWPReader.fromFile((path));
-                if (hwpFile != null) {
-                    HWPFile clonedHWPFile = hwpFile.clone(false);
-                    String filename2 = accDocType.getDesc() + ".hwp";
-                    HWPWriter.toFile(clonedHWPFile, submitPath + directory + "/" + filename2);
-                    dir = submitPath + directory + "/" + filename2;
-                    System.out.println(filename2 + " ok !!!");
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new MyFileException(e);
-            }
-        } else {
-            dir = "close";
-        }
-        return dir;
-    }
 }

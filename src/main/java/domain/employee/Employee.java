@@ -183,7 +183,8 @@ public class Employee {
 
 	private AccDocFile uploadLossAssessment(Accident accident) {
 		DocUtil instance = DocUtil.getInstance();
-		String fileDir = instance.upload(accident, AccDocType.LOSSASSESSMENT);
+		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
+		String fileDir = instance.upload(dir);
 		if (fileDir == null) {
 			return null;
 		}

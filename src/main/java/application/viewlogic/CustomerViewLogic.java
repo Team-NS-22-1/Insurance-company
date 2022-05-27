@@ -179,7 +179,8 @@ public class CustomerViewLogic implements ViewLogic {
                 medicalCertification = (String) br.verifyRead(accDocType.getDesc()+" 양식을 다운로드 받겠습니까?(Y/N)", medicalCertification);
                 if (medicalCertification.equals("Y")) {
                     DocUtil instance = DocUtil.getInstance();
-                    instance.download(accDocType);
+                    String dir = "./AccDocFile/Example/" + accDocType.getDesc()+"(예시).hwp";
+                    instance.download(dir);
                     break;
                 } else if (medicalCertification.equals("N")) {
                     break;
@@ -204,7 +205,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void isFinishedClaimComp(Accident accident, boolean submitted) {
-        if (submitted && accident.getAccount() != null) {
+        if (submitted) {
             connectCompEmployee(accident);
         } else {
             System.out.println("추후에 미제출한 정보들을 제출해주세요.");
@@ -233,7 +234,7 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
             }
         }
-        accident.setEmployeeId(compEmployee.getId());
+        accident.setEmployeeId(compEmployee.getId()); // TODO update 해줘야해.
     }
 
     private void showFireAccidentDoc(Accident accident) {

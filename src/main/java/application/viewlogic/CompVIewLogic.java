@@ -202,8 +202,9 @@ public class CompVIewLogic implements ViewLogic {
         //다운로드 하기.
 
         downloadAccDocFile(accident, accDocFiles);
-
-        AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,createCompAccount());
+        AccountRequestDto compAccount = createCompAccount();
+        System.out.println("손해사정서를 업로드해주세요.");
+        AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
 
         accDocFileList.create(assessDamageResponseDto.getAccDocFile());
         long lossReserves = accident.getLossReserves();
@@ -301,7 +302,7 @@ public class CompVIewLogic implements ViewLogic {
                 if (result.equals("Y")) {
                     //TODO parameter로 accdocfile을 넣어주도록 하라.
                     // 그리고 CompEmployee가 다운로드를 해야 하지 않을까...
-                    instance.download(accident, accDocFile.getType());
+                    instance.download(accDocFile.getFileAddress());
 
 
                     break;

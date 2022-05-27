@@ -230,7 +230,6 @@ public class TestData {
         accident.setAccidentType(AccidentType.INJURYACCIDENT);
         accident.setEmployeeId(3);
         accident.setCustomerId(1);
-        accident.setAccount(new Account().setAccountNo("123412-12-123412").setBankType(BankType.KB));
         accident.setDateOfAccident(LocalDateTime.now());
         accident.setDateOfReport(LocalDateTime.now());
         accidentList.create(accident);
@@ -239,19 +238,19 @@ public class TestData {
         accDocFile.setAccidentId(accident.getId());
         accDocFile.setType(AccDocType.CLAIMCOMP);
         accDocFile.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
-        +"/"+accDocFile.getType().getDesc());
+        +"/"+accDocFile.getType().getDesc()+".hwp");
 
         AccDocFile accDocFile2 = new AccDocFile();
         accDocFile2.setAccidentId(accident.getId());
         accDocFile2.setType(AccDocType.MEDICALCERTIFICATION);
         accDocFile2.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
-                +"/"+accDocFile2.getType().getDesc());
+                +"/"+accDocFile2.getType().getDesc()+".hwp");
 
         AccDocFile accDocFile3 = new AccDocFile();
         accDocFile3.setAccidentId(accident.getId());
         accDocFile3.setType(AccDocType.CONFIRMADMISSIONDISCHARGE);
         accDocFile3.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
-                +"/"+ accDocFile3.getType().getDesc());
+                +"/"+ accDocFile3.getType().getDesc()+".hwp");
 
        accDocFileList.create(accDocFile);
         accDocFileList.create(accDocFile2);

@@ -26,7 +26,7 @@ public abstract class Accident {
 	protected int employeeId;
 	protected int id;
 	protected long lossReserves; // 지급준비금
-	protected Account account;
+
 
 
 
@@ -106,14 +106,6 @@ public abstract class Accident {
 		return this;
 	}
 
-	public Account getAccount() {
-		return account;
-	}
-
-	public Accident setAccount(Account account) {
-		this.account = account;
-		return this;
-	}
 
 	public abstract String toString();
 
