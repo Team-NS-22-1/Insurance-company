@@ -637,10 +637,10 @@ public class CustomerViewLogic implements ViewLogic {
     public void showContractInfoForPay(Contract contract) {
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
-        contract.setPremium(insurance.getPremium());
-        sb.append("[ID]").append(" : ").append(contract.getId())
-                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
-                .append("\n");
+//        contract.setPremium(insurance.getPremium());
+//        sb.append("[ID]").append(" : ").append(contract.getId())
+//                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
+//                .append("\n");
         System.out.println(sb.toString());
     }
 

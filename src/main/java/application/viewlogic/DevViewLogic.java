@@ -1,7 +1,6 @@
 package application.viewlogic;
 
 import application.ViewLogic;
-import dao.InsuranceDao;
 import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -326,12 +325,8 @@ public class DevViewLogic implements ViewLogic {
         while(forWhile){
             switch (br.verifyMenu("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 1 -> {
-                    Insurance insurance = employee.develop(insuranceList, insuranceDetailList, type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
+                    employee.develop(type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
                     System.out.println("정상적으로 보험이 저장되었습니다!");
-                    System.out.println(insuranceList.read(insurance.getId()).print());
-                    for(InsuranceDetail insuranceDetail : insuranceDetailList.readByInsuranceId(insurance.getId())) {
-                        System.out.println(insuranceDetail.print());
-                    }
                     forWhile = false;
                 }
                 case 2 -> {

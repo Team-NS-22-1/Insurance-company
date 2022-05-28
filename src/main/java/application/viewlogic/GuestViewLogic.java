@@ -4,10 +4,8 @@ import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
 import exception.MyInadequateFormatException;
@@ -91,7 +89,7 @@ public class GuestViewLogic implements ViewLogic {
                 }
                 Insurance insurance = insuranceList.read(Integer.parseInt(command));
                 if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
+                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning(insurance);
                 }
                 else {
@@ -406,11 +404,12 @@ public class GuestViewLogic implements ViewLogic {
 
     private void signContract(Contract contract, Customer customer) {
         boolean isLoop = true;
-        int premium = insuranceList.readPremium(contract.getInsuranceId());
+//        int premium = insuranceList.readPremium(contract.getInsuranceId());
         // premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
         // premium = employee.planFireInsurance(buildingType, collateralAmount);
         // premium = employee.planCarInsurance(driverAge, value);
 
+        int premium = 10000;
         System.out.println("조회된 귀하의 보험료는: " + premium + "원입니다.");
         while (isLoop) {
             try {
