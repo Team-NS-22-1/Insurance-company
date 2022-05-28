@@ -10,11 +10,13 @@ import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.customer.JDBCCustomerListImpl;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
-import domain.insurance.*;
+import domain.insurance.InsuranceDetailList;
+import domain.insurance.InsuranceDetailListImpl;
+import domain.insurance.InsuranceList;
+import domain.insurance.InsuranceListImpl;
 import domain.payment.PaymentList;
 import domain.payment.PaymentListImpl;
 import exception.MyCloseSequence;
@@ -73,7 +75,7 @@ public class Application {
             try {
                 createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
                 System.out.println("0.종료하기");
-                int userType = sc.nextInt();
+                int userType = Integer.parseInt(sc.nextLine());
                 UserType[] values = UserType.values();
 
                 if (userType == 0) {
@@ -83,7 +85,7 @@ public class Application {
                 while (true) {
                     ViewLogic viewLogic = map.get(type);
                     viewLogic.showMenu();
-                    String command = sc.next();
+                    String command = sc.nextLine();
                     if (command.equals("0"))
                         break;
                     if (command.equalsIgnoreCase("EXIT")) {
@@ -96,6 +98,8 @@ public class Application {
             } catch (MyCloseSequence e) {
                 System.out.println(e.getMessage());
                 System.exit(0);
+            } catch (NumberFormatException e) {
+                System.out.println("형식에 맞는 메뉴를 입력해주세요");
             }
         }
     }
