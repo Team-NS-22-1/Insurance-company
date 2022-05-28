@@ -73,13 +73,34 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void initEmployee() {
-        System.out.println("직원 ID을 입력하세요.");
-        for(Employee employee : this.employeeList.readAll()) {
-            if (employee.getDepartment() == Department.SALES)
-                System.out.println(employee.print());
+        while(true) {
+            try {
+                System.out.println("직원 ID을 입력하세요.");
+                for(Employee employee : this.employeeList.readAll()) {
+                    if (employee.getDepartment() == Department.SALES)
+                        System.out.println(employee.print());
+                }
+                command = sc.nextLine();
+                if (command.equals("0")) {
+                    break;
+                }
+                if (command.isBlank()){
+                    throw new InputException.InputNullDataException();
+                }
+                this.employee = this.employeeList.read(Integer.parseInt(command));
+                if (employee != null && employee.getDepartment() == Department.SALES)  {
+                    break;
+                }
+                else {
+                    throw new InputException.NoResultantException();
+                }
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("형식에 맞는 Id를 입력해주세요");
+            }
         }
-        int employeeId = sc.nextInt();
-        this.employee = this.employeeList.read(employeeId);
+
     }
 
 
@@ -132,20 +153,12 @@ public class SalesViewLogic implements ViewLogic {
         Contract contract;
         int count = 0;
         String question;
-//        String diseaseDetail;
-//        boolean riskPremiumCriterion;
 
         question = "대상 나이를 입력하세요.";
         int age = validateIntFormat(question);
 
         question = "대상 성별을 입력하세요. \t1. 남 \t2. 여 (기본은 여로 설정)";
         boolean sex = validateBooleanFormat(question);
-
-//        System.out.println("대상 나이를 입력하세요.");
-//        int age = sc.nextInt();
-//        createMenu("대상 성별을 입력하세요.", "남", "여");
-//        command = sc.nextInt();
-//        boolean sex = command == 1;
 
         question = "음주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
         boolean isDrinking = validateBooleanFormat(question);
@@ -176,54 +189,6 @@ public class SalesViewLogic implements ViewLogic {
         boolean isHavingDisease = validateBooleanFormat(question);
         if (isHavingDisease)
             count++;
-
-//        createMenu("음주 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isDrinking = false;
-//        if (command == 1) {
-//            isDrinking = true;
-//            count++;
-//        }
-//
-//        createMenu("흡연 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isSmoking = false;
-//        if (command == 1) {
-//            isSmoking = true;
-//            count++;
-//        }
-//
-//        createMenu("운전 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isDriving = false;
-//        if (command == 1) {
-//            isDriving = true;
-//            count++;
-//        }
-//
-//        createMenu("위험 취미 활동 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isDangerActivity = false;
-//        if (command == 1) {
-//            isDangerActivity = true;
-//            count++;
-//        }
-//
-//        createMenu("약물 복용 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isTakingDrug = false;
-//        if (command == 1) {
-//            isTakingDrug = true;
-//            count++;
-//        }
-//
-//        createMenu("질병 이력 여부를 입력해주세요.", "예", "아니요");
-//        command = sc.nextInt();
-//        boolean isHavingDisease = false;
-//        if (command == 1) {
-//            isHavingDisease = true;
-//            count++;
-//        }
 
         boolean riskPremiumCriterion = count >= 4;
 

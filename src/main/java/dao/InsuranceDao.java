@@ -3,7 +3,6 @@ package dao;
 import domain.insurance.Insurance;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class InsuranceDao extends Dao {
 
@@ -29,6 +28,4 @@ public class InsuranceDao extends Dao {
     public void delete(Insurance insurance) {
 
     }
-
-
 }
