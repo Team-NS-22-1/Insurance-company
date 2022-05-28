@@ -8,17 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-/**
- * packageName :  dao
- * fileName : Dao
- * author :  규현
- * date : 2022-05-25
- * description :
- * ===========================================================
- * DATE                 AUTHOR                NOTE
- * -----------------------------------------------------------
- * 2022-05-25                규현             최초 생성
- */
 public class Dao {
     private Connection connection = null;
     private Statement statement = null;
@@ -54,4 +43,13 @@ public class Dao {
         }
         return resultSet;
     }
+
+    public void update(String query) {
+
+    }
+
+    public void delete(String query) {
+
+    }
+
 }

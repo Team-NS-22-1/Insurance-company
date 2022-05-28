@@ -59,7 +59,24 @@ public class JDBCCustomerListImpl extends Dao implements CustomerList{
 
     @Override
     public boolean delete(int id) {
-        return false;
+        Connection conn = null;
+        PreparedStatement pstm = null;
+        ResultSet rs = null;
+        try {
+            String query = "delete from customer where customer_id = ?";
+            Class.forName(DbConst.JDBC_DRIVER);
+            conn = DBUtil.getConnection();
+            pstm = conn.prepareStatement(query);
+            pstm.setInt(1, id);
+            pstm.executeUpdate();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            close(conn,pstm,rs);
+        }
+        return true;
     }
 
     private void close(Connection con, Statement stmt, ResultSet rs) {
@@ -87,5 +104,4 @@ public class JDBCCustomerListImpl extends Dao implements CustomerList{
             }
         }
     }
-
 }

@@ -36,6 +36,7 @@ public class TestData {
     private CustomerListImpl customerList;
     private PaymentList paymentList;
     private InsuranceListImpl insuranceList;
+    private InsuranceDetailList insuranceDetailList;
     private ContractListImpl contractList;
     private EmployeeListImpl employeeList;
     private AccidentList accidentList;
@@ -45,6 +46,7 @@ public class TestData {
         this.customerList = new CustomerListImpl();
         this.paymentList = new PaymentListImpl();
         this.insuranceList = new InsuranceListImpl();
+        this.insuranceDetailList = new InsuranceDetailListImpl();
         this.contractList = new ContractListImpl();
         this.employeeList = new EmployeeListImpl();
         this.accidentList = new AccidentListImpl();
@@ -120,65 +122,50 @@ public class TestData {
 
     }
     private void createInsurance() {
-        HealthInsurance h1 = new HealthInsurance();
-        h1.setName("테스트 건강보험1");
-        h1.setDescription("테스트 건강보험1의 설명입니다.");
-        h1.setInsuranceType(InsuranceType.HEALTH);
-        h1.setPremium(100000);
-        h1.setSalesAuthFile(new SalesAuthFile());
-        h1.setDevInfo(new DevInfo()
-                .setEmployeeId(1)
-                .setDevDate(LocalDate.now())
-                .setSalesAuthState(SalesAuthState.PERMISSION)
-                .setSalesStartDate(LocalDate.now()));
-        insuranceList.create(h1);
-        HealthInsurance h2 = new HealthInsurance();
-        h2.setName("테스트 건강보험2");
-        h2.setDescription("테스트 건강보험2의 설명입니다.");
-        h2.setInsuranceType(InsuranceType.HEALTH);
-        h2.setPremium(100000);
-        h2.setSalesAuthFile(new SalesAuthFile());
-        h2.setDevInfo(new DevInfo()
-                .setEmployeeId(1)
-                .setDevDate(LocalDate.now())
-                .setSalesAuthState(SalesAuthState.PERMISSION)
-                .setSalesStartDate(LocalDate.now()));
-        insuranceList.create(h2);
-
-        insuranceList.create(new CarInsurance().setName("테스트 자동차보험1")
-                .setInsuranceType(InsuranceType.CAR)
-                .setDescription("테스트 자동차보험1의 설명입니다.")
-                .setPremium(20000000)
-                .setSalesAuthFile(new SalesAuthFile())
+        insuranceList.create(new Insurance().setName("테스트 건강보험1")
+                .setDescription("테스트 건강보험1의 설명입니다.")
+                .setContractPeriod(90)
+                .setPaymentPeriod(30)
+                .setInsuranceType(InsuranceType.HEALTH)
                 .setDevInfo(new DevInfo().setEmployeeId(1)
-                        .setDevDate(LocalDate.now())
-                        .setSalesAuthState(SalesAuthState.WAIT)));
-        insuranceList.create(new CarInsurance().setName("테스트 자동차보험2")
-                .setInsuranceType(InsuranceType.CAR)
-                .setDescription("테스트 자동차보험2의 설명입니다.")
-                .setPremium(20000000)
-                .setSalesAuthFile(new SalesAuthFile())
-                .setDevInfo(new DevInfo().setEmployeeId(1)
-                        .setDevDate(LocalDate.now())
-                        .setSalesAuthState(SalesAuthState.DISALLOWANCE)));
-
-        insuranceList.create(new FireInsurance().setName("테스트 화재보험1")
-                .setInsuranceType(InsuranceType.FIRE)
-                .setDescription("테스트 화재보험1의 설명입니다.")
-                .setPremium(10000000)
-                .setSalesAuthFile(new SalesAuthFile())
-                .setDevInfo(new DevInfo().setEmployeeId(6)
                         .setDevDate(LocalDate.now())
                         .setSalesAuthState(SalesAuthState.PERMISSION)
-                        .setSalesStartDate(LocalDate.now())));
-        insuranceList.create(new FireInsurance().setName("테스트 화재보험2")
+                        .setSalesStartDate(LocalDate.now()))
+                .setSalesAuthFile(new SalesAuthFile()));
+        insuranceDetailList.create(new HealthDetail().setTargetAge(20)
+                .setTargetSex(true)
+                .setRiskCriterion(4)
+                .setPremium(100000)
+                .setInsuranceId(1));
+
+        insuranceList.create(new Insurance().setName("테스트 자동차보험1")
+                .setDescription("테스트 자동차보험1의 설명입니다.")
+                .setContractPeriod(1)
+                .setPaymentPeriod(1)
+                .setInsuranceType(InsuranceType.CAR)
+                .setDevInfo(new DevInfo().setEmployeeId(1)
+                        .setDevDate(LocalDate.now())
+                        .setSalesAuthState(SalesAuthState.WAIT))
+                .setSalesAuthFile(new SalesAuthFile()));
+        insuranceDetailList.create(new CarDetail().setTargetAge(20)
+                .setValueCriterion(20000000)
+                .setPremium(1000000)
+                .setInsuranceId(2));
+
+        insuranceList.create(new Insurance().setName("테스트 화재보험1")
+                .setDescription("테스트 화재보험1의 설명입니다.")
+                .setContractPeriod(10)
+                .setPaymentPeriod(10)
                 .setInsuranceType(InsuranceType.FIRE)
-                .setDescription("테스트 화재보험2의 설명입니다.")
-                .setPremium(20000000)
-                .setSalesAuthFile(new SalesAuthFile())
                 .setDevInfo(new DevInfo().setEmployeeId(6)
                         .setDevDate(LocalDate.now())
-                        .setSalesAuthState(SalesAuthState.WAIT)));
+                        .setSalesAuthState(SalesAuthState.DISALLOWANCE))
+                .setSalesAuthFile(new SalesAuthFile()));
+        insuranceDetailList.create(new FireDetail().setTargetBuildingType(BuildingType.COMMERCIAL)
+                .setCollateralAmountCriterion(100000000)
+                .setPremium(10000000)
+                .setInsuranceId(2));
+
     }
 
     private void createPayment() {

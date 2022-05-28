@@ -33,7 +33,6 @@ public class DocUtil extends JFrame {
     private FileOutputStream out;
     static {
         instance = new DocUtil();
-
     }
 
     public static DocUtil getInstance() {

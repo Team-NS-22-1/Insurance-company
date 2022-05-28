@@ -56,7 +56,7 @@ public class GuestViewLogic implements ViewLogic {
         try {
             switch (command) {
                 case "1":
-                    selectInsurance();
+//                    selectInsurance();
                 // 해결을?
                 case "":
                     throw new InputException.InputNullDataException();

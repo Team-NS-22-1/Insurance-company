@@ -6,9 +6,12 @@ public class DtoGuarantee {
 
     private String description;
 
-    public DtoGuarantee(String name, String description) {
+    private Long guaranteeAmount;
+
+    public DtoGuarantee(String name, String description, Long guaranteeAmount) {
         this.name = name;
         this.description = description;
+        this.guaranteeAmount = guaranteeAmount;
     }
 
     public String getName() {
@@ -18,4 +21,6 @@ public class DtoGuarantee {
     public String getDescription() {
         return description;
     }
+
+    public Long getGuaranteeAmount() { return guaranteeAmount; }
 }

@@ -8,24 +8,71 @@ package domain.insurance;
  */
 public class Guarantee {
 
-	private int insurranceId;
+	private int id;
+	private int insuranceId;
 	private String name;
 	private String description;
+	private Long guaranteeAmount;
 
-	public Guarantee(String name, String description){
+	public Guarantee() {
+	}
+
+	public Guarantee(String name, String description, Long guaranteeAmount){
 		this.name = name;
 		this.description = description;
+		this.guaranteeAmount = guaranteeAmount;
 	}
 
-	public String getName(){
-		return this.name;
+	public int getId() {
+		return id;
 	}
 
-	public String getDescription(){
-		return this.description;
+	public Guarantee setId(int id) {
+		this.id = id;
+		return this;
 	}
-	@Override
-	public String toString() {
-		return "이름 : " + name + " 설명 : " + description;
+
+	public int getInsuranceId() {
+		return insuranceId;
+	}
+
+	public Guarantee setInsuranceId(int insuranceId) {
+		this.insuranceId = insuranceId;
+		return this;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Guarantee setName(String name) {
+		this.name = name;
+		return this;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Guarantee setDescription(String description) {
+		this.description = description;
+		return this;
+	}
+
+	public Long getGuaranteeAmount() {
+		return guaranteeAmount;
+	}
+
+	public Guarantee setGuaranteeAmount(Long guaranteeAmount) {
+		this.guaranteeAmount = guaranteeAmount;
+		return this;
+	}
+
+	public String print() {
+		return "보장 정보 {" +
+				"이름 : " + name +
+				", 설명 : " + description +
+				", 보장금액: " + guaranteeAmount +
+				"}";
 	}
 }
