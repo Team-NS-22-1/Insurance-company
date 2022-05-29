@@ -74,7 +74,7 @@ public class Application {
             Scanner sc = new Scanner(System.in);
             try {
                 createMenu("<<유저 타입>>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
-                System.out.println("0.종료하기");
+                System.out.println("0. 종료하기");
                 int userType = Integer.parseInt(sc.nextLine());
                 UserType[] values = UserType.values();
 

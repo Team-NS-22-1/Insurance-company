@@ -18,7 +18,6 @@ import domain.customer.CustomerList;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceDetailList;
 import domain.insurance.InsuranceList;
 import domain.payment.*;
 import exception.*;
@@ -32,10 +31,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static main.utility.CustomerInfoFormatUtil.*;
+import static main.utility.CustomerInfoFormatUtil.isCarNo;
+import static main.utility.CustomerInfoFormatUtil.isPhone;
 import static utility.CompAssignUtil.assignCompEmployee;
-//import static utility.CustomerInfoFormatUtil.isCarNo;
-//import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
 import static utility.FormatUtil.*;
 import static utility.MessageUtil.*;
@@ -87,20 +85,27 @@ public class CustomerViewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
-        switch (command) {
-            case "2" :
-                payPremiumButton();
-                break;
-            case "3":
-                reportAccident();
-                break;
-            case "4":
-                claimCompensation();
-                break;
-            default:
-                throw new MyIllegalArgumentException();
-        }
-
+        try {
+                switch (command) {
+//                    case "1":
+//                        System.out.println("1선택");
+                    case "2" :
+                        payPremiumButton();
+                        break;
+                    case "3":
+                        reportAccident();
+                        break;
+                    case "4":
+                        claimCompensation();
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InvalidMenuException();
+                }
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            }
     }
 
     private void claimCompensation() {

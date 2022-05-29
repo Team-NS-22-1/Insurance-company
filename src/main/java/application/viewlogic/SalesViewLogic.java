@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
-import static utility.MessageUtil.createMenu;
+import static utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -49,25 +49,30 @@ public class SalesViewLogic implements ViewLogic {
         this.contractList = contractList;
         this.customerList = customerList;
         this.employeeList = employeeList;
+        this.input = new InputValidation();
     }
 
     @Override
     public void showMenu() {
-        createMenu("영업팀 메뉴", "보험상품설계");
+        createMenuAndClose("영업팀 메뉴", "보험상품설계");
     }
 
     @Override
     public void work(String command) {
-
-        switch (command) {
-            // 보험상품설계
-            case "1":
-                initEmployee();
-                planInsurance();
-                break;
-            default:
-                System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
-                break;
+        try {
+            switch (command) {
+                // 보험상품설계
+                case "1":
+                    initEmployee();
+                    planInsurance();
+                    break;
+                case "":
+                    throw new InputException.InputNullDataException();
+                default:
+                    throw new InputException.InvalidMenuException();
+            }
+        } catch(InputException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -80,9 +85,6 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println(employee.print());
                 }
                 command = sc.nextLine();
-                if (command.equals("0")) {
-                    break;
-                }
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
@@ -99,7 +101,6 @@ public class SalesViewLogic implements ViewLogic {
                 System.out.println("형식에 맞는 Id를 입력해주세요");
             }
         }
-
     }
 
 
@@ -110,7 +111,7 @@ public class SalesViewLogic implements ViewLogic {
         while(true) {
             for (Insurance insurance : insuranceList.readAll()) {
                 if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
-                    System.out.println("보험코드: " + insurance.getId() + "\t보험이름: " + insurance.getName() + "\t보험종류: " + insurance.getInsuranceType());
+                    System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
             try {
@@ -124,7 +125,7 @@ public class SalesViewLogic implements ViewLogic {
                 }
                 Insurance insurance = insuranceList.read(Integer.parseInt(command));
                 if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)  {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
+                    System.out.println("보험설명 : " + insurance.getDescription() + "\n보장내역 : " + insurance.getGuarantee());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
                             planHealthInsurance(insurance);
@@ -156,35 +157,35 @@ public class SalesViewLogic implements ViewLogic {
         question = "대상 나이를 입력하세요.";
         int age = input.validateIntFormat(question);
 
-        question = "대상 성별을 입력하세요. \t1. 남 \t2. 여 (기본은 여로 설정)";
+        question = "대상 성별을 입력하세요. \t1. 남 \t2. 여";
         boolean sex = input.validateBooleanFormat(question);
 
-        question = "음주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "음주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDrinking = input.validateBooleanFormat(question);
         if (isDrinking)
             count++;
 
-        question = "흡연 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "흡연 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isSmoking = input.validateBooleanFormat(question);
         if (isSmoking)
             count++;
 
-        question = "운전 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "운전 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDriving = input.validateBooleanFormat(question);
         if (isDriving)
             count++;
 
-        question = "위험 취미 활동 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "위험 취미 활동 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDangerActivity = input.validateBooleanFormat(question);
         if (isDangerActivity)
             count++;
 
-        question = "약물 복용 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "약물 복용 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isTakingDrug = input.validateBooleanFormat(question);
         if (isTakingDrug)
             count++;
 
-        question = "질병 이력 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "질병 이력 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isHavingDisease = input.validateBooleanFormat(question);
         if (isHavingDisease)
             count++;
@@ -193,7 +194,7 @@ public class SalesViewLogic implements ViewLogic {
 
         int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
 
-        System.out.println("조회된 귀하의 보험료는 " + premium + " 입니다.");
+        System.out.println("조회된 귀하의 보험료는 " + premium + "원 입니다.");
 
         while (true) {
             try {
@@ -213,10 +214,8 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InvalidMenuException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e) {
+            } catch (InputException e) {
                 System.out.println(e.getMessage());
-            } catch (InputException.InvalidMenuException e) {
-                System.out.println("올바른 메뉴번호를 입력해주세요");
             }
         }
     }
@@ -250,17 +249,17 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InputInvalidDataException();
                 }
                 break;
-            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+            } catch (InputException e){
                 System.out.println(e.getMessage());
             }
         }
 
-        question = "담보 금액을 입력해주세요. \t(단워: 원)";
+        question = "담보 금액을 입력해주세요. \t(단워 : 원)";
         int collateralAmount = input.validateIntFormat(question);
 
         int premium = employee.planFireInsurance(buildingType, collateralAmount);
 
-        System.out.println("귀하의 보험료는 " + premium + " 입니다.");
+        System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
         while (true) {
             try {
@@ -280,10 +279,8 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InvalidMenuException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e) {
+            } catch (InputException e) {
                 System.out.println(e.getMessage());
-            } catch (InputException.InvalidMenuException e) {
-                System.out.println("올바른 메뉴번호를 입력해주세요");
             }
         }
     }
@@ -300,7 +297,7 @@ public class SalesViewLogic implements ViewLogic {
 
         int premium = employee.planCarInsurance(age, value);
 
-        System.out.println("귀하의 보험료는 " + premium + " 입니다.");
+        System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
         while (true) {
             try {
@@ -320,17 +317,16 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InvalidMenuException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e) {
+            } catch (InputException e) {
                 System.out.println(e.getMessage());
-            } catch (InputException.InvalidMenuException e) {
-                System.out.println("올바른 메뉴번호를 입력해주세요");
             }
         }
     }
 
     private void inputCustomerInfo(Contract contract) {
+        boolean isLoop = true;
 
-        while (true) {
+        while (isLoop) {
             try {
                 createMenu("등록된 고객입니까?", "예", "아니요");
                 command = sc.nextLine();
@@ -341,71 +337,43 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println("고객 ID를 입력해주세요.");
                         int customerId = sc.nextInt();
                         customer = customerList.read(customerId);
+                        isLoop = false;
                         break;
                     // 미등록 고객
                     case "2":
                         String question;
-                        String ssn;
-                        String email;
-                        String phone;
-                        String name;
 
-                        while(true) {
-                            try {
-                                System.out.println("고객 이름을 입력해주세요.");
-                                name = input.validateNameFormat(sc.nextLine());
-                                break;
-                            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
-                                System.out.println(e.getMessage());
-                            }
-                        }
+                        question = "고객 이름을 입력해주세요.";
+                        String name = input.validateDistinctFormat(question, 1);
 
-                        while(true){
-                            try{
-                                System.out.println("고객 주민번호를 입력해주세요. \t(______-*******)");
-                                ssn = input.validateSsnFormat(sc.nextLine());
-                                break;
-                            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
-                                System.out.println(e.getMessage());
-                            }
-                        }
+                        question = "고객 주민번호를 입력해주세요. \t(______-*******)";
+                        String ssn = input.validateDistinctFormat(question, 2);
 
-                        while(true){
-                            try{
-                                System.out.println("고객 연락처를 입력해주세요. \t(0__-____-____)");
-                                phone = input.validatePhoneFormat(sc.nextLine());
-                                break;
-                            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
-                                System.out.println(e.getMessage());
-                            }
-                        }
+                        question = "고객 연락처를 입력해주세요. \t(0__-____-____)";
+                        String phone = input.validateDistinctFormat(question, 3);
 
                         question = "고객 주소를 입력해주세요.";
                         String address = input.validateStringFormat(question);
 
-                        while (true){
-                            try{
-                                System.out.println("고객 이메일을 입력해주세요. \t(_____@_____.___)");
-                                email = input.validateEmailFormat(sc.nextLine());
-                                break;
-                            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
-                                System.out.println(e.getMessage());
-                            }
-                        }
+                        question = "고객 이메일을 입력해주세요. \t(_____@_____.___)";
+                        String email = input.validateDistinctFormat(question, 4);
 
                         question = "고객 직업을 입력해주세요.";
                         String job = input.validateStringFormat(question);
 
                         customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
 
+                        isLoop = false;
                         break;
+                    case "":
+                        throw new InputException.InputNullDataException();
                     default:
-                        throw new Exception();
+                        throw new InputException.InvalidMenuException();
                 }
-            } catch (Exception e) {
-                System.out.println("잘못된 입력입니다.");
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
             }
-            break;
+
         }
 
         switch (insuranceList.read(contract.getInsuranceId()).getInsuranceType()) {
@@ -424,10 +392,10 @@ public class SalesViewLogic implements ViewLogic {
         String question;
         String diseaseDetail;
 
-        question = "고객 키를 입력해주세요. \t(단위: cm)";
+        question = "고객 키를 입력해주세요. \t(단위 : cm)";
         int height = input.validateIntFormat(question);
 
-        question = "고객 몸무게를 입력해주세요. \t(단위: kg)";
+        question = "고객 몸무게를 입력해주세요. \t(단위 : kg)";
         int weight = input.validateIntFormat(question);
 
         if (contract.getHealthInfo().isHavingDisease()) {
@@ -443,13 +411,13 @@ public class SalesViewLogic implements ViewLogic {
     private void inputFireInfo(Customer customer, Contract contract) {
         String question;
 
-        question = "대상 건물면적을 입력해주세요. \t(단위: m^2 )";
+        question = "대상 건물면적을 입력해주세요. \t(단위 : m^2 )";
         int buildingArea = input.validateIntFormat(question);
 
-        question = "고객 자가 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "고객 자가 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isSelfOwned = input.validateBooleanFormat(question);
 
-        question = "고객 실거주 여부를 입력해주세요. \t1.예 \t2.아니요 (기본은 아니요로 설정)";
+        question = "고객 실거주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isActualResidence = input.validateBooleanFormat(question);
 
         contract = employee.inputFireInfo(contract, buildingArea, isSelfOwned, isActualResidence);
@@ -459,17 +427,9 @@ public class SalesViewLogic implements ViewLogic {
     private void inputCarInfo(Customer customer, Contract contract) {
         String question;
         CarType carType;
-        String carNo;
 
-        while (true){
-            try{
-                System.out.println("고객 차량번호를 입력해주세요. \t(지역명:__-**_-****))");
-                carNo = input.validateCarNoFormat(sc.nextLine());
-                break;
-            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
-                System.out.println(e.getMessage());
-            }
-        }
+        question = "고객 차량번호를 입력해주세요. \t(__-**_-****, 처음 두 자리는 지역명)";
+        String carNo = input.validateDistinctFormat(question, 5);
 
         while(true) {
             try {
@@ -503,7 +463,7 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InputInvalidDataException();
                 }
                 break;
-            } catch (InputException.InputNullDataException | InputException.InputInvalidDataException e){
+            } catch (InputException e){
                 System.out.println(e.getMessage());
             }
         }
@@ -511,9 +471,8 @@ public class SalesViewLogic implements ViewLogic {
         question = "모델이름을 입력해주세요.";
         String modelName = input.validateStringFormat(question);
 
-        question = "차량연식을 입력해주세요. \t(단위: 년)";
+        question = "차량연식을 입력해주세요. \t(단위 : 년)";
         int modelYear = input.validateIntFormat(question);
-
 
         contract = employee.inputCarInfo(contract, carNo, carType, modelName, modelYear);
         concludeContract(contract, customer);
@@ -527,15 +486,15 @@ public class SalesViewLogic implements ViewLogic {
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-                        if (customer.getId() == 0) {
-                            customerList.create(customer);
-                        }
-                        contract.setConditionOfUw(ConditionOfUw.WAIT)
-                                .setEmployeeId(employee.getId())
-                                .setCustomerId(customer.getId());
-                        contractList.create(contract);
-                        System.out.println(customerList.read(customer.getId()));
-                        System.out.println(contractList.read(contract.getId()));
+//                        if (customer.getId() == 0) {
+//                            customerList.create(customer);
+//                        }
+//                        contract.setConditionOfUw(ConditionOfUw.WAIT)
+//                                .setEmployeeId(employee.getId())
+//                                .setCustomerId(customer.getId());
+//                        contractList.create(contract);
+//                        System.out.println(customerList.read(customer.getId()));
+//                        System.out.println(contractList.read(contract.getId()));
                         System.out.println("계약을 체결하였습니다.");
                         break;
                     case "2":
@@ -547,10 +506,8 @@ public class SalesViewLogic implements ViewLogic {
                         throw new InputException.InvalidMenuException();
                 }
                 break;
-            } catch (InputException.InputNullDataException e) {
+            } catch (InputException e) {
                 System.out.println(e.getMessage());
-            } catch (InputException.InvalidMenuException e) {
-                System.out.println("올바른 메뉴번호를 입력해주세요");
             }
         }
     }
