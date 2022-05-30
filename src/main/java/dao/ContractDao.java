@@ -48,7 +48,7 @@ public class ContractDao extends Dao{
 
             if (rs.next()) {
 
-                InsuranceType insuranceType = InsuranceType.valueOfName(rs.getString("insurance_type"));
+                InsuranceType insuranceType = InsuranceType.valueOf(rs.getString("insurance_type"));
 
                 switch (insuranceType) {
 
