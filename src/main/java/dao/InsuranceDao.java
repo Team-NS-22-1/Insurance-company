@@ -1,11 +1,14 @@
 package dao;
 
 import domain.contract.BuildingType;
+import domain.insurance.DevInfo;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceType;
+import domain.insurance.SalesAuthState;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class InsuranceDao extends Dao {
 
@@ -45,13 +48,12 @@ public class InsuranceDao extends Dao {
         return insurance;
     }
 
-    public /* ArrayList<Insurance>*/Insurance readAll() throws SQLException {
-        Insurance insurance = null;
-//        ArrayList<Insurance> insuranceList = new ArrayList<>();
+    public ArrayList<Insurance> readAll() throws SQLException {
+        Insurance insurance;
+        ArrayList<Insurance> insuranceList = new ArrayList<>();
         String query = "select * from insurance";
         ResultSet rs = super.read(query);
         while (rs.next()) {
-            int i = 0;
             insurance = new Insurance();
             insurance.setId(rs.getInt("insurance_id"));
             insurance.setName(rs.getString("name"));
@@ -59,19 +61,46 @@ public class InsuranceDao extends Dao {
             insurance.setContractPeriod(rs.getInt("contract_period"));
             insurance.setPaymentPeriod(rs.getInt("payment_period"));
             switch (rs.getString("insurance_type")) {
-                case "HEALTH":
+                case "건강":
                     insurance.setInsuranceType(InsuranceType.HEALTH);
                     break;
-                case "FIRE":
+                case "화재":
                     insurance.setInsuranceType(InsuranceType.FIRE);
                     break;
-                case "CAR":
+                case "자동차":
                     insurance.setInsuranceType(InsuranceType.CAR);
                     break;
             }
-//            insuranceList.add(insurance);
+            insuranceList.add(insurance);
         }
-        return insurance;
+        return insuranceList;
+    }
+
+    public DevInfo readDevInfo(int id) throws SQLException {
+        DevInfo devInfo = null;
+        String query = "select * from dev_info where insurance_id = " + id;
+        ResultSet rs = super.read(query);
+
+        if (rs.next()) {
+            devInfo = new DevInfo();
+            devInfo.setId(rs.getInt("dev_info_id"));
+            devInfo.setInsuranceId(rs.getInt("insurance_id"));
+            devInfo.setEmployeeId(rs.getInt("employee_id"));
+            devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
+            devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
+            switch (rs.getString("sales_auth_state")) {
+                case "대기":
+                    devInfo.setSalesAuthState(SalesAuthState.WAIT);
+                    break;
+                case "허가":
+                    devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
+                    break;
+                case "불허":
+                    devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
+                    break;
+            }
+        }
+        return devInfo;
     }
 
     public void update(Insurance insurance) {

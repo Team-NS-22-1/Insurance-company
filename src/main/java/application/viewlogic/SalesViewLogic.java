@@ -2,6 +2,7 @@ package application.viewlogic;
 
 
 import application.ViewLogic;
+import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
@@ -14,6 +15,7 @@ import domain.insurance.SalesAuthState;
 import exception.InputException;
 import utility.InputValidation;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
@@ -78,6 +80,8 @@ public class SalesViewLogic implements ViewLogic {
             }
         } catch(InputException e) {
             System.out.println(e.getMessage());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -109,18 +113,18 @@ public class SalesViewLogic implements ViewLogic {
     }
 
 
-    public void planInsurance() {
-        if(insuranceList.readAll().size() == 0)
+    public void planInsurance() throws SQLException {
+        InsuranceDao insuranceDao = new InsuranceDao();
+        if(insuranceDao.readAll().size() == 0)
             throw new InputException.NoResultantException();
-
-        while(true) {
-            for (Insurance insurance : insuranceList.readAll()) {
-                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
+        while (true) {
+            for (Insurance insurance : insuranceDao.readAll()) {
+                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
             try {
-                System.out.println("설계할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
+                System.out.println("가입할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
                 command = sc.nextLine();
                 if (command.equals("0")) {
                     break;
@@ -128,9 +132,10 @@ public class SalesViewLogic implements ViewLogic {
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                insurance = insuranceList.read(Integer.parseInt(command));
-                if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)  {
-                    System.out.println("보험설명 : " + insurance.getDescription() + "\n보장내역 : " + insurance.getGuarantee());
+                insuranceDao = new InsuranceDao();
+                insurance = insuranceDao.read(Integer.parseInt(command));
+                if (insurance != null && insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION) {
+                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
                             planHealthInsurance();
@@ -150,6 +155,8 @@ public class SalesViewLogic implements ViewLogic {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("형식에 맞는 코드를 입력해주세요");
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -374,7 +381,6 @@ public class SalesViewLogic implements ViewLogic {
             } catch (InputException e) {
                 System.out.println(e.getMessage());
             }
-
         }
 
         switch (insurance.getInsuranceType()) {
