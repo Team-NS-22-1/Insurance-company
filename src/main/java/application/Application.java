@@ -1,6 +1,9 @@
 package application;
 
 import application.viewlogic.*;
+import dao.AccDocFileDao;
+import dao.AccidentDao;
+import dao.PaymentDao;
 import domain.accident.AccidentList;
 import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileList;
@@ -49,9 +52,9 @@ public class Application {
         InsuranceList insuranceList = new InsuranceListImpl();
         InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
         ContractList contractList = new ContractListImpl();
-        PaymentList paymentList = new PaymentListImpl();
-        AccidentList accidentList = new AccidentListImpl();
-        AccDocFileList accDocFileList = new AccDocFileListImpl();
+        PaymentList paymentList = new PaymentDao();
+        AccidentList accidentList = new AccidentDao();
+        AccDocFileList accDocFileList = new AccDocFileDao();
         ComplainList complainList = new ComplainListImpl();
 
         // 테스트 더미 데이터 생성

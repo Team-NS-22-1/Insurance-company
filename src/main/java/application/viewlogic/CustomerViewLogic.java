@@ -153,6 +153,9 @@ public class CustomerViewLogic implements ViewLogic {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
                     }
+                    if(accident.getAccDocFileList().containsKey(accDocType))
+                        accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+                    else
                     accDocFileList.create(accDocFile);
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
@@ -263,13 +266,14 @@ public class CustomerViewLogic implements ViewLogic {
 
     private Accident selectAccident() {
         Accident retAccident = null;
+        int accidentId = 0;
         while (true) {
             List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
             for (Accident accident : accidents) {
                 accident.printForCustomer();
             }
             try {
-                int accidentId = 0;
+
                 System.out.println("0. 취소하기");
                 System.out.println("exit. 종료하기");
                  accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
@@ -283,6 +287,13 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해 주세요");
             }
         }
+        if (accidentId != 0) {
+            List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
+            for (AccDocFile file : files) {
+                retAccident.getAccDocFileList().put(file.getType(),file);
+            }
+        }
+
         return retAccident;
     }
 
