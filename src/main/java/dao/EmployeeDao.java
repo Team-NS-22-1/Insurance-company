@@ -92,11 +92,9 @@ public class EmployeeDao extends Dao implements EmployeeList {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
-
-//        if (employee == null) {
-//        }
-
         return employee;
     }
 
