@@ -32,30 +32,32 @@ public class ContractDao extends Dao{
             String input;
             if (rs.next())
                 switch (rs.getString("insurance_type")) {
-                    case "건강보험":
+                    case "HEALTH" -> {
                         HealthContract healthContract = (HealthContract) contract;
                         inputquery = "insert into health_contract (contract_id, height, weight, is_danger_activity, " +
-                                "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_danger_activity, disease_detail";
+                                "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_driving, disease_detail) " +
+                                "VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, '%s');";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
-                                healthContract.isDangerActivity()? 1 : 0, healthContract.isDrinking()? 1 : 0, healthContract.isSmoking()? 1 : 0, healthContract.isSmoking(),
-                                healthContract.isTakingDrug(), healthContract.isHavingDisease(), healthContract.isDangerActivity()? 1 : 0, healthContract.getDiseaseDetail());
+                                healthContract.isDangerActivity()?1:0, healthContract.isDrinking()?1:0, healthContract.isSmoking()?1:0, healthContract.isSmoking()?1:0,
+                                healthContract.isTakingDrug()?1:0, healthContract.isHavingDisease()?1:0, healthContract.isDriving()?1:0, healthContract.getDiseaseDetail());
                         super.create(input);
-                        break;
-                    case "화재보험":
+                    }
+                    case "FIRE" -> {
                         FireContract fireContract = (FireContract) contract;
-                        inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, Values() " +
-                                "is_actual_residence, is_self_owned";
-                        input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType(),
-                                fireContract.getCollateralAmount(), fireContract.isActualResidence(), fireContract.isSelfOwned());
+                        inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, is_actual_residence, is_self_owned)" +
+                                "VALUES (%d, %d, '%s', %d, %d, %d);";
+                        input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType().name(),
+                                fireContract.getCollateralAmount(), fireContract.isActualResidence()?1:0, fireContract.isSelfOwned()?1:0);
                         super.create(input);
-                        break;
-                    case "자동차보험":
+                    }
+                    case "CAR" -> {
                         CarContract carContract = (CarContract) contract;
-                        inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value ";
-                        input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType(),
+                        inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value)" +
+                                "values (%d, '%s', '%s', %d, '%s', %d) ";;
+                        input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType().name(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
                         super.create(input);
-                        break;
+                    }
                 }
         } finally {
             close();
@@ -67,8 +69,8 @@ public class ContractDao extends Dao{
                 "         FROM contract c\n" +
                 "LEFT JOIN car_contract cc\n" +
                 "       ON c.contract_id = cc.contract_id\n" +
-                "LEFT JOIN building_contract bc\n" +
-                "       ON c.contract_id = bc.contract_id\n" +
+                "LEFT JOIN fire_contract fc\n" +
+                "       ON c.contract_id = fc.contract_id\n" +
                 "LEFT JOIN health_contract hc\n" +
                 "       ON c.contract_id = hc.contract_id\n" +
                 "LEFT JOIN insurance i\n" +
@@ -108,8 +110,8 @@ public class ContractDao extends Dao{
                 "         FROM contract c\n" +
                 "LEFT JOIN car_contract cc\n" +
                 "       ON c.contract_id = cc.contract_id\n" +
-                "LEFT JOIN building_contract bc\n" +
-                "       ON c.contract_id = bc.contract_id\n" +
+                "LEFT JOIN fire_contract fc\n" +
+                "       ON c.contract_id = fc.contract_id\n" +
                 "LEFT JOIN health_contract hc\n" +
                 "       ON c.contract_id = hc.contract_id\n" +
                 "LEFT JOIN insurance i\n" +

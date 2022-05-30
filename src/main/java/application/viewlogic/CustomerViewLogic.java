@@ -13,13 +13,11 @@ import domain.accident.accDocFile.AccDocType;
 import domain.complain.Complain;
 import domain.complain.ComplainList;
 import domain.contract.Contract;
-import domain.contract.ContractList;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceList;
 import domain.payment.*;
 import exception.*;
 import outerSystem.CarAccidentService;
@@ -32,10 +30,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static utility.CustomerInfoFormatUtil.*;
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
 import static utility.CompAssignUtil.assignCompEmployee;
+import static utility.CompAssignUtil.changeCompEmployee;
+import static utility.CustomerInfoFormatUtil.isCarNo;
+import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
 import static utility.FormatUtil.*;
 import static utility.MessageUtil.*;
@@ -78,26 +78,26 @@ public class CustomerViewLogic implements ViewLogic {
     @Override
     public void work(String command) {
         try {
-                switch (command) {
+            switch (command) {
 //                    case "1":
 //                        System.out.println("1선택");
-                    case "2" :
-                        payPremiumButton();
-                        break;
-                    case "3":
-                        reportAccident();
-                        break;
-                    case "4":
-                        claimCompensation();
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
-                }
-            } catch (InputException e) {
-                System.out.println(e.getMessage());
+                case "2" :
+                    payPremiumButton();
+                    break;
+                case "3":
+                    reportAccident();
+                    break;
+                case "4":
+                    claimCompensation();
+                    break;
+                case "":
+                    throw new InputException.InputNullDataException();
+                default:
+                    throw new InputException.InvalidMenuException();
             }
+        } catch (InputException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void claimCompensation() {
@@ -230,7 +230,7 @@ public class CustomerViewLogic implements ViewLogic {
                 Complain complain = this.customer.changeCompEmp(reasons);
                 complainList = new ComplainDao();
                 complainList.create(complain);
-                compEmployee = assignCompEmployee(employeeList, accidentList);
+                compEmployee = changeCompEmployee(employeeList, accidentList,compEmployee);
                 System.out.println(compEmployee.print());
                 System.out.println("보상처리담당자 변경이 완료되었습니다.");
                 break;
@@ -285,14 +285,14 @@ public class CustomerViewLogic implements ViewLogic {
 
                 System.out.println("0. 취소하기");
                 System.out.println("exit. 종료하기");
-                 accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
+                accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
 
                 if (accidentId == 0) {
                     break;
                 }
                 accidentList = new AccidentDao();
-                 retAccident = accidentList.read(accidentId);
-                 break;
+                retAccident = accidentList.read(accidentId);
+                break;
             } catch (InputException | IllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해 주세요");
             }
@@ -356,8 +356,8 @@ public class CustomerViewLogic implements ViewLogic {
 
     private AccidentReportDto inputPlaceAddress(AccidentReportDto accidentReportDto) {
         String placeAddress = "";
-         placeAddress= (String) br.verifyRead("사고 장소 : ", placeAddress);
-         return accidentReportDto.setPlaceAddress(placeAddress);
+        placeAddress= (String) br.verifyRead("사고 장소 : ", placeAddress);
+        return accidentReportDto.setPlaceAddress(placeAddress);
     }
 
     private AccidentReportDto inputCarNo(AccidentReportDto accidentReportDto) {
@@ -507,19 +507,19 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private AccidentType selectAccidentType() {
-            int insType = 0;
-            createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
-            insType = br.verifyMenu("", 4);
+        int insType = 0;
+        createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
+        insType = br.verifyMenu("", 4);
 
 
-            return switch (insType) {
-                case 1 -> AccidentType.CARACCIDENT;
-                case 2 -> AccidentType.CARBREAKDOWN;
-                case 3 -> AccidentType.INJURYACCIDENT;
-                case 4 -> AccidentType.FIREACCIDENT;
-                case 0 -> null;
-                default -> throw new IllegalStateException("Unexpected value: " + insType);
-            };
+        return switch (insType) {
+            case 1 -> AccidentType.CARACCIDENT;
+            case 2 -> AccidentType.CARBREAKDOWN;
+            case 3 -> AccidentType.INJURYACCIDENT;
+            case 4 -> AccidentType.FIREACCIDENT;
+            case 0 -> null;
+            default -> throw new IllegalStateException("Unexpected value: " + insType);
+        };
 
     }
 
@@ -712,7 +712,7 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
     }
-    
+
 
     // 결제수단 중 카드를 새로 추가하는 기능
     private void createCard() {
@@ -802,7 +802,7 @@ public class CustomerViewLogic implements ViewLogic {
             throw new MyInadequateFormatException();
         return month;
     }
-    
+
     // 카드 결제 수단을 추가하는 과정에서 입력한 달과 연을 통해서 저장하기 위한 LocalDate 객체를 생성하는 기능
     private LocalDate createExpireDate(int month, int year) {
         String mm = month < 10 ? "0"+month : String.valueOf(month);
@@ -827,7 +827,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계좌 결제 수단을 추가하는 기능
     private void createAccount() {
         PaymentDto account = new PaymentDto();
-       loop: while (true) {
+        loop: while (true) {
             try{
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
