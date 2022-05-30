@@ -1,5 +1,8 @@
 package application.viewlogic;
 
+import dao.ContractDao;
+import dao.CustomerDao;
+import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
@@ -14,9 +17,7 @@ import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 import utility.MessageUtil;
 import utility.MyBufferedReader;
-import uwDao.ContractDao;
-import uwDao.CustomerDao;
-import uwDao.InsuranceDao;
+
 import uwDao.InsuranceDetailDao;
 
 import java.io.IOException;
@@ -252,9 +253,9 @@ public class UWViewLogic implements ViewLogic {
         Insurance insurance = insuranceDao.read(contract.getInsuranceId());
         System.out.println(insurance.print());
 
-        InsuranceDetailDao insuranceDetailDao = new InsuranceDetailDao();
-        InsuranceDetail insuranceDetail = insuranceDetailDao.read(contract.getInsuranceId());
-        System.out.println(insuranceDetail.print());
+        //InsuranceDetailDao insuranceDetailDao = new InsuranceDetailDao();
+        //InsuranceDetail insuranceDetail = insuranceDetailDao.read(contract.getInsuranceId());
+        //System.out.println(insuranceDetail.print());
         return contract;
 
     }
