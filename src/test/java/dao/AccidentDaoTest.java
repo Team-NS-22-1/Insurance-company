@@ -32,6 +32,24 @@ class AccidentDaoTest {
     AccidentDao ad = new AccidentDao();
 
     @Test
+    void ad_test() {
+        InjuryAccident accident = new InjuryAccident();
+        accident.setInjurySite("asdasd")
+                .setCustomerId(1)
+                .setEmployeeId(1)
+                .setLossReserves(123)
+                .setDateOfAccident(LocalDateTime.now())
+                .setDateOfReport(LocalDateTime.now())
+                .setAccidentType(AccidentType.INJURYACCIDENT);
+        ad = new AccidentDao();
+        ad.create(accident);
+
+        ad = new AccidentDao();
+        Accident read = ad.read(accident.getId());
+        read.printForCustomer();
+    }
+
+    @Test
     void create() {
 
         InjuryAccident accident = new InjuryAccident();
@@ -107,7 +125,7 @@ class AccidentDaoTest {
 
     @Test
     void read2() throws SQLException {
-        Accident read = ad.read(23);
+        Accident read = ad.read(3);
         read.printForComEmployee();
         read.printForComEmployee();
 

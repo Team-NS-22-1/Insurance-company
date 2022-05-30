@@ -20,6 +20,10 @@ import java.sql.*;
  */
 public class CustomerDao extends Dao implements CustomerList {
 
+    public CustomerDao() {
+        super.connect();
+    }
+
     @Override
     public void create(Customer customer) {
             String query = "insert into customer (name, job, email, phone, ssn, address) values ('%s', '%s','%s','%s','%s', '%s)";
@@ -28,7 +32,7 @@ public class CustomerDao extends Dao implements CustomerList {
             int id = super.create(formattedQuery);
             customer.setId(id);
 
-        close(connection,statement,resultSet);
+        close();
     }
 
     @Override
@@ -50,7 +54,7 @@ public class CustomerDao extends Dao implements CustomerList {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            close(connection,statement,resultSet);
+            close();
         }
         return customer;
     }
@@ -78,7 +82,7 @@ public class CustomerDao extends Dao implements CustomerList {
         } catch (SQLException e) {
             e.printStackTrace();
         }finally {
-            close(conn,pstm,rs);
+            close();
         }
         return true;
     }

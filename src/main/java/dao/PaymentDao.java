@@ -22,8 +22,9 @@ import java.util.List;
  */
 public class PaymentDao extends Dao implements PaymentList {
 
-
-
+    public PaymentDao() {
+        super.connect();
+    }
 
     @Override
     public void create(Payment payment) {

@@ -1,11 +1,9 @@
 package dao;
 
 import utility.db.DBUtil;
+import utility.db.DbConst;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Dao {
 
@@ -44,7 +42,7 @@ public class Dao {
 
     public ResultSet read(String query) {
         try {
-            statement = connection.createStatement();
+            statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
 
         } catch (SQLException e) {
@@ -68,7 +66,7 @@ public class Dao {
     private int executeUpdate(String query) {
         int result = 0;
         try {
-            statement = connection.createStatement();
+            statement = connect.createStatement();
             result = statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,26 +74,26 @@ public class Dao {
         return result;
     }
 
-    public void close(Connection con, Statement stmt, ResultSet rs) {
-        if (rs != null) {
+    public void close() {
+        if (resultSet != null) {
             try{
-                rs.close();
+                resultSet.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        if (stmt != null) {
+        if (statement != null) {
             try {
-                stmt.close();
+                statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
 
-        if (con != null) {
+        if (connect != null) {
             try{
-                con.close();
+                connect.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -22,6 +22,10 @@ import java.util.List;
  */
 public class AccidentDao extends Dao implements AccidentList {
 
+    public AccidentDao() {
+        super.connect();
+    }
+
     @Override
     public void create(Accident accident) {
 

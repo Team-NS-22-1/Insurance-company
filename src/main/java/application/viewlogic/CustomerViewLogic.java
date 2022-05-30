@@ -2,6 +2,7 @@ package application.viewlogic;
 
 import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
+import dao.*;
 import domain.accident.Accident;
 import domain.accident.AccidentList;
 import domain.accident.AccidentType;
@@ -31,10 +32,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static main.utility.CustomerInfoFormatUtil.isCarNo;
+import static main.utility.CustomerInfoFormatUtil.isPhone;
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
-import static utility.CustomerInfoFormatUtil.isCarNo;
-import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.DocUtil.isExist;
 import static utility.FormatUtil.*;

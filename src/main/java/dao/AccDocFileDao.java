@@ -23,6 +23,11 @@ import java.util.List;
  * 2022-05-30                규현             최초 생성
  */
 public class AccDocFileDao extends Dao implements AccDocFileList {
+
+    public AccDocFileDao() {
+        super.connect();
+    }
+
     @Override
     public void create(AccDocFile accDocFile) {
         String query = "insert into acc_doc_file (type, file_address, accident_id, last_modified_date)" +
@@ -34,6 +39,7 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
         int id = super.create(formattedQuery);
         accDocFile.setId(id);
         accDocFile.setLastModifedDate(now);
+        close();
     }
 
     @Override
@@ -54,6 +60,8 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
         if(accDocFile==null)
             throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
@@ -69,7 +77,7 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
         String formattedQuery = String.format(query, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),id);
         System.out.println(formattedQuery);
         super.update(formattedQuery);
-
+        close();
         return true;
     }
 
@@ -93,6 +101,9 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            }finally {
+
+                close();
             }
         if(accDocFileList.size()==0)
             throw new IllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");

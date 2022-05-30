@@ -50,6 +50,7 @@ class PaymentDaoTest {
                 .setPaytype(PayType.CARD);
 
         dao.create(card);
+        dao = new PaymentDao();
         Payment read = dao.read(card.getId());
 
         System.out.println(read);
