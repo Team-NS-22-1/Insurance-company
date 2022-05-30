@@ -38,10 +38,6 @@ public class SalesViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
 
-    private InsuranceList insuranceList;
-    private ContractList contractList;
-    private CustomerList customerList;
-    private EmployeeList employeeList;
     private HealthContract healthContract;
     private FireContract fireContract;
     private CarContract carContract;
@@ -50,12 +46,8 @@ public class SalesViewLogic implements ViewLogic {
     private Insurance insurance;
     private InputValidation input;
 
-    public SalesViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList, EmployeeList employeeList) {
+    public SalesViewLogic() {
         this.sc = new Scanner(System.in);
-        this.insuranceList = insuranceList;
-        this.contractList = contractList;
-        this.customerList = customerList;
-        this.employeeList = employeeList;
         this.input = new InputValidation();
     }
 

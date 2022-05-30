@@ -1,14 +1,16 @@
 package application.viewlogic;
 
-import domain.contract.*;
+import application.ViewLogic;
+import domain.contract.ConditionOfUw;
+import domain.contract.Contract;
 import domain.customer.Customer;
-import domain.customer.CustomerList;
-import domain.employee.*;
+import domain.employee.Department;
+import domain.employee.Employee;
+import domain.employee.EmployeeList;
+import domain.employee.Position;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceDetail;
-import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceType;
-import application.ViewLogic;
 import exception.InputException;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
@@ -40,14 +42,11 @@ import static utility.MessageUtil.createMenu;
 public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
-    private EmployeeList employeeList;
-
 
     private MyBufferedReader br;
 
-    public UWViewLogic(EmployeeList employeeList, CustomerList customerList, InsuranceList insuranceList, ContractList contractList) {
+    public UWViewLogic() {
         this.sc = new Scanner(System.in);
-        this.employeeList = employeeList;
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
 
         Employee employee = new Employee();

@@ -23,13 +23,9 @@ import java.util.List;
  */
 public class EmployeeDao extends Dao implements EmployeeList {
 
-
-
-
     public EmployeeDao() {
         super.connect();
     }
-
 
     @Override
     public List<Employee> readAllCompEmployee() {
@@ -55,6 +51,30 @@ public class EmployeeDao extends Dao implements EmployeeList {
                 close();
             }
         return compEmployees;
+    }
+
+    public ArrayList<Employee> readAllDev() {
+        ArrayList<Employee> devEmployees = new ArrayList<>();
+        String queryFormat =
+                "SELECT * FROM employee WHERE department = '%s';";
+        String query =
+                String.format(queryFormat, Department.DEV.name());
+        super.read(query);
+        try {
+            while(resultSet.next()){
+                devEmployees.add(
+                        new Employee().setId(resultSet.getInt("employee_id"))
+                                .setName(resultSet.getString("name"))
+                                .setPhone(resultSet.getString("phone"))
+                                .setDepartment(Department.valueOf(resultSet.getString("department").toUpperCase()))
+                                .setPosition(Position.valueOf(resultSet.getString("position").toUpperCase()))
+                );
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return devEmployees;
     }
 
     @Override

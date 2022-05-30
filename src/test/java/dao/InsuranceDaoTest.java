@@ -1,7 +1,7 @@
 package dao;
 
 import domain.insurance.Insurance;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ class InsuranceDaoTest {
 
     @Test
     void create() {
+
     }
 
     @Test
