@@ -4,6 +4,7 @@ import domain.contract.BuildingType;
 import domain.insurance.*;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 

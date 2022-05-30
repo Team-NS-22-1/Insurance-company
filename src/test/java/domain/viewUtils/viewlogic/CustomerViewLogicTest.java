@@ -45,7 +45,7 @@ class CustomerViewLogicTest {
         Contract contract = new Contract();
         contract.setCustomerId(1);
         contract.setPremium(10000);
-        contract.setPayment(paymentList.read(1));
+//        contract.setPayment(paymentList.read(1));
         contract.setInsuranceId(1);
 
         contractList.create(contract);
