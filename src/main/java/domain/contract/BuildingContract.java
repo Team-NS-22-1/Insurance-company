@@ -6,7 +6,7 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class BuildingInfo {
+public class BuildingContract extends  Contract {
 
 	private int buildingArea;
 	private BuildingType buildingType;
@@ -14,14 +14,14 @@ public class BuildingInfo {
 	private boolean isActualResidence;
 	private boolean isSelfOwned;
 
-	public BuildingInfo(){
+	public BuildingContract(){
 	}
 
 	public int getBuildingArea() {
 		return buildingArea;
 	}
 
-	public BuildingInfo setBuildingArea(int buildingArea) {
+	public BuildingContract setBuildingArea(int buildingArea) {
 		this.buildingArea = buildingArea;
 		return this;
 	}
@@ -30,7 +30,7 @@ public class BuildingInfo {
 		return buildingType;
 	}
 
-	public BuildingInfo setBuildingType(BuildingType buildingType) {
+	public BuildingContract setBuildingType(BuildingType buildingType) {
 		this.buildingType = buildingType;
 		return this;
 	}
@@ -39,7 +39,7 @@ public class BuildingInfo {
 		return collateralAmount;
 	}
 
-	public BuildingInfo setCollateralAmount(int collateralAmount) {
+	public BuildingContract setCollateralAmount(int collateralAmount) {
 		this.collateralAmount = collateralAmount;
 		return this;
 	}
@@ -48,7 +48,7 @@ public class BuildingInfo {
 		return isActualResidence;
 	}
 
-	public BuildingInfo setActualResidence(boolean actualResidence) {
+	public BuildingContract setActualResidence(boolean actualResidence) {
 		isActualResidence = actualResidence;
 		return this;
 	}
@@ -57,19 +57,20 @@ public class BuildingInfo {
 		return isSelfOwned;
 	}
 
-	public BuildingInfo setSelfOwned(boolean selfOwned) {
+	public BuildingContract setSelfOwned(boolean selfOwned) {
 		isSelfOwned = selfOwned;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "{" +
+		return super.toString() +
+				" 주택정보: {" +
 				"주택면적: " + buildingArea +
-				", 건물종류: " + buildingType +
+				", 건물종류: " + buildingType.getName() +
 				", 담보금액: " + collateralAmount +
 				", 실거주여부: " + isActualResidence +
 				", 자가여부: " + isSelfOwned +
-				'}';
+				"}}";
 	}
 }

@@ -1,13 +1,11 @@
 package domain.employee;
 
 
-import dao.ContractDao;
-import dao.Dao;
-import dao.InsuranceDao;
+import domain.contract.ContractListImpl;
+import uwDao.ContractDao;
 import domain.contract.BuildingType;
 import domain.contract.ConditionOfUw;
 import domain.contract.Contract;
-import domain.contract.ContractListImpl;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException.InputInvalidDataException;
@@ -84,7 +82,7 @@ public class Employee {
 				.setDescription(basicInfo.getDescription())
 				.setContractPeriod(basicInfo.getContractPeriod())
 				.setPaymentPeriod(basicInfo.getPaymentPeriod());
-//		new InsuranceDao().create(insurance);
+//		new uwDao.InsuranceDao().create(insurance);
 		insuranceList.create(insurance);
 
 		insurance = developGuarantee(insurance, guaranteeInfoList);
@@ -306,32 +304,9 @@ public class Employee {
 
 	public List<Contract> readContract(InsuranceType insuranceType){
 		ContractDao contractDao = new ContractDao();
+		List<Contract> contractList = contractDao.readAllByInsuranceType(insuranceType);
 
-		/**
-		Map<Integer, Contract> contractList = new HashMap<>();
-
-		for (Contract contract : ContractListImpl.getContractList().values()) {
-
-			switch (insuranceType) {
-
-				case HEALTH:
-					if (contract.getHealthInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-				case CAR:
-					if (contract.getCarInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-				case FIRE:
-					if (contract.getBuildingInfo() != null && (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-			}
-
-
-		}
-		**/
-		return contractDao.readAll(insuranceType);
+		return contractList;
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
@@ -339,7 +314,10 @@ public class Employee {
 		Contract contract = contractDao.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
-		contract.setPublishStock(true);
+
+		if (!conditionOfUw.getName().equals(ConditionOfUw.RE_AUDIT.getName()))
+			contract.setPublishStock(true);
+
 		contractDao.update(contract);
 	}
 

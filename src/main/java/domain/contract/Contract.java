@@ -1,7 +1,5 @@
 package domain.contract;
 
-import domain.customer.Customer;
-import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -12,12 +10,12 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-	private CarInfo carInfo;
+//	private CarContract carContract;
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-	private BuildingInfo buildingInfo;
-	private HealthInfo healthInfo;
+//	private BuildingContract buildingContract;
+//	private HealthContract healthContract;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
@@ -30,14 +28,14 @@ public class Contract {
 
 	}
 
-	public CarInfo getCarInfo() {
-		return carInfo;
-	}
-
-	public Contract setCarInfo(CarInfo carInfo) {
-		this.carInfo = carInfo;
-		return this;
-	}
+//	public CarContract getCarInfo() {
+//		return carContract;
+//	}
+//
+//	public Contract setCarInfo(CarContract carContract) {
+//		this.carContract = carContract;
+//		return this;
+//	}
 
 	public int getCustomerId() {
 		return customerId;
@@ -57,23 +55,23 @@ public class Contract {
 		return this;
 	}
 
-	public BuildingInfo getBuildingInfo() {
-		return buildingInfo;
-	}
+//	public BuildingContract getBuildingInfo() {
+//		return buildingContract;
+//	}
+//
+//	public Contract setBuildingInfo(BuildingContract buildingContract) {
+//		this.buildingContract = buildingContract;
+//		return this;
+//	}
 
-	public Contract setBuildingInfo(BuildingInfo buildingInfo) {
-		this.buildingInfo = buildingInfo;
-		return this;
-	}
-
-	public HealthInfo getHealthInfo() {
-		return healthInfo;
-	}
-
-	public Contract setHealthInfo(HealthInfo healthInfo) {
-		this.healthInfo = healthInfo;
-		return this;
-	}
+//	public HealthContract getHealthInfo() {
+//		return healthContract;
+//	}
+//
+//	public Contract setHealthInfo(HealthContract healthContract) {
+//		this.healthContract = healthContract;
+//		return this;
+//	}
 
 	public int getId() {
 		return id;
@@ -142,21 +140,14 @@ public class Contract {
 		String text =
 		 "계약 정보 {" +
 				 "계약 ID: " + id +
-				", 인수심사상태: " + conditionOfUw +
+				", 인수심사상태: " + conditionOfUw.getName() +
 				 ", 인수사유: '" + reasonOfUw + '\'' +
 				 ", 증권발행여부: " + isPublishStock +
 				 ", 보험료: " + premium +
 				", 결제수단: " + payment +
-				 ", 건강정보: " + healthInfo +
-				 ", 자동차정보: " + carInfo +
-				 ", 화재정보: " + buildingInfo + '\'' +
-				'}';
+				 ", ";
 
-		if (carInfo != null) text.concat(carInfo.toString());
-		if (buildingInfo != null) text.concat(buildingInfo.toString());
-		if (healthInfo != null) text.concat(healthInfo.toString());
-
-		 return text;
+		return text;
 	}
 
 }

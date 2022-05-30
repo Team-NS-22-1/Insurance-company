@@ -170,30 +170,30 @@ public class TestData {
     }
 
     private void createContract() {
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
-
-        Contract testContract =  new Contract();
-        testContract.setCustomerId(1);
-        testContract.setInsuranceId(1);
-        testContract.setHealthInfo(healthInfo);
-        testContract.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract1 =  new Contract();
-        testContract1.setCustomerId(2);
-        testContract1.setInsuranceId(3);
-        testContract1.setCarInfo(carInfo);
-        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract2 =  new Contract();
-        testContract2.setCustomerId(3);
-        testContract2.setInsuranceId(6);
-        testContract2.setBuildingInfo(buildingInfo);
-        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
-
-        this.contractList.create(testContract);
-        this.contractList.create(testContract1);
-        this.contractList.create(testContract2);
+//        HealthContract healthContract = new HealthContract();
+//        CarContract carContract = new CarContract();
+//        BuildingContract buildingContract = new BuildingContract();
+//
+//        Contract testContract =  new Contract();
+//        testContract.setCustomerId(1);
+//        testContract.setInsuranceId(1);
+//        testContract.setHealthInfo(healthContract);
+//        testContract.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        Contract testContract1 =  new Contract();
+//        testContract1.setCustomerId(2);
+//        testContract1.setInsuranceId(3);
+//        testContract1.setCarInfo(carContract);
+//        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        Contract testContract2 =  new Contract();
+//        testContract2.setCustomerId(3);
+//        testContract2.setInsuranceId(6);
+//        testContract2.setBuildingInfo(buildingContract);
+//        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        this.contractList.create(testContract);
+//        this.contractList.create(testContract1);
+//        this.contractList.create(testContract2);
     }
 }

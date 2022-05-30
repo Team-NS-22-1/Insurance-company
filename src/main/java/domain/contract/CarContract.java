@@ -6,15 +6,16 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class CarInfo {
+public class CarContract extends Contract{
 
 	private String carNo;
 	private CarType carType;
 	private String modelName;
+	private String owner;
 	private int modelYear;
 	private int value;
 
-	public CarInfo(){
+	public CarContract(){
 
 	}
 
@@ -22,7 +23,7 @@ public class CarInfo {
 		return carNo;
 	}
 
-	public CarInfo setCarNo(String carNo) {
+	public CarContract setCarNo(String carNo) {
 		this.carNo = carNo;
 		return this;
 	}
@@ -31,7 +32,7 @@ public class CarInfo {
 		return carType;
 	}
 
-	public CarInfo setCarType(CarType carType) {
+	public CarContract setCarType(CarType carType) {
 		this.carType = carType;
 		return this;
 	}
@@ -40,7 +41,7 @@ public class CarInfo {
 		return modelName;
 	}
 
-	public CarInfo setModelName(String modelName) {
+	public CarContract setModelName(String modelName) {
 		this.modelName = modelName;
 		return this;
 	}
@@ -49,7 +50,7 @@ public class CarInfo {
 		return modelYear;
 	}
 
-	public CarInfo setModelYear(int modelYear) {
+	public CarContract setModelYear(int modelYear) {
 		this.modelYear = modelYear;
 		return this;
 	}
@@ -58,19 +59,30 @@ public class CarInfo {
 		return value;
 	}
 
-	public CarInfo setValue(int value) {
+	public CarContract setValue(int value) {
 		this.value = value;
 		return this;
 	}
 
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 	@Override
 	public String toString() {
-		return "{" +
+		return super.toString() +
+				" 자동차정보: {" +
 				"자동차번호: '" + carNo + '\'' +
-				", 차량유형: " + carType +
+				", 차량유형: " + carType.getName() +
 				", 연식: " + modelYear +
 				", 차명: '" + modelName + '\'' +
+				", 차주: '" + owner + '\'' +
 				", 차량가액: " + value +
-				'}';
+				"}}";
+
 	}
 }

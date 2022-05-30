@@ -5,14 +5,11 @@ import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 
 import java.util.Scanner;
@@ -192,17 +189,16 @@ public class SalesViewLogic implements ViewLogic {
             // 계약
             case 1:
                 isLoop = false;
-                Contract contract = new Contract();
-                contract.setInsuranceId(insuranceId)
-                        .setPremium(premium)
-                        .setHealthInfo(new HealthInfo().setDrinking(isDrinking)
-                                .setSmoking(isSmoking)
-                                .setDriving(isDriving)
-                                .setDangerActivity(isDangerActivity)
-                                .setTakingDrug(isTakingDrug)
-                                .setHavingDisease(isHavingDisease)
-                        );
-                inputCustomerInfo(contract);
+                Contract healthContract = new HealthContract().setDrinking(isDrinking)
+                        .setSmoking(isSmoking)
+                        .setDriving(isDriving)
+                        .setDangerActivity(isDangerActivity)
+                        .setTakingDrug(isTakingDrug)
+                        .setHavingDisease(isHavingDisease);
+                healthContract.setInsuranceId(insuranceId)
+                        .setPremium(premium);
+
+                inputCustomerInfo(healthContract);
                 break;
             // 취소
             case 2:
@@ -249,12 +245,11 @@ public class SalesViewLogic implements ViewLogic {
             // 계약
             case 1:
                 isLoop = false;
-                Contract contract = new Contract();
-                contract.setInsuranceId(insuranceId)
-                        .setPremium(premium)
-                        .setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
-                                .setCollateralAmount(collateralAmount));
-                inputCustomerInfo(contract);
+                BuildingContract buildingContract = new BuildingContract().setBuildingType(buildingType)
+                        .setCollateralAmount(collateralAmount);
+                buildingContract.setInsuranceId(insuranceId)
+                        .setPremium(premium);
+                inputCustomerInfo(buildingContract);
                 break;
             // 취소
             case 2:
@@ -286,11 +281,10 @@ public class SalesViewLogic implements ViewLogic {
             // 계약
             case 1:
                 isLoop = false;
-                Contract contract = new Contract();
-                contract.setInsuranceId(insuranceId)
-                        .setPremium(premium)
-                        .setCarInfo(new CarInfo().setValue(value));
-                inputCustomerInfo(contract);
+                CarContract carContract = new CarContract().setValue(value);
+                carContract.setInsuranceId(insuranceId)
+                        .setPremium(premium);
+                inputCustomerInfo(carContract);
                 break;
             // 취소
             case 2:
@@ -358,17 +352,17 @@ public class SalesViewLogic implements ViewLogic {
 
         switch (insuranceList.read(contract.getInsuranceId()).getInsuranceType()) {
             case HEALTH:
-                inputHealthInfo(customer, contract);
+                inputHealthInfo(customer, (HealthContract) contract);
                 break;
             case FIRE:
-                inputFireInfo(customer, contract);
+                inputFireInfo(customer, (BuildingContract) contract);
                 break;
             case CAR:
-                inputCarInfo(customer, contract);
+                inputCarInfo(customer, (CarContract) contract);
                 break;
         }
     }
-    private void inputHealthInfo(Customer customer, Contract contract) {
+    private void inputHealthInfo(Customer customer, HealthContract healthContract) {
         String diseaseDetail;
         System.out.print("고객 키: ");
         int height = sc.nextInt();
@@ -376,22 +370,22 @@ public class SalesViewLogic implements ViewLogic {
         System.out.print("고객 몸무게: ");
         int weight = sc.nextInt();
 
-        if (contract.getHealthInfo().isHavingDisease()) {
+        if (healthContract.isHavingDisease()) {
             System.out.println("고객 질병 상세 내용: ");
             diseaseDetail = sc.next();
         } else {
             diseaseDetail = null;
         }
 
-        contract.setHealthInfo(new HealthInfo().setHeight(height)
+        healthContract.setHeight(height)
                 .setWeight(weight)
-                .setDiseaseDetail(diseaseDetail)
-        );
+                .setDiseaseDetail(diseaseDetail);
 
-        concludeContract(contract, customer);
+
+        concludeContract(healthContract, customer);
     }
 
-    private void inputFireInfo(Customer customer, Contract contract) {
+    private void inputFireInfo(Customer customer, BuildingContract buildingContract) {
         System.out.println("대상 건물면적: ");
         int buildingArea = sc.nextInt();
 
@@ -403,15 +397,14 @@ public class SalesViewLogic implements ViewLogic {
         command = sc.nextInt();
         boolean isActualResidence = command == 1;
 
-        contract.setBuildingInfo(new BuildingInfo().setBuildingArea(buildingArea)
+        buildingContract.setBuildingArea(buildingArea)
                 .setSelfOwned(isSelfOwned)
-                .setActualResidence(isActualResidence)
-        );
+                .setActualResidence(isActualResidence);
 
-        concludeContract(contract, customer);
+        concludeContract(buildingContract, customer);
     }
 
-    private void inputCarInfo(Customer customer, Contract contract) {
+    private void inputCarInfo(Customer customer, CarContract carContract) {
         System.out.println("차량번호: ");
         String carNo = sc.next();
 
@@ -449,13 +442,12 @@ public class SalesViewLogic implements ViewLogic {
         System.out.println("차량연식을 입력해주세요.");
         int modelYear = sc.nextInt();
 
-        contract.setCarInfo(new CarInfo().setCarNo(carNo)
+        carContract.setCarNo(carNo)
                 .setCarType(carType)
                 .setModelName(modelName)
-                .setModelYear(modelYear)
-        );
+                .setModelYear(modelYear);
 
-        concludeContract(contract, customer);
+        concludeContract(carContract, customer);
     }
 
 

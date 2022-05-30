@@ -4,10 +4,8 @@ import application.ViewLogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
 import exception.MyInadequateFormatException;
@@ -261,7 +259,7 @@ public class GuestViewLogic implements ViewLogic {
         } else
             diseaseDetail = null;
 
-        contract.setHealthInfo(new HealthInfo().setHeight(height)
+        ((HealthContract) contract).setHeight(height)
                 .setWeight(weight)
                 .setDrinking(isDrinking)
                 .setSmoking(isSmoking)
@@ -269,8 +267,7 @@ public class GuestViewLogic implements ViewLogic {
                 .setDangerActivity(isDangerActivity)
                 .setTakingDrug(isTakingDrug)
                 .setHavingDisease(isHavingDisease)
-                .setDiseaseDetail(diseaseDetail)
-        );
+                .setDiseaseDetail(diseaseDetail);
 
         signContract(contract, customer);
     }
@@ -322,12 +319,11 @@ public class GuestViewLogic implements ViewLogic {
         System.out.println(isSelfOwned);
         System.out.println(isActualResidence);
 
-        contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
+        ((BuildingContract) contract).setBuildingType(buildingType)
                 .setBuildingArea(buildingArea)
                 .setCollateralAmount(collateralAmount)
                 .setSelfOwned(isSelfOwned)
-                .setActualResidence(isActualResidence)
-        );
+                .setActualResidence(isActualResidence);
 
         signContract(contract, customer);
     }
@@ -394,12 +390,11 @@ public class GuestViewLogic implements ViewLogic {
         question = "차량가액을 입력해주세요. \t(단위: 년)";
         int value = validateIntFormat(question);
 
-        contract.setCarInfo(new CarInfo().setCarNo(carNo)
+        ((CarContract) contract).setCarNo(carNo)
                 .setCarType(carType)
                 .setModelName(modelName)
                 .setModelYear(modelYear)
-                .setValue(value)
-        );
+                .setValue(value);
 
         signContract(contract, customer);
     }

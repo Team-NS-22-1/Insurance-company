@@ -18,4 +18,5 @@ public enum InsuranceType {
 	public String getName() {
 		return name;
 	}
+
 }

@@ -1,3 +1,5 @@
+package uwDao;
+
 import application.Application;
 import utility.db.DBUtil;
 
@@ -23,9 +25,6 @@ public class Dao {
             if (generatedKeys.next())
                 id = generatedKeys.getInt(1);
 
-
-
-            //if (!statement.execute(query));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,11 +42,26 @@ public class Dao {
         return resultSet;
     }
 
-    public void update(String query) {
-
+    public void update(String query, String[] columnNames) {
+        connect();
+        try {
+            statement = connection.createStatement();
+            int i  = statement.executeUpdate(query, columnNames);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close(null);
+        }
     }
 
     public void delete(String query) {
 
+    }
+
+    public void close(ResultSet rs) {
+        if (rs != null) try { rs.close(); } catch(Exception e) {e.printStackTrace();}
+        if (statement != null) try { statement.close(); } catch(Exception e) {e.printStackTrace();}
+        if (connection != null) try { connection.close(); } catch(Exception e) {e.printStackTrace();}
     }
 }

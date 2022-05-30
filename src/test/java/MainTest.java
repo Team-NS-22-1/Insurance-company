@@ -24,41 +24,41 @@ class MainTest {
         insurance.setDescription("보험설명");
         insurance.setInsuranceType(InsuranceType.HEALTH);
 
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
+        HealthContract healthContract = new HealthContract();
+        CarContract carContract = new CarContract();
+        BuildingContract buildingContract = new BuildingContract();
 
-        Contract testContract =  new Contract();
-        testContract.setId(1);
-        testContract.setCustomerId(1);
-        testContract.setInsuranceId(1);
-        testContract.setHealthInfo(healthInfo);
-        testContract.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract1 =  new Contract();
-        testContract1.setId(2);
-        testContract1.setCustomerId(1);
-        testContract1.setInsuranceId(1);
-        testContract1.setCarInfo(carInfo);
-        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
-
-        Contract testContract2 =  new Contract();
-        testContract2.setId(3);
-        testContract2.setCustomerId(1);
-        testContract2.setInsuranceId(1);
-        testContract2.setBuildingInfo(buildingInfo);
-        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
-
-        CustomerListImpl customerList = new CustomerListImpl();
-        customerList.create(customer);
-
-        InsuranceListImpl insuranceList = new InsuranceListImpl();
-        insuranceList.create(insurance);
-
-        ContractListImpl contractList = new ContractListImpl();
-        contractList.create(testContract);
-        contractList.create(testContract1);
-        contractList.create(testContract2);
+//        Contract testContract =  new Contract();
+//        testContract.setId(1);
+//        testContract.setCustomerId(1);
+//        testContract.setInsuranceId(1);
+//        testContract.setHealthInfo(healthContract);
+//        testContract.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        Contract testContract1 =  new Contract();
+//        testContract1.setId(2);
+//        testContract1.setCustomerId(1);
+//        testContract1.setInsuranceId(1);
+//        testContract1.setCarInfo(carContract);
+//        testContract1.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        Contract testContract2 =  new Contract();
+//        testContract2.setId(3);
+//        testContract2.setCustomerId(1);
+//        testContract2.setInsuranceId(1);
+//        testContract2.setBuildingInfo(buildingContract);
+//        testContract2.setConditionOfUw(ConditionOfUw.WAIT);
+//
+//        CustomerListImpl customerList = new CustomerListImpl();
+//        customerList.create(customer);
+//
+//        InsuranceListImpl insuranceList = new InsuranceListImpl();
+//        insuranceList.create(insurance);
+//
+//        ContractListImpl contractList = new ContractListImpl();
+//        contractList.create(testContract);
+//        contractList.create(testContract1);
+//        contractList.create(testContract2);
 
         Application app = new Application();
         app.run();
