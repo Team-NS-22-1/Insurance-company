@@ -43,6 +43,7 @@ public class Dao {
     }
 
     public ResultSet read(String query) {
+        connect();
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
@@ -73,6 +74,8 @@ public class Dao {
         return result;
     }
 
+
+
     public void close() {
         if (resultSet != null) {
             try{
@@ -96,6 +99,19 @@ public class Dao {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void update(String query, String[] columnNames) {
+        connect();
+        try {
+            statement = connect.createStatement();
+            int i  = statement.executeUpdate(query, columnNames);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            close();
         }
     }
 

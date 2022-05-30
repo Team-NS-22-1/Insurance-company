@@ -557,16 +557,17 @@ public class Employee {
 	}
 
 	public List<Contract> readContract(InsuranceType insuranceType){
-		uwDao.ContractDao contractDao = new uwDao.ContractDao();
+		ContractDao contractDao = new ContractDao();
 		return contractDao.readAllByInsuranceType(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractListImpl contractList = new ContractListImpl();
-		Contract contract = contractList.read(contractId);
+		ContractDao contractDao = new ContractDao();
+		Contract contract = contractDao.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
+		contractDao.update(contract);
 	}
 
 	public String print() {
