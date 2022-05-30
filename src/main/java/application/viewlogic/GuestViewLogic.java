@@ -4,10 +4,8 @@ import application.ViewLogic;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
-import domain.customer.CustomerList;
 import domain.employee.Employee;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceList;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
 import utility.InputValidation;
@@ -38,9 +36,6 @@ public class GuestViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
 
-    private InsuranceList insuranceList;
-    private ContractList contractList;
-    private CustomerList customerList;
     private HealthContract healthContract;
     private FireContract fireContract;
     private CarContract carContract;
@@ -51,11 +46,8 @@ public class GuestViewLogic implements ViewLogic {
     private InputValidation input;
     private Employee employee = new Employee();
 
-    public GuestViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList) {
+    public GuestViewLogic() {
         this.sc = new Scanner(System.in);
-        this.insuranceList = insuranceList;
-        this.contractList = contractList;
-        this.customerList = customerList;
         this.input = new InputValidation();
     }
 
