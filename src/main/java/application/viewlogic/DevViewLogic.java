@@ -4,6 +4,7 @@ import application.ViewLogic;
 import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.BuildingType;
+import domain.employee.Department;
 import domain.employee.Employee;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
@@ -73,19 +74,28 @@ public class DevViewLogic implements ViewLogic {
     }
 
     private void initEmployee() throws IOException {
-        try {
-            System.out.println("<< 직원을 선택하세요. >>");
-            ArrayList<Employee> devEmployees = new EmployeeDao().readAllDev();
-            for(Employee employee : devEmployees) {
-                System.out.println(employee.print());
+        while(true) {
+            try {
+                System.out.println("<< 직원을 선택하세요. >>");
+                ArrayList<Employee> devEmployees = new EmployeeDao().readAllDev();
+                for(Employee employee : devEmployees) {
+                    System.out.println(employee.print());
+                }
+                System.out.println("---------------------------------");
+                int eid = 0;
+                eid = (int) br.verifyRead("직원 ID: ", eid);
+                if(eid == 0) return;
+                this.employee = new EmployeeDao().read(eid);
+                if(this.employee != null) {
+                    if (this.employee.getDepartment() == Department.DEV)
+                        break;
+                    else
+                        System.out.println("개발팀 직원을 선택하세요!");
+                }
             }
-            System.out.println("---------------------------------");
-            int eid = br.verifyMenu("직원 ID: ", devEmployees.size());
-            if(eid == 0) return;
-            this.employee = new EmployeeDao().read(eid);
-        }
-        catch (InputException e) {
-            System.out.println(e.getMessage());
+            catch (InputException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
