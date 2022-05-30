@@ -135,7 +135,7 @@ public class TestData {
                 .setSalesAuthFile(new SalesAuthFile()));
         insuranceDetailList.create(new HealthDetail().setTargetAge(20)
                 .setTargetSex(true)
-                .setRiskCriterion(true)
+                .setRiskCriterion(3)
                 .setPremium(100000)
                 .setInsuranceId(1));
 

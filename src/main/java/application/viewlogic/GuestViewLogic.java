@@ -104,7 +104,7 @@ public class GuestViewLogic implements ViewLogic {
                 insuranceDao = new InsuranceDao();
                 insurance = insuranceDao.read(Integer.parseInt(command));
                 if (insurance != null && insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION) {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
+                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning();
                 }
                 else {

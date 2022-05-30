@@ -8,9 +8,9 @@ public class DtoHealth extends DtoTypeInfo {
     private boolean targetSex;
 
     // > 3: true | <= 3: false
-    private boolean riskCriterion;
+    private int riskCriterion;
 
-    public DtoHealth(int targetAge, boolean targetSex, boolean riskCriterion) {
+    public DtoHealth(int targetAge, boolean targetSex, int riskCriterion) {
         this.targetAge = targetAge;
         this.targetSex = targetSex;
         this.riskCriterion = riskCriterion;
@@ -24,7 +24,7 @@ public class DtoHealth extends DtoTypeInfo {
         return targetSex;
     }
 
-    public boolean getRiskCriterion() {
+    public int getRiskCriterion() {
         return riskCriterion;
     }
 }

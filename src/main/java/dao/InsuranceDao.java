@@ -311,31 +311,9 @@ public class InsuranceDao extends Dao {
             }
         }
         return devInfo;
-    public ArrayList<Insurance> readByEmployeeId(int eid) {
-        ArrayList<Integer> insuranceIds = new ArrayList<>();
-        ArrayList<Insurance> insurances = new ArrayList<>();
-        try {
-            String query =
-                    "select * from insurance\n" +
-                            "where insurance_id = (\n" +
-                            "    select insurance_id\n" +
-                            "    from dev_info\n" +
-                            "    where employee_id = " + eid +
-                            ");";
-            super.read(query);
-            while (resultSet.next()) {
-                insuranceIds.add(resultSet.getInt("insurance_id"));
-            }
-            for(Integer insuranceId : insuranceIds) {
-                insurances.add(this.read(insuranceId));
-            }
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return insurances;
+    }
 
-    public ArrayList<Insurance> readByEmployeeId(int eid) {
+    public ArrayList<Insurance> readByEmployeeId(int eid){
         ArrayList<Integer> insuranceIds = new ArrayList<>();
         ArrayList<Insurance> insurances = new ArrayList<>();
         try {
@@ -350,11 +328,10 @@ public class InsuranceDao extends Dao {
             while (resultSet.next()) {
                 insuranceIds.add(resultSet.getInt("insurance_id"));
             }
-            for(Integer insuranceId : insuranceIds) {
+            for (Integer insuranceId : insuranceIds) {
                 insurances.add(this.read(insuranceId));
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return insurances;

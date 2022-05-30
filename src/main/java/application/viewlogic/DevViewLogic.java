@@ -1,6 +1,7 @@
 package application.viewlogic;
 
 import application.ViewLogic;
+import dao.InsuranceDao;
 import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
@@ -183,14 +184,14 @@ public class DevViewLogic implements ViewLogic {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
-            int targetAge = 0, premium = -1, count = 0;
-            boolean targetSex, riskCriterion;
+            int targetAge = 0, premium = -1, riskCriterion = -1;
+            boolean targetSex;
             System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
             targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
             targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
             while(true) {
-                riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", count) > 3;
-                if(count > 6){
+                riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", riskCriterion);
+                if(riskCriterion > 6){
                     System.out.println("위험부담 기준은 6개 이하여야 합니다.");
                 }
                 else break;

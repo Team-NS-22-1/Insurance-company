@@ -32,8 +32,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static main.utility.CustomerInfoFormatUtil.isCarNo;
-import static main.utility.CustomerInfoFormatUtil.isPhone;
+import static utility.CustomerInfoFormatUtil.*;
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
 import static utility.CompAssignUtil.assignCompEmployee;
