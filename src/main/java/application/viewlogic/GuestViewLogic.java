@@ -13,6 +13,7 @@ import exception.InputException;
 import utility.InputValidation;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
@@ -84,11 +85,12 @@ public class GuestViewLogic implements ViewLogic {
 
     private void selectInsurance() throws SQLException {
         InsuranceDao insuranceDao = new InsuranceDao();
-        if(insuranceDao.readAll().size() == 0)
+        ArrayList<Insurance> insurances = insuranceDao.readAll();
+        if(insurances.size() == 0)
             throw new InputException.NoResultantException();
         while (true) {
-            for (Insurance insurance : insuranceDao.readAll()) {
-                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
+            for (Insurance insurance : insurances) {
+                if (insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -103,7 +105,7 @@ public class GuestViewLogic implements ViewLogic {
                 }
                 insuranceDao = new InsuranceDao();
                 insurance = insuranceDao.read(Integer.parseInt(command));
-                if (insurance != null && insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION) {
+                if (insurance != null && insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning();
                 }
