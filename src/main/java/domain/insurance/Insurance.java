@@ -1,6 +1,5 @@
 package domain.insurance;
 
-
 import java.util.ArrayList;
 
 /**
@@ -114,6 +113,14 @@ public class Insurance {
 		return this;
 	}
 
+	public String printGuarantee() {
+		String value = "";
+		for(Guarantee guarantee : guaranteeList) {
+			value += guarantee.getId() + " ";
+		}
+		return value;
+	}
+
 	public String print() {
 		return "보험 정보 {" +
 				"보험ID: " + id +
@@ -122,7 +129,7 @@ public class Insurance {
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 보장정보: " + guaranteeList +
+				", 보장정보: " + printGuarantee() +
 				", 개발정보: " + devInfo.print() +
 				", 인가파일: " + salesAuthFile.print() +
 				'}';

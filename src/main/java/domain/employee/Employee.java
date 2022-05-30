@@ -13,6 +13,7 @@ import utility.FileDialogUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,7 +87,8 @@ public class Employee {
 				.setContractPeriod(basicInfo.getContractPeriod())
 				.setPaymentPeriod(basicInfo.getPaymentPeriod())
 				.setGuaranteeList(developGuarantee(guaranteeInfoList))
-				.setDevInfo(developDevInfo());
+				.setDevInfo(developDevInfo())
+				.setSalesAuthFile(new SalesAuthFile());
 		switch (type) {
 			case HEALTH -> developHealth(insurance, typeInfoList);
 			case CAR -> developCar(insurance, typeInfoList);
@@ -244,23 +246,83 @@ public class Employee {
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) {
-			return -1;
-		}
+		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 1;
+		return uploadProd(insurance);
+	}
+
+	public int registerAuthProdDeclaration(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setProdDeclaration(nullValue);
+		return uploadProd(insurance);
+	}
+
+	private int uploadProd(Insurance insurance) throws IOException {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
-		if(savePath == null) return 0;
-		insurance.getSalesAuthFile().setProdDeclaration(savePath);
-		return 1;
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setProdDeclaration(savePath)
+				.setModifiedProd(LocalDateTime.now());
+		new InsuranceDao().updateByProd(insurance);
+		return 0;
 	}
 
-	public void registerAuthSrActuaryVerification(Insurance insurance) {
+	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 1;
+		return uploadSrActuary(insurance);
 	}
 
-	public void registerAuthISOVerification(Insurance insurance) {
+	public int registerAuthSrActuaryVerification(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setSrActuaryVerification(nullValue);
+		return uploadSrActuary(insurance);
 	}
 
-	public void registerAuthFSSOfficialDoc(Insurance insurance) {
+	private int uploadSrActuary(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setSrActuaryVerification(savePath)
+				.setModifiedSrActuary(LocalDateTime.now());
+		new InsuranceDao().updateBySrActuary(insurance);
+		return 0;
+	}
+
+	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 1;
+		return uploadIso(insurance);
+	}
+
+	public int registerAuthIsoVerification(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setIsoVerification(nullValue);
+		return uploadIso(insurance);
+	}
+
+	private int uploadIso(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setIsoVerification(savePath)
+				.setModifiedIso(LocalDateTime.now());
+		new InsuranceDao().updateByIso(insurance);
+		return 0;
+	}
+
+	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 1;
+		return uploadFss(insurance);
+	}
+
+	public int registerAuthFssOfficialDoc(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setFssOfficialDoc(nullValue);
+		return uploadFss(insurance);
+	}
+
+	private int uploadFss(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setFssOfficialDoc(savePath)
+				.setModifiedFss(LocalDateTime.now());
+		new InsuranceDao().updateByFss(insurance);
+		return 0;
 	}
 
 	public void assessDamage(){

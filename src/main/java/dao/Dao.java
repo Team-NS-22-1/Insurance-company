@@ -50,12 +50,19 @@ public class Dao {
     }
 
     public void update(String query) {
-
+        try {
+            statement = connect.createStatement();
+            statement.executeUpdate(query);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void delete(PreparedStatement statement) {
+    public void delete(String query) {
         try {
-            statement.executeUpdate();
+            statement = connect.createStatement();
+            statement.executeUpdate(query);
         }
         catch (SQLException e) {
             e.printStackTrace();

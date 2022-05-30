@@ -1,7 +1,9 @@
 package dao;
 
+import domain.contract.BuildingType;
 import domain.insurance.*;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -95,17 +97,27 @@ public class InsuranceDao extends Dao {
                     }
                 }
             }
+
+            // CREATE sales auth file
+            SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+            salesAuthFile.setInsuranceId(insuranceId);
+            String queryFormatSalesAuthFile =
+                    "INSERT INTO sales_auth_file (insurance_id) VALUES (%d);";
+            String querySalesAuthFile =
+                    String.format(queryFormatSalesAuthFile, insuranceId);
+            super.create(querySalesAuthFile);
+
         }
         finally {
             super.close();
         }
     }
 
-    public ArrayList<Insurance> read(int id) throws SQLException {
-        ArrayList<Insurance> insuranceList = new ArrayList<>();
-        Insurance insurance = null;
+    public Insurance read(int id) {
+        Insurance insurance = new Insurance();
         try {
-            String query = "SELECT * FROM insurance WHERE insurance_id = "+id;
+            // READ insurance
+            String query = "SELECT * FROM insurance WHERE insurance_id = " + id + ";";
             super.read(query);
             if(resultSet.next()){
                 insurance.setId(resultSet.getInt("insurance_id"))
@@ -113,22 +125,205 @@ public class InsuranceDao extends Dao {
                         .setDescription(resultSet.getString("description"))
                         .setContractPeriod(resultSet.getInt("contract_period"))
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
-                        .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type")));
-                insuranceList.add(insurance);
+                        .setInsuranceType(InsuranceType.valueOfName(resultSet.getString("insurance_type")));
             }
+
+            // READ guarantee
+            ArrayList<Guarantee> guarantees = new ArrayList<>();
+            String queryGuarantee = "SELECT * FROM guarantee WHERE insurance_id = " + id + ";";
+            super.read(queryGuarantee);
+            while(resultSet.next()) {
+                guarantees.add(
+                        new Guarantee().setId(resultSet.getInt("guarantee_id"))
+                                .setName(resultSet.getString("name"))
+                                .setDescription(resultSet.getString("description"))
+                                .setGuaranteeAmount(resultSet.getLong("amount"))
+                                .setInsuranceId(resultSet.getInt("insurance_id"))
+                );
+            }
+            insurance.setGuaranteeList(guarantees);
+
+            // READ devInfo
+            DevInfo devInfo = new DevInfo();
+            String queryDevInfo = "SELECT * FROM dev_info WHERE insurance_id = " + id + ";";
+            super.read(queryDevInfo);
+            if(resultSet.next()){
+                devInfo.setId(resultSet.getInt("dev_info_id"))
+                        .setEmployeeId(resultSet.getInt("employee_id"))
+                        .setDevDate(resultSet.getDate("dev_date").toLocalDate())
+                        .setSalesAuthState(SalesAuthState.valueOfName(resultSet.getString("sales_auth_state")))
+                        .setInsuranceId(resultSet.getInt("insurance_id"));
+                Date salesStartDate = resultSet.getDate("sales_start_date");
+                devInfo.setSalesStartDate(resultSet.wasNull() ? null : salesStartDate.toLocalDate());
+            }
+            insurance.setDevInfo(devInfo);
+
+            // READ insuranceDetail
+            ArrayList<InsuranceDetail> insuranceDetails = new ArrayList<>();
+            switch (insurance.getInsuranceType()) {
+                case HEALTH -> {
+                    String queryHealthDetail =
+                            "SELECT * FROM insurance_detail " +
+                                    "INNER JOIN health_detail " +
+                                    "ON insurance_detail.insurance_detail_id = health_detail.health_detail_id " +
+                                "WHERE insurance_id = " + id + ";";
+                    super.read(queryHealthDetail);
+                    while(resultSet.next()){
+                        insuranceDetails.add(
+                                new HealthDetail().setTargetAge(resultSet.getInt("target_age"))
+                                        .setTargetSex(resultSet.getInt("target_sex")==0 ? true : false)
+                                        .setRiskCriterion(resultSet.getInt("risk_criterion"))
+                                        .setId(resultSet.getInt("health_detail_id"))
+                                        .setPremium(resultSet.getInt("premium"))
+                                        .setInsuranceId(resultSet.getInt("insurance_id"))
+                        );
+                    }
+                    insurance.setInsuranceDetailList(insuranceDetails);
+                }
+                case CAR -> {
+                    String queryCarDetail =
+                            "SELECT * FROM insurance_detail " +
+                                    "INNER JOIN car_detail " +
+                                    "ON insurance_detail.insurance_detail_id = car_detail.car_detail_id " +
+                                "WHERE insurance_id = " + id + ";";
+                    super.read(queryCarDetail);
+                    while(resultSet.next()) {
+                        insuranceDetails.add(
+                                new CarDetail().setTargetAge(resultSet.getInt("target_age"))
+                                        .setValueCriterion(resultSet.getLong("value_criterion"))
+                                        .setId(resultSet.getInt("car_detail"))
+                                        .setPremium(resultSet.getInt("premium"))
+                                        .setInsuranceId(resultSet.getInt("insurance_id"))
+                        );
+                    }
+                    insurance.setInsuranceDetailList(insuranceDetails);
+                }
+                case FIRE -> {
+                    String queryFireDetail =
+                            "SELECT * FROM insurance_detail " +
+                                    "INNER JOIN fire_detail " +
+                                    "ON insurance_detail.insurance_detail_id = fire_detail.fire_detail_id " +
+                                "WHERE insurance_id = " + id + ";";
+                    super.read(queryFireDetail);
+                    while(resultSet.next()) {
+                        insuranceDetails.add(
+                                new FireDetail().setTargetBuildingType(BuildingType.valueOfName(resultSet.getString("target_building_type")))
+                                        .setCollateralAmountCriterion(resultSet.getLong("collateral_amount_criterion"))
+                                        .setId(resultSet.getInt("fire_detail_id"))
+                                        .setPremium(resultSet.getInt("premium"))
+                                        .setInsuranceId(resultSet.getInt("insurance_id"))
+                        );
+                    }
+                    insurance.setInsuranceDetailList(insuranceDetails);
+                }
+            }
+
+            // READ salesAuthFile
+            SalesAuthFile salesAuthFile = new SalesAuthFile();
+            String querySalesAuthFile =
+                    "SELECT * FROM sales_auth_file WHERE insurance_id = " + id + ";";
+            super.read(querySalesAuthFile);
+            if (resultSet.next()) {
+                salesAuthFile.setInsuranceId(resultSet.getInt("insurance_id"));
+                String fssOfficialDoc = resultSet.getString("fss_official_doc");
+                salesAuthFile.setFssOfficialDoc(resultSet.wasNull() ? null : fssOfficialDoc);
+                java.sql.Timestamp modifiedFss = resultSet.getTimestamp("modified_fss");
+                salesAuthFile.setModifiedFss(resultSet.wasNull() ? null : modifiedFss.toLocalDateTime());
+
+                String isoVerification = resultSet.getString("iso_verification");
+                salesAuthFile.setIsoVerification(resultSet.wasNull() ? null : isoVerification);
+                java.sql.Timestamp modifiedIso = resultSet.getTimestamp("modified_iso");
+                salesAuthFile.setModifiedIso(resultSet.wasNull() ? null : modifiedIso.toLocalDateTime());
+
+                String prodDeclaration = resultSet.getString("prod_declaration");
+                salesAuthFile.setProdDeclaration(resultSet.wasNull() ? null : prodDeclaration);
+                java.sql.Timestamp modifiedProd = resultSet.getTimestamp("modified_prod");
+                salesAuthFile.setModifiedProd(resultSet.wasNull() ? null : modifiedProd.toLocalDateTime());
+
+                String srActuaryVerification = resultSet.getString("sr_actuary_verification");
+                salesAuthFile.setSrActuaryVerification(resultSet.wasNull() ? null : srActuaryVerification);
+                java.sql.Timestamp modifiedSrActuary = resultSet.getTimestamp("modified_sr_actuary");
+                salesAuthFile.setModifiedSrActuary(resultSet.wasNull() ? null : modifiedSrActuary.toLocalDateTime());
+            }
+            insurance.setSalesAuthFile(salesAuthFile);
+
+        }
+        catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
         }
         finally {
             super.close();
         }
-        return insuranceList;
+        return insurance;
+    }
+
+    public ArrayList<Insurance> readByEmployeeId(int eid) {
+        ArrayList<Integer> insuranceIds = new ArrayList<>();
+        ArrayList<Insurance> insurances = new ArrayList<>();
+        try {
+            String query =
+                    "select * from insurance\n" +
+                            "where insurance_id = (\n" +
+                            "    select insurance_id\n" +
+                            "    from dev_info\n" +
+                            "    where employee_id = " + eid +
+                            ");";
+            super.read(query);
+            while (resultSet.next()) {
+                insuranceIds.add(resultSet.getInt("insurance_id"));
+            }
+            for(Integer insuranceId : insuranceIds) {
+                insurances.add(this.read(insuranceId));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return insurances;
     }
 
     public void update(Insurance insurance) {
 
     }
 
+    public void updateByFss(Insurance insurance) {
+        SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+        String queryFormat =
+                "UPDATE sales_auth_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = " + insurance.getId() +";";
+        String query =
+                String.format(queryFormat, salesAuthFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedFss()));
+        super.update(query);
+    }
+
+    public void updateByIso(Insurance insurance) {
+        SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+        String queryFormat =
+                "UPDATE sales_auth_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = " + insurance.getId() +";";
+        String query =
+                String.format(queryFormat, salesAuthFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedIso()));
+        super.update(query);
+    }
+
+    public void updateByProd(Insurance insurance) {
+        SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+        String queryFormat =
+                "UPDATE sales_auth_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = " + insurance.getId() +";";
+        String query =
+                String.format(queryFormat, salesAuthFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedProd()));
+        super.update(query);
+    }
+
+    public void updateBySrActuary(Insurance insurance) {
+        SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+        String queryFormat =
+                "UPDATE sales_auth_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = " + insurance.getId() +";";
+        String query =
+                String.format(queryFormat, salesAuthFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedSrActuary()));
+        super.update(query);
+    }
+
     public void delete(int id) throws SQLException {
-        String query = "DELETE FROM insurance WHERE insurance_id = ?";
+        String query = "DELETE FROM insurance WHERE insurance_id = " + id + ";";
     }
 
 }
