@@ -49,7 +49,7 @@ public class UWViewLogic implements ViewLogic {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
         EmployeeDao employeeDao = new EmployeeDao();
-        this.employee = employeeDao.read(4);
+        this.employee = employeeDao.read(2);
     }
 
     @Override
