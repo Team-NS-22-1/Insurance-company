@@ -101,8 +101,8 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
 
                 close();
             }
-        if(accDocFileList.size()==0)
-            throw new IllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
+//        if(accDocFileList.size()==0)
+//            throw new IllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
         return accDocFileList;
     }
 

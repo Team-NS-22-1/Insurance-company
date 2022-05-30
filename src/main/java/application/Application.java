@@ -54,8 +54,6 @@ public class Application {
         AccDocFileList accDocFileList = new AccDocFileDao();
         ComplainList complainList = new ComplainDao();
 
-        // 테스트 더미 데이터 생성
-        new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
         map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
@@ -90,9 +88,11 @@ public class Application {
                     }
                     viewLogic.work(command);
                 }
-            } catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
+            }
+            catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
                 System.out.println("정확한 값을 입력해주세요.");
-            } catch (MyCloseSequence e) {
+            }
+            catch (MyCloseSequence e) {
                 System.out.println(e.getMessage());
                 System.exit(0);
             } catch (NumberFormatException e) {

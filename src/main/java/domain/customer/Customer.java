@@ -138,7 +138,6 @@ public class Customer {
 			return null;
 		}
 		accDocFile.setFileAddress(directory);
-		accident.getAccDocFileList().put(accDocFile.getType(), accDocFile);
 		return accDocFile;
 	}
 

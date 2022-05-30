@@ -21,7 +21,9 @@ import java.util.List;
  * 2022-05-30                규현             최초 생성
  */
 public class ComplainDao extends Dao implements ComplainList {
-
+    public ComplainDao() {
+        super.connect();
+    }
 
     @Override
     public void create(Complain complain) {
