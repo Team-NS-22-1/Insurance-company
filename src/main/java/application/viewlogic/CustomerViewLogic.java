@@ -66,19 +66,10 @@ public class CustomerViewLogic implements ViewLogic {
     private CustomMyBufferedReader br;
 
     public CustomerViewLogic() {
-    }
-
-    public CustomerViewLogic(CustomerList customerList, ContractList contractList, InsuranceList insuranceList, PaymentList paymentList, AccidentList accidentList, AccDocFileList accDocFileList, EmployeeList employeeList, ComplainList complainList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
-
-        this.customerList = customerList;
-        this.paymentList = paymentList;
-        this.accidentList = accidentList;
-        this.accDocFileList = accDocFileList;
-        this.employeeList = employeeList;
-        this.complainList = complainList;
     }
+
     @Override
     public void showMenu() {
         createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
