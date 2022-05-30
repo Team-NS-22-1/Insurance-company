@@ -6,9 +6,13 @@ import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.insurance.*;
+import domain.insurance.Insurance;
+import domain.insurance.InsuranceDetailList;
+import domain.insurance.InsuranceList;
+import domain.insurance.InsuranceType;
 import domain.insurance.inputDto.*;
 import exception.InputException;
+import exception.MyFileException;
 import utility.MyBufferedReader;
 
 import java.io.IOException;
@@ -57,6 +61,7 @@ public class DevViewLogic implements ViewLogic {
         try {
             switch (command){
                 case "1" -> {
+                    new InsuranceDao().read(1);
                     testInitEmployee();
                     if(employee!=null){
                         showInsuranceByEmployee();
@@ -326,12 +331,8 @@ public class DevViewLogic implements ViewLogic {
         while(forWhile){
             switch (br.verifyMenu("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 1 -> {
-                    Insurance insurance = employee.develop(insuranceList, insuranceDetailList, type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
+                    employee.develop(type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
                     System.out.println("정상적으로 보험이 저장되었습니다!");
-                    System.out.println(insuranceList.read(insurance.getId()).print());
-                    for(InsuranceDetail insuranceDetail : insuranceDetailList.readByInsuranceId(insurance.getId())) {
-                        System.out.println(insuranceDetail.print());
-                    }
                     forWhile = false;
                 }
                 case 2 -> {
@@ -344,28 +345,100 @@ public class DevViewLogic implements ViewLogic {
     }
 
     private void menuSalesAuthFile(Insurance insurance) throws IOException {
-        System.out.println("<< 해당 보험의 추가할 파일을 선택하세요. >>");
-        String query = "1. 보험상품신고서\n"
-                + "2. 선임계리사 검증기초서류\n"
-                + "3. 보험요율산출기관 검증확인서\n"
-                + "4. 금융감독원 판매인가서\n";
-        switch (br.verifyMenu(query, 4)){
-            case 1 -> {
-                switch (employee.registerAuthProdDeclaration(insurance)) {
-                    case 1 -> System.out.println("정상적으로 업로드되었습니다!");
-                    case 0 -> {
-                        return;
+        try {
+            loop : while(true) {
+                System.out.println("<< 해당 보험의 추가할 파일을 선택하세요. >>");
+                String query = "1. 보험상품신고서\n"
+                        + "2. 선임계리사 검증기초서류\n"
+                        + "3. 보험요율산출기관 검증확인서\n"
+                        + "4. 금융감독원 판매인가서\n"
+                        + "0. 이전 메뉴로 돌아가기\n";
+                switch (br.verifyMenu(query, 5)){
+                    // 보험상품신고서
+                    case 1 -> {
+                        switch (employee.registerAuthProdDeclaration(insurance)) {
+                            // 파일 업로드 성공
+                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            // 파일 업로드 취소
+                            case -1 -> { return; }
+                            // 파일 업로드 변경
+                            case 1 -> {
+                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                    case 1 -> {
+                                        switch (employee.registerAuthProdDeclaration(insurance, null)) {
+                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case -1 -> { return; }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                    case -1 -> {
-                        // 존재할 경우 변경하는 메소드? 어디서? FileUtil에서? 가능?
-                        System.out.println("이미 파일이 존재합니다! 변경하시겠습니까?");
-                        System.out.println("1. 예 2. 아니오");
+                    case 2 -> {
+                        switch (employee.registerAuthSrActuaryVerification(insurance)) {
+                            // 파일 업로드 성공
+                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            // 파일 업로드 취소
+                            case -1 -> { return; }
+                            // 파일 업로드 변경
+                            case 1 -> {
+                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                    case 1 -> {
+                                        switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
+                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case -1 -> { return; }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    case 3 -> {
+                        switch (employee.registerAuthIsoVerification(insurance)) {
+                            // 파일 업로드 성공
+                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            // 파일 업로드 취소
+                            case -1 -> { return; }
+                            // 파일 업로드 변경
+                            case 1 -> {
+                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                    case 1 -> {
+                                        switch (employee.registerAuthIsoVerification(insurance, null)) {
+                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case -1 -> { return; }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    case 4 -> {
+                        switch (employee.registerAuthFssOfficialDoc(insurance)) {
+                            // 파일 업로드 성공
+                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            // 파일 업로드 취소
+                            case -1 -> { return; }
+                            // 파일 업로드 변경
+                            case 1 -> {
+                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                    case 1 -> {
+                                        switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
+                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case -1 -> { return; }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    case 0 -> {
+                        break loop;
                     }
                 }
             }
-            case 2 -> employee.registerAuthSrActuaryVerification(insurance);
-            case 3 -> employee.registerAuthISOVerification(insurance);
-            case 4 -> employee.registerAuthFSSOfficialDoc(insurance);
+        }
+        catch (MyFileException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

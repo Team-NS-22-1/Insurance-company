@@ -1,5 +1,7 @@
 package domain.insurance;
 
+import java.time.LocalDateTime;
+
 /**
  * @author ����
  * @version 1.0
@@ -7,82 +9,120 @@ package domain.insurance;
  */
 public class SalesAuthFile {
 
-	private int id;
+	private int insuranceId;
 
 	/**
 	 * 보험상품신고서
 	 */
 	private String prodDeclaration;
+	private LocalDateTime modifiedProd;
+
 	/**
 	 * 보험요율산출기관 검증확인서
 	 */
 	private String isoVerification;
+	private LocalDateTime modifiedIso;
 
 	/**
 	 * 선임계리사 검증기초서류
 	 */
 	private String srActuaryVerification;
+	private LocalDateTime modifiedSrActuary;
+
 	/**
 	 * 금융감독원 인가허가파일
 	 */
-	private String fSSOfficialDoc;
+	private String fssOfficialDoc;
+	private LocalDateTime modifiedFss;
 
-	private int insuranceId;
-
-	public int getId() {
-		return id;
+	public int getInsuranceId() {
+		return insuranceId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public SalesAuthFile setInsuranceId(int insuranceId) {
+		this.insuranceId = insuranceId;
+		return this;
 	}
 
 	public String getProdDeclaration() {
 		return prodDeclaration;
 	}
 
-	public void setProdDeclaration(String prodDeclaration) {
+	public SalesAuthFile setProdDeclaration(String prodDeclaration) {
 		this.prodDeclaration = prodDeclaration;
+		return this;
+	}
+
+	public LocalDateTime getModifiedProd() {
+		return modifiedProd;
+	}
+
+	public SalesAuthFile setModifiedProd(LocalDateTime modifiedProd) {
+		this.modifiedProd = modifiedProd;
+		return this;
 	}
 
 	public String getIsoVerification() {
 		return isoVerification;
 	}
 
-	public void setIsoVerification(String isoVerification) {
+	public SalesAuthFile setIsoVerification(String isoVerification) {
 		this.isoVerification = isoVerification;
+		return this;
+	}
+
+	public LocalDateTime getModifiedIso() {
+		return modifiedIso;
+	}
+
+	public SalesAuthFile setModifiedIso(LocalDateTime modifiedIso) {
+		this.modifiedIso = modifiedIso;
+		return this;
 	}
 
 	public String getSrActuaryVerification() {
 		return srActuaryVerification;
 	}
 
-	public void setSrActuaryVerification(String srActuaryVerification) {
+	public SalesAuthFile setSrActuaryVerification(String srActuaryVerification) {
 		this.srActuaryVerification = srActuaryVerification;
+		return this;
 	}
 
-	public String getfSSOfficialDoc() {
-		return fSSOfficialDoc;
+	public LocalDateTime getModifiedSrActuary() {
+		return modifiedSrActuary;
 	}
 
-	public void setfSSOfficialDoc(String fSSOfficialDoc) {
-		this.fSSOfficialDoc = fSSOfficialDoc;
+	public SalesAuthFile setModifiedSrActuary(LocalDateTime modifiedSrActuary) {
+		this.modifiedSrActuary = modifiedSrActuary;
+		return this;
 	}
 
-	public int getInsuranceId() {
-		return insuranceId;
+	public String getFssOfficialDoc() {
+		return fssOfficialDoc;
 	}
 
-	public void setInsuranceId(int insuranceId) {
-		this.insuranceId = insuranceId;
+	public SalesAuthFile setFssOfficialDoc(String fSSOfficialDoc) {
+		this.fssOfficialDoc = fSSOfficialDoc;
+		return this;
+	}
+
+	public LocalDateTime getModifiedFss() {
+		return modifiedFss;
+	}
+
+	public SalesAuthFile setModifiedFss(LocalDateTime modifiedFss) {
+		this.modifiedFss = modifiedFss;
+		return this;
 	}
 
 	public String print() {
-		String print = "";
-		if(prodDeclaration != null) print += "보험상품신고서 ";
-		if(isoVerification != null) print += "보험요율산출기관 검증확인서 ";
-		if(srActuaryVerification != null) print += "선임계리사 검증기초서류 ";
-		if(fSSOfficialDoc != null) print += "금융감독원 인가허가파일 ";
+		String print = "{보험ID: " + insuranceId + ", [";
+		if(prodDeclaration != null) print += "보험상품신고서(" + modifiedProd + ") ";
+		if(isoVerification != null) print += "보험요율산출기관 검증확인서(" + modifiedIso + ") ";
+		if(srActuaryVerification != null) print += "선임계리사 검증기초서류(" + modifiedSrActuary + ") ";
+		if(fssOfficialDoc != null) print += "금융감독원 인가허가파일(" + modifiedFss + ")";
+		print += "]";
 		return print;
 	}
 
