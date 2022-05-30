@@ -139,8 +139,7 @@ public class ContractDao extends Dao {
                 carContract.setCarType(CarType.valueOf(rs.getString("car_type")));
             carContract.setModelYear(rs.getInt("model_year"));
             carContract.setModelName(rs.getString("name"));
-            carContract.setOwner(rs.getString("owner"));
-            carContract.setValue(rs.getInt("value"));
+            carContract.setValue(Long.valueOf(rs.getInt("value")));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -155,7 +154,7 @@ public class ContractDao extends Dao {
             fireContract.setBuildingArea(rs.getInt("building_area"));
             fireContract.setBuildingType(BuildingType.valueOf(rs.getString("building_type")));
             fireContract.setActualResidence((rs.getInt("is_actual_residence")) != 0);
-            fireContract.setCollateralAmount(rs.getInt("collateral_amount"));
+            fireContract.setCollateralAmount(Long.valueOf(rs.getInt("collateral_amount")));
             fireContract.setSelfOwned((rs.getInt("is_self_owned")) != 0);
 
         } catch (SQLException e) {
