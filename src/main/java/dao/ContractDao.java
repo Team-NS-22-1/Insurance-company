@@ -112,8 +112,7 @@ public class ContractDao extends Dao{
                 "condition_of_uw = '" + contract.getConditionOfUw() + "',\n" +
                 "is_publish_stock = " + (contract.isPublishStock() ? 1 : 0) + "\n" +
                 "WHERE contract_id = " + contract.getId();
-        String[] columnNames = {"reason_of_uw", "condition_of_uw", "is_publish_stock"};
-        super.update(query, columnNames);
+        super.update(query);
 
     }
 

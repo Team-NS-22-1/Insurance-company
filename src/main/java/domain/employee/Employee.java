@@ -567,7 +567,9 @@ public class Employee {
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
-		contractDao.update(contract);
+
+		ContractDao contractDao1 = new ContractDao();
+		contractDao1.update(contract);
 	}
 
 	public String print() {
