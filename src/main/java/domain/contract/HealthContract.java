@@ -101,15 +101,9 @@ public class HealthContract extends Contract{
 
 	@Override
 	public String toString() {
-
-		return "계약정보 {" +
-				"계약 ID: " + getId() +
-				", 인수심사상태: " + getConditionOfUw() +
-				", 인수사유: '" + getReasonOfUw() + '\'' +
-				", 증권발행여부: " + isPublishStock() +
-				", 보험료: " + getPremium() +
-				", 결제수단: " + getPayment() +
-				", 키: " + height +
+		return super.toString() +
+				" 건강정보: {" +
+				"키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +
 				", 운전여부: " + isDriving +
@@ -117,6 +111,6 @@ public class HealthContract extends Contract{
 				", 흡연여부: " + isSmoking +
 				", 약물복용여부: " + isTakingDrug +
 				", 몸무게: " + weight +
-				'}';
+				"}}";
 	}
 }
