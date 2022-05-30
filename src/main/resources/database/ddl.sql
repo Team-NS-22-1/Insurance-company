@@ -61,7 +61,7 @@ accident_id int primary key not null,
 car_no varchar(15),
 place_address varchar(100),
 opposing_driver_phone varchar(13),
-is_request_in_site boolean,
+is_request_on_site boolean,
 error_rate int,
 foreign key (accident_id) references accident (accident_id) on delete cascade
 );
@@ -91,6 +91,7 @@ acc_doc_file_id int not null primary key auto_increment,
 type varchar(50),
 file_address varchar(5000),
 accident_id int,
+last_modified_date datetime,
 foreign key(accident_id) references accident(accident_id) on delete cascade
 );
 
@@ -110,7 +111,7 @@ create table health_info(
 contract_id int not null primary key,
 height int,
 weight int,
-is_dangert_activity boolean,
+is_danger_activity boolean,
 is_drinking boolean,
 is_smoking boolean,
 is_taking_drug boolean,
