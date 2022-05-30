@@ -53,7 +53,6 @@ public class HealthDetail extends InsuranceDetail {
 				", 대상나이: " + targetAge +
 				", 대상성별: " + getTargetSex() +
 				", 위험부담 기준: " + riskCriterion +
-				", 보험ID: " + getInsuranceId() +
 				"}";
 	}
 }

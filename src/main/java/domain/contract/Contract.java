@@ -1,5 +1,7 @@
 package domain.contract;
 
+import domain.customer.Customer;
+import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -21,12 +23,9 @@ public class Contract {
 	private int premium;
 	private String reasonOfUw;
 
-
 	public Contract(){
 
 	}
-
-
 
 	public int getCustomerId() {
 		return customerId;
@@ -45,7 +44,6 @@ public class Contract {
 		this.employeeId = employeeId;
 		return this;
 	}
-
 
 	public int getId() {
 		return id;

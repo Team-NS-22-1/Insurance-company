@@ -107,7 +107,7 @@ is_publish_stock boolean,
 condition_of_uw varchar(15)
 );
 
-create table health_info(
+create table health_contract(
 contract_id int not null primary key,
 height int,
 weight int,
@@ -118,7 +118,7 @@ is_taking_drug boolean,
 foreign key (contract_id) references contract(contract_id) on delete cascade
 );
 
-create table car_info(
+create table car_contract(
 contract_id int not null primary key,
 car_no varchar(15),
 car_type varchar(15),
@@ -129,7 +129,7 @@ value int,
 foreign key (contract_id) references contract(contract_id) on delete cascade
 );
 
-create table building_info(
+create table fire_contract(
 contract_id int not null primary key,
 building_area int,
 building_type varchar(20),

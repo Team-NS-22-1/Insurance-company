@@ -252,8 +252,20 @@ public class Employee {
 		return (int) (stPremium * weightRatio);
 	}
 
+	public void modifySalesAuthState(Insurance insurance, SalesAuthState modify) {
+		insurance.getDevInfo().setSalesAuthState(modify);
+		new InsuranceDao().updateBySalesAuthState(insurance);
+	}
+
+	private boolean checkSalesAuthState(Insurance insurance) {
+		SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
+		if(salesAuthFile.getProdDeclaration()!=null && salesAuthFile.getFssOfficialDoc()!=null && salesAuthFile.getIsoVerification()!=null && salesAuthFile.getSrActuaryVerification()!=null)
+			return true;
+		return false;
+	}
+
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 1;
+		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 0;
 		return uploadProd(insurance);
 	}
 
@@ -269,11 +281,12 @@ public class Employee {
 		insurance.getSalesAuthFile().setProdDeclaration(savePath)
 				.setModifiedProd(LocalDateTime.now());
 		new InsuranceDao().updateByProd(insurance);
-		return 0;
+		if(checkSalesAuthState(insurance)) return 2;
+		return 1;
 	}
 
 	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 1;
+		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 0;
 		return uploadSrActuary(insurance);
 	}
 
@@ -289,11 +302,12 @@ public class Employee {
 		insurance.getSalesAuthFile().setSrActuaryVerification(savePath)
 				.setModifiedSrActuary(LocalDateTime.now());
 		new InsuranceDao().updateBySrActuary(insurance);
-		return 0;
+		if(checkSalesAuthState(insurance)) return 2;
+		return 1;
 	}
 
 	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 1;
+		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 0;
 		return uploadIso(insurance);
 	}
 
@@ -309,11 +323,12 @@ public class Employee {
 		insurance.getSalesAuthFile().setIsoVerification(savePath)
 				.setModifiedIso(LocalDateTime.now());
 		new InsuranceDao().updateByIso(insurance);
-		return 0;
+		if(checkSalesAuthState(insurance)) return 2;
+		return 1;
 	}
 
 	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 1;
+		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 0;
 		return uploadFss(insurance);
 	}
 
@@ -329,7 +344,8 @@ public class Employee {
 		insurance.getSalesAuthFile().setFssOfficialDoc(savePath)
 				.setModifiedFss(LocalDateTime.now());
 		new InsuranceDao().updateByFss(insurance);
-		return 0;
+		if(checkSalesAuthState(insurance)) return 2;
+		return 1;
 	}
 	public AssessDamageResponseDto assessDamage(Accident accident, AccountRequestDto accountRequestDto){
 		return AssessDamageResponseDto.builder().accDocFile(uploadLossAssessment(accident))

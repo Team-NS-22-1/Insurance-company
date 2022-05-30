@@ -117,12 +117,12 @@ public class SalesAuthFile {
 	}
 
 	public String print() {
-		String print = "{보험ID: " + insuranceId + ", [";
-		if(prodDeclaration != null) print += "보험상품신고서(" + modifiedProd + ") ";
-		if(isoVerification != null) print += "보험요율산출기관 검증확인서(" + modifiedIso + ") ";
-		if(srActuaryVerification != null) print += "선임계리사 검증기초서류(" + modifiedSrActuary + ") ";
+		String print = "{";
+		if(prodDeclaration != null) print += "보험상품신고서(" + modifiedProd + "), ";
+		if(isoVerification != null) print += "보험요율산출기관 검증확인서(" + modifiedIso + "), ";
+		if(srActuaryVerification != null) print += "선임계리사 검증기초서류(" + modifiedSrActuary + "), ";
 		if(fssOfficialDoc != null) print += "금융감독원 인가허가파일(" + modifiedFss + ")";
-		print += "]";
+		print += "} ";
 		return print;
 	}
 

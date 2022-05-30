@@ -77,13 +77,13 @@ public class DevInfo {
 				", 개발일자: " + devDate.getYear() + "년 " +
 							devDate.getMonthValue() + "월 "+
 							devDate.getDayOfMonth() + "일" +
-				", 판매인가상태: " +salesAuthState.getName();
+				", 판매인가상태: " + salesAuthState.name();
 		if(salesAuthState == SalesAuthState.PERMISSION) {
 			value += ", 판매시작일자: " + salesStartDate.getYear() + "년 " +
 									salesStartDate.getMonthValue() + "월 " +
 									salesStartDate.getDayOfMonth() + "일";
 		}
-		value += "} ";
+		value += "}";
 		return value;
 	}
 }
