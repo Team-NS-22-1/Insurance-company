@@ -152,10 +152,16 @@ public class CustomerViewLogic implements ViewLogic {
                         break;
                     }
                     accDocFileList = new AccDocFileDao();
-                    if(accident.getAccDocFileList().containsKey(accDocType))
+                    for (AccDocFile value : accident.getAccDocFileList().values()) {
+                        System.out.println(value);
+                    }
+
+                    if (accident.getAccDocFileList().containsKey(accDocType)) {
                         accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-                    else
-                    accDocFileList.create(accDocFile);
+                    } else {
+                        accDocFileList.create(accDocFile);
+                        accident.getAccDocFileList().put(accDocType,accDocFile);
+                    }
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
                     break;
@@ -220,7 +226,7 @@ public class CustomerViewLogic implements ViewLogic {
             rtVal = (String) br.verifyRead("보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)",rtVal);
             if (rtVal.equals("Y")) {
                 String reasons = "";
-                reasons=(String)br.verifyRead("변경 사유를 입력해주세요",reasons);
+                reasons=(String)br.verifyRead("변경 사유를 입력해주세요 : ",reasons);
                 Complain complain = this.customer.changeCompEmp(reasons);
                 complainList = new ComplainDao();
                 complainList.create(complain);
@@ -296,6 +302,7 @@ public class CustomerViewLogic implements ViewLogic {
             List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
             for (AccDocFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
+                System.out.println(file);
             }
         }
 

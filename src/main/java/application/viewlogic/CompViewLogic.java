@@ -51,7 +51,7 @@ public class CompViewLogic implements ViewLogic {
     private  AccidentList accidentList;
     private  AccDocFileList accDocFileList;
     private  CustomerList customerList;
-    private EmployeeList employeeList;
+    private EmployeeDao employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 

@@ -22,6 +22,7 @@ import utility.DocUtil;
 import utility.FileDialogUtil;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -486,7 +487,7 @@ public class Employee {
 	}
 
 
-	public void registerContract(Customer customer, Contract contract, Employee employee){
+	public void registerContract(Customer customer, Contract contract, Employee employee) throws SQLException {
 		if (customer.getId() == 0) {
 			CustomerDao customerDao = new CustomerDao();
 			customerDao.create(customer);
@@ -499,7 +500,9 @@ public class Employee {
 		contractDao.create(contract);
 	}
 
-	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion){
+	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion, Insurance insurance){
+		int premium = 0;
+
 		if(targetAge > 100) targetAge = 100;
 		else if(targetAge > 80) targetAge = 80;
 		else if(targetAge > 60) targetAge = 60;
@@ -510,12 +513,23 @@ public class Employee {
 		else if(targetAge > 10) targetAge = 10;
 		else targetAge = 0;
 
-		InsuranceDao insuranceDao = new InsuranceDao();
-		int premium = insuranceDao.readHealthPremium(targetAge, targetSex, riskPremiumCriterion);
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
+			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskPremiumCriterion() > 3) == riskPremiumCriterion) {
+				premium = healthDetail.getPremium();
+				break;
+			}
+		}
+//		InsuranceDao insuranceDao = new InsuranceDao();
+//		int premium = insuranceDao.readHealthPremium(targetAge, targetSex, riskPremiumCriterion);
 		return premium;
 	}
 
-	public int planFireInsurance(BuildingType buildingType, Long collateralAmount){
+	public int planFireInsurance(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+		int premium = 0;
+
 		Long collateralAmountCriterion;
 		if(collateralAmount > 5000000000L) collateralAmountCriterion = 5000000000L;
 		else if(collateralAmount > 1000000000L) collateralAmountCriterion = 1000000000L;
@@ -523,12 +537,24 @@ public class Employee {
 		else if(collateralAmount > 100000000L) collateralAmountCriterion = 100000000L;
 		else collateralAmountCriterion = 0L;;
 
-		InsuranceDao insuranceDao = new InsuranceDao();
-		int premium = insuranceDao.readFirePremium(buildingType, collateralAmountCriterion);
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			FireDetail fireDetail = (FireDetail) insuranceDetail;
+			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
+				premium = fireDetail.getPremium();
+				break;
+			}
+		}
+
+//		InsuranceDao insuranceDao = new InsuranceDao();
+//		int premium = insuranceDao.readFirePremium(buildingType, collateralAmountCriterion);
 		return premium;
 	}
 
-	public int planCarInsurance(int targetAge, Long value){
+	public int planCarInsurance(int targetAge, Long value, Insurance insurance){
+		int premium = 0;
+
 		if(targetAge > 100) targetAge = 100;
 		else if(targetAge > 80) targetAge = 80;
 		else if(targetAge > 60) targetAge = 60;
@@ -547,8 +573,18 @@ public class Employee {
 		else if(value > 10000000L) valueCriterion = 10000000L;
 		else valueCriterion = 0L;
 
-		InsuranceDao insuranceDao = new InsuranceDao();
-		int premium = insuranceDao.readCarPremium(targetAge, valueCriterion);
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			CarDetail carDetail = (CarDetail) insuranceDetail;
+			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
+				premium = carDetail.getPremium();
+				break;
+			}
+		}
+
+//		InsuranceDao insuranceDao = new InsuranceDao();
+//		int premium = insuranceDao.readCarPremium(targetAge, valueCriterion);
 		return premium;
 	}
 

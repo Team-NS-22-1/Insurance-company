@@ -1,25 +1,21 @@
 package application.viewlogic;
 
+import application.ViewLogic;
 import dao.ContractDao;
 import dao.CustomerDao;
 import dao.EmployeeDao;
 import dao.InsuranceDao;
-import domain.contract.*;
+import domain.contract.ConditionOfUw;
+import domain.contract.Contract;
 import domain.customer.Customer;
-import domain.customer.CustomerList;
-import domain.employee.*;
+import domain.employee.Employee;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceDetail;
-import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceType;
-import application.ViewLogic;
 import exception.InputException;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 import utility.MessageUtil;
 import utility.MyBufferedReader;
-
-import uwDao.InsuranceDetailDao;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

@@ -1,7 +1,5 @@
 package domain.contract;
 
-import domain.customer.Customer;
-import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -11,7 +9,6 @@ import domain.payment.Payment;
  * @created 09-5-2022 오전 2:42:24
  */
 public class Contract {
-
 
 	private ConditionOfUw conditionOfUw;
 	private int customerId;

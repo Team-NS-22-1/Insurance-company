@@ -22,6 +22,10 @@ public class HealthContract extends Contract{
 
 	}
 
+	public int getHeight() {
+		return height;
+	}
+
 	public HealthContract setHeight(int height) {
 		this.height = height;
 		return this;

@@ -192,7 +192,7 @@ public class InsuranceDao extends Dao {
                         insuranceDetails.add(
                                 new CarDetail().setTargetAge(resultSet.getInt("target_age"))
                                         .setValueCriterion(resultSet.getLong("value_criterion"))
-                                        .setId(resultSet.getInt("car_detail"))
+                                        .setId(resultSet.getInt("car_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
                                         .setInsuranceId(resultSet.getInt("insurance_id"))
                         );
@@ -272,13 +272,13 @@ public class InsuranceDao extends Dao {
             insurance.setContractPeriod(rs.getInt("contract_period"));
             insurance.setPaymentPeriod(rs.getInt("payment_period"));
             switch (rs.getString("insurance_type")) {
-                case "건강":
+                case "건강보험":
                     insurance.setInsuranceType(InsuranceType.HEALTH);
                     break;
-                case "화재":
+                case "화재보험":
                     insurance.setInsuranceType(InsuranceType.FIRE);
                     break;
-                case "자동차":
+                case "자동차보험":
                     insurance.setInsuranceType(InsuranceType.CAR);
                     break;
             }

@@ -157,8 +157,8 @@ public class AccidentDao extends Dao implements AccidentList {
 
         List<Accident> accidents = getAccidents(formatted);
         close();
-        if(accidents.size()==0)
-            throw new IllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+//        if(accidents.size()==0)
+//            throw new IllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
         return accidents;
     }
 

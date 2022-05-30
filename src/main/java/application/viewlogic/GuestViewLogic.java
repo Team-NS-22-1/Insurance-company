@@ -63,7 +63,6 @@ public class GuestViewLogic implements ViewLogic {
             switch (command) {
                 case "1":
                     selectInsurance();
-                    // 해결을?
                     break;
                 case "":
                     throw new InputException.InputNullDataException();
@@ -82,7 +81,7 @@ public class GuestViewLogic implements ViewLogic {
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION)
+                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -97,7 +96,8 @@ public class GuestViewLogic implements ViewLogic {
                 }
                 insuranceDao = new InsuranceDao();
                 insurance = insuranceDao.read(Integer.parseInt(command));
-                if (insurance != null && insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION) {
+                insuranceDao = new InsuranceDao();
+                if (insurance != null && insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning();
                 }
@@ -225,7 +225,7 @@ public class GuestViewLogic implements ViewLogic {
         boolean sex = customerSexFinder(customer.getSsn());
         boolean riskPremiumCriterion = count >= 4;
 
-        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
+        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion, insurance);
 
         healthContract = employee.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
                 isTakingDrug, isHavingDisease, diseaseDetail, insurance.getId(), premium);
@@ -276,8 +276,7 @@ public class GuestViewLogic implements ViewLogic {
         question = "실거주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isActualResidence = input.validateBooleanFormat(question);
 
-        int premium = employee.planFireInsurance(buildingType, collateralAmount);
-
+        int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
 
         fireContract = employee.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, insurance.getId(), premium);
         signContract(fireContract);
@@ -337,7 +336,7 @@ public class GuestViewLogic implements ViewLogic {
         Long value = input.validateLongFormat(question);
 
         int age = customerAgeFinder(customer.getSsn());
-        int premium = employee.planCarInsurance(age, value);
+        int premium = employee.planCarInsurance(age, value, insurance);
 
         carContract = employee.inputCarInfo(carNo, carType, modelName, modelYear, value, insurance.getId(), premium);
         signContract(carContract);
@@ -353,7 +352,6 @@ public class GuestViewLogic implements ViewLogic {
                     case "1":
                         employee.registerContract(customer , contract, employee);
                         System.out.println(customer);
-                        System.out.println(employee.getId() == 0);
                         System.out.println(contract);
                         System.out.println("가입이 완료되었습니다.");
                         break;
@@ -368,6 +366,8 @@ public class GuestViewLogic implements ViewLogic {
                 break;
             } catch (InputException e) {
                 System.out.println(e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -26,9 +26,8 @@ public class CustomerDao extends Dao implements CustomerList {
 
     @Override
     public void create(Customer customer) {
-            String query = "insert into customer (name, job, email, phone, ssn, address) values ('%s', '%s','%s','%s','%s', '%s)";
-            String formattedQuery =  String.format(query, customer.getName(), customer.getJob(), customer.getEmail(), customer.getPhone(), customer.getSsn()
-            ,customer.getAddress());
+            String query = "insert into customer (name, job, email, phone, ssn, address) values ('%s', '%s','%s','%s','%s', '%s')";
+            String formattedQuery =  String.format(query, customer.getName(), customer.getJob(), customer.getEmail(), customer.getPhone(), customer.getSsn(), customer.getAddress());
             int id = super.create(formattedQuery);
             customer.setId(id);
 
