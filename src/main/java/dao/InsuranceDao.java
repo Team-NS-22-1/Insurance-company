@@ -6,6 +6,7 @@ import domain.insurance.*;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.sql.ResultSet;
 
 public class InsuranceDao extends Dao {
 

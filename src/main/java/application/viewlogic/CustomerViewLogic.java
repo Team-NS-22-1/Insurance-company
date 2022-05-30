@@ -1,28 +1,25 @@
 package application.viewlogic;
 
+import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
-import domain.accident.*;
+import domain.accident.Accident;
+import domain.accident.AccidentList;
+import domain.accident.AccidentType;
+import domain.accident.CarAccident;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
-import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.accident.accDocFile.AccDocType;
 import domain.complain.Complain;
 import domain.complain.ComplainList;
-import domain.complain.ComplainListImpl;
 import domain.contract.Contract;
 import domain.contract.ContractList;
-import domain.contract.ContractListImpl;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.payment.*;
-import application.ViewLogic;
 import exception.*;
 import outerSystem.CarAccidentService;
 import utility.CustomMyBufferedReader;
@@ -34,12 +31,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static main.utility.CustomerInfoFormatUtil.isCarNo;
+import static main.utility.CustomerInfoFormatUtil.isPhone;
 import static utility.CompAssignUtil.assignCompEmployee;
-import static utility.CustomerInfoFormatUtil.isCarNo;
-import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;
-import static utility.MessageUtil.*;
 import static utility.FormatUtil.*;
+import static utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -88,20 +85,27 @@ public class CustomerViewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
-        switch (command) {
-            case "2" :
-                payPremiumButton();
-                break;
-            case "3":
-                reportAccident();
-                break;
-            case "4":
-                claimCompensation();
-                break;
-            default:
-                throw new MyIllegalArgumentException();
-        }
-
+        try {
+                switch (command) {
+//                    case "1":
+//                        System.out.println("1선택");
+                    case "2" :
+                        payPremiumButton();
+                        break;
+                    case "3":
+                        reportAccident();
+                        break;
+                    case "4":
+                        claimCompensation();
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InvalidMenuException();
+                }
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            }
     }
 
     private void claimCompensation() {
@@ -637,10 +641,9 @@ public class CustomerViewLogic implements ViewLogic {
     public void showContractInfoForPay(Contract contract) {
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
-//        contract.setPremium(insurance.getPremium());
-//        sb.append("[ID]").append(" : ").append(contract.getId())
-//                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(insurance.getPremium())
-//                .append("\n");
+        sb.append("[ID]").append(" : ").append(contract.getId())
+                .append(" 이름 : ").append(insurance.getName()).append(" 보험료 : ").append(contract.getPremium())
+                .append("\n");
         System.out.println(sb.toString());
     }
 
