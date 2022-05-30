@@ -16,7 +16,6 @@ import domain.customer.CustomerList;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.payment.Account;
 import domain.payment.BankType;
 import exception.InputException;
 import exception.MyIllegalArgumentException;
@@ -46,7 +45,7 @@ import static utility.MessageUtil.createMenuAndExit;
  * -----------------------------------------------------------
  * 2022-05-10                규현             최초 생성
  */
-public class CompVIewLogic implements ViewLogic {
+public class CompViewLogic implements ViewLogic {
 
 
     private  EmployeeList employeeList;
@@ -56,7 +55,7 @@ public class CompVIewLogic implements ViewLogic {
     private CustomMyBufferedReader br;
     private Employee employee;
 
-    public CompVIewLogic(EmployeeList employeeList, AccidentList accidentList, AccDocFileList accDocFileList, CustomerList customerList) {
+    public CompViewLogic(EmployeeList employeeList, AccidentList accidentList, AccDocFileList accDocFileList, CustomerList customerList) {
         this.employeeList = employeeList;
         this.accidentList = accidentList;
         this.accDocFileList = accDocFileList;

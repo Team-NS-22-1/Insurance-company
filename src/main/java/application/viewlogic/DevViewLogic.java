@@ -6,10 +6,7 @@ import domain.contract.BuildingType;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.insurance.Insurance;
-import domain.insurance.InsuranceDetailList;
-import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceType;
+import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException;
 import exception.MyFileException;
@@ -358,18 +355,25 @@ public class DevViewLogic implements ViewLogic {
                     case 1 -> {
                         switch (employee.registerAuthProdDeclaration(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthProdDeclaration(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -377,18 +381,25 @@ public class DevViewLogic implements ViewLogic {
                     case 2 -> {
                         switch (employee.registerAuthSrActuaryVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -396,18 +407,25 @@ public class DevViewLogic implements ViewLogic {
                     case 3 -> {
                         switch (employee.registerAuthIsoVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthIsoVerification(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -415,18 +433,25 @@ public class DevViewLogic implements ViewLogic {
                     case 4 -> {
                         switch (employee.registerAuthFssOfficialDoc(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }

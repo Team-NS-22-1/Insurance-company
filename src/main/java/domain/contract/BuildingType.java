@@ -18,14 +18,4 @@ public enum BuildingType {
 	public String getName() {
 		return name;
 	}
-	public static BuildingType valueOfName(String name) {
-		return switch (name) {
-			case "상업용" -> COMMERCIAL;
-			case "산업용" -> INDUSTRIAL;
-			case "기관용" -> INSTITUTIONAL;
-			case "거주용" -> RESIDENTIAL;
-			default -> null;
-		};
-	}
-
 }

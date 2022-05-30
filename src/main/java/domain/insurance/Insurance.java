@@ -114,24 +114,38 @@ public class Insurance {
 	}
 
 	public String printGuarantee() {
-		String value = "";
+		String value = "\n";
 		for(Guarantee guarantee : guaranteeList) {
-			value += guarantee.getId() + " ";
+			value += "  보장정보: " + guarantee.print() + "\n";
+		}
+		return value;
+	}
+
+	private String printInsuranceDetail() {
+		String value = "";
+		switch (insuranceType) {
+			case HEALTH -> {
+				for(InsuranceDetail insuranceDetail : insuranceDetailList) {
+					value += "  " + insuranceDetail.print() + "\n";
+				}
+			}
 		}
 		return value;
 	}
 
 	public String print() {
-		return "보험 정보 {" +
+		return "보험 정보 {\n" +
 				"보험ID: " + id +
-				", 보험유형:" + insuranceType.getName() +
+				", 보험유형: " + insuranceType.name() +
 				", 이름: '" + name + '\'' +
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 보장정보: " + printGuarantee() +
-				", 개발정보: " + devInfo.print() +
-				", 인가파일: " + salesAuthFile.print() +
+				", 개발정보 " + devInfo.print() +
+				", 인가파일 " + salesAuthFile.print() +
+				", " + printGuarantee() +
+				printInsuranceDetail() +
 				'}';
 	}
+
 }
