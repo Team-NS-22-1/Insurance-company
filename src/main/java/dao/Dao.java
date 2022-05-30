@@ -15,8 +15,10 @@ public class Dao {
         try {
             Class.forName(DbConst.JDBC_DRIVER);
             connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             // DB 접근 실패 Exception
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
