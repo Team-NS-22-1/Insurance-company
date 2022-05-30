@@ -18,7 +18,8 @@ import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
-import static utility.MessageUtil.*;
+import static utility.MessageUtil.createMenu;
+import static utility.MessageUtil.createMenuAndClose;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -39,8 +40,12 @@ public class SalesViewLogic implements ViewLogic {
     private ContractList contractList;
     private CustomerList customerList;
     private EmployeeList employeeList;
+    private HealthContract healthContract;
+    private FireContract fireContract;
+    private CarContract carContract;
     private Employee employee;
     private Customer customer;
+    private Insurance insurance;
     private InputValidation input;
 
     public SalesViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList, EmployeeList employeeList) {
@@ -123,18 +128,18 @@ public class SalesViewLogic implements ViewLogic {
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                Insurance insurance = insuranceList.read(Integer.parseInt(command));
+                insurance = insuranceList.read(Integer.parseInt(command));
                 if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)  {
                     System.out.println("보험설명 : " + insurance.getDescription() + "\n보장내역 : " + insurance.getGuarantee());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
-                            planHealthInsurance(insurance);
+                            planHealthInsurance();
                             break;
                         case FIRE:
-                            planFireInsurance(insurance);
+                            planFireInsurance();
                             break;
                         case CAR:
-                            planCarInsurance(insurance);
+                            planCarInsurance();
                             break;
                     }
                 }
@@ -149,8 +154,7 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void planHealthInsurance(Insurance insurance) {
-        Contract contract;
+    private void planHealthInsurance() {
         int count = 0;
         String question;
 
@@ -202,8 +206,8 @@ public class SalesViewLogic implements ViewLogic {
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-                        contract = employee.concludeHealthContract(insurance.getId(), premium, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
-                        inputCustomerInfo(contract);
+                        healthContract = employee.concludeHealthContract(insurance.getId(), premium, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
+                        inputCustomerInfo();
                         break;
                     case "2":
                         System.out.println("계약이 취소되었습니다.");
@@ -220,11 +224,9 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void planFireInsurance(Insurance insurance) {
-        Contract contract;
+    private void planFireInsurance() {
         String question;
         BuildingType buildingType;
-
 
         while(true) {
             try {
@@ -255,7 +257,7 @@ public class SalesViewLogic implements ViewLogic {
         }
 
         question = "담보 금액을 입력해주세요. \t(단워 : 원)";
-        int collateralAmount = input.validateIntFormat(question);
+        Long collateralAmount = input.validateLongFormat(question);
 
         int premium = employee.planFireInsurance(buildingType, collateralAmount);
 
@@ -267,8 +269,8 @@ public class SalesViewLogic implements ViewLogic {
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-                        contract = employee.concludeFireContract(insurance.getId(), premium, buildingType, collateralAmount);
-                        inputCustomerInfo(contract);
+                        fireContract = employee.concludeFireContract(insurance.getId(), premium, buildingType, collateralAmount);
+                        inputCustomerInfo();
                         break;
                     case "2":
                         System.out.println("계약이 취소되었습니다.");
@@ -285,15 +287,14 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void planCarInsurance(Insurance insurance) {
-        Contract contract;
+    private void planCarInsurance() {
         String question;
 
         question = "대상 나이를 입력하세요.";
         int age = input.validateIntFormat(question);
 
         System.out.println("차량가액을 입력하세요.");
-        int value = input.validateIntFormat(question);
+        Long value = input.validateLongFormat(question);
 
         int premium = employee.planCarInsurance(age, value);
 
@@ -305,8 +306,8 @@ public class SalesViewLogic implements ViewLogic {
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-                        contract = employee.concludeCarContract(insurance.getId(), premium, value);
-                        inputCustomerInfo(contract);
+                        carContract = employee.concludeCarContract(insurance.getId(), premium, value);
+                        inputCustomerInfo();
                         break;
                     case "2":
                         System.out.println("계약이 취소되었습니다.");
@@ -323,7 +324,7 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void inputCustomerInfo(Contract contract) {
+    private void inputCustomerInfo() {
         boolean isLoop = true;
 
         while (isLoop) {
@@ -376,19 +377,19 @@ public class SalesViewLogic implements ViewLogic {
 
         }
 
-        switch (insuranceList.read(contract.getInsuranceId()).getInsuranceType()) {
+        switch (insurance.getInsuranceType()) {
             case HEALTH:
-                inputHealthInfo(customer, contract);
+                inputHealthInfo();
                 break;
             case FIRE:
-                inputFireInfo(customer, contract);
+                inputFireInfo();
                 break;
             case CAR:
-                inputCarInfo(customer, contract);
+                inputCarInfo();
                 break;
         }
     }
-    private void inputHealthInfo(Customer customer, Contract contract) {
+    private void inputHealthInfo() {
         String question;
         String diseaseDetail;
 
@@ -398,17 +399,17 @@ public class SalesViewLogic implements ViewLogic {
         question = "고객 몸무게를 입력해주세요. \t(단위 : kg)";
         int weight = input.validateIntFormat(question);
 
-        if (contract.getHealthInfo().isHavingDisease()) {
+        if (healthContract.isHavingDisease()) {
             question = "질병에 대한 상세 내용를 입력해주세요.";
             diseaseDetail = input.validateStringFormat(question);
         } else
             diseaseDetail = null;
 
-        contract = employee.inputHealthInfo(contract, height, weight, diseaseDetail);
-        concludeContract(contract, customer);
+        healthContract = employee.inputHealthInfo(healthContract, height, weight, diseaseDetail);
+        concludeContract(healthContract);
     }
 
-    private void inputFireInfo(Customer customer, Contract contract) {
+    private void inputFireInfo() {
         String question;
 
         question = "대상 건물면적을 입력해주세요. \t(단위 : m^2 )";
@@ -420,11 +421,11 @@ public class SalesViewLogic implements ViewLogic {
         question = "고객 실거주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isActualResidence = input.validateBooleanFormat(question);
 
-        contract = employee.inputFireInfo(contract, buildingArea, isSelfOwned, isActualResidence);
-        concludeContract(contract, customer);
+        fireContract = employee.inputFireInfo(fireContract, buildingArea, isSelfOwned, isActualResidence);
+        concludeContract(fireContract);
     }
 
-    private void inputCarInfo(Customer customer, Contract contract) {
+    private void inputCarInfo() {
         String question;
         CarType carType;
 
@@ -474,27 +475,22 @@ public class SalesViewLogic implements ViewLogic {
         question = "차량연식을 입력해주세요. \t(단위 : 년)";
         int modelYear = input.validateIntFormat(question);
 
-        contract = employee.inputCarInfo(contract, carNo, carType, modelName, modelYear);
-        concludeContract(contract, customer);
+        carContract = employee.inputCarInfo(carContract, carNo, carType, modelName, modelYear);
+        concludeContract(carContract);
     }
 
 
-    private void concludeContract(Contract contract, Customer customer) {
+    private void concludeContract(Contract contract) {
         while(true) {
             try {
                 createMenu("보험 계약을을 체결하시겠습니까?", "계약체결", "취소");
                 command = sc.nextLine();
                 switch (command) {
                     case "1":
-//                        if (customer.getId() == 0) {
-//                            customerList.create(customer);
-//                        }
-//                        contract.setConditionOfUw(ConditionOfUw.WAIT)
-//                                .setEmployeeId(employee.getId())
-//                                .setCustomerId(customer.getId());
-//                        contractList.create(contract);
-//                        System.out.println(customerList.read(customer.getId()));
-//                        System.out.println(contractList.read(contract.getId()));
+                        employee.registerContract(customer , contract, employee);
+                        System.out.println(customer);
+                        System.out.println(employee.getId() == 0);
+                        System.out.println(contract);
                         System.out.println("계약을 체결하였습니다.");
                         break;
                     case "2":

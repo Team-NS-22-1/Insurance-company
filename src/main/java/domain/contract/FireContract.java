@@ -6,22 +6,22 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class BuildingInfo {
+public class FireContract extends Contract{
 
 	private int buildingArea;
 	private BuildingType buildingType;
-	private int collateralAmount;
+	private Long collateralAmount;
 	private boolean isActualResidence;
 	private boolean isSelfOwned;
 
-	public BuildingInfo(){
+	public FireContract(){
 	}
 
 	public int getBuildingArea() {
 		return buildingArea;
 	}
 
-	public BuildingInfo setBuildingArea(int buildingArea) {
+	public FireContract setBuildingArea(int buildingArea) {
 		this.buildingArea = buildingArea;
 		return this;
 	}
@@ -30,16 +30,16 @@ public class BuildingInfo {
 		return buildingType;
 	}
 
-	public BuildingInfo setBuildingType(BuildingType buildingType) {
+	public FireContract setBuildingType(BuildingType buildingType) {
 		this.buildingType = buildingType;
 		return this;
 	}
 
-	public int getCollateralAmount() {
+	public Long getCollateralAmount() {
 		return collateralAmount;
 	}
 
-	public BuildingInfo setCollateralAmount(int collateralAmount) {
+	public FireContract setCollateralAmount(Long collateralAmount) {
 		this.collateralAmount = collateralAmount;
 		return this;
 	}
@@ -48,7 +48,7 @@ public class BuildingInfo {
 		return isActualResidence;
 	}
 
-	public BuildingInfo setActualResidence(boolean actualResidence) {
+	public FireContract setActualResidence(boolean actualResidence) {
 		isActualResidence = actualResidence;
 		return this;
 	}
@@ -57,15 +57,21 @@ public class BuildingInfo {
 		return isSelfOwned;
 	}
 
-	public BuildingInfo setSelfOwned(boolean selfOwned) {
+	public FireContract setSelfOwned(boolean selfOwned) {
 		isSelfOwned = selfOwned;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "{" +
-				"주택면적: " + buildingArea +
+		return "계약정보 {" +
+				"계약 ID: " + getId() +
+				", 인수심사상태: " + getConditionOfUw() +
+				", 인수사유: '" + getReasonOfUw() + '\'' +
+				", 증권발행여부: " + isPublishStock() +
+				", 보험료: " + getPremium() +
+				", 결제수단: " + getPayment() +
+				", 주택면적: " + buildingArea +
 				", 건물종류: " + buildingType +
 				", 담보금액: " + collateralAmount +
 				", 실거주여부: " + isActualResidence +

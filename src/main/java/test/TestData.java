@@ -119,7 +119,7 @@ public class TestData {
                 .setSalesAuthFile(new SalesAuthFile()));
         insuranceDetailList.create(new HealthDetail().setTargetAge(20)
                 .setTargetSex(true)
-                .setRiskCriterion(4)
+                .setRiskCriterion(true)
                 .setPremium(100000)
                 .setInsuranceId(1));
 
@@ -130,7 +130,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.CAR)
                 .setDevInfo(new DevInfo().setEmployeeId(1)
                         .setDevDate(LocalDate.now())
-                        .setSalesAuthState(SalesAuthState.WAIT))
+                        .setSalesAuthState(SalesAuthState.PERMISSION))
                 .setSalesAuthFile(new SalesAuthFile()));
         insuranceDetailList.create(new CarDetail().setTargetAge(20)
                 .setValueCriterion(20000000)
@@ -144,7 +144,7 @@ public class TestData {
                 .setInsuranceType(InsuranceType.FIRE)
                 .setDevInfo(new DevInfo().setEmployeeId(6)
                         .setDevDate(LocalDate.now())
-                        .setSalesAuthState(SalesAuthState.DISALLOWANCE))
+                        .setSalesAuthState(SalesAuthState.PERMISSION))
                 .setSalesAuthFile(new SalesAuthFile()));
         insuranceDetailList.create(new FireDetail().setTargetBuildingType(BuildingType.COMMERCIAL)
                 .setCollateralAmountCriterion(100000000)
@@ -170,26 +170,26 @@ public class TestData {
     }
 
     private void createContract() {
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
+        HealthContract healthContract = new HealthContract();
+        CarContract carContract = new CarContract();
+        FireContract fireContract = new FireContract();
 
         Contract testContract =  new Contract();
         testContract.setCustomerId(1);
         testContract.setInsuranceId(1);
-        testContract.setHealthInfo(healthInfo);
+//        testContract.setHealthInfo(healthContract);
         testContract.setConditionOfUw(ConditionOfUw.WAIT);
 
         Contract testContract1 =  new Contract();
         testContract1.setCustomerId(2);
         testContract1.setInsuranceId(3);
-        testContract1.setCarInfo(carInfo);
+//        testContract1.setCarInfo(carContract);
         testContract1.setConditionOfUw(ConditionOfUw.WAIT);
 
         Contract testContract2 =  new Contract();
         testContract2.setCustomerId(3);
         testContract2.setInsuranceId(6);
-        testContract2.setBuildingInfo(buildingInfo);
+//        testContract2.setBuildingInfo(buildingInfo);
         testContract2.setConditionOfUw(ConditionOfUw.WAIT);
 
         this.contractList.create(testContract);

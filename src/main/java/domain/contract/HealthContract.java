@@ -6,7 +6,7 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:24
  */
-public class HealthInfo {
+public class HealthContract extends Contract{
 
 	private int height;
 	private int weight;
@@ -18,11 +18,11 @@ public class HealthInfo {
 	private boolean isTakingDrug;
 	private String diseaseDetail;
 
-	public HealthInfo(){
+	public HealthContract(){
 
 	}
 
-	public HealthInfo setHeight(int height) {
+	public HealthContract setHeight(int height) {
 		this.height = height;
 		return this;
 	}
@@ -31,7 +31,7 @@ public class HealthInfo {
 		return weight;
 	}
 
-	public HealthInfo setWeight(int weight) {
+	public HealthContract setWeight(int weight) {
 		this.weight = weight;
 		return this;
 	}
@@ -40,7 +40,7 @@ public class HealthInfo {
 		return isDrinking;
 	}
 
-	public HealthInfo setDrinking(boolean drinking) {
+	public HealthContract setDrinking(boolean drinking) {
 		isDrinking = drinking;
 		return this;
 	}
@@ -49,7 +49,7 @@ public class HealthInfo {
 		return isSmoking;
 	}
 
-	public HealthInfo setSmoking(boolean smoking) {
+	public HealthContract setSmoking(boolean smoking) {
 		isSmoking = smoking;
 		return this;
 	}
@@ -58,7 +58,7 @@ public class HealthInfo {
 		return isDriving;
 	}
 
-	public HealthInfo setDriving(boolean driving) {
+	public HealthContract setDriving(boolean driving) {
 		isDriving = driving;
 		return this;
 	}
@@ -67,7 +67,7 @@ public class HealthInfo {
 		return isDangerActivity;
 	}
 
-	public HealthInfo setDangerActivity(boolean dangerActivity) {
+	public HealthContract setDangerActivity(boolean dangerActivity) {
 		isDangerActivity = dangerActivity;
 		return this;
 	}
@@ -76,7 +76,7 @@ public class HealthInfo {
 		return isHavingDisease;
 	}
 
-	public HealthInfo setHavingDisease(boolean havingDisease) {
+	public HealthContract setHavingDisease(boolean havingDisease) {
 		isHavingDisease = havingDisease;
 		return this;
 	}
@@ -85,7 +85,7 @@ public class HealthInfo {
 		return isTakingDrug;
 	}
 
-	public HealthInfo setTakingDrug(boolean takingDrug) {
+	public HealthContract setTakingDrug(boolean takingDrug) {
 		isTakingDrug = takingDrug;
 		return this;
 	}
@@ -94,15 +94,22 @@ public class HealthInfo {
 		return diseaseDetail;
 	}
 
-	public HealthInfo setDiseaseDetail(String diseaseDetail) {
+	public HealthContract setDiseaseDetail(String diseaseDetail) {
 		this.diseaseDetail = diseaseDetail;
 		return this;
 	}
 
 	@Override
 	public String toString() {
-		return "{" +
-				"키: " + height +
+
+		return "계약정보 {" +
+				"계약 ID: " + getId() +
+				", 인수심사상태: " + getConditionOfUw() +
+				", 인수사유: '" + getReasonOfUw() + '\'' +
+				", 증권발행여부: " + isPublishStock() +
+				", 보험료: " + getPremium() +
+				", 결제수단: " + getPayment() +
+				", 키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +
 				", 운전여부: " + isDriving +
