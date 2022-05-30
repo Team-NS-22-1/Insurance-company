@@ -1,18 +1,18 @@
 package application.viewlogic;
 
-import application.ViewLogic;
 import dao.ContractDao;
 import dao.CustomerDao;
+import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
-import domain.employee.Department;
-import domain.employee.Employee;
-import domain.employee.EmployeeList;
-import domain.employee.Position;
+import domain.customer.CustomerList;
+import domain.employee.*;
 import domain.insurance.Insurance;
 import domain.insurance.InsuranceDetail;
+import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceType;
+import application.ViewLogic;
 import exception.InputException;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
@@ -42,19 +42,14 @@ import static utility.MessageUtil.createMenu;
 public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
-
     private MyBufferedReader br;
+    private Employee employee;
 
     public UWViewLogic() {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-
-        Employee employee = new Employee();
-        employee.setId(1)
-                .setName("윤여찬")
-                .setDepartment(Department.UW)
-                .setPhone("010-1111-2222")
-                .setPosition(Position.DEPTMANAGER);
+        EmployeeDao employeeDao = new EmployeeDao();
+        this.employee = employeeDao.read(2);
     }
 
     @Override
@@ -119,7 +114,7 @@ public class UWViewLogic implements ViewLogic {
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
 
                 // read
-                List<Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
+                List<Contract> contractList = this.employee.readContract(insuranceType);
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
@@ -209,7 +204,7 @@ public class UWViewLogic implements ViewLogic {
                 switch (sc.next()) {
                     case "1":
                         // update
-                        this.employeeList.read(1).underwriting(contractId, reasonOfUw, conditionOfUw);
+                        this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
                         ContractDao contractDao = new ContractDao();
