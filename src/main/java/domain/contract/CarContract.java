@@ -71,7 +71,6 @@ public class CarContract extends Contract{
 				", 인수사유: '" + getReasonOfUw() + '\'' +
 				", 증권발행여부: " + isPublishStock() +
 				", 보험료: " + getPremium() +
-				", 결제수단: " + getPayment() +
 				", 자동차번호: '" + carNo + '\'' +
 				", 차량유형: " + carType +
 				", 연식: " + modelYear +

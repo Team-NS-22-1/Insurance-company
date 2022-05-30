@@ -30,7 +30,6 @@ public class PaymentDao extends Dao implements PaymentList {
     public void create(Payment payment) {
         String query = "insert into payment (pay_type, customer_id) values ('%s', %d)";
         String formattedQuery = String.format(query,payment.getPaytype().name(),payment.getCustomerId());
-        System.out.println(formattedQuery);
         int id = super.create(formattedQuery);
         payment.setId(id);
 
@@ -50,8 +49,9 @@ public class PaymentDao extends Dao implements PaymentList {
                     detailFormat = String.format(detail_query,payment.getId(), ((Account)payment).getAccountNo(),((Account)payment).getBankType().name());
             }
         }
-        System.out.println(detailFormat);
+
         super.create(detailFormat);
+        close();
     }
 
     @Override
@@ -60,13 +60,14 @@ public class PaymentDao extends Dao implements PaymentList {
         try {
             String query = "select * from payment where payment_id = %d";
             String formattedQuery = String.format(query,id);
-            System.out.println(formattedQuery);
             ResultSet rs = super.read(formattedQuery);
             if (rs.next()) {
                 payment = getPayment(rs,id);
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
 
         if (payment == null) {
@@ -100,6 +101,8 @@ public class PaymentDao extends Dao implements PaymentList {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            }finally {
+                close();
             }
 
         if(paymentList.size() == 0)
@@ -115,7 +118,6 @@ public class PaymentDao extends Dao implements PaymentList {
                 case CARD -> {
                     String detailQuery = "select * from card where payment_id = %d";
                     String formattedDetailQuery = String.format(detailQuery,id);
-                    System.out.println(formattedDetailQuery);
                     ResultSet detailRs = read(formattedDetailQuery);
                     payment = new Card();
                     if (detailRs.next()) {
@@ -129,7 +131,6 @@ public class PaymentDao extends Dao implements PaymentList {
                 case ACCOUNT -> {
                     String detailQuery = "select * from account where payment_id = %d";
                     String formattedDetailQuery = String.format(detailQuery,id);
-                    System.out.println(formattedDetailQuery);
                     ResultSet detailRs = read(formattedDetailQuery);
                     payment = new Account();
                     if (detailRs.next()) {
@@ -143,6 +144,8 @@ public class PaymentDao extends Dao implements PaymentList {
                     .setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
         return payment;
     }

@@ -1,5 +1,7 @@
 package domain.contract;
 
+import domain.customer.Customer;
+import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -10,32 +12,20 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-//	private CarInfo carInfo;
+
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-//	private BuildingInfo buildingInfo;
-//	private HealthInfo healthInfo;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
-	private Payment payment;
+	private int paymentId;
 	private int premium;
 	private String reasonOfUw;
-
 
 	public Contract(){
 
 	}
-
-//	public CarInfo getCarInfo() {
-//		return carInfo;
-//	}
-//
-//	public Contract setCarInfo(CarInfo carInfo) {
-//		this.carInfo = carInfo;
-//		return this;
-//	}
 
 	public int getCustomerId() {
 		return customerId;
@@ -54,24 +44,6 @@ public class Contract {
 		this.employeeId = employeeId;
 		return this;
 	}
-
-//	public BuildingInfo getBuildingInfo() {
-//		return buildingInfo;
-//	}
-//
-//	public Contract setBuildingInfo(BuildingInfo buildingInfo) {
-//		this.buildingInfo = buildingInfo;
-//		return this;
-//	}
-//
-//	public HealthInfo getHealthInfo() {
-//		return healthInfo;
-//	}
-//
-//	public Contract setHealthInfo(HealthInfo healthInfo) {
-//		this.healthInfo = healthInfo;
-//		return this;
-//	}
 
 	public int getId() {
 		return id;
@@ -100,12 +72,12 @@ public class Contract {
 		return this;
 	}
 
-	public Payment getPayment() {
-		return payment;
+	public int getPaymentId() {
+		return paymentId;
 	}
 
-	public Contract setPayment(Payment payment) {
-		this.payment = payment;
+	public Contract setPaymentId(int paymentId) {
+		this.paymentId = paymentId;
 		return this;
 	}
 
@@ -143,9 +115,8 @@ public class Contract {
 				", 인수심사상태: " + conditionOfUw.getName() +
 				 ", 인수사유: '" + reasonOfUw + '\'' +
 				 ", 증권발행여부: " + isPublishStock +
-				 ", 보험료: " + premium +
-				", 결제수단: " + payment +
-				 ", ";
+				 ", 보험료: " + premium;
+
 
 		 return text;
 	}

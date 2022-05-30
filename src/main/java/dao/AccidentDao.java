@@ -32,7 +32,6 @@ public class AccidentDao extends Dao implements AccidentList {
         String query = "insert into accident (accident_type, employee_id, customer_id, loss_reserves, date_of_accident, date_of_report) values ('%s', '%d','%d','%d','%s', '%s')";
         String formattedQuery =  String.format(query, accident.getAccidentType().name(), accident.getEmployeeId(), accident.getCustomerId(), accident.getLossReserves(), accident.getDateOfAccident().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                 ,accident.getDateOfReport().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        System.out.println("formattedQuery = " + formattedQuery);
         int id = super.create(formattedQuery);
         accident.setId(id);
 
@@ -56,7 +55,7 @@ public class AccidentDao extends Dao implements AccidentList {
         }
 
         super.create(detailFormat);
-        System.out.println("detailFormat = " + detailFormat);
+        close();
     }
 
     @Override
@@ -126,6 +125,8 @@ public class AccidentDao extends Dao implements AccidentList {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
         if (ac == null) {
             throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
@@ -143,6 +144,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String query = "select * from accident where customer_Id = %d";
         String formatted = String.format(query,customerId);
         List<Accident> accidents = getAccidents(formatted);
+        close();
         if(accidents.size() == 0)
         throw new IllegalArgumentException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
         return  accidents;
@@ -154,6 +156,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String formatted = String.format(query,employeeId);
 
         List<Accident> accidents = getAccidents(formatted);
+        close();
         if(accidents.size()==0)
             throw new IllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
         return accidents;
@@ -225,6 +228,8 @@ public class AccidentDao extends Dao implements AccidentList {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
         return accidentList;
     }
@@ -234,6 +239,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String query = "update accident set loss_reserves = %d where accident_id = %d";
         String formatted = String.format(query,accident.getLossReserves(),accident.getId());
         super.update(formatted);
+        close();
     }
 
     @Override
@@ -246,6 +252,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String detailFormatted = String.format(detailQuery,((CarAccident)accident).getErrorRate(),accident.getId());
         System.out.println(detailFormatted);
         super.update(detailFormatted);
+        close();
     }
 
     @Override
@@ -253,6 +260,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String query = "update accident set employee_id = %d where accident_id = %d";
         String formatted = String.format(query,accident.getEmployeeId(),accident.getId());
         super.update(formatted);
+        close();
     }
 
 
@@ -261,6 +269,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String query = "delete from accident where accident_id = %d";
         String formattedQuery = String.format(query,id);
         boolean result = super.delete(formattedQuery);
+        close();
         if(!result)
             throw new IllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 

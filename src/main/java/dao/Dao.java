@@ -1,6 +1,5 @@
 package dao;
 
-import utility.db.DBUtil;
 import utility.db.DbConst;
 
 import java.sql.*;
@@ -15,9 +14,14 @@ public class Dao {
         try {
             Class.forName(DbConst.JDBC_DRIVER);
             connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
-        } catch (SQLException | ClassNotFoundException e) {
-            // DB 접근 실패 Exception
-            e.printStackTrace();
+        } catch (SQLException e) {
+            System.out.println("ERROR:: DB CONNECTION");
+            System.out.println("현재 시스템의 장애가 발생하여 일시적으로 정보를 출력할 수 없습니다.\n" +
+                    "고객센터(1588-0001)로 연락주시기 바랍니다.");
+        } catch (ClassNotFoundException e) {
+            System.out.println("ERROR:: JDBC DRIVER");
+            System.out.println("현재 시스템의 장애가 발생하여 일시적으로 정보를 출력할 수 없습니다.\n" +
+                    "고객센터(1588-0001)로 연락주시기 바랍니다.");
         }
     }
 
@@ -43,7 +47,6 @@ public class Dao {
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

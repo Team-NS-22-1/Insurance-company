@@ -35,7 +35,6 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
         LocalDateTime now = LocalDateTime.now();
         String formattedQuery = String.format(query,accDocFile.getType().name(),
                 accDocFile.getFileAddress(),accDocFile.getAccidentId(), now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
-        System.out.println(formattedQuery);
         int id = super.create(formattedQuery);
         accDocFile.setId(id);
         accDocFile.setLastModifedDate(now);
@@ -46,7 +45,6 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
     public AccDocFile read(int id) {
         String query = "select * from acc_doc_file where acc_doc_file_id = %d";
         String formattedQuery = String.format(query,id);
-        System.out.println(formattedQuery);
         ResultSet rs = super.read(formattedQuery);
         AccDocFile accDocFile = null;
         try {
@@ -75,7 +73,6 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
     public boolean update(int id) {
         String query = "update acc_doc_file set last_modified_date = '%s' where acc_doc_file_id = %d";
         String formattedQuery = String.format(query, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),id);
-        System.out.println(formattedQuery);
         super.update(formattedQuery);
         close();
         return true;
@@ -85,7 +82,6 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
     public List<AccDocFile> readAllByAccidentId(int accidentId) {
         String query = "select * from acc_doc_file where accident_id = %d";
         String formattedQuery = String.format(query,accidentId);
-        System.out.println(formattedQuery);
         ResultSet rs = super.read(formattedQuery);
         List<AccDocFile> accDocFileList = new ArrayList<>();
 
