@@ -83,6 +83,7 @@ public class DevInfo {
 									salesStartDate.getMonthValue() + "월 " +
 									salesStartDate.getDayOfMonth() + "일";
 		}
+		value += "} ";
 		return value;
 	}
 }

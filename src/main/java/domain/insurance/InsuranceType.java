@@ -18,4 +18,12 @@ public enum InsuranceType {
 	public String getName() {
 		return name;
 	}
+	public static InsuranceType valueOfName(String name) {
+		return switch (name) {
+			case "건강보험" -> HEALTH;
+			case "화재보험" -> FIRE;
+			case "자동차보험" -> CAR;
+			default -> null;
+		};
+	}
 }

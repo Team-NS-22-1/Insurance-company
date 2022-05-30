@@ -97,7 +97,7 @@ public class GuestViewLogic implements ViewLogic {
                 }
                 Insurance insurance = insuranceList.read(Integer.parseInt(command));
                 if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuarantee());
+                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning(insurance);
                 }
                 else {

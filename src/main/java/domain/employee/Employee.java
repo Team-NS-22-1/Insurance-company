@@ -12,6 +12,7 @@ import utility.FileDialogUtil;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -78,88 +79,78 @@ public class Employee {
 		return this;
 	}
 
-	public Insurance develop(InsuranceList insuranceList, InsuranceDetailList insuranceDetailList, InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
+	public void develop(InsuranceType type, DtoBasicInfo basicInfo, ArrayList<DtoGuarantee> guaranteeInfoList, ArrayList<DtoTypeInfo> typeInfoList){
 		Insurance insurance = new Insurance();
 		insurance.setName(basicInfo.getName())
 				.setDescription(basicInfo.getDescription())
 				.setContractPeriod(basicInfo.getContractPeriod())
-				.setPaymentPeriod(basicInfo.getPaymentPeriod());
-//		new InsuranceDao().create(insurance);
-		insuranceList.create(insurance);
-
-		insurance = developGuarantee(insurance, guaranteeInfoList);
-		insurance = developDevInfo(insurance);
-
-		return switch (type) {
-			case HEALTH -> developHealth(insuranceDetailList, insurance, typeInfoList);
-			case CAR -> developCar(insuranceDetailList, insurance, typeInfoList);
-			case FIRE -> developFire(insuranceDetailList, insurance, typeInfoList);
-		};
+				.setPaymentPeriod(basicInfo.getPaymentPeriod())
+				.setGuaranteeList(developGuarantee(guaranteeInfoList))
+				.setDevInfo(developDevInfo())
+				.setSalesAuthFile(new SalesAuthFile());
+		switch (type) {
+			case HEALTH -> developHealth(insurance, typeInfoList);
+			case CAR -> developCar(insurance, typeInfoList);
+			case FIRE -> developFire(insurance, typeInfoList);
+		}
+		new InsuranceDao().create(insurance);
 	}
 
-	private Insurance developGuarantee(Insurance insurance, ArrayList<DtoGuarantee> guaranteeInfoList) {
+	private ArrayList<Guarantee> developGuarantee(ArrayList<DtoGuarantee> guaranteeInfoList) {
 		ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 		for(int i=0; i<guaranteeInfoList.size(); i++) {
 			guaranteeList.add(new Guarantee().setName(guaranteeInfoList.get(i).getName())
 					.setDescription(guaranteeInfoList.get(i).getDescription())
 					.setGuaranteeAmount(guaranteeInfoList.get(i).getGuaranteeAmount())
-					.setInsuranceId(insurance.getId())
 			);
-			// Guarantee DB 저장
 		}
-		return insurance.setGuarantee(guaranteeList);
+		return guaranteeList;
 	}
 
-	private Insurance developDevInfo(Insurance insurance) {
-		DevInfo devInfo = new DevInfo().setEmployeeId(this.id)
-				.setInsuranceId(insurance.getId())
+	private DevInfo developDevInfo() {
+		return new DevInfo().setEmployeeId(this.id)
 				.setDevDate(LocalDate.now())
 				.setSalesAuthState(SalesAuthState.WAIT);
-		// DevInfo DB 저장
-		return insurance.setDevInfo(devInfo);
 	}
 
-	private Insurance developHealth(InsuranceDetailList insuranceDetailList, Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
+	private Insurance developHealth(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
 		insurance.setInsuranceType(InsuranceType.HEALTH);
-		int insuranceId = insurance.getId();
+		ArrayList<InsuranceDetail> insuranceDetails = new ArrayList<>();
 		for(DtoTypeInfo dtoTypeInfo : typeInfoList) {
 			HealthDetail healthDetail = new HealthDetail();
 			healthDetail.setTargetAge(((DtoHealth) dtoTypeInfo).getTargetAge())
 					.setTargetSex(((DtoHealth) dtoTypeInfo).isTargetSex())
 					.setRiskCriterion(((DtoHealth) dtoTypeInfo).getRiskCriterion())
-					.setPremium(dtoTypeInfo.getPremium())
-					.setInsuranceId(insuranceId);
-			insuranceDetailList.create(healthDetail);
+					.setPremium(dtoTypeInfo.getPremium());
+			insuranceDetails.add(healthDetail);
 		}
-		return insurance;
+		return insurance.setInsuranceDetailList(insuranceDetails);
 	}
 
-	private Insurance developCar(InsuranceDetailList insuranceDetailList, Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
+	private Insurance developCar(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
 		insurance.setInsuranceType(InsuranceType.CAR);
-		int insuranceId = insurance.getId();
+		ArrayList<InsuranceDetail> insuranceDetails = new ArrayList<>();
 		for(DtoTypeInfo dtoTypeInfo : typeInfoList) {
 			CarDetail carDetail = new CarDetail();
 			carDetail.setTargetAge(((DtoCar) dtoTypeInfo).getTargetAge())
 					.setValueCriterion(((DtoCar) dtoTypeInfo).getValueCriterion())
-					.setPremium(dtoTypeInfo.getPremium())
-					.setInsuranceId(insuranceId);
-			insuranceDetailList.create(carDetail);
+					.setPremium(dtoTypeInfo.getPremium());
+			insuranceDetails.add(carDetail);
 		}
-		return insurance;
+		return insurance.setInsuranceDetailList(insuranceDetails);
 	}
 
-	private Insurance developFire(InsuranceDetailList insuranceDetailList, Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
+	private Insurance developFire(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
 		insurance.setInsuranceType(InsuranceType.FIRE);
-		int insuranceId = insurance.getId();
+		ArrayList<InsuranceDetail> insuranceDetails = new ArrayList<>();
 		for(DtoTypeInfo dtoTypeInfo : typeInfoList) {
 			FireDetail fireDetail = new FireDetail();
 			fireDetail.setTargetBuildingType(((DtoFire) dtoTypeInfo).getBuildingType())
 					.setCollateralAmountCriterion(((DtoFire) dtoTypeInfo).getCollateralAmount())
-					.setPremium(dtoTypeInfo.getPremium())
-					.setInsuranceId(insuranceId);
-			insuranceDetailList.create(fireDetail);
+					.setPremium(dtoTypeInfo.getPremium());
+			insuranceDetails.add(fireDetail);
 		}
-		return insurance;
+		return insurance.setInsuranceDetailList(insuranceDetails);
 	}
 
 	public int calcStandardPremium(long damageAmount, long countContract, long businessExpense, double profitMargin){
@@ -192,7 +183,6 @@ public class Employee {
 		boolean targetSex = dtoHealth.isTargetSex();
 		int riskCriterion = dtoHealth.getRiskCriterion();
 
-		// 나이 가중치
 		if(targetAge < 10) weightRatio *= 1.02;
 		else if(targetAge < 20) weightRatio *= 1.06;
 		else if(targetAge < 30) weightRatio *= 1.1;
@@ -203,10 +193,8 @@ public class Employee {
 		else if(targetAge < 100) weightRatio *= 1.3;
 		else weightRatio *= 1.34;
 
-		// 성별 가중치
 		weightRatio = (targetSex) ? weightRatio * 1.2 : weightRatio * 1.1;
 
-		// 위험부담 기준 가중치
 		weightRatio = (riskCriterion > 3) ? weightRatio * 1.4 : weightRatio;
 
 		return (int) (stPremium * weightRatio);
@@ -257,23 +245,83 @@ public class Employee {
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) {
-			return -1;
-		}
+		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 1;
+		return uploadProd(insurance);
+	}
+
+	public int registerAuthProdDeclaration(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setProdDeclaration(nullValue);
+		return uploadProd(insurance);
+	}
+
+	private int uploadProd(Insurance insurance) throws IOException {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
-		if(savePath == null) return 0;
-		insurance.getSalesAuthFile().setProdDeclaration(savePath);
-		return 1;
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setProdDeclaration(savePath)
+				.setModifiedProd(LocalDateTime.now());
+		new InsuranceDao().updateByProd(insurance);
+		return 0;
 	}
 
-	public void registerAuthSrActuaryVerification(Insurance insurance) {
+	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 1;
+		return uploadSrActuary(insurance);
 	}
 
-	public void registerAuthISOVerification(Insurance insurance) {
+	public int registerAuthSrActuaryVerification(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setSrActuaryVerification(nullValue);
+		return uploadSrActuary(insurance);
 	}
 
-	public void registerAuthFSSOfficialDoc(Insurance insurance) {
+	private int uploadSrActuary(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setSrActuaryVerification(savePath)
+				.setModifiedSrActuary(LocalDateTime.now());
+		new InsuranceDao().updateBySrActuary(insurance);
+		return 0;
+	}
+
+	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 1;
+		return uploadIso(insurance);
+	}
+
+	public int registerAuthIsoVerification(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setIsoVerification(nullValue);
+		return uploadIso(insurance);
+	}
+
+	private int uploadIso(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setIsoVerification(savePath)
+				.setModifiedIso(LocalDateTime.now());
+		new InsuranceDao().updateByIso(insurance);
+		return 0;
+	}
+
+	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
+		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 1;
+		return uploadFss(insurance);
+	}
+
+	public int registerAuthFssOfficialDoc(Insurance insurance, String nullValue) throws IOException {
+		insurance.getSalesAuthFile().setFssOfficialDoc(nullValue);
+		return uploadFss(insurance);
+	}
+
+	private int uploadFss(Insurance insurance) throws IOException {
+		String dirInsurance = insurance.getId() + ". " + insurance.getName();
+		String savePath = FileDialogUtil.upload(dirInsurance);
+		if(savePath == null) return -1;
+		insurance.getSalesAuthFile().setFssOfficialDoc(savePath)
+				.setModifiedFss(LocalDateTime.now());
+		new InsuranceDao().updateByFss(insurance);
+		return 0;
 	}
 
 	public void assessDamage(){
