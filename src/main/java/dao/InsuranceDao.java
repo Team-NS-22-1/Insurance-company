@@ -192,7 +192,7 @@ public class InsuranceDao extends Dao {
                         insuranceDetails.add(
                                 new CarDetail().setTargetAge(resultSet.getInt("target_age"))
                                         .setValueCriterion(resultSet.getLong("value_criterion"))
-                                        .setId(resultSet.getInt("car_detail"))
+                                        .setId(resultSet.getInt("car_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
                                         .setInsuranceId(resultSet.getInt("insurance_id"))
                         );

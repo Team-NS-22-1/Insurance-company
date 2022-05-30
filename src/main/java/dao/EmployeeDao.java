@@ -57,6 +57,31 @@ public class EmployeeDao extends Dao implements EmployeeList {
         return compEmployees;
     }
 
+    public ArrayList<Employee> readAllSalesEmployee() {
+        String query = "select * from employee where department = '%s'";
+        String formattedQuery = String.format(query, Department.SALES.name());
+        ResultSet rs = super.read(formattedQuery);
+        ArrayList<Employee> salesEmployees = new ArrayList<>();
+
+        try {
+            while (rs.next()) {
+                Employee employee = new Employee();
+                employee.setId(rs.getInt("employee_id"))
+                        .setName(rs.getString("name"))
+                        .setPhone(rs.getString("phone"))
+                        .setDepartment(Department.valueOf(rs.getString("department").toUpperCase()))
+                        .setPosition(Position.valueOf(rs.getString("position").toUpperCase()));
+                salesEmployees.add(employee);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+        return salesEmployees;
+    }
+
     @Override
     public ArrayList<Employee> readAll() {
         return null;

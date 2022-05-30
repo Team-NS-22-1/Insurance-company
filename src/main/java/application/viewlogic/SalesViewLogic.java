@@ -2,6 +2,8 @@ package application.viewlogic;
 
 
 import application.ViewLogic;
+import dao.CustomerDao;
+import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
@@ -21,7 +23,8 @@ import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
-import static utility.MessageUtil.*;
+import static utility.MessageUtil.createMenu;
+import static utility.MessageUtil.createMenuAndClose;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -38,10 +41,6 @@ public class SalesViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
 
-    private InsuranceList insuranceList;
-    private ContractList contractList;
-    private CustomerList customerList;
-    private EmployeeList employeeList;
     private HealthContract healthContract;
     private FireContract fireContract;
     private CarContract carContract;
@@ -52,10 +51,6 @@ public class SalesViewLogic implements ViewLogic {
 
     public SalesViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList, EmployeeList employeeList) {
         this.sc = new Scanner(System.in);
-        this.insuranceList = insuranceList;
-        this.contractList = contractList;
-        this.customerList = customerList;
-        this.employeeList = employeeList;
         this.input = new InputValidation();
     }
 
@@ -86,18 +81,20 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void initEmployee() {
+        EmployeeDao employeeDao = new EmployeeDao();
+        ArrayList<Employee> employees = employeeDao.readAllSalesEmployee();
         while(true) {
             try {
                 System.out.println("직원 ID을 입력하세요.");
-                for(Employee employee : this.employeeList.readAll()) {
-                    if (employee.getDepartment() == Department.SALES)
-                        System.out.println(employee.print());
+                for(Employee employee : employees) {
+                    System.out.println(employee.print());
                 }
                 command = sc.nextLine();
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                this.employee = this.employeeList.read(Integer.parseInt(command));
+                employeeDao = new EmployeeDao();
+                this.employee = employeeDao.read(Integer.parseInt(command));
                 if (employee != null && employee.getDepartment() == Department.SALES)  {
                     break;
                 }
@@ -120,7 +117,7 @@ public class SalesViewLogic implements ViewLogic {
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION)
+                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -202,7 +199,7 @@ public class SalesViewLogic implements ViewLogic {
 
         boolean riskPremiumCriterion = count >= 4;
 
-        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion);
+        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion, insurance);
 
         System.out.println("조회된 귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -265,7 +262,7 @@ public class SalesViewLogic implements ViewLogic {
         question = "담보 금액을 입력해주세요. \t(단워 : 원)";
         Long collateralAmount = input.validateLongFormat(question);
 
-        int premium = employee.planFireInsurance(buildingType, collateralAmount);
+        int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
 
         System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -299,10 +296,10 @@ public class SalesViewLogic implements ViewLogic {
         question = "대상 나이를 입력하세요.";
         int age = input.validateIntFormat(question);
 
-        System.out.println("차량가액을 입력하세요.");
+        question = "차량가액을 입력하세요.";
         Long value = input.validateLongFormat(question);
 
-        int premium = employee.planCarInsurance(age, value);
+        int premium = employee.planCarInsurance(age, value, insurance);
 
         System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -343,7 +340,8 @@ public class SalesViewLogic implements ViewLogic {
                     case "1":
                         System.out.println("고객 ID를 입력해주세요.");
                         int customerId = sc.nextInt();
-                        customer = customerList.read(customerId);
+                        CustomerDao customerDao = new CustomerDao();
+                        customer = customerDao.read(customerId);
                         isLoop = false;
                         break;
                     // 미등록 고객
