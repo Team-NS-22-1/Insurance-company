@@ -1,11 +1,10 @@
 package uwDao;
 
-import dao.Dao;
-import domain.contract.CarContract;
+import dao.ContractDao;
 import domain.contract.Contract;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.sql.SQLException;
 
 /**
  * packageName :  uwDao
@@ -22,7 +21,7 @@ class ContractDaoTest {
 
     ContractDao dao = new ContractDao();
     @Test
-    void updateTest() {
+    void updateTest() throws SQLException {
         Contract con = new Contract();
         con.setPremium(10000);
         con.setCustomerId(22)

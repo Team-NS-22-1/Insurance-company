@@ -1,19 +1,12 @@
 package dao;
 
-import domain.contract.CarContract;
 import domain.contract.*;
-import domain.contract.ConditionOfUw;
-import domain.contract.Contract;
-import domain.contract.FireContract;
-import domain.contract.HealthContract;
-import domain.contract.ContractList;
 import domain.customer.Customer;
-import exception.MyIllegalArgumentException;
 import domain.insurance.InsuranceType;
+import exception.MyIllegalArgumentException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +30,7 @@ public class ContractDao extends Dao{
             ResultSet rs = super.read(joinningquery);
             String inputquery = null;
             String input;
-            if(rs.next())
+            if (rs.next())
                 switch (rs.getString("insurance_type")) {
                     case "건강":
                         HealthContract healthContract = (HealthContract) contract;
@@ -45,7 +38,7 @@ public class ContractDao extends Dao{
                                 "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_danger_activity, disease_detail";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
                                 healthContract.isDangerActivity(), healthContract.isDrinking(), healthContract.isSmoking(), healthContract.isSmoking(),
-                                healthContract.isTakingDrug(), healthContract. isHavingDisease(), healthContract.isDangerActivity(), healthContract.getDiseaseDetail());
+                                healthContract.isTakingDrug(), healthContract.isHavingDisease(), healthContract.isDangerActivity(), healthContract.getDiseaseDetail());
                         super.create(input);
                     case "화재":
                         FireContract fireContract = (FireContract) contract;
@@ -58,12 +51,12 @@ public class ContractDao extends Dao{
                         CarContract carContract = (CarContract) contract;
                         inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value ";
                         input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType(),
-                                carContract.getModelYear(), carContract.getModelName(), carContract.getValue() );
+                                carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
                         super.create(input);
                 }
-        }finally {
+        } finally {
             close();
-        close();
+        }
     }
 
     public Contract read(int id) {
