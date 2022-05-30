@@ -642,7 +642,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약을 선택한 이후 즉시 결제를 시도하는 기능.
     // 해당 계약에 결제 수단이 등록되지 않았다면 결제 수단 등록을 진행한다.
     private void payLogic(Contract contract) {
-        if (contract.getPayment() == null) {
+        if (contract.getPaymentId() == 0) {
             System.out.println("해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.");
             setPaymentOnContract(contract);
         }else{
@@ -652,7 +652,9 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계약에 대해서 보험료를 납부하는 기능
     private void pay(Contract contract) {
-        customer.pay(contract);
+        paymentList = new PaymentDao();
+        Payment payment = paymentList.read(contract.getPaymentId());
+        customer.pay(contract,payment);
     }
 
 
