@@ -1,7 +1,6 @@
 package dao;
 
 import utility.db.DBUtil;
-import utility.db.DbConst;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,9 +8,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Dao {
-    private Connection connection = null;
-    private Statement statement = null;
-    private ResultSet resultSet = null;
+    protected Connection connection = null;
+    protected Statement statement = null;
+    protected ResultSet resultSet = null;
 
     public void connect() {
         connection = DBUtil.getConnection();
@@ -45,11 +44,48 @@ public class Dao {
     }
 
     public void update(String query) {
-
+        connect();
+        executeUpdate(query);
     }
 
     public void delete(String query) {
+        executeUpdate(query);
 
+    }
+
+    private void executeUpdate(String query) {
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void close(Connection con, Statement stmt, ResultSet rs) {
+        if (rs != null) {
+            try{
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (stmt != null) {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (con != null) {
+            try{
+                con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

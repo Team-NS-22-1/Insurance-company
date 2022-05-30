@@ -10,8 +10,7 @@ import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
-import domain.customer.JDBCCustomerListImpl;
+import dao.CustomerDao;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import domain.insurance.*;
@@ -45,7 +44,7 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        CustomerList customerList = new JDBCCustomerListImpl();
+        CustomerList customerList = new CustomerDao();
         EmployeeList employeeList = new EmployeeListImpl();
         InsuranceList insuranceList = new InsuranceListImpl();
         InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
@@ -59,7 +58,7 @@ public class Application {
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList,insuranceDetailList));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));

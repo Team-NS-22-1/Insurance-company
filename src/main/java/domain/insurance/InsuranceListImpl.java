@@ -49,6 +49,11 @@ public class InsuranceListImpl implements InsuranceList {
 		return insuranceArrayList;
 	}
 
+	@Override
+	public int readPremium(int id) {
+		return 0;
+	}
+
 //	// 임시
 //	public int readPremium(int id) {
 //		Insurance insurance = this.insuranceList.get(id);

@@ -394,7 +394,7 @@ public class GuestViewLogic implements ViewLogic {
         question = "차량가액을 입력해주세요. \t(단위: 년)";
         int value = validateIntFormat(question);
 
-        contract.setCarInfo(new CarInfo().setCarNo(carNo)
+         contract.setCarInfo(new CarInfo().setCarNo(carNo)
                 .setCarType(carType)
                 .setModelName(modelName)
                 .setModelYear(modelYear)

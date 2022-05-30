@@ -28,4 +28,13 @@ public class Complain {
         this.customerId = customerId;
         this.reason = reason;
     }
+
+    @Override
+    public String toString() {
+        return "Complain{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", reason='" + reason + '\'' +
+                '}';
+    }
 }
