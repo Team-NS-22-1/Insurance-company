@@ -421,7 +421,7 @@ public class DevViewLogic implements ViewLogic {
                             case -1 -> { return; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
                                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
@@ -432,7 +432,7 @@ public class DevViewLogic implements ViewLogic {
                             }
                             // 판매상태 변경
                             case 2 -> {
-                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허\n", 2)){
                                     case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
                                     case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
