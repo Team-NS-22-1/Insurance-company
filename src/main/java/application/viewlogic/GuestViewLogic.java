@@ -13,6 +13,7 @@ import exception.InputException;
 import utility.InputValidation;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
@@ -70,7 +71,6 @@ public class GuestViewLogic implements ViewLogic {
             switch (command) {
                 case "1":
                     selectInsurance();
-                    // 해결을?
                     break;
                 case "":
                     throw new InputException.InputNullDataException();
@@ -84,10 +84,11 @@ public class GuestViewLogic implements ViewLogic {
 
     private void selectInsurance() throws SQLException {
         InsuranceDao insuranceDao = new InsuranceDao();
-        if(insuranceDao.readAll().size() == 0)
+        ArrayList<Insurance> insurances = insuranceDao.readAll();
+        if(insurances.size() == 0)
             throw new InputException.NoResultantException();
         while (true) {
-            for (Insurance insurance : insuranceDao.readAll()) {
+            for (Insurance insurance : insurances) {
                 if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
@@ -374,6 +375,8 @@ public class GuestViewLogic implements ViewLogic {
                 break;
             } catch (InputException e) {
                 System.out.println(e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }

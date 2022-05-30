@@ -22,6 +22,7 @@ import utility.DocUtil;
 import utility.FileDialogUtil;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -473,7 +474,7 @@ public class Employee {
 	}
 
 
-	public void registerContract(Customer customer, Contract contract, Employee employee){
+	public void registerContract(Customer customer, Contract contract, Employee employee) throws SQLException {
 		if (customer.getId() == 0) {
 			CustomerDao customerDao = new CustomerDao();
 			customerDao.create(customer);

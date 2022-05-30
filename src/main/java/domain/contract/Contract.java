@@ -10,12 +10,9 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-//	private CarInfo carInfo;
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-//	private BuildingInfo buildingInfo;
-//	private HealthInfo healthInfo;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
@@ -27,15 +24,6 @@ public class Contract {
 	public Contract(){
 
 	}
-
-//	public CarInfo getCarInfo() {
-//		return carInfo;
-//	}
-//
-//	public Contract setCarInfo(CarInfo carInfo) {
-//		this.carInfo = carInfo;
-//		return this;
-//	}
 
 	public int getCustomerId() {
 		return customerId;
@@ -54,24 +42,6 @@ public class Contract {
 		this.employeeId = employeeId;
 		return this;
 	}
-
-//	public BuildingInfo getBuildingInfo() {
-//		return buildingInfo;
-//	}
-//
-//	public Contract setBuildingInfo(BuildingInfo buildingInfo) {
-//		this.buildingInfo = buildingInfo;
-//		return this;
-//	}
-//
-//	public HealthInfo getHealthInfo() {
-//		return healthInfo;
-//	}
-//
-//	public Contract setHealthInfo(HealthInfo healthInfo) {
-//		this.healthInfo = healthInfo;
-//		return this;
-//	}
 
 	public int getId() {
 		return id;
@@ -149,7 +119,7 @@ public class Contract {
 //				 ", 자동차정보: " + carInfo +
 //				 ", 화재정보: " + buildingInfo + '\'' +
 //				'}';
-
+//
 //		if (carInfo != null) text.concat(carInfo.toString());
 //		if (buildingInfo != null) text.concat(buildingInfo.toString());
 //		if (healthInfo != null) text.concat(healthInfo.toString());

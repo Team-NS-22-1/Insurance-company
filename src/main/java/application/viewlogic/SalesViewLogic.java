@@ -509,6 +509,8 @@ public class SalesViewLogic implements ViewLogic {
                 break;
             } catch (InputException e) {
                 System.out.println(e.getMessage());
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
     }
