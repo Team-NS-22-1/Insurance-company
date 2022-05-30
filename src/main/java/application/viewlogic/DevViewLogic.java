@@ -181,7 +181,7 @@ public class DevViewLogic implements ViewLogic {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
-            int targetAge = 0, riskCriterion = -1, premium = -1;
+            int targetAge = 0, premium = -1, riskCriterion = -1;
             boolean targetSex;
             System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
             targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);

@@ -27,14 +27,16 @@ class AccDocFileDaoTest {
     @Test
     void create() {
         AccDocFile accDocFile = new AccDocFile();
-        accDocFile.setFileAddress("testAddress");
+//        accDocFile.setFileAddress("testAddress");
         accDocFile.setType(AccDocType.CLAIMCOMP);
-        accDocFile.setAccidentId(22);
+        accDocFile.setAccidentId(4);
         dao.create(accDocFile);
 
+        dao = new AccDocFileDao();
         AccDocFile read = dao.read(accDocFile.getId());
         System.out.println(read);
         assertEquals(accDocFile.getId(),read.getId());
+        assertNotNull(read.getFileAddress());
     }
 
     @Test
@@ -49,14 +51,15 @@ class AccDocFileDaoTest {
     @Test
     void update() {
         AccDocFile accDocFile = new AccDocFile();
-        accDocFile.setFileAddress("testAddress");
+//        accDocFile.setFileAddress("testAddress");
         accDocFile.setType(AccDocType.CLAIMCOMP);
-        accDocFile.setAccidentId(22);
+//        accDocFile.setAccidentId(22);
         dao.create(accDocFile);
 
         dao.update(accDocFile.getId());
 
         AccDocFile read = dao.read(accDocFile.getId());
+        System.out.println(read);
         System.out.println(accDocFile.getLastModifedDate());
         System.out.println(read.getLastModifedDate());
         assertNotEquals(accDocFile.getLastModifedDate(),read.getLastModifedDate());

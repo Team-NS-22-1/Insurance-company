@@ -1,5 +1,7 @@
 package domain.contract;
 
+import domain.customer.Customer;
+import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -10,12 +12,9 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-	private CarContract carInfo;
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-	private FireContract buildingInfo;
-	private HealthContract healthInfo;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
@@ -26,15 +25,6 @@ public class Contract {
 
 	public Contract(){
 
-	}
-
-	public CarContract getCarInfo() {
-		return carInfo;
-	}
-
-	public Contract setCarInfo(CarContract carInfo) {
-		this.carInfo = carInfo;
-		return this;
 	}
 
 	public int getCustomerId() {
@@ -52,24 +42,6 @@ public class Contract {
 
 	public Contract setEmployeeId(int employeeId) {
 		this.employeeId = employeeId;
-		return this;
-	}
-
-	public FireContract getBuildingInfo() {
-		return buildingInfo;
-	}
-
-	public Contract setBuildingInfo(FireContract buildingInfo) {
-		this.buildingInfo = buildingInfo;
-		return this;
-	}
-
-	public HealthContract getHealthInfo() {
-		return healthInfo;
-	}
-
-	public Contract setHealthInfo(HealthContract healthInfo) {
-		this.healthInfo = healthInfo;
 		return this;
 	}
 
@@ -140,19 +112,12 @@ public class Contract {
 		String text =
 		 "계약 정보 {" +
 				 "계약 ID: " + id +
-				", 인수심사상태: " + conditionOfUw +
+				", 인수심사상태: " + conditionOfUw.getName() +
 				 ", 인수사유: '" + reasonOfUw + '\'' +
 				 ", 증권발행여부: " + isPublishStock +
 				 ", 보험료: " + premium +
 				", 결제수단: " + payment +
-				 ", 건강정보: " + healthInfo +
-				 ", 자동차정보: " + carInfo +
-				 ", 화재정보: " + buildingInfo + '\'' +
-				'}';
-
-		if (carInfo != null) text.concat(carInfo.toString());
-		if (buildingInfo != null) text.concat(buildingInfo.toString());
-		if (healthInfo != null) text.concat(healthInfo.toString());
+				 ", ";
 
 		 return text;
 	}

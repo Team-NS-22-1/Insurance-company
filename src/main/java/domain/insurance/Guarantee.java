@@ -70,4 +70,14 @@ public class Guarantee {
 				"', 보장금액: " + guaranteeAmount +
 				"}";
 	}
+
+	@Override
+	public String toString() {
+		return "{" +
+				"이름 : " + name +
+				", 설명 : " + description +
+				", 보장금액: " + guaranteeAmount +
+				"}";
+	}
+
 }

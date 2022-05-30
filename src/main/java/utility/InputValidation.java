@@ -4,7 +4,7 @@ import exception.InputException;
 
 import java.util.Scanner;
 
-import static main.utility.CustomerInfoFormatUtil.*;
+import static utility.CustomerInfoFormatUtil.*;
 
 public class InputValidation {
     private Scanner sc;
@@ -37,6 +37,23 @@ public class InputValidation {
                     throw new InputException.InputNullDataException();
                 }
                 return Integer.parseInt(temp);
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
+            }
+        }
+    }
+
+    public Long validateLongFormat(String question) {
+        while (true) {
+            try {
+                System.out.println(question);
+                String temp = sc.nextLine();
+                if (temp.isBlank()){
+                    throw new InputException.InputNullDataException();
+                }
+                return Long.parseLong(temp);
             } catch (InputException e) {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
@@ -122,7 +139,7 @@ public class InputValidation {
     }
 
     public void validateCarNoFormat(String carNo) {
-        if(!isEmail(carNo))
+        if(!isCarNo(carNo))
             throw new InputException.InputInvalidDataException();
     }
 }

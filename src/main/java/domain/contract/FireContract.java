@@ -6,11 +6,11 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class FireContract {
+public class FireContract extends Contract{
 
 	private int buildingArea;
 	private BuildingType buildingType;
-	private int collateralAmount;
+	private Long collateralAmount;
 	private boolean isActualResidence;
 	private boolean isSelfOwned;
 
@@ -35,11 +35,11 @@ public class FireContract {
 		return this;
 	}
 
-	public int getCollateralAmount() {
+	public Long getCollateralAmount() {
 		return collateralAmount;
 	}
 
-	public FireContract setCollateralAmount(int collateralAmount) {
+	public FireContract setCollateralAmount(Long collateralAmount) {
 		this.collateralAmount = collateralAmount;
 		return this;
 	}
@@ -64,12 +64,13 @@ public class FireContract {
 
 	@Override
 	public String toString() {
-		return "{" +
+		return super.toString() +
+				" 주택정보: {" +
 				"주택면적: " + buildingArea +
-				", 건물종류: " + buildingType +
+				", 건물종류: " + buildingType.getName() +
 				", 담보금액: " + collateralAmount +
 				", 실거주여부: " + isActualResidence +
 				", 자가여부: " + isSelfOwned +
-				'}';
+				"}}";
 	}
 }

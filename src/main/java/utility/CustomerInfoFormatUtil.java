@@ -1,4 +1,4 @@
-package main.utility;
+package utility;
 
 import java.util.regex.Pattern;
 
@@ -9,7 +9,7 @@ public class CustomerInfoFormatUtil {
     }
 
     public static boolean isSsn(String ssn){
-        return Pattern.matches("^[0-9]{6}-[1-4][0-9]{6}$", ssn);
+        return Pattern.matches("^[0-9]{2}[0-1][0-9][0-3][0-9]-[1-4][0-9]{6}$", ssn);
     }
 
     public static boolean isEmail(String email){

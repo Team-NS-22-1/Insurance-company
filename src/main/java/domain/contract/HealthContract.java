@@ -6,7 +6,7 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:24
  */
-public class HealthContract {
+public class HealthContract extends Contract{
 
 	private int height;
 	private int weight;
@@ -101,7 +101,8 @@ public class HealthContract {
 
 	@Override
 	public String toString() {
-		return "{" +
+		return super.toString() +
+				" 건강정보: {" +
 				"키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +
@@ -110,6 +111,6 @@ public class HealthContract {
 				", 흡연여부: " + isSmoking +
 				", 약물복용여부: " + isTakingDrug +
 				", 몸무게: " + weight +
-				'}';
+				"}}";
 	}
 }
