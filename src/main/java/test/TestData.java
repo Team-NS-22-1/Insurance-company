@@ -171,9 +171,9 @@ public class TestData {
     }
 
     private void createContract() {
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
+        HealthContract healthInfo = new HealthContract();
+        CarContract carInfo = new CarContract();
+        FireContract buildingInfo = new FireContract();
 
         Contract testContract =  new Contract();
         testContract.setCustomerId(1);

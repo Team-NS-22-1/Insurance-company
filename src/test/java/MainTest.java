@@ -24,9 +24,9 @@ class MainTest {
         insurance.setDescription("보험설명");
         insurance.setInsuranceType(InsuranceType.HEALTH);
 
-        HealthInfo healthInfo = new HealthInfo();
-        CarInfo carInfo = new CarInfo();
-        BuildingInfo buildingInfo = new BuildingInfo();
+        HealthContract healthInfo = new HealthContract();
+        CarContract carInfo = new CarContract();
+        FireContract buildingInfo = new FireContract();
 
         Contract testContract =  new Contract();
         testContract.setId(1);

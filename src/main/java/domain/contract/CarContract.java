@@ -6,7 +6,7 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class CarInfo {
+public class CarContract {
 
 	private String carNo;
 	private CarType carType;
@@ -14,7 +14,7 @@ public class CarInfo {
 	private int modelYear;
 	private int value;
 
-	public CarInfo(){
+	public CarContract(){
 
 	}
 
@@ -22,7 +22,7 @@ public class CarInfo {
 		return carNo;
 	}
 
-	public CarInfo setCarNo(String carNo) {
+	public CarContract setCarNo(String carNo) {
 		this.carNo = carNo;
 		return this;
 	}
@@ -31,7 +31,7 @@ public class CarInfo {
 		return carType;
 	}
 
-	public CarInfo setCarType(CarType carType) {
+	public CarContract setCarType(CarType carType) {
 		this.carType = carType;
 		return this;
 	}
@@ -40,7 +40,7 @@ public class CarInfo {
 		return modelName;
 	}
 
-	public CarInfo setModelName(String modelName) {
+	public CarContract setModelName(String modelName) {
 		this.modelName = modelName;
 		return this;
 	}
@@ -49,7 +49,7 @@ public class CarInfo {
 		return modelYear;
 	}
 
-	public CarInfo setModelYear(int modelYear) {
+	public CarContract setModelYear(int modelYear) {
 		this.modelYear = modelYear;
 		return this;
 	}
@@ -58,7 +58,7 @@ public class CarInfo {
 		return value;
 	}
 
-	public CarInfo setValue(int value) {
+	public CarContract setValue(int value) {
 		this.value = value;
 		return this;
 	}

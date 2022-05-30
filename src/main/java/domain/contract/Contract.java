@@ -1,7 +1,5 @@
 package domain.contract;
 
-import domain.customer.Customer;
-import domain.customer.CustomerListImpl;
 import domain.payment.Payment;
 
 
@@ -12,12 +10,12 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-	private CarInfo carInfo;
+	private CarContract carInfo;
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-	private BuildingInfo buildingInfo;
-	private HealthInfo healthInfo;
+	private FireContract buildingInfo;
+	private HealthContract healthInfo;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
@@ -30,11 +28,11 @@ public class Contract {
 
 	}
 
-	public CarInfo getCarInfo() {
+	public CarContract getCarInfo() {
 		return carInfo;
 	}
 
-	public Contract setCarInfo(CarInfo carInfo) {
+	public Contract setCarInfo(CarContract carInfo) {
 		this.carInfo = carInfo;
 		return this;
 	}
@@ -57,20 +55,20 @@ public class Contract {
 		return this;
 	}
 
-	public BuildingInfo getBuildingInfo() {
+	public FireContract getBuildingInfo() {
 		return buildingInfo;
 	}
 
-	public Contract setBuildingInfo(BuildingInfo buildingInfo) {
+	public Contract setBuildingInfo(FireContract buildingInfo) {
 		this.buildingInfo = buildingInfo;
 		return this;
 	}
 
-	public HealthInfo getHealthInfo() {
+	public HealthContract getHealthInfo() {
 		return healthInfo;
 	}
 
-	public Contract setHealthInfo(HealthInfo healthInfo) {
+	public Contract setHealthInfo(HealthContract healthInfo) {
 		this.healthInfo = healthInfo;
 		return this;
 	}
