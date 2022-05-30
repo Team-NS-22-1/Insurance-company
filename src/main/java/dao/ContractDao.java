@@ -49,8 +49,9 @@ public class ContractDao extends Dao{
                         super.create(input);
                     case "자동차":
                         CarContract carContract = (CarContract) contract;
-                        inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value ";
-                        input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType(),
+                        inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value)" +
+                                "values (%d, '%s', '%s', %d, '%s', %d) ";
+                        input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType().name(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
                         super.create(input);
                 }

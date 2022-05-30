@@ -32,6 +32,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static utility.CompAssignUtil.changeCompEmployee;
 import static utility.CustomerInfoFormatUtil.*;
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
@@ -230,7 +231,7 @@ public class CustomerViewLogic implements ViewLogic {
                 Complain complain = this.customer.changeCompEmp(reasons);
                 complainList = new ComplainDao();
                 complainList.create(complain);
-                compEmployee = assignCompEmployee(employeeList, accidentList);
+                compEmployee = changeCompEmployee(employeeList, accidentList,compEmployee);
                 System.out.println(compEmployee.print());
                 System.out.println("보상처리담당자 변경이 완료되었습니다.");
                 break;

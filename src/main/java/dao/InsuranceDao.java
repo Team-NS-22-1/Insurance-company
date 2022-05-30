@@ -128,7 +128,6 @@ public class InsuranceDao extends Dao {
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
                         .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type")));
             }
-
             // READ guarantee
             ArrayList<Guarantee> guarantees = new ArrayList<>();
             String queryGuarantee = "SELECT * FROM guarantee WHERE insurance_id = " + id + ";";
