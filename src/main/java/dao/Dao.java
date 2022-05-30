@@ -8,31 +8,41 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Dao {
-    protected Connection connection = null;
+
+    protected Connection connect = null;
     protected Statement statement = null;
     protected ResultSet resultSet = null;
 
     public void connect() {
-        connection = DBUtil.getConnection();
+        try {
+            Class.forName(DbConst.JDBC_DRIVER);
+            connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
+        } catch (SQLException e) {
+            // DB 접근 실패 Exception
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public int create(String query) {
-        connect();
         int id = 0;
         try {
-            statement = connection.createStatement();
-            statement.executeUpdate(query,Statement.RETURN_GENERATED_KEYS);
+            statement = connect.createStatement();
+            statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
             ResultSet generatedKeys = statement.getGeneratedKeys();
-            if(generatedKeys.next())
+            if(generatedKeys.next()){
                 id = generatedKeys.getInt(1);
-        } catch (SQLException e) {
+                generatedKeys.close();
+            }
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
-
         return id;
     }
+
     public ResultSet read(String query) {
-        connect();
         try {
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);

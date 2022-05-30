@@ -121,6 +121,7 @@ public class TestData {
                 .setJob("테스터"));
 
     }
+
     private void createInsurance() {
         insuranceList.create(new Insurance().setName("테스트 건강보험1")
                 .setDescription("테스트 건강보험1의 설명입니다.")

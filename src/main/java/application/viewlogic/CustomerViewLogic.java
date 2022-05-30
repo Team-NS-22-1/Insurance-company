@@ -1,8 +1,11 @@
 package application.viewlogic;
 
+import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
-import dao.*;
-import domain.accident.*;
+import domain.accident.Accident;
+import domain.accident.AccidentList;
+import domain.accident.AccidentType;
+import domain.accident.CarAccident;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocType;
@@ -15,10 +18,8 @@ import domain.customer.CustomerList;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceDetailList;
 import domain.insurance.InsuranceList;
 import domain.payment.*;
-import application.ViewLogic;
 import exception.*;
 import outerSystem.CarAccidentService;
 import utility.CustomMyBufferedReader;
@@ -32,12 +33,12 @@ import java.util.*;
 
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
-import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
+import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.DocUtil.isExist;
-import static utility.MessageUtil.*;
 import static utility.FormatUtil.*;
+import static utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -86,20 +87,27 @@ public class CustomerViewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
-        switch (command) {
-            case "2" :
-                payPremiumButton();
-                break;
-            case "3":
-                reportAccident();
-                break;
-            case "4":
-                claimCompensation();
-                break;
-            default:
-                throw new MyIllegalArgumentException();
-        }
-
+        try {
+                switch (command) {
+//                    case "1":
+//                        System.out.println("1선택");
+                    case "2" :
+                        payPremiumButton();
+                        break;
+                    case "3":
+                        reportAccident();
+                        break;
+                    case "4":
+                        claimCompensation();
+                        break;
+                    case "":
+                        throw new InputException.InputNullDataException();
+                    default:
+                        throw new InputException.InvalidMenuException();
+                }
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            }
     }
 
     private void claimCompensation() {
