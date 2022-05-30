@@ -36,7 +36,6 @@ gen
 **/build/
 build/**
 !src/**/build/
-.gradle/**
 .gradle/
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -50,4 +49,7 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+#db관련
 src/main/java/utility/db/DbConst.java
+#청구서류 관련
+AccDocFile/submit/**

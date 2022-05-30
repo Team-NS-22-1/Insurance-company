@@ -1,5 +1,13 @@
 package test;
 
+import domain.accident.AccidentList;
+import domain.accident.AccidentListImpl;
+import domain.accident.AccidentType;
+import domain.accident.InjuryAccident;
+import domain.accident.accDocFile.AccDocFile;
+import domain.accident.accDocFile.AccDocFileList;
+import domain.accident.accDocFile.AccDocFileListImpl;
+import domain.accident.accDocFile.AccDocType;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerListImpl;
@@ -11,6 +19,7 @@ import domain.insurance.*;
 import domain.payment.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * packageName :  main
@@ -30,6 +39,8 @@ public class TestData {
     private InsuranceDetailList insuranceDetailList;
     private ContractListImpl contractList;
     private EmployeeListImpl employeeList;
+    private AccidentList accidentList;
+    private AccDocFileList accDocFileList;
 
     public TestData() {
         this.customerList = new CustomerListImpl();
@@ -38,12 +49,16 @@ public class TestData {
         this.insuranceDetailList = new InsuranceDetailListImpl();
         this.contractList = new ContractListImpl();
         this.employeeList = new EmployeeListImpl();
+        this.accidentList = new AccidentListImpl();
+        this.accDocFileList = new AccDocFileListImpl();
+
 
         createEmployee();
         createContract();
         createCustomerData();
         createInsurance();
         createPayment();
+        createAccident();
 
     }
     public void createEmployee() {
@@ -106,6 +121,7 @@ public class TestData {
                 .setJob("테스터"));
 
     }
+
     private void createInsurance() {
         insuranceList.create(new Insurance().setName("테스트 건강보험1")
                 .setDescription("테스트 건강보험1의 설명입니다.")
@@ -195,5 +211,38 @@ public class TestData {
         this.contractList.create(testContract);
         this.contractList.create(testContract1);
         this.contractList.create(testContract2);
+    }
+
+    private void createAccident() {
+        InjuryAccident accident = new InjuryAccident();
+        accident.setAccidentType(AccidentType.INJURYACCIDENT);
+        accident.setEmployeeId(3);
+        accident.setCustomerId(1);
+        accident.setDateOfAccident(LocalDateTime.now());
+        accident.setDateOfReport(LocalDateTime.now());
+        accidentList.create(accident);
+
+        AccDocFile accDocFile = new AccDocFile();
+        accDocFile.setAccidentId(accident.getId());
+        accDocFile.setType(AccDocType.CLAIMCOMP);
+        accDocFile.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
+        +"/"+accDocFile.getType().getDesc()+".hwp");
+
+        AccDocFile accDocFile2 = new AccDocFile();
+        accDocFile2.setAccidentId(accident.getId());
+        accDocFile2.setType(AccDocType.MEDICALCERTIFICATION);
+        accDocFile2.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
+                +"/"+accDocFile2.getType().getDesc()+".hwp");
+
+        AccDocFile accDocFile3 = new AccDocFile();
+        accDocFile3.setAccidentId(accident.getId());
+        accDocFile3.setType(AccDocType.CONFIRMADMISSIONDISCHARGE);
+        accDocFile3.setFileAddress("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()
+                +"/"+ accDocFile3.getType().getDesc()+".hwp");
+
+       accDocFileList.create(accDocFile);
+        accDocFileList.create(accDocFile2);
+        accDocFileList.create(accDocFile3);
+
     }
 }

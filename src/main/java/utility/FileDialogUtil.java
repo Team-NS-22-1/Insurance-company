@@ -1,5 +1,7 @@
 package utility;
 
+import exception.MyFileException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
@@ -37,7 +39,7 @@ public class FileDialogUtil {
             out = new FileOutputStream(savePath);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+            throw new MyFileException("ERROR :: 파일을 찾을 수 없습니다!");
         }
         return fileName;
     }

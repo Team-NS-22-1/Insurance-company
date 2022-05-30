@@ -1,4 +1,6 @@
 import application.Application;
+import dao.CustomerDao;
+import domain.customer.Customer;
 
 import java.sql.SQLException;
 

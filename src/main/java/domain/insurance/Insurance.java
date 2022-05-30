@@ -1,6 +1,5 @@
 package domain.insurance;
 
-
 import java.util.ArrayList;
 
 /**
@@ -15,10 +14,11 @@ public class Insurance {
 	public String description;
 	public int contractPeriod;
 	public int paymentPeriod;
+	public InsuranceType insuranceType;
 	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+	public ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
 	public DevInfo devInfo;
 	public SalesAuthFile salesAuthFile;
-	public InsuranceType insuranceType;
 
 	public Insurance(){
 	}
@@ -68,13 +68,30 @@ public class Insurance {
 		return this;
 	}
 
-	public ArrayList<Guarantee> getGuarantee() {
+	public InsuranceType getInsuranceType() {
+		return insuranceType;
+	}
+
+	public Insurance setInsuranceType(InsuranceType insuranceType) {
+		this.insuranceType = insuranceType;
+		return this;
+	}
+
+	public ArrayList<Guarantee> getGuaranteeList() {
 		return guaranteeList;
 	}
 
-	public Insurance setGuarantee(ArrayList<Guarantee> guaranteeList) {
-		guaranteeList.stream()
-				.forEach(guarantee -> this.guaranteeList.add(guarantee));
+	public Insurance setGuaranteeList(ArrayList<Guarantee> guaranteeList) {
+		this.guaranteeList = guaranteeList;
+		return this;
+	}
+
+	public ArrayList<InsuranceDetail> getInsuranceDetailList() {
+		return insuranceDetailList;
+	}
+
+	public Insurance setInsuranceDetailList(ArrayList<InsuranceDetail> insuranceDetailList) {
+		this.insuranceDetailList = insuranceDetailList;
 		return this;
 	}
 
@@ -96,11 +113,12 @@ public class Insurance {
 		return this;
 	}
 
-	public InsuranceType getInsuranceType() { return insuranceType; }
-
-	public Insurance setInsuranceType(InsuranceType insuranceType) {
-		this.insuranceType = insuranceType;
-		return this;
+	public String printGuarantee() {
+		String value = "";
+		for(Guarantee guarantee : guaranteeList) {
+			value += guarantee.getId() + " ";
+		}
+		return value;
 	}
 
 	public String print() {
@@ -111,7 +129,7 @@ public class Insurance {
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 보장정보: " + guaranteeList +
+				", 보장정보: " + printGuarantee() +
 				", 개발정보: " + devInfo.print() +
 				", 인가파일: " + salesAuthFile.print() +
 				'}';

@@ -1,14 +1,15 @@
 package dao;
 
+import utility.db.DBUtil;
 import utility.db.DbConst;
 
 import java.sql.*;
 
 public class Dao {
 
-    private Connection connect = null;
-    private Statement statement = null;
-    private ResultSet resultSet = null;
+    protected Connection connect = null;
+    protected Statement statement = null;
+    protected ResultSet resultSet = null;
 
     public void connect() {
         try {
@@ -18,7 +19,7 @@ public class Dao {
             // DB 접근 실패 Exception
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
-            System.out.println("테스트");
+            e.printStackTrace();
         }
     }
 
@@ -43,8 +44,8 @@ public class Dao {
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
-        }
-        catch (SQLException e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return resultSet;
@@ -98,4 +99,5 @@ public class Dao {
             }
         }
     }
+
 }

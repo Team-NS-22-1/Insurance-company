@@ -10,16 +10,16 @@ public class HealthDetail extends InsuranceDetail {
 
 	private int targetAge;
 	private boolean targetSex;
-	private boolean riskCriterion;
+	private int riskCriterion;
 
 	public HealthDetail(){
 	}
 
-	public boolean isRiskPremiumCriterion() {
+	public int getRiskPremiumCriterion() {
 		return riskCriterion;
 	}
 
-	public HealthDetail setRiskCriterion(boolean riskCriterion) {
+	public HealthDetail setRiskCriterion(int riskCriterion) {
 		this.riskCriterion = riskCriterion;
 		return this;
 	}
@@ -42,12 +42,16 @@ public class HealthDetail extends InsuranceDetail {
 		return this;
 	}
 
+	public String getTargetSex() {
+		return isTargetSex() ? "남성" : "여성";
+	}
+
 	public String print() {
 		return "건강보험 정보 {" +
 				"건강보험정보 ID:" + getId() +
 				", 보험료: " + getPremium() +
 				", 대상나이: " + targetAge +
-				", 대상성별: " + targetSex +
+				", 대상성별: " + getTargetSex() +
 				", 위험부담 기준: " + riskCriterion +
 				", 보험ID: " + getInsuranceId() +
 				"}";

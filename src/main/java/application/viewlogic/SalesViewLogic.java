@@ -20,8 +20,7 @@ import java.util.Scanner;
 
 import static domain.contract.BuildingType.*;
 import static domain.contract.CarType.*;
-import static utility.MessageUtil.createMenu;
-import static utility.MessageUtil.createMenuAndClose;
+import static utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -124,7 +123,7 @@ public class SalesViewLogic implements ViewLogic {
             }
 
             try {
-                System.out.println("가입할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
+                System.out.println("설계할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
                 command = sc.nextLine();
                 if (command.equals("0")) {
                     break;

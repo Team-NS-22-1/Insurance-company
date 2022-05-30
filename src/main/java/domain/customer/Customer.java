@@ -5,6 +5,7 @@ import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 
+import domain.accident.accDocFile.AccDocType;
 import domain.complain.Complain;
 
 import domain.contract.Contract;
@@ -125,8 +126,14 @@ public class Customer {
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
 	public AccDocFile claimCompensation(Accident accident,AccDocFile accDocFile){
 		DocUtil docUtil = DocUtil.getInstance();
-		String path = this.id+"/"+ accident.getId();
-		String directory = docUtil.upload(path, accDocFile.getType());
+		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+accDocFile.getType().getDesc();
+		String extension = "";
+		if(accDocFile.getType()== AccDocType.PICTUREOFSITE)
+			extension = ".jpg";
+		else
+			extension = ".hwp";
+
+		String directory = docUtil.upload(path+extension);
 		if (directory.equals("close")) {
 			return null;
 		}
