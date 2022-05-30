@@ -1,13 +1,23 @@
 package domain.employee;
 
 
+import application.viewlogic.dto.compDto.AccountRequestDto;
+import application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
+import domain.accident.Accident;
+import domain.accident.AccidentType;
+import domain.accident.CarAccident;
+import domain.accident.accDocFile.AccDocFile;
+import domain.accident.accDocFile.AccDocType;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.insurance.*;
 import domain.insurance.inputDto.*;
+import domain.payment.Account;
 import exception.InputException.InputInvalidDataException;
+import utility.DocUtil;
 import utility.FileDialogUtil;
 
 import java.io.IOException;
@@ -323,12 +333,35 @@ public class Employee {
 		new InsuranceDao().updateByFss(insurance);
 		return 0;
 	}
+	public AssessDamageResponseDto assessDamage(Accident accident, AccountRequestDto accountRequestDto){
+		return AssessDamageResponseDto.builder().accDocFile(uploadLossAssessment(accident))
+				.account(new Account().setBankType(accountRequestDto.getBankType()).setAccountNo(accountRequestDto.getAccountNo()))
+				.build();
+	}
 
-	public void assessDamage(){
+	private AccDocFile uploadLossAssessment(Accident accident) {
+		DocUtil instance = DocUtil.getInstance();
+		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
+		String fileDir = instance.upload(dir);
+		if (fileDir == null) {
+			return null;
+		}
+		AccDocFile accDocFile = new AccDocFile();
+		accDocFile.setFileAddress(fileDir)
+				.setAccidentId(accident.getId())
+				.setType(AccDocType.LOSSASSESSMENT);
+		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT,accDocFile);
+		return accDocFile;
+	}
+
+	public void concludeContract(){
 
 	}
 
-	public void investigateDamage(){
+	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
+		accident.setLossReserves(dto.getLossReserves());
+		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+			((CarAccident)accident).setErrorRate(dto.getErrorRate());
 
 	}
 

@@ -64,6 +64,11 @@ public class ContractListImpl implements ContractList {
 
 	}
 
+	@Override
+	public void updatePayment(int contractId, int paymentId) {
+
+	}
+
 	public boolean update(int id, Contract contract) {
 		this.delete(id);
 		contractList.put(id, contract);

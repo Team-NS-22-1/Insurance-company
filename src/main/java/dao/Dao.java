@@ -1,5 +1,6 @@
 package dao;
 
+import utility.db.DBUtil;
 import utility.db.DbConst;
 
 import java.sql.*;
@@ -39,34 +40,38 @@ public class Dao {
         return id;
     }
 
-    public void read(String query) {
+    public ResultSet read(String query) {
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
-        }
-        catch (SQLException e) {
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        return resultSet;
     }
 
-    public void update(String query) {
-        try {
-            statement = connect.createStatement();
-            statement.executeUpdate(query);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public boolean update(String query) {
+        connect();
+        int resultRows = executeUpdate(query);
+        return resultRows > 0;
     }
 
-    public void delete(String query) {
+    public boolean delete(String query) {
+        connect();
+        int resultRows = executeUpdate(query);
+        return resultRows > 0;
+    }
+
+    private int executeUpdate(String query) {
+        int result = 0;
         try {
             statement = connect.createStatement();
-            statement.executeUpdate(query);
-        }
-        catch (SQLException e) {
+            result = statement.executeUpdate(query);
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+        return result;
     }
 
     public void close() {
@@ -94,4 +99,5 @@ public class Dao {
             }
         }
     }
+
 }
