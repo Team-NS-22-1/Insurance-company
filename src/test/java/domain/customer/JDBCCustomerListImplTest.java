@@ -33,7 +33,6 @@ class JDBCCustomerListImplTest {
         Customer findCustomer = null;
         try {
             String query = "insert into customer (name) values (?)";
-            Class.forName(DbConst.JDBC_DRIVER);
             Connection conn = DBUtil.getConnection();
             PreparedStatement pstm = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
@@ -51,9 +50,8 @@ class JDBCCustomerListImplTest {
 
 
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 

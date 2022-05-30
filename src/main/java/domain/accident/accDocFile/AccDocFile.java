@@ -1,6 +1,7 @@
 package domain.accident.accDocFile;
 
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -14,6 +15,7 @@ public class AccDocFile {
 	private String fileAddress;
 	private int id;
 	private AccDocType type;
+	private LocalDateTime lastModifedDate;
 
 	public AccDocFile(){
 
@@ -55,6 +57,15 @@ public class AccDocFile {
 		return this;
 	}
 
+	public LocalDateTime getLastModifedDate() {
+		return lastModifedDate;
+	}
+
+	public AccDocFile setLastModifedDate(LocalDateTime lastModifedDate) {
+		this.lastModifedDate = lastModifedDate;
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return "AccDocFile{" +
@@ -62,6 +73,7 @@ public class AccDocFile {
 				", fileAddress='" + fileAddress + '\'' +
 				", id=" + id +
 				", type=" + type +
+				", lastModifedDate=" + lastModifedDate +
 				'}';
 	}
 

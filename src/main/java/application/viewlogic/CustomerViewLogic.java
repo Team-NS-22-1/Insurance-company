@@ -2,6 +2,7 @@ package application.viewlogic;
 
 import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
+import dao.*;
 import domain.accident.Accident;
 import domain.accident.AccidentList;
 import domain.accident.AccidentType;
@@ -33,6 +34,8 @@ import java.util.*;
 
 import static main.utility.CustomerInfoFormatUtil.isCarNo;
 import static main.utility.CustomerInfoFormatUtil.isPhone;
+import static utility.BankUtil.checkAccountFormat;
+import static utility.BankUtil.selectBankType;
 import static utility.CompAssignUtil.assignCompEmployee;
 import static utility.DocUtil.isExist;
 import static utility.FormatUtil.*;
@@ -137,43 +140,9 @@ public class CustomerViewLogic implements ViewLogic {
     private void showCommonAccidentDoc(Accident accident) {
 
         submitDocFile(accident,AccDocType.CLAIMCOMP);
-
-        System.out.println("계좌 번호를 입력해주세요");
-        Account compAccount = createCompAccount();
-        if (compAccount != null) {
-            accident.setAccount(compAccount);
-        }
     }
 
-    private Account createCompAccount() {
-        Account account = null;
-        loop : while (true) {
 
-            System.out.println("계좌 추가하기");
-            System.out.println("은행사 선택하기");
-            BankType bankType = selectBankType();
-            if(bankType==null)
-                break ;
-            while (true) {
-                try {
-                    System.out.println("계좌 번호 입력하기 : (예시 -> " + bankType.getFormat() + ")");
-                    System.out.println("0. 취소하기");
-                    String command = sc.next();
-                    if (command.equals("0")) {
-                        continue loop;
-                    }
-                    String accountNo = checkAccountFormat(bankType,command);
-                    account = new Account();
-                    account.setBankType(bankType)
-                            .setAccountNo(accountNo);
-                    break loop;
-                } catch (MyInadequateFormatException e) {
-                    System.out.println("정확한 값을 입력해주세요");
-                }
-            }
-        }
-        return account;
-    }
 
     private void submitMedicalConfirmation(Accident accident) {
         submitDocFile(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
@@ -185,7 +154,6 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 String uploadMedicalCertification = "";
                 isExist(accident,accDocType);
-                // TODO isExist라면 update를 해줘야 하는데..
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
                     AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
@@ -194,6 +162,10 @@ public class CustomerViewLogic implements ViewLogic {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
                     }
+                    accDocFileList = new AccDocFileDao();
+                    if(accident.getAccDocFileList().containsKey(accDocType))
+                        accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+                    else
                     accDocFileList.create(accDocFile);
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
@@ -215,7 +187,8 @@ public class CustomerViewLogic implements ViewLogic {
                 medicalCertification = (String) br.verifyRead(accDocType.getDesc()+" 양식을 다운로드 받겠습니까?(Y/N)", medicalCertification);
                 if (medicalCertification.equals("Y")) {
                     DocUtil instance = DocUtil.getInstance();
-                    instance.download(accDocType);
+                    String dir = "./AccDocFile/Example/" + accDocType.getDesc()+"(예시).hwp";
+                    instance.download(dir);
                     break;
                 } else if (medicalCertification.equals("N")) {
                     break;
@@ -240,7 +213,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void isFinishedClaimComp(Accident accident, boolean submitted) {
-        if (submitted && accident.getAccount() != null) {
+        if (submitted) {
             connectCompEmployee(accident);
         } else {
             System.out.println("추후에 미제출한 정보들을 제출해주세요.");
@@ -260,6 +233,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String reasons = "";
                 reasons=(String)br.verifyRead("변경 사유를 입력해주세요",reasons);
                 Complain complain = this.customer.changeCompEmp(reasons);
+                complainList = new ComplainDao();
                 complainList.create(complain);
                 compEmployee = assignCompEmployee(employeeList, accidentList);
                 System.out.println(compEmployee.print());
@@ -270,6 +244,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         accident.setEmployeeId(compEmployee.getId());
+        accidentList = new AccidentDao();
+        accidentList.updateCompEmployeeId(accident);
     }
 
     private void showFireAccidentDoc(Accident accident) {
@@ -303,13 +279,15 @@ public class CustomerViewLogic implements ViewLogic {
 
     private Accident selectAccident() {
         Accident retAccident = null;
+        int accidentId = 0;
         while (true) {
+            accidentList = new AccidentDao();
             List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
             for (Accident accident : accidents) {
                 accident.printForCustomer();
             }
             try {
-                int accidentId = 0;
+
                 System.out.println("0. 취소하기");
                 System.out.println("exit. 종료하기");
                  accidentId = (int) br.verifyRead("사고 ID 입력 : ", accidentId);
@@ -317,13 +295,21 @@ public class CustomerViewLogic implements ViewLogic {
                 if (accidentId == 0) {
                     break;
                 }
-
+                accidentList = new AccidentDao();
                  retAccident = accidentList.read(accidentId);
                  break;
             } catch (InputException | IllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해 주세요");
             }
         }
+        if (accidentId != 0) {
+            accDocFileList = new AccDocFileDao();
+            List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
+            for (AccDocFile file : files) {
+                retAccident.getAccDocFileList().put(file.getType(),file);
+            }
+        }
+
         return retAccident;
     }
 
@@ -346,6 +332,7 @@ public class CustomerViewLogic implements ViewLogic {
 
         AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
         Accident accident = customer.reportAccident(accidentReportDto);
+        accidentList = new AccidentDao();
         accidentList.create(accident);
 
         accident.printForCustomer();
@@ -542,8 +529,10 @@ public class CustomerViewLogic implements ViewLogic {
 
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
     public void login(int customerId) {
+        customerList = new CustomerDao();
         this.customer  = customerList.read(customerId);
         try {
+            paymentList = new PaymentDao();
             List<Payment> payments = paymentList.findAllByCustomerId(customerId);
             this.customer.setPaymentList((ArrayList<Payment>) payments);
         } catch (IllegalArgumentException e) {
@@ -615,6 +604,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
+        //TODO ContractDAO 생기면 new 해주기
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
@@ -626,6 +616,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String key = sc.next();
                 if (key.equals("0"))
                     break;
+                //TODO ContractDAO 생기면 new 해주기
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -639,6 +630,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 보험료 납부를 위한 계약 정보를 출력하는 기능
     public void showContractInfoForPay(Contract contract) {
+        //TODO 보험DAO 생기면 new 해주기
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
         sb.append("[ID]").append(" : ").append(contract.getId())
@@ -686,8 +678,11 @@ public class CustomerViewLogic implements ViewLogic {
                     return;
                 if(key.equals("exit"))
                     throw new MyCloseSequence();
+                this.paymentList = new PaymentDao();
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
+                // TODO 계약 DAO 생기면 new 하기.
+                contractList.updatePayment(contract.getId(),payment.getId());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
@@ -776,6 +771,7 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(card);
+        paymentList = new PaymentDao();
         paymentList.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
@@ -836,7 +832,7 @@ public class CustomerViewLogic implements ViewLogic {
             try{
                 System.out.println("계좌 추가하기");
                 System.out.println("은행사 선택하기");
-                BankType bankType = selectBankType();
+                BankType bankType = selectBankType(br);
                 if(bankType==null)
                     return;
                 while (true) {
@@ -879,67 +875,11 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(account);
+        paymentList = new PaymentDao();
         paymentList.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
     }
-
-    // 계좌 결제 수단 추가 과정에서 은행을 선택하는 기능
-    private BankType selectBankType() {
-        BankType[] values = BankType.values();
-        for (int i = 0; i < values.length; i++) {
-            System.out.println((i+1) + " " + values[i]);
-        }
-        System.out.println("0. 취소하기");
-        System.out.println("은행 번호 : ");
-        String key = sc.next();
-        
-        if(key.equals("0"))
-            return null;
-
-
-        return values[Integer.parseInt(key)-1];
-    }
-
-    // 계좌 결제 수단 추가 과정에서 은행사에 따라서 계좌 번호를 검증하는 기능
-    private String checkAccountFormat(BankType bankType, String accountNo) {
-        boolean result = false;
-        switch (bankType) {
-            case KB :
-                result = isKB(accountNo);
-                break;
-            case NH:
-                result = isNH(accountNo);
-                break;
-            case KAKAOBANK:
-                result = isKakaoBank(accountNo);
-                break;
-            case SINHAN:
-                result = isSinhan(accountNo);
-                break;
-            case WOORI:
-                result = isWoori(accountNo);
-                break;
-            case IBK:
-                result = isIBK(accountNo);
-                break;
-            case HANA:
-                result = isHana(accountNo);
-                break;
-            case CITY:
-                result = isCity(accountNo);
-                break;
-            case SAEMAUL:
-                result = isSaemaul(accountNo);
-                break;
-        }
-        if (!result)
-            throw new MyInadequateFormatException("정확한 형식의 값을 입력해주세요");
-
-        return accountNo;
-
-    }
-
 
 
     public void payLogicforTest(Contract contract) {

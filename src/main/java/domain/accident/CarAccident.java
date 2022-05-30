@@ -12,7 +12,7 @@ public class CarAccident extends Accident {
 
 
 	private String carNo;
-	private double errorRate;
+	private int errorRate;
 	private boolean isRequestOnSite; // 현장 출동 요청
 	private String opposingDriverPhone;
 	private String placeAddress;
@@ -30,11 +30,11 @@ public class CarAccident extends Accident {
 		return this;
 	}
 
-	public double getErrorRate() {
+	public int getErrorRate() {
 		return errorRate;
 	}
 
-	public CarAccident setErrorRate(double errorRate) {
+	public CarAccident setErrorRate(int errorRate) {
 		this.errorRate = errorRate;
 		return this;
 	}
