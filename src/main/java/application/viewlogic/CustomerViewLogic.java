@@ -1,6 +1,7 @@
 package application.viewlogic;
 
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
+import dao.*;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
@@ -144,7 +145,6 @@ public class CustomerViewLogic implements ViewLogic {
             try {
                 String uploadMedicalCertification = "";
                 isExist(accident,accDocType);
-                // TODO isExist라면 update를 해줘야 하는데..
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
                     AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
@@ -153,6 +153,7 @@ public class CustomerViewLogic implements ViewLogic {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
                     }
+                    accDocFileList = new AccDocFileDao();
                     if(accident.getAccDocFileList().containsKey(accDocType))
                         accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
                     else
@@ -223,6 +224,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String reasons = "";
                 reasons=(String)br.verifyRead("변경 사유를 입력해주세요",reasons);
                 Complain complain = this.customer.changeCompEmp(reasons);
+                complainList = new ComplainDao();
                 complainList.create(complain);
                 compEmployee = assignCompEmployee(employeeList, accidentList);
                 System.out.println(compEmployee.print());
@@ -268,6 +270,7 @@ public class CustomerViewLogic implements ViewLogic {
         Accident retAccident = null;
         int accidentId = 0;
         while (true) {
+            accidentList = new AccidentDao();
             List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
             for (Accident accident : accidents) {
                 accident.printForCustomer();
@@ -281,6 +284,7 @@ public class CustomerViewLogic implements ViewLogic {
                 if (accidentId == 0) {
                     break;
                 }
+                accidentList = new AccidentDao();
                  retAccident = accidentList.read(accidentId);
                  break;
             } catch (InputException | IllegalArgumentException e) {
@@ -288,6 +292,7 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         if (accidentId != 0) {
+            accDocFileList = new AccDocFileDao();
             List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
             for (AccDocFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
@@ -316,6 +321,7 @@ public class CustomerViewLogic implements ViewLogic {
 
         AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
         Accident accident = customer.reportAccident(accidentReportDto);
+        accidentList = new AccidentDao();
         accidentList.create(accident);
 
         accident.printForCustomer();
@@ -512,8 +518,10 @@ public class CustomerViewLogic implements ViewLogic {
 
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
     public void login(int customerId) {
+        customerList = new CustomerDao();
         this.customer  = customerList.read(customerId);
         try {
+            paymentList = new PaymentDao();
             List<Payment> payments = paymentList.findAllByCustomerId(customerId);
             this.customer.setPaymentList((ArrayList<Payment>) payments);
         } catch (IllegalArgumentException e) {
@@ -585,6 +593,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
+        //TODO ContractDAO 생기면 new 해주기
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
@@ -596,6 +605,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String key = sc.next();
                 if (key.equals("0"))
                     break;
+                //TODO ContractDAO 생기면 new 해주기
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -609,6 +619,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 보험료 납부를 위한 계약 정보를 출력하는 기능
     public void showContractInfoForPay(Contract contract) {
+        //TODO 보험DAO 생기면 new 해주기
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
         sb.append("[ID]").append(" : ").append(contract.getId())
@@ -656,8 +667,11 @@ public class CustomerViewLogic implements ViewLogic {
                     return;
                 if(key.equals("exit"))
                     throw new MyCloseSequence();
+                this.paymentList = new PaymentDao();
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
+                // TODO 계약 DAO 생기면 new 하기.
+                contractList.updatePayment(contract.getId(),payment.getId());
                 break;
             } catch (NumberFormatException e) {
                 System.out.println("정확한 형식의 값을 입력해주세요.");
@@ -746,6 +760,7 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(card);
+        paymentList = new PaymentDao();
         paymentList.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
@@ -849,6 +864,7 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(account);
+        paymentList = new PaymentDao();
         paymentList.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");

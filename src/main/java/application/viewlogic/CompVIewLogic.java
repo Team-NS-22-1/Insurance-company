@@ -4,6 +4,9 @@ import application.ViewLogic;
 import application.viewlogic.dto.compDto.AccountRequestDto;
 import application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
+import dao.AccDocFileDao;
+import dao.AccidentDao;
+import dao.CustomerDao;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
@@ -45,10 +48,10 @@ import static utility.MessageUtil.createMenuAndExit;
 public class CompVIewLogic implements ViewLogic {
 
 
-    private final EmployeeList employeeList;
-    private final AccidentList accidentList;
-    private final AccDocFileList accDocFileList;
-    private final CustomerList customerList;
+    private  EmployeeList employeeList;
+    private  AccidentList accidentList;
+    private  AccDocFileList accDocFileList;
+    private  CustomerList customerList;
     private CustomMyBufferedReader br;
     private Employee employee;
 
@@ -88,7 +91,7 @@ public class CompVIewLogic implements ViewLogic {
     }
 
     private void investigateDamage() {
-        System.out.println("CompVIewLogic.investigateDamage 시작");
+
         loginCompEmployee();
 
         Accident accident = selectAccident();
@@ -96,6 +99,7 @@ public class CompVIewLogic implements ViewLogic {
             return;
 
         showAccidentDetail(accident);
+        accDocFileList = new AccDocFileDao();
         List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
@@ -112,7 +116,7 @@ public class CompVIewLogic implements ViewLogic {
         inputLossReserve(dto);
 
         employee.investigateDamage(dto,accident);
-
+        accidentList = new AccidentDao();
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
             accidentList.updateLossReserveAndErrorRate(accident);
         else
@@ -133,7 +137,8 @@ public class CompVIewLogic implements ViewLogic {
     }
 
     private Accident selectAccident() {
-        System.out.println("CompVIewLogic.selectAccident");
+
+        accidentList = new AccidentDao();
         List<Accident> accidents = this.accidentList.readAllByEmployeeId(this.employee.getId());
         if (accidents.size() == 0) {
             System.out.println("현재 배당된 사고가 없습니다.");
@@ -148,6 +153,7 @@ public class CompVIewLogic implements ViewLogic {
             System.out.println("---------------------------------");
             int accidentId = 0;
             accidentId = (int)br.verifyRead("사고 ID : ", accidentId);
+            accidentList = new AccidentDao();
             Accident accident = this.accidentList.read(accidentId);
             if (accident.getEmployeeId() != this.employee.getId()) {
                 System.out.println("현재 직원에게 배당된 사건이 아닙니다. 정확한 값을 입력해주세요.");
@@ -158,6 +164,7 @@ public class CompVIewLogic implements ViewLogic {
     }
 
     private void showAccidentDetail(Accident accident) {
+        customerList = new CustomerDao();
         Customer customer = customerList.read(accident.getCustomerId());
 
 
@@ -197,7 +204,7 @@ public class CompVIewLogic implements ViewLogic {
         Accident accident = selectAccident();
         if(accident == null)
             return;
-
+        accDocFileList = new AccDocFileDao();
         List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
@@ -205,7 +212,7 @@ public class CompVIewLogic implements ViewLogic {
         AccountRequestDto compAccount = createCompAccount();
         System.out.println("손해사정서를 업로드해주세요.");
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
-
+        accDocFileList = new AccDocFileDao();
         accDocFileList.create(assessDamageResponseDto.getAccDocFile());
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
@@ -319,6 +326,7 @@ public class CompVIewLogic implements ViewLogic {
         while(true){
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
+                //TODO employeeDAO 생기면 변경
                 List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
                 for(Employee employee : employeeArrayList){
                     System.out.println(employee.print());
@@ -327,6 +335,7 @@ public class CompVIewLogic implements ViewLogic {
                 int employeeId = 0;
                 employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
                 if(employeeId == 0) break;
+                //TODO employeeDAO 생기면 변경
                 this.employee = this.employeeList.read(employeeId);
                 if(this.employee.getDepartment() != Department.COMP){
                     System.out.println("해당 직원은 보상팀 직원이 아닙니다!");
