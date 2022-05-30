@@ -373,34 +373,34 @@ public class Employee {
 
 	public Contract concludeHealthContract(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
 								 boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
-		Contract contract = new Contract();
-		contract.setInsuranceId(insuranceId)
-				.setPremium(premium)
-				.setHealthInfo(new HealthInfo().setDrinking(isDrinking)
+		HealthContract healthContract = new HealthContract();
+		healthContract.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		healthContract.setDrinking(isDrinking)
 						.setSmoking(isSmoking)
 						.setDriving(isDriving)
 						.setDangerActivity(isDangerActivity)
 						.setTakingDrug(isTakingDrug)
-						.setHavingDisease(isHavingDisease)
-				);
-		return contract;
+						.setHavingDisease(isHavingDisease);
+
+		return healthContract;
 	}
 
 	public Contract concludeFireContract(int insuranceId, int premium, BuildingType buildingType, int collateralAmount){
-		Contract contract = new Contract();
-		contract.setInsuranceId(insuranceId)
-				.setPremium(premium)
-				.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
-						.setCollateralAmount(collateralAmount));
-		return contract;
+		FireContract fireContract = new FireContract();
+		fireContract.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		fireContract.setBuildingType(buildingType)
+						.setCollateralAmount(collateralAmount);
+		return fireContract;
 	}
 
 	public Contract concludeCarContract(int insuranceId, int premium, int value){
-		Contract contract = new Contract();
-		contract.setInsuranceId(insuranceId)
-				.setPremium(premium)
-				.setCarInfo(new CarInfo().setValue(value));
-		return contract;
+		CarContract carContract = new CarContract();
+		carContract.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		carContract.setValue(value);
+		return carContract;
 	}
 
 	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job) {
@@ -414,10 +414,10 @@ public class Employee {
 		return customer;
 	};
 
-	public Contract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
+	public HealthContract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
 									Boolean isTakingDrug, boolean isHavingDisease, String diseaseDetail, int premium){
-		Contract contract = new Contract();
-		contract.setHealthInfo(new HealthInfo().setHeight(height)
+		HealthContract healthContract = new HealthContract();
+		healthContract.setHeight(height)
 						.setWeight(weight)
 						.setDrinking(isDrinking)
 						.setSmoking(isSmoking)
@@ -425,53 +425,53 @@ public class Employee {
 						.setDangerActivity(isDangerActivity)
 						.setTakingDrug(isTakingDrug)
 						.setHavingDisease(isHavingDisease)
-						.setDiseaseDetail(diseaseDetail))
+						.setDiseaseDetail(diseaseDetail)
 				.setPremium(premium);
-		return contract;
+		return healthContract;
 	}
 
-	public Contract inputHealthInfo(Contract contract, int height, int weight, String diseaseDetail){
-		contract.setHealthInfo(new HealthInfo().setHeight(height)
+	public HealthContract inputHealthInfo(HealthContract healthContract, int height, int weight, String diseaseDetail){
+		healthContract.setHeight(height)
 						.setWeight(weight)
-						.setDiseaseDetail(diseaseDetail));
-		return contract;
+						.setDiseaseDetail(diseaseDetail);
+		return healthContract;
 	}
 
 	public Contract inputFireInfo(BuildingType buildingType, int buildingArea, int collateralAmount, boolean isSelfOwned, boolean isActualResidence, int premium){
-		Contract contract = new Contract();
-		contract.setBuildingInfo(new BuildingInfo().setBuildingType(buildingType)
+		FireContract fireContract = new FireContract();
+		fireContract.setBuildingType(buildingType)
 						.setBuildingArea(buildingArea)
 						.setCollateralAmount(collateralAmount)
 						.setSelfOwned(isSelfOwned)
-						.setActualResidence(isActualResidence))
+						.setActualResidence(isActualResidence)
 				.setPremium(premium);
-		return contract;
+		return fireContract;
 	}
 
-	public Contract inputFireInfo(Contract contract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
-		contract.setBuildingInfo(new BuildingInfo().setBuildingArea(buildingArea)
+	public FireContract inputFireInfo(FireContract fireContract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
+		fireContract.setBuildingArea(buildingArea)
 				.setSelfOwned(isSelfOwned)
-				.setActualResidence(isActualResidence));
-		return contract;
+				.setActualResidence(isActualResidence);
+		return fireContract;
 	}
 
-	public Contract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, int value, int premium) {
-		Contract contract = new Contract();
-		contract.setCarInfo(new CarInfo().setCarNo(carNo)
+	public CarContract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, int value, int premium) {
+		CarContract carContract = new CarContract();
+		carContract.setCarNo(carNo)
 						.setCarType(carType)
 						.setModelName(modelName)
 						.setModelYear(modelYear)
-						.setValue(value))
+						.setValue(value)
 				.setPremium(premium);
-		return contract;
+		return carContract;
 	}
 
-	public Contract inputCarInfo(Contract contract, String carNo, CarType carType, String modelName, int modelYear) {
-		contract.setCarInfo(new CarInfo().setCarNo(carNo)
+	public CarContract inputCarInfo(CarContract carContract, String carNo, CarType carType, String modelName, int modelYear) {
+		carContract.setCarNo(carNo)
 				.setCarType(carType)
 				.setModelName(modelName)
-				.setModelYear(modelYear));
-		return contract;
+				.setModelYear(modelYear);
+		return carContract;
 	}
 
 

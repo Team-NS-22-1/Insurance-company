@@ -1,9 +1,7 @@
 import application.Application;
 import domain.contract.*;
 import domain.customer.Customer;
-import domain.customer.CustomerListImpl;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +24,7 @@ class MainTest {
 
         HealthContract healthContract = new HealthContract();
         CarContract carContract = new CarContract();
-        BuildingContract buildingContract = new BuildingContract();
+        FireContract fireContract = new FireContract();
 
 //        Contract testContract =  new Contract();
 //        testContract.setId(1);

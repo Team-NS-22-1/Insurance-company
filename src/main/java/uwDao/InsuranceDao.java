@@ -69,9 +69,9 @@ public class InsuranceDao extends Dao {
                 insurance.setDevInfo(devInfo);
 
                 salesAuthFile.setInsuranceId(rs.getInt("insurance_id"));
-                salesAuthFile.setId(rs.getInt("sales_auth_files_id"));
+                //salesAuthFile.setId(rs.getInt("sales_auth_files_id"));
                 salesAuthFile.setProdDeclaration(rs.getString("prod_declaration"));
-                salesAuthFile.setfSSOfficialDoc(rs.getString("fss_official_doc"));
+                //salesAuthFile.setfSSOfficialDoc(rs.getString("fss_official_doc"));
                 salesAuthFile.setIsoVerification(rs.getString("iso_verification"));
                 salesAuthFile.setSrActuaryVerification(rs.getString("sr_actuary_verification"));
                 insurance.setSalesAuthFile(salesAuthFile);
@@ -90,7 +90,7 @@ public class InsuranceDao extends Dao {
                 guaranteeList.add(guarantee);
 
             }
-            insurance.setGuarantee(guaranteeList);
+            //insurance.setGuarantee(guaranteeList);
             super.close(grantRs);
 
         } catch (SQLException e) {

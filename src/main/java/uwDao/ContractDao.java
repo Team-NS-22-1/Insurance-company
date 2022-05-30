@@ -1,9 +1,7 @@
 package uwDao;
 
 import domain.contract.*;
-import domain.insurance.DevInfo;
 import domain.insurance.InsuranceType;
-import domain.insurance.SalesAuthState;
 
 
 import java.sql.ResultSet;
@@ -150,20 +148,20 @@ public class ContractDao extends Dao {
         return carContract;
     }
 
-    public BuildingContract setBuildingContract(ResultSet rs) {
-        BuildingContract buildingContract = new BuildingContract();
+    public FireContract setBuildingContract(ResultSet rs) {
+        FireContract fireContract = new FireContract();
 
         try {
-            buildingContract.setBuildingArea(rs.getInt("building_area"));
-            buildingContract.setBuildingType(BuildingType.valueOf(rs.getString("building_type")));
-            buildingContract.setActualResidence((rs.getInt("is_actual_residence")) != 0);
-            buildingContract.setCollateralAmount(rs.getInt("collateral_amount"));
-            buildingContract.setSelfOwned((rs.getInt("is_self_owned")) != 0);
+            fireContract.setBuildingArea(rs.getInt("building_area"));
+            fireContract.setBuildingType(BuildingType.valueOf(rs.getString("building_type")));
+            fireContract.setActualResidence((rs.getInt("is_actual_residence")) != 0);
+            fireContract.setCollateralAmount(rs.getInt("collateral_amount"));
+            fireContract.setSelfOwned((rs.getInt("is_self_owned")) != 0);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return buildingContract;
+        return fireContract;
 
     }
 
