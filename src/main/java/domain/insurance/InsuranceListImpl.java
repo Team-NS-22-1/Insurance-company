@@ -68,8 +68,4 @@ public class InsuranceListImpl implements InsuranceList {
 		if(insurance != null) return true;
 		else return false;
 	}
-
-
-//	public void update(){}
-
 }

@@ -1,7 +1,7 @@
 package dao;
 
 import domain.insurance.Insurance;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 

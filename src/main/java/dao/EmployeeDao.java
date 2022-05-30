@@ -23,9 +23,13 @@ import java.util.List;
  */
 public class EmployeeDao extends Dao implements EmployeeList {
 
+
+
+
     public EmployeeDao() {
         super.connect();
     }
+
 
     @Override
     public List<Employee> readAllCompEmployee() {
@@ -105,4 +109,5 @@ public class EmployeeDao extends Dao implements EmployeeList {
     public boolean delete(int id) {
         return false;
     }
+
 }
