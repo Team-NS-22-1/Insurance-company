@@ -6,11 +6,11 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:23
  */
-public class FireContract extends  Contract {
+public class FireContract extends Contract{
 
 	private int buildingArea;
 	private BuildingType buildingType;
-	private int collateralAmount;
+	private Long collateralAmount;
 	private boolean isActualResidence;
 	private boolean isSelfOwned;
 
@@ -35,11 +35,11 @@ public class FireContract extends  Contract {
 		return this;
 	}
 
-	public int getCollateralAmount() {
+	public Long getCollateralAmount() {
 		return collateralAmount;
 	}
 
-	public FireContract setCollateralAmount(int collateralAmount) {
+	public FireContract setCollateralAmount(Long collateralAmount) {
 		this.collateralAmount = collateralAmount;
 		return this;
 	}

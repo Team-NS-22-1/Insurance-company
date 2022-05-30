@@ -6,7 +6,7 @@ package domain.contract;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:24
  */
-public class HealthContract extends Contract {
+public class HealthContract extends Contract{
 
 	private int height;
 	private int weight;

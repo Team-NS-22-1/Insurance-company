@@ -10,12 +10,12 @@ import domain.payment.Payment;
  */
 public class Contract {
 
-//	private CarContract carContract;
+//	private CarInfo carInfo;
 	private ConditionOfUw conditionOfUw;
 	private int customerId;
 	private int employeeId;
-//	private BuildingContract buildingContract;
-//	private HealthContract healthContract;
+//	private BuildingInfo buildingInfo;
+//	private HealthInfo healthInfo;
 	private int id;
 	private int insuranceId;
 	private boolean isPublishStock;
@@ -28,12 +28,12 @@ public class Contract {
 
 	}
 
-//	public CarContract getCarInfo() {
-//		return carContract;
+//	public CarInfo getCarInfo() {
+//		return carInfo;
 //	}
 //
-//	public Contract setCarInfo(CarContract carContract) {
-//		this.carContract = carContract;
+//	public Contract setCarInfo(CarInfo carInfo) {
+//		this.carInfo = carInfo;
 //		return this;
 //	}
 
@@ -55,21 +55,21 @@ public class Contract {
 		return this;
 	}
 
-//	public BuildingContract getBuildingInfo() {
-//		return buildingContract;
+//	public BuildingInfo getBuildingInfo() {
+//		return buildingInfo;
 //	}
 //
-//	public Contract setBuildingInfo(BuildingContract buildingContract) {
-//		this.buildingContract = buildingContract;
+//	public Contract setBuildingInfo(BuildingInfo buildingInfo) {
+//		this.buildingInfo = buildingInfo;
 //		return this;
 //	}
-
-//	public HealthContract getHealthInfo() {
-//		return healthContract;
+//
+//	public HealthInfo getHealthInfo() {
+//		return healthInfo;
 //	}
 //
-//	public Contract setHealthInfo(HealthContract healthContract) {
-//		this.healthContract = healthContract;
+//	public Contract setHealthInfo(HealthInfo healthInfo) {
+//		this.healthInfo = healthInfo;
 //		return this;
 //	}
 
@@ -147,7 +147,7 @@ public class Contract {
 				", 결제수단: " + payment +
 				 ", ";
 
-		return text;
+		 return text;
 	}
 
 }

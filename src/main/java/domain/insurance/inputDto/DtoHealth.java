@@ -7,6 +7,7 @@ public class DtoHealth extends DtoTypeInfo {
     // male: true | female: false
     private boolean targetSex;
 
+    // > 3: true | <= 3: false
     private int riskCriterion;
 
     public DtoHealth(int targetAge, boolean targetSex, int riskCriterion) {

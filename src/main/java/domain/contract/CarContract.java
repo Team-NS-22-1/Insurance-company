@@ -11,9 +11,8 @@ public class CarContract extends Contract{
 	private String carNo;
 	private CarType carType;
 	private String modelName;
-	private String owner;
 	private int modelYear;
-	private int value;
+	private Long value;
 
 	public CarContract(){
 
@@ -55,34 +54,29 @@ public class CarContract extends Contract{
 		return this;
 	}
 
-	public int getValue() {
+	public Long getValue() {
 		return value;
 	}
 
-	public CarContract setValue(int value) {
+	public CarContract setValue(Long value) {
 		this.value = value;
 		return this;
 	}
 
-	public String getOwner() {
-		return owner;
-	}
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
 	@Override
 	public String toString() {
-		return super.toString() +
-				" 자동차정보: {" +
-				"자동차번호: '" + carNo + '\'' +
-				", 차량유형: " + carType.getName() +
+		return "계약정보 {" +
+				"계약 ID: " + getId() +
+				", 인수심사상태: " + getConditionOfUw() +
+				", 인수사유: '" + getReasonOfUw() + '\'' +
+				", 증권발행여부: " + isPublishStock() +
+				", 보험료: " + getPremium() +
+				", 결제수단: " + getPayment() +
+				", 자동차번호: '" + carNo + '\'' +
+				", 차량유형: " + carType +
 				", 연식: " + modelYear +
 				", 차명: '" + modelName + '\'' +
-				", 차주: '" + owner + '\'' +
 				", 차량가액: " + value +
-				"}}";
-
+				'}';
 	}
 }
