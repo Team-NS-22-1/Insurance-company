@@ -32,27 +32,30 @@ public class ContractDao extends Dao{
             String input;
             if (rs.next())
                 switch (rs.getString("insurance_type")) {
-                    case "건강":
+                    case "건강보험":
                         HealthContract healthContract = (HealthContract) contract;
                         inputquery = "insert into health_contract (contract_id, height, weight, is_danger_activity, " +
                                 "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_danger_activity, disease_detail";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
-                                healthContract.isDangerActivity(), healthContract.isDrinking(), healthContract.isSmoking(), healthContract.isSmoking(),
-                                healthContract.isTakingDrug(), healthContract.isHavingDisease(), healthContract.isDangerActivity(), healthContract.getDiseaseDetail());
+                                healthContract.isDangerActivity()? 1 : 0, healthContract.isDrinking()? 1 : 0, healthContract.isSmoking()? 1 : 0, healthContract.isSmoking(),
+                                healthContract.isTakingDrug(), healthContract.isHavingDisease(), healthContract.isDangerActivity()? 1 : 0, healthContract.getDiseaseDetail());
                         super.create(input);
-                    case "화재":
+                        break;
+                    case "화재보험":
                         FireContract fireContract = (FireContract) contract;
-                        inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, " +
+                        inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, Values() " +
                                 "is_actual_residence, is_self_owned";
                         input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType(),
                                 fireContract.getCollateralAmount(), fireContract.isActualResidence(), fireContract.isSelfOwned());
                         super.create(input);
-                    case "자동차":
+                        break;
+                    case "자동차보험":
                         CarContract carContract = (CarContract) contract;
                         inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value ";
                         input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
                         super.create(input);
+                        break;
                 }
         } finally {
             close();
