@@ -61,7 +61,7 @@ public class Application {
         map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
-        map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
+        map.put(UserType.UW, new UWViewLogic());
         map.put(UserType.COMP, new CompViewLogic(employeeList,accidentList,accDocFileList,customerList));
     }
 

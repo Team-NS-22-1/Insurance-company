@@ -80,7 +80,7 @@ public class ContractDao extends Dao{
                 "       ON c.contract_id = hc.contract_id\n" +
                 "LEFT JOIN insurance i\n" +
                 "       ON c.insurance_id = i.insurance_id\n" +
-                "WHERE i.insurance_type = '" + insuranceType.getName() +"'";
+                "WHERE i.insurance_type = '" + insuranceType +"'";
 
         try {
             ResultSet rs = super.read(query);

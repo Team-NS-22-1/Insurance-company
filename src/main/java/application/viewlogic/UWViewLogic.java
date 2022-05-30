@@ -41,22 +41,11 @@ import static utility.MessageUtil.createMenu;
 public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
-    private EmployeeList employeeList;
-
-
     private MyBufferedReader br;
 
-    public UWViewLogic(EmployeeList employeeList, CustomerList customerList, InsuranceList insuranceList, ContractList contractList) {
+    public UWViewLogic() {
         this.sc = new Scanner(System.in);
-        this.employeeList = employeeList;
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-
-        Employee employee = new Employee();
-        employee.setId(1)
-                .setName("윤여찬")
-                .setDepartment(Department.UW)
-                .setPhone("010-1111-2222")
-                .setPosition(Position.DEPTMANAGER);
     }
 
     @Override
