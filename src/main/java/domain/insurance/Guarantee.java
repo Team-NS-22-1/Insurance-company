@@ -17,12 +17,6 @@ public class Guarantee {
 	public Guarantee() {
 	}
 
-	public Guarantee(String name, String description, Long guaranteeAmount){
-		this.name = name;
-		this.description = description;
-		this.guaranteeAmount = guaranteeAmount;
-	}
-
 	public int getId() {
 		return id;
 	}
@@ -69,10 +63,11 @@ public class Guarantee {
 	}
 
 	public String print() {
-		return "보장 정보 {" +
-				"이름 : " + name +
-				", 설명 : " + description +
-				", 보장금액: " + guaranteeAmount +
+		return "{" +
+				"보장ID: " + id +
+				", 보장명: '" + name +
+				"', 보장설명: '" + description +
+				"', 보장금액: " + guaranteeAmount +
 				"}";
 	}
 }

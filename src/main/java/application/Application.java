@@ -5,9 +5,7 @@ import dao.AccDocFileDao;
 import dao.AccidentDao;
 import dao.PaymentDao;
 import domain.accident.AccidentList;
-import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileList;
-import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.complain.ComplainList;
 import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
@@ -21,7 +19,6 @@ import domain.insurance.InsuranceDetailListImpl;
 import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.payment.PaymentList;
-import domain.payment.PaymentListImpl;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 import test.TestData;
@@ -68,7 +65,7 @@ public class Application {
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
-        map.put(UserType.COMP, new CompVIewLogic(employeeList,accidentList,accDocFileList,customerList));
+        map.put(UserType.COMP, new CompViewLogic(employeeList,accidentList,accDocFileList,customerList));
     }
 
 
