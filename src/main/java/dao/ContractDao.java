@@ -87,6 +87,8 @@ public class ContractDao extends Dao{
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            }finally {
+                close();
             }
 
         if (contracts.size() == 0)
@@ -98,5 +100,6 @@ public class ContractDao extends Dao{
         String query = "update contract set payment_id = %d where contract_id = %d";
         String formattedQuery = String.format(query, paymentId, contractId);
         super.update(formattedQuery);
+        close();
     }
 }
