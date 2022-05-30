@@ -7,6 +7,7 @@ import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import dao.AccDocFileDao;
 import dao.AccidentDao;
 import dao.CustomerDao;
+import dao.EmployeeDao;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
@@ -180,7 +181,6 @@ public class CompViewLogic implements ViewLogic {
                 System.out.println("사고 주소 : " + ((FireAccident)accident).getPlaceAddress());
                 break;
             }
-//            default ->
         }
 
     }
@@ -188,8 +188,6 @@ public class CompViewLogic implements ViewLogic {
     private void assessDamage() {
         loginCompEmployee();
         assessDamagewithoutLogin();
-        //TODO 손해 사정이 끝나면 정보 삭제하기.
-
     }
 
     private void assessDamagewithoutLogin() {
@@ -314,11 +312,7 @@ public class CompViewLogic implements ViewLogic {
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 if (result.equals("Y")) {
-                    //TODO parameter로 accdocfile을 넣어주도록 하라.
-                    // 그리고 CompEmployee가 다운로드를 해야 하지 않을까...
                     instance.download(accDocFile.getFileAddress());
-
-
                     break;
                 } else if (result.equals("N")) {
                     break;
@@ -333,7 +327,7 @@ public class CompViewLogic implements ViewLogic {
         while(true){
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
-                //TODO employeeDAO 생기면 변경
+                employeeList = new EmployeeDao();
                 List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
                 for(Employee employee : employeeArrayList){
                     System.out.println(employee.print());
@@ -342,7 +336,7 @@ public class CompViewLogic implements ViewLogic {
                 int employeeId = 0;
                 employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
                 if(employeeId == 0) break;
-                //TODO employeeDAO 생기면 변경
+                this.employeeList = new EmployeeDao();
                 this.employee = this.employeeList.read(employeeId);
                 if(this.employee.getDepartment() != Department.COMP){
                     System.out.println("해당 직원은 보상팀 직원이 아닙니다!");

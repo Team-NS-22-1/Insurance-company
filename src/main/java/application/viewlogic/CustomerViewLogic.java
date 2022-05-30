@@ -53,8 +53,8 @@ import static utility.MessageUtil.*;
  */
 public class CustomerViewLogic implements ViewLogic {
 
-    private ContractList contractList;
-    private InsuranceList insuranceList;
+    private ContractDao contractList;
+    private InsuranceDao insuranceList;
     private CustomerList customerList;
     private PaymentList paymentList;
     private AccidentList accidentList;
@@ -593,7 +593,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
-        //TODO ContractDAO 생기면 new 해주기
+        contractList = new ContractDao();
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
@@ -605,7 +605,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String key = sc.next();
                 if (key.equals("0"))
                     break;
-                //TODO ContractDAO 생기면 new 해주기
+                contractList = new ContractDao();
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -619,7 +619,8 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 보험료 납부를 위한 계약 정보를 출력하는 기능
     public void showContractInfoForPay(Contract contract) {
-        //TODO 보험DAO 생기면 new 해주기
+
+        insuranceList = new InsuranceDao();
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
         sb.append("[ID]").append(" : ").append(contract.getId())
@@ -672,7 +673,7 @@ public class CustomerViewLogic implements ViewLogic {
                 this.paymentList = new PaymentDao();
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
-                // TODO 계약 DAO 생기면 new 하기.
+                contractList = new ContractDao();
                 contractList.updatePayment(contract.getId(),payment.getId());
                 break;
             } catch (NumberFormatException e) {

@@ -16,6 +16,10 @@ public class ContractDao extends Dao {
 
 
     public void create(Contract contract) {
+        String query = "insert into contract (insurance_id, customer_id, employee_id, premium, is_publish_stock, condition_of_uw) values (%d, %d, %d, %d, %b, %s);";
+        String contractQuery = String.format(query, contract.getInsuranceId(), contract.getCustomerId(), contract.getEmployeeId(), contract.getPremium(), false, ConditionOfUw.WAIT);
+        int id = super.create(contractQuery);
+        contract.setId(id);
 
 
     }
