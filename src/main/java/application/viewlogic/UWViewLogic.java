@@ -2,6 +2,7 @@ package application.viewlogic;
 
 import dao.ContractDao;
 import dao.CustomerDao;
+import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
@@ -41,22 +42,14 @@ import static utility.MessageUtil.createMenu;
 public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
-    private EmployeeList employeeList;
-
-
     private MyBufferedReader br;
+    private Employee employee;
 
-    public UWViewLogic(EmployeeList employeeList, CustomerList customerList, InsuranceList insuranceList, ContractList contractList) {
+    public UWViewLogic() {
         this.sc = new Scanner(System.in);
-        this.employeeList = employeeList;
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-
-        Employee employee = new Employee();
-        employee.setId(1)
-                .setName("윤여찬")
-                .setDepartment(Department.UW)
-                .setPhone("010-1111-2222")
-                .setPosition(Position.DEPTMANAGER);
+        EmployeeDao employeeDao = new EmployeeDao();
+        this.employee = employeeDao.read(2);
     }
 
     @Override
@@ -121,7 +114,7 @@ public class UWViewLogic implements ViewLogic {
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
 
                 // read
-                List<Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
+                List<Contract> contractList = this.employee.readContract(insuranceType);
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
@@ -211,7 +204,7 @@ public class UWViewLogic implements ViewLogic {
                 switch (sc.next()) {
                     case "1":
                         // update
-                        this.employeeList.read(1).underwriting(contractId, reasonOfUw, conditionOfUw);
+                        this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
                         ContractDao contractDao = new ContractDao();

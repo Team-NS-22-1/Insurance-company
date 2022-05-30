@@ -5,7 +5,6 @@ import dao.*;
 import domain.accident.AccidentList;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.complain.ComplainList;
-import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
@@ -18,7 +17,6 @@ import domain.insurance.InsuranceListImpl;
 import domain.payment.PaymentList;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
-import test.TestData;
 
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -44,6 +42,7 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
+
         CustomerList customerList = new CustomerDao();
         EmployeeList employeeList = new EmployeeListImpl();
         InsuranceList insuranceList = new InsuranceListImpl();
@@ -55,12 +54,14 @@ public class Application {
         ComplainList complainList = new ComplainDao();
 
 
-        map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
-        map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
-        map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
-        map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
-        map.put(UserType.COMP, new CompViewLogic(employeeList,accidentList,accDocFileList,customerList));
+
+        map.put(UserType.GUEST,new GuestViewLogic());
+        map.put(UserType.CUSTOMER, new CustomerViewLogic());
+        map.put(UserType.SALES, new SalesViewLogic());
+        map.put(UserType.DEV, new DevViewLogic());
+        map.put(UserType.UW, new UWViewLogic());
+        map.put(UserType.COMP, new CompViewLogic());
+
     }
 
 

@@ -102,17 +102,4 @@ public class Dao {
         }
     }
 
-    public void update(String query, String[] columnNames) {
-        connect();
-        try {
-            statement = connect.createStatement();
-            int i  = statement.executeUpdate(query, columnNames);
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            close();
-        }
-    }
-
 }

@@ -48,19 +48,14 @@ import static utility.MessageUtil.createMenuAndExit;
  */
 public class CompViewLogic implements ViewLogic {
 
-
-    private  EmployeeList employeeList;
     private  AccidentList accidentList;
     private  AccDocFileList accDocFileList;
     private  CustomerList customerList;
+    private EmployeeDao employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 
-    public CompViewLogic(EmployeeList employeeList, AccidentList accidentList, AccDocFileList accDocFileList, CustomerList customerList) {
-        this.employeeList = employeeList;
-        this.accidentList = accidentList;
-        this.accDocFileList = accDocFileList;
-        this.customerList = customerList;
+    public CompViewLogic() {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
     }
 
