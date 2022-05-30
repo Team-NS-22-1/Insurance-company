@@ -18,4 +18,5 @@ public interface AccidentList extends CrudInterface<Accident> {
     void updateLossReserve(Accident accident);
 
     void updateLossReserveAndErrorRate(Accident accident);
+    void updateCompEmployeeId(Accident accident);
 }

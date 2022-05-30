@@ -219,7 +219,7 @@ public class CompVIewLogic implements ViewLogic {
                 isExist = true;
             }
         }
-        accDocFileList = new AccDocFileDao(); // TODO 이미 있는지 체크해줘야함.
+        accDocFileList = new AccDocFileDao();
         if (isExist) {
             accDocFileList.update(lossId);
         } else {
@@ -245,6 +245,9 @@ public class CompVIewLogic implements ViewLogic {
             }
         }
         Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
+        accidentList = new AccidentDao();
+        accidentList.delete(accident.getId());
+        DocUtil.deleteDir(accident); // 폴더 삭제
     }
 
     private AccountRequestDto createCompAccount() {

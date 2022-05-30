@@ -36,7 +36,7 @@ public class AccidentDao extends Dao implements AccidentList {
         String detailFormat = "";
 
         switch (accident.getAccidentType()) {
-            case CARACCIDENT -> {detail_query = "insert into car_accident (accident_id, car_no, place_address, opposing_driver_phone, is_request_in_site, error_rate) values ('%d', '%s', '%s', '%s', '%d', '%d')";
+            case CARACCIDENT -> {detail_query = "insert into car_accident (accident_id, car_no, place_address, opposing_driver_phone, is_request_on_site, error_rate) values ('%d', '%s', '%s', '%s', '%d', '%d')";
                 detailFormat = String.format(detail_query,accident.getId(),((CarAccident)accident).getCarNo(),((CarAccident)accident).getPlaceAddress(), ((CarAccident)accident).getOpposingDriverPhone(), ((CarAccident)accident).isRequestOnSite() ? 1 : 0
                 ,((CarAccident)accident).getErrorRate());
             }
@@ -76,7 +76,7 @@ public class AccidentDao extends Dao implements AccidentList {
                             ((CarAccident) ac).setCarNo(detailRs.getString("car_no"))
                                     .setPlaceAddress(detailRs.getString("place_address"))
                                     .setOpposingDriverPhone(detailRs.getString("opposing_driver_phone"))
-                                    .setRequestOnSite(detailRs.getInt("is_request_in_site") == 1 ? true : false)
+                                    .setRequestOnSite(detailRs.getInt("is_request_on_site") == 1 ? true : false)
                                     .setErrorRate(detailRs.getInt("error_rate"));
 
                         }
@@ -174,7 +174,7 @@ public class AccidentDao extends Dao implements AccidentList {
                             ((CarAccident) ac).setCarNo(detailRs.getString("car_no"))
                                     .setPlaceAddress(detailRs.getString("place_address"))
                                     .setOpposingDriverPhone(detailRs.getString("opposiong_driver_phone"))
-                                    .setRequestOnSite(detailRs.getInt("is_request_in_site") == 1 ? true : false)
+                                    .setRequestOnSite(detailRs.getInt("is_request_on_site") == 1 ? true : false)
                                     .setErrorRate(detailRs.getInt("error_rate"));
 
                         }
@@ -244,10 +244,23 @@ public class AccidentDao extends Dao implements AccidentList {
         super.update(detailFormatted);
     }
 
+    @Override
+    public void updateCompEmployeeId(Accident accident) {
+        String query = "update accident set employee_id = %d where accident_id = %d";
+        String formatted = String.format(query,accident.getEmployeeId(),accident.getId());
+        super.update(formatted);
+    }
+
 
     @Override
     public boolean delete(int id) {
-        return false;
+        String query = "delete from accident where accident_id = %d";
+        String formattedQuery = String.format(query,id);
+        boolean result = super.delete(formattedQuery);
+        if(!result)
+            throw new IllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+
+        return true;
     }
 
 }

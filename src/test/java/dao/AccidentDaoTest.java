@@ -107,11 +107,11 @@ class AccidentDaoTest {
 
     @Test
     void read2() throws SQLException {
-        Accident read = ad.read(14);
+        Accident read = ad.read(23);
         read.printForComEmployee();
         read.printForComEmployee();
 
-        assertEquals(read.getId(),14);
+//        assertEquals(read.getId(),14);
     }
     @Test
     void readAllByCustomerId() {
@@ -178,6 +178,26 @@ class AccidentDaoTest {
         Accident updated = ad.read(read.getId());
         assertEquals(updated.getLossReserves(),1000);
         assertEquals(((CarAccident)updated).getErrorRate(),90);
+    }
+
+    @Test
+    void delete() {
+//        CarAccident car = new CarAccident();
+//        car.setCarNo("test")
+//                .setPlaceAddress("terst").setOpposingDriverPhone("asd")
+//                .setRequestOnSite(true)
+//                .setAccidentType(AccidentType.CARACCIDENT)
+//                .setEmployeeId(2)
+//                .setCustomerId(2)
+//                .setDateOfAccident(LocalDateTime.now())
+//                .setDateOfReport(LocalDateTime.now());
+//
+//
+//        ad.create(car);
+
+        ad.delete(2);
+
+
     }
 
 }

@@ -43,23 +43,27 @@ public class Dao {
         return resultSet;
     }
 
-    public void update(String query) {
+    public boolean update(String query) {
         connect();
-        executeUpdate(query);
+        int resultRows = executeUpdate(query);
+        return resultRows > 0;
     }
 
-    public void delete(String query) {
-        executeUpdate(query);
-
+    public boolean delete(String query) {
+        connect();
+        int resultRows = executeUpdate(query);
+        return resultRows > 0;
     }
 
-    private void executeUpdate(String query) {
+    private int executeUpdate(String query) {
+        int result = 0;
         try {
             statement = connection.createStatement();
-            statement.executeUpdate(query);
+            result = statement.executeUpdate(query);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return result;
     }
 
     public void close(Connection con, Statement stmt, ResultSet rs) {

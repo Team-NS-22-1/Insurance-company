@@ -234,7 +234,9 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
             }
         }
-        accident.setEmployeeId(compEmployee.getId()); // TODO update 해줘야해.
+        accident.setEmployeeId(compEmployee.getId());
+        accidentList = new AccidentDao();
+        accidentList.updateCompEmployeeId(accident);
     }
 
     private void showFireAccidentDoc(Accident accident) {
