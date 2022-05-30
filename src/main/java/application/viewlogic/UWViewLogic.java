@@ -3,18 +3,25 @@ package application.viewlogic;
 import domain.contract.*;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
-import domain.customer.CustomerListImpl;
 import domain.employee.*;
 import domain.insurance.Insurance;
+import domain.insurance.InsuranceDetail;
 import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
 import domain.insurance.InsuranceType;
 import application.ViewLogic;
 import exception.InputException;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
+import utility.MessageUtil;
+import utility.MyBufferedReader;
+import uwDao.ContractDao;
+import uwDao.CustomerDao;
+import uwDao.InsuranceDao;
+import uwDao.InsuranceDetailDao;
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 import java.util.Scanner;
 
 import static utility.MessageUtil.createMenu;
@@ -34,16 +41,14 @@ public class UWViewLogic implements ViewLogic {
 
     private Scanner sc;
     private EmployeeList employeeList;
-    private CustomerList customerList;
-    private InsuranceList insuranceList;
-    private ContractList contractList;
+
+
+    private MyBufferedReader br;
 
     public UWViewLogic(EmployeeList employeeList, CustomerList customerList, InsuranceList insuranceList, ContractList contractList) {
         this.sc = new Scanner(System.in);
         this.employeeList = employeeList;
-        this.customerList = customerList;
-        this.insuranceList = insuranceList;
-        this.contractList = contractList;
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
 
         Employee employee = new Employee();
         employee.setId(1)
@@ -80,24 +85,13 @@ public class UWViewLogic implements ViewLogic {
 
     }
 
-    public void createMenuAndExit(String menuName, String ... elements) {
-        createMenu(menuName, elements);
-        System.out.println("0 : 취소하기");
-        System.out.println("exit : 시스템 종료");
-    }
-
-    public void createMenuOnlyExit(String menuName, String ... elements) {
-        createMenu(menuName, elements);
-        System.out.println("exit : 시스템 종료");
-    }
-
     public boolean selectInsuranceType() {
         boolean isExit = false;
 
         while (isExit != true) {
 
             try {
-                createMenuAndExit("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험");
+                MessageUtil.createMenuAndExit("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험");
 
                 InsuranceType insuranceType = null;
 
@@ -124,21 +118,30 @@ public class UWViewLogic implements ViewLogic {
             try {
                 createMenu("-------------------------------");
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
-                Map<Integer, Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
+
+                // read
+                List<Contract> contractList = this.employeeList.read(1).readContract(insuranceType);
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
-                createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
+                MessageUtil.createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
                 String contractId = sc.next();
 
                 if (contractId.equals("0")) break;
                 if (contractId.equals("exit")) throw new MyCloseSequence();
 
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
-                if (!contractList.containsKey(Integer.parseInt(contractId))) throw new MyIllegalArgumentException();
 
-                Contract contract = printContractInfo(contractList.get(Integer.parseInt(contractId)));
+                ContractDao contractDao = new ContractDao();
+                InsuranceDao insuranceDao = new InsuranceDao();
+                Contract contract = contractDao.read(Integer.parseInt(contractId));
+                Insurance insurance = insuranceDao.read(contract.getId());
 
+                if (contract.getId() == 0) throw new MyIllegalArgumentException();
+                if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyIllegalArgumentException();
+
+                // read
+                printContractInfo(contract);
                 selectUwState(contract);
 
             } catch (NumberFormatException e) {
@@ -156,14 +159,15 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
+                MessageUtil.createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
                 String command = sc.next();
 
                 switch (command) {
 
                     case "1": case "2": case "3":
                         createMenu("<<인수사유를 입력해주세요.>>");
-                        String reasonOfUw = sc.next();
+                        String reasonOfUw = "";
+                        reasonOfUw = (String) br.verifyRead("인수사유: ", reasonOfUw);
                         ConditionOfUw conditionOfUw = null;
 
                         switch (command) {
@@ -186,6 +190,8 @@ public class UWViewLogic implements ViewLogic {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             } catch (MyIllegalArgumentException e) {
                 System.out.println("계약 정보가 존재하지 않습니다.");
+            } catch (IOException e) {
+                System.out.println("인수사유가 잘못되었습니다.");
             }
         }
         return true;
@@ -199,14 +205,16 @@ public class UWViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
+                MessageUtil.createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
 
                 switch (sc.next()) {
                     case "1":
+                        // update
                         this.employeeList.read(1).underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
-                        System.out.println(ContractListImpl.getContractList().get(contractId));
+                        ContractDao contractDao = new ContractDao();
+                        System.out.println(contractDao.read(contractId));
                         isExit = true;
                         break;
                     case "2":
@@ -224,23 +232,29 @@ public class UWViewLogic implements ViewLogic {
 
     }
 
-    public void printContractList(Map<Integer, Contract> contractList) {
+    public void printContractList(List<Contract> contractList) {
 
-        for (Contract contract : contractList.values()) {
-            Customer customer = this.customerList.read(contract.getCustomerId());
-            System.out.println(contract.getId() + "        " + customer.getName() + "        " + contract.getConditionOfUw());
+        for (Contract contract : contractList) {
+            CustomerDao customerDao = new CustomerDao();
+            Customer customer = customerDao.read(contract.getCustomerId());
+            System.out.println(contract.getId() + "        " + customer.getName() + " " + contract.getConditionOfUw().getName());
         }
     }
 
     public Contract printContractInfo(Contract contract) {
         System.out.println(contract.toString());
 
-        Customer customer = this.customerList.read(contract.getCustomerId());
+        CustomerDao customerDao = new CustomerDao();
+        Customer customer = customerDao.read(contract.getCustomerId());
         System.out.println(customer.toString());
 
-        Insurance insurance = this.insuranceList.read(contract.getInsuranceId());
+        InsuranceDao insuranceDao = new InsuranceDao();
+        Insurance insurance = insuranceDao.read(contract.getInsuranceId());
         System.out.println(insurance.print());
 
+        InsuranceDetailDao insuranceDetailDao = new InsuranceDetailDao();
+        InsuranceDetail insuranceDetail = insuranceDetailDao.read(contract.getInsuranceId());
+        System.out.println(insuranceDetail.print());
         return contract;
 
     }

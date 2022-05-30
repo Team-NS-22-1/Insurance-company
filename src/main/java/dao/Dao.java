@@ -51,13 +51,11 @@ public class Dao {
     }
 
     public boolean update(String query) {
-        connect();
         int resultRows = executeUpdate(query);
         return resultRows > 0;
     }
 
     public boolean delete(String query) {
-        connect();
         int resultRows = executeUpdate(query);
         return resultRows > 0;
     }

@@ -1,9 +1,7 @@
 package application;
 
 import application.viewlogic.*;
-import dao.AccDocFileDao;
-import dao.AccidentDao;
-import dao.PaymentDao;
+import dao.*;
 import domain.accident.AccidentList;
 import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileList;
@@ -13,7 +11,6 @@ import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
-import dao.CustomerDao;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import domain.insurance.InsuranceDetailList;
@@ -58,7 +55,7 @@ public class Application {
         PaymentList paymentList = new PaymentDao();
         AccidentList accidentList = new AccidentDao();
         AccDocFileList accDocFileList = new AccDocFileDao();
-        ComplainList complainList = new ComplainListImpl();
+        ComplainList complainList = new ComplainDao();
 
         // 테스트 더미 데이터 생성
         new TestData();

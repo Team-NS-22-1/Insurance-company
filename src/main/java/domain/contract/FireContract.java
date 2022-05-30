@@ -64,18 +64,13 @@ public class FireContract extends Contract{
 
 	@Override
 	public String toString() {
-		return "계약정보 {" +
-				"계약 ID: " + getId() +
-				", 인수심사상태: " + getConditionOfUw() +
-				", 인수사유: '" + getReasonOfUw() + '\'' +
-				", 증권발행여부: " + isPublishStock() +
-				", 보험료: " + getPremium() +
-				", 결제수단: " + getPayment() +
-				", 주택면적: " + buildingArea +
-				", 건물종류: " + buildingType +
+		return super.toString() +
+				" 주택정보: {" +
+				"주택면적: " + buildingArea +
+				", 건물종류: " + buildingType.getName() +
 				", 담보금액: " + collateralAmount +
 				", 실거주여부: " + isActualResidence +
 				", 자가여부: " + isSelfOwned +
-				'}';
+				"}}";
 	}
 }

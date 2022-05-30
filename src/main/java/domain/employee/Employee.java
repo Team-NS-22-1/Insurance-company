@@ -25,10 +25,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author SeungHo
@@ -544,28 +541,9 @@ public class Employee {
 
 	}
 
-	public Map<Integer, Contract> readContract(InsuranceType insuranceType){
-		Map<Integer, Contract> contractList = new HashMap<>();
-
-		for (Contract contract : ContractListImpl.getContractList().values()) {
-
-			switch (insuranceType) {
-
-				case HEALTH:
-					if (/*contract.getHealthInfo() != null &&*/ (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-				case CAR:
-					if (/*contract.getCarInfo() != null &&*/ (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-				case FIRE:
-					if (/*contract.getBuildingInfo() != null &&*/ (contract.getConditionOfUw() == ConditionOfUw.WAIT || contract.getConditionOfUw() == ConditionOfUw.RE_AUDIT))
-						contractList.put(contract.getId(), contract);
-					break;
-			}
-		}
-		return contractList;
+	public List<Contract> readContract(InsuranceType insuranceType){
+		uwDao.ContractDao contractDao = new uwDao.ContractDao();
+		return contractDao.readAllByInsuranceType(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){

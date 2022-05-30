@@ -107,24 +107,17 @@ public class Contract {
 
 	@Override
 	public String toString() {
-//		String text =
-//		 "계약 정보 {" +
-//				 "계약 ID: " + id +
-//				", 인수심사상태: " + conditionOfUw +
-//				 ", 인수사유: '" + reasonOfUw + '\'' +
-//				 ", 증권발행여부: " + isPublishStock +
-//				 ", 보험료: " + premium +
-//				", 결제수단: " + payment +
-//				 ", 건강정보: " + healthContract +
-//				 ", 자동차정보: " + carInfo +
-//				 ", 화재정보: " + buildingInfo + '\'' +
-//				'}';
-//
-//		if (carInfo != null) text.concat(carInfo.toString());
-//		if (buildingInfo != null) text.concat(buildingInfo.toString());
-//		if (healthInfo != null) text.concat(healthInfo.toString());
+		String text =
+		 "계약 정보 {" +
+				 "계약 ID: " + id +
+				", 인수심사상태: " + conditionOfUw.getName() +
+				 ", 인수사유: '" + reasonOfUw + '\'' +
+				 ", 증권발행여부: " + isPublishStock +
+				 ", 보험료: " + premium +
+				", 결제수단: " + payment +
+				 ", ";
 
-		 return null;
+		 return text;
 	}
 
 }
