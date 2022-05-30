@@ -1,20 +1,6 @@
 package application;
 
 import application.viewlogic.*;
-import dao.*;
-import domain.accident.AccidentList;
-import domain.accident.accDocFile.AccDocFileList;
-import domain.complain.ComplainList;
-import domain.contract.ContractList;
-import domain.contract.ContractListImpl;
-import domain.customer.CustomerList;
-import domain.employee.EmployeeList;
-import domain.employee.EmployeeListImpl;
-import domain.insurance.InsuranceDetailList;
-import domain.insurance.InsuranceDetailListImpl;
-import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceListImpl;
-import domain.payment.PaymentList;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 
@@ -42,19 +28,6 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-
-        CustomerList customerList = new CustomerDao();
-        EmployeeList employeeList = new EmployeeListImpl();
-        InsuranceList insuranceList = new InsuranceListImpl();
-        InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
-        ContractList contractList = new ContractListImpl();
-        PaymentList paymentList = new PaymentDao();
-        AccidentList accidentList = new AccidentDao();
-        AccDocFileList accDocFileList = new AccDocFileDao();
-        ComplainList complainList = new ComplainDao();
-
-
-
         map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic());
         map.put(UserType.SALES, new SalesViewLogic());
