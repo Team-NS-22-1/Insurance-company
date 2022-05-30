@@ -8,7 +8,6 @@ public class PremiumInfoFinder {
     public static int customerAgeFinder(String ssn) {
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
         String today = date.format(new Date());
-
         int thisYear = Integer.parseInt(today.substring(0, 4));
         int thisMonth = Integer.parseInt(today.substring(4, 6));
         int thisDay = Integer.parseInt(today.substring(6, 8));

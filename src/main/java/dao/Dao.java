@@ -15,10 +15,8 @@ public class Dao {
         try {
             Class.forName(DbConst.JDBC_DRIVER);
             connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
-        } catch (SQLException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             // DB 접근 실패 Exception
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -52,13 +50,11 @@ public class Dao {
     }
 
     public boolean update(String query) {
-        connect();
         int resultRows = executeUpdate(query);
         return resultRows > 0;
     }
 
     public boolean delete(String query) {
-        connect();
         int resultRows = executeUpdate(query);
         return resultRows > 0;
     }
