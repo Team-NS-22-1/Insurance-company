@@ -10,6 +10,7 @@ import dao.CustomerDao;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
+import domain.accident.accDocFile.AccDocType;
 import domain.customer.Customer;
 import domain.customer.CustomerList;
 import domain.employee.Department;
@@ -196,8 +197,6 @@ public class CompVIewLogic implements ViewLogic {
         assessDamagewithoutLogin();
         //TODO 손해 사정이 끝나면 정보 삭제하기.
 
-        // TODO 손해 사정이 반려되었을 때, 다시 작성한다면 손해사정서 정보를 읽어서 있다면 create 하지 않기. update를 해야 하나? 그럼 파일들 업로드 날을 필드로 추가하던가 해야 할 거 같다.
-        //
     }
 
     private void assessDamagewithoutLogin() {
@@ -212,8 +211,20 @@ public class CompVIewLogic implements ViewLogic {
         AccountRequestDto compAccount = createCompAccount();
         System.out.println("손해사정서를 업로드해주세요.");
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
-        accDocFileList = new AccDocFileDao();
-        accDocFileList.create(assessDamageResponseDto.getAccDocFile());
+        boolean isExist = false;
+        int lossId = 0;
+        for (AccDocFile accDocFile : accDocFiles) {
+            if (accDocFile.getType() == AccDocType.LOSSASSESSMENT) {
+                lossId = accDocFile.getId();
+                isExist = true;
+            }
+        }
+        accDocFileList = new AccDocFileDao(); // TODO 이미 있는지 체크해줘야함.
+        if (isExist) {
+            accDocFileList.update(lossId);
+        } else {
+            accDocFileList.create(assessDamageResponseDto.getAccDocFile());
+        }
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
