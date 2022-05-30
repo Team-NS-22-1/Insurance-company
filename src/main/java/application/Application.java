@@ -1,6 +1,9 @@
 package application;
 
 import application.viewlogic.*;
+import dao.AccDocFileDao;
+import dao.AccidentDao;
+import dao.PaymentDao;
 import domain.accident.AccidentList;
 import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileList;
@@ -10,7 +13,7 @@ import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
-import domain.customer.JDBCCustomerListImpl;
+import dao.CustomerDao;
 import domain.employee.EmployeeList;
 import domain.employee.EmployeeListImpl;
 import domain.insurance.InsuranceDetailList;
@@ -47,21 +50,21 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        CustomerList customerList = new JDBCCustomerListImpl();
+        CustomerList customerList = new CustomerDao();
         EmployeeList employeeList = new EmployeeListImpl();
         InsuranceList insuranceList = new InsuranceListImpl();
         InsuranceDetailList insuranceDetailList = new InsuranceDetailListImpl();
         ContractList contractList = new ContractListImpl();
-        PaymentList paymentList = new PaymentListImpl();
-        AccidentList accidentList = new AccidentListImpl();
-        AccDocFileList accDocFileList = new AccDocFileListImpl();
+        PaymentList paymentList = new PaymentDao();
+        AccidentList accidentList = new AccidentDao();
+        AccDocFileList accDocFileList = new AccDocFileDao();
         ComplainList complainList = new ComplainListImpl();
 
         // 테스트 더미 데이터 생성
         new TestData();
 
         map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
-        map.put(UserType.CUSTOMER, new CustomerViewLogic(customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList/*,insuranceDetailList*/));
+        map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
         map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));

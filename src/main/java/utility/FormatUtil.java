@@ -15,6 +15,10 @@ import java.util.regex.Pattern;
  */
 public class FormatUtil {
 
+
+    public static boolean isErrorRate(int errorRate) {
+        return errorRate>=0 && errorRate<=100;
+    }
     public static boolean isCardNo(String str) {
         return Pattern.matches("^[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}$",str);
     }

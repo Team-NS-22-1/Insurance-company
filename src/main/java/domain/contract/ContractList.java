@@ -13,4 +13,5 @@ import java.util.List;
 public interface ContractList extends CrudInterface<Contract> {
 
     List<Contract> findAllByCustomerId(int customerId);
+    void updatePayment(int contractId, int paymentId);
 }
