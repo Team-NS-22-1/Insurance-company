@@ -17,12 +17,4 @@ public enum SalesAuthState {
 	public String getName() {
 		return name;
 	}
-	public static SalesAuthState valueOfName(String name){
-		return switch (name) {
-			case "허가" -> PERMISSION;
-			case "대기" -> WAIT;
-			case "불허" -> DISALLOWANCE;
-			default -> null;
-		};
-	}
 }

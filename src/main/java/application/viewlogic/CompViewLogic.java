@@ -7,6 +7,7 @@ import application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import dao.AccDocFileDao;
 import dao.AccidentDao;
 import dao.CustomerDao;
+import dao.EmployeeDao;
 import domain.accident.*;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
@@ -16,7 +17,6 @@ import domain.customer.CustomerList;
 import domain.employee.Department;
 import domain.employee.Employee;
 import domain.employee.EmployeeList;
-import domain.payment.Account;
 import domain.payment.BankType;
 import exception.InputException;
 import exception.MyIllegalArgumentException;
@@ -46,21 +46,16 @@ import static utility.MessageUtil.createMenuAndExit;
  * -----------------------------------------------------------
  * 2022-05-10                규현             최초 생성
  */
-public class CompVIewLogic implements ViewLogic {
+public class CompViewLogic implements ViewLogic {
 
-
-    private  EmployeeList employeeList;
     private  AccidentList accidentList;
     private  AccDocFileList accDocFileList;
     private  CustomerList customerList;
+    private EmployeeDao employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 
-    public CompVIewLogic(EmployeeList employeeList, AccidentList accidentList, AccDocFileList accDocFileList, CustomerList customerList) {
-        this.employeeList = employeeList;
-        this.accidentList = accidentList;
-        this.accDocFileList = accDocFileList;
-        this.customerList = customerList;
+    public CompViewLogic() {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
     }
 
@@ -187,7 +182,6 @@ public class CompVIewLogic implements ViewLogic {
                 System.out.println("사고 주소 : " + ((FireAccident)accident).getPlaceAddress());
                 break;
             }
-//            default ->
         }
 
     }
@@ -195,8 +189,6 @@ public class CompVIewLogic implements ViewLogic {
     private void assessDamage() {
         loginCompEmployee();
         assessDamagewithoutLogin();
-        //TODO 손해 사정이 끝나면 정보 삭제하기.
-
     }
 
     private void assessDamagewithoutLogin() {
@@ -321,11 +313,7 @@ public class CompVIewLogic implements ViewLogic {
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 if (result.equals("Y")) {
-                    //TODO parameter로 accdocfile을 넣어주도록 하라.
-                    // 그리고 CompEmployee가 다운로드를 해야 하지 않을까...
                     instance.download(accDocFile.getFileAddress());
-
-
                     break;
                 } else if (result.equals("N")) {
                     break;
@@ -340,7 +328,7 @@ public class CompVIewLogic implements ViewLogic {
         while(true){
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
-                //TODO employeeDAO 생기면 변경
+                employeeList = new EmployeeDao();
                 List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
                 for(Employee employee : employeeArrayList){
                     System.out.println(employee.print());
@@ -349,7 +337,7 @@ public class CompVIewLogic implements ViewLogic {
                 int employeeId = 0;
                 employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
                 if(employeeId == 0) break;
-                //TODO employeeDAO 생기면 변경
+                this.employeeList = new EmployeeDao();
                 this.employee = this.employeeList.read(employeeId);
                 if(this.employee.getDepartment() != Department.COMP){
                     System.out.println("해당 직원은 보상팀 직원이 아닙니다!");

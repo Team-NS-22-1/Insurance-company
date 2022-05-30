@@ -1,15 +1,11 @@
 package application.viewlogic;
 
 import application.ViewLogic;
+import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.BuildingType;
-import domain.employee.Department;
 import domain.employee.Employee;
-import domain.employee.EmployeeList;
-import domain.insurance.Insurance;
-import domain.insurance.InsuranceDetailList;
-import domain.insurance.InsuranceList;
-import domain.insurance.InsuranceType;
+import domain.insurance.*;
 import domain.insurance.inputDto.*;
 import exception.InputException;
 import exception.MyFileException;
@@ -35,20 +31,12 @@ import static utility.MessageUtil.createMenuAndClose;
  */
 public class DevViewLogic implements ViewLogic {
 
-    private EmployeeList employeeList;
-    private InsuranceList insuranceList;
-    private InsuranceDetailList insuranceDetailList;
-
     private Employee employee;
 
     private MyBufferedReader br;
 
-
-    public DevViewLogic(EmployeeList employeeList, InsuranceList insuranceList, InsuranceDetailList insuranceDetailList) {
+    public DevViewLogic() {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-        this.employeeList = employeeList;
-        this.insuranceList = insuranceList;
-        this.insuranceDetailList = insuranceDetailList;
     }
 
     @Override
@@ -61,15 +49,14 @@ public class DevViewLogic implements ViewLogic {
         try {
             switch (command){
                 case "1" -> {
-                    new InsuranceDao().read(1);
-                    testInitEmployee();
+                    initEmployee();
                     if(employee!=null){
                         showInsuranceByEmployee();
                         this.menuDevelop(this.menuInsuranceType());
                     }
                 }
                 case "2" -> {
-                    testInitEmployee();
+                    initEmployee();
                     if(employee!=null){
                         this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
                     }
@@ -85,33 +72,26 @@ public class DevViewLogic implements ViewLogic {
         }
     }
 
-    private void testInitEmployee() throws IOException {
-        while(true){
-            try {
-                System.out.println("<< 직원을 선택하세요. >>");
-                ArrayList<Employee> employeeArrayList = this.employeeList.readAll();
-                for(Employee employee : employeeArrayList) {
-                    System.out.println(employee.print());
-                }
-                System.out.println("---------------------------------");
-                int employeeId = br.verifyMenu("직원 ID: ", employeeArrayList.size());
-                if(employeeId == 0) break;
-                this.employee = this.employeeList.read(employeeId);
-                if(this.employee.getDepartment() != Department.DEV){
-                    System.out.println("해당 직원은 개발팀 직원이 아닙니다!");
-                    continue;
-                }
-                break;
+    private void initEmployee() throws IOException {
+        try {
+            System.out.println("<< 직원을 선택하세요. >>");
+            ArrayList<Employee> devEmployees = new EmployeeDao().readAllDev();
+            for(Employee employee : devEmployees) {
+                System.out.println(employee.print());
             }
-            catch (InputException e) {
-                System.out.println(e.getMessage());
-            }
+            System.out.println("---------------------------------");
+            int eid = br.verifyMenu("직원 ID: ", devEmployees.size());
+            if(eid == 0) return;
+            this.employee = new EmployeeDao().read(eid);
+        }
+        catch (InputException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private ArrayList<Insurance> showInsuranceByEmployee() {
         System.out.println("<< "+employee.getName()+" 보험 개발 리스트 >>");
-        ArrayList<Insurance> insuranceArrayList = insuranceList.readByEid(employee.getId());
+        ArrayList<Insurance> insuranceArrayList = new InsuranceDao().readByEmployeeId(employee.getId());
         if(insuranceArrayList.size() == 0) {
             System.out.println("--------------NONE---------------");
         }
@@ -128,7 +108,7 @@ public class DevViewLogic implements ViewLogic {
         ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
         System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
         int insuranceId = br.verifyMenu("보험 ID: ", insuranceArrayList.size());
-        Insurance insurance = insuranceList.read(insuranceId);
+        Insurance insurance = new InsuranceDao().read(insuranceId);
         System.out.println(insurance.print());
         return insurance;
     }
@@ -358,18 +338,25 @@ public class DevViewLogic implements ViewLogic {
                     case 1 -> {
                         switch (employee.registerAuthProdDeclaration(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthProdDeclaration(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -377,18 +364,25 @@ public class DevViewLogic implements ViewLogic {
                     case 2 -> {
                         switch (employee.registerAuthSrActuaryVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -396,18 +390,25 @@ public class DevViewLogic implements ViewLogic {
                     case 3 -> {
                         switch (employee.registerAuthIsoVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthIsoVerification(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }
@@ -415,18 +416,25 @@ public class DevViewLogic implements ViewLogic {
                     case 4 -> {
                         switch (employee.registerAuthFssOfficialDoc(insurance)) {
                             // 파일 업로드 성공
-                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
                             case -1 -> { return; }
                             // 파일 업로드 변경
-                            case 1 -> {
+                            case 0 -> {
                                 switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
-                                            case 0 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                                             case -1 -> { return; }
                                         }
                                     }
+                                }
+                            }
+                            // 판매상태 변경
+                            case 2 -> {
+                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
+                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthState.PERMISSION);
+                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthState.DISALLOWANCE);
                                 }
                             }
                         }

@@ -27,9 +27,9 @@ class AccDocFileDaoTest {
     @Test
     void create() {
         AccDocFile accDocFile = new AccDocFile();
-//        accDocFile.setFileAddress("testAddress");
+        accDocFile.setFileAddress("testAddress");
         accDocFile.setType(AccDocType.CLAIMCOMP);
-        accDocFile.setAccidentId(4);
+        accDocFile.setAccidentId(5);
         dao.create(accDocFile);
 
         dao = new AccDocFileDao();

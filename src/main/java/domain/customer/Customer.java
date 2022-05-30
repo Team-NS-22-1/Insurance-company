@@ -138,12 +138,10 @@ public class Customer {
 			return null;
 		}
 		accDocFile.setFileAddress(directory);
-		accident.getAccDocFileList().put(accDocFile.getType(), accDocFile);
 		return accDocFile;
 	}
 
-	public void pay(Contract contract){
-		Payment payment = contract.getPayment();
+	public void pay(Contract contract, Payment payment){
 		if(payment != null)
 			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
 	}
@@ -183,7 +181,7 @@ public class Customer {
 	}
 
 	public void registerPayment(Contract contract, Payment payment) {
-		contract.setPayment(payment);
+		contract.setPaymentId(payment.getId());
 	}
 
 	public Accident reportAccident(AccidentReportDto accidentReportDto){

@@ -53,8 +53,8 @@ import static utility.MessageUtil.*;
  */
 public class CustomerViewLogic implements ViewLogic {
 
-    private ContractList contractList;
-    private InsuranceList insuranceList;
+    private ContractDao contractList;
+    private InsuranceDao insuranceList;
     private CustomerList customerList;
     private PaymentList paymentList;
     private AccidentList accidentList;
@@ -66,20 +66,10 @@ public class CustomerViewLogic implements ViewLogic {
     private CustomMyBufferedReader br;
 
     public CustomerViewLogic() {
-    }
-
-    public CustomerViewLogic(CustomerList customerList, ContractList contractList, InsuranceList insuranceList, PaymentList paymentList, AccidentList accidentList, AccDocFileList accDocFileList, EmployeeList employeeList, ComplainList complainList) {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
-        this.contractList = contractList;
-        this.insuranceList = insuranceList;
-        this.customerList = customerList;
-        this.paymentList = paymentList;
-        this.accidentList = accidentList;
-        this.accDocFileList = accDocFileList;
-        this.employeeList = employeeList;
-        this.complainList = complainList;
     }
+
     @Override
     public void showMenu() {
         createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
@@ -162,10 +152,16 @@ public class CustomerViewLogic implements ViewLogic {
                         break;
                     }
                     accDocFileList = new AccDocFileDao();
-                    if(accident.getAccDocFileList().containsKey(accDocType))
+                    for (AccDocFile value : accident.getAccDocFileList().values()) {
+                        System.out.println(value);
+                    }
+
+                    if (accident.getAccDocFileList().containsKey(accDocType)) {
                         accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-                    else
-                    accDocFileList.create(accDocFile);
+                    } else {
+                        accDocFileList.create(accDocFile);
+                        accident.getAccDocFileList().put(accDocType,accDocFile);
+                    }
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
                     break;
@@ -230,7 +226,7 @@ public class CustomerViewLogic implements ViewLogic {
             rtVal = (String) br.verifyRead("보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)",rtVal);
             if (rtVal.equals("Y")) {
                 String reasons = "";
-                reasons=(String)br.verifyRead("변경 사유를 입력해주세요",reasons);
+                reasons=(String)br.verifyRead("변경 사유를 입력해주세요 : ",reasons);
                 Complain complain = this.customer.changeCompEmp(reasons);
                 complainList = new ComplainDao();
                 complainList.create(complain);
@@ -306,6 +302,7 @@ public class CustomerViewLogic implements ViewLogic {
             List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
             for (AccDocFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
+                System.out.println(file);
             }
         }
 
@@ -603,7 +600,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
-        //TODO ContractDAO 생기면 new 해주기
+        contractList = new ContractDao();
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
@@ -615,7 +612,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String key = sc.next();
                 if (key.equals("0"))
                     break;
-                //TODO ContractDAO 생기면 new 해주기
+                contractList = new ContractDao();
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -629,7 +626,8 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 보험료 납부를 위한 계약 정보를 출력하는 기능
     public void showContractInfoForPay(Contract contract) {
-        //TODO 보험DAO 생기면 new 해주기
+
+        insuranceList = new InsuranceDao();
         Insurance insurance = insuranceList.read(contract.getInsuranceId());
         StringBuilder sb = new StringBuilder();
         sb.append("[ID]").append(" : ").append(contract.getId())
@@ -642,7 +640,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약을 선택한 이후 즉시 결제를 시도하는 기능.
     // 해당 계약에 결제 수단이 등록되지 않았다면 결제 수단 등록을 진행한다.
     private void payLogic(Contract contract) {
-        if (contract.getPayment() == null) {
+        if (contract.getPaymentId() == 0) {
             System.out.println("해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.");
             setPaymentOnContract(contract);
         }else{
@@ -652,7 +650,9 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계약에 대해서 보험료를 납부하는 기능
     private void pay(Contract contract) {
-        customer.pay(contract);
+        paymentList = new PaymentDao();
+        Payment payment = paymentList.read(contract.getPaymentId());
+        customer.pay(contract,payment);
     }
 
 
@@ -680,7 +680,7 @@ public class CustomerViewLogic implements ViewLogic {
                 this.paymentList = new PaymentDao();
                 Payment payment = this.paymentList.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
-                // TODO 계약 DAO 생기면 new 하기.
+                contractList = new ContractDao();
                 contractList.updatePayment(contract.getId(),payment.getId());
                 break;
             } catch (NumberFormatException e) {

@@ -21,15 +21,17 @@ import java.util.List;
  * 2022-05-30                규현             최초 생성
  */
 public class ComplainDao extends Dao implements ComplainList {
-
+    public ComplainDao() {
+        super.connect();
+    }
 
     @Override
     public void create(Complain complain) {
         String query = "insert into complain (reason, customer_id) values ('%s', %d)";
         String formattedQuery = String.format(query,complain.getReason(),complain.getCustomerId());
-        System.out.println(formattedQuery);
         int id = super.create(formattedQuery);
         complain.setId(id);
+        close();
     }
 
     // Not Use
@@ -37,7 +39,6 @@ public class ComplainDao extends Dao implements ComplainList {
     public Complain read(int id) {
         String query = "select * from complain where complain_id = %d";
         String formattedQuery = String.format(query,id);
-        System.out.println(formattedQuery);
         ResultSet rs = super.read(formattedQuery);
         Complain complain = null;
         try {
@@ -46,6 +47,8 @@ public class ComplainDao extends Dao implements ComplainList {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            close();
         }
         if (complain == null)
             throw new MyIllegalArgumentException(id + "에 해당하는 민원정보가 존재하지 않습니다.");
@@ -76,6 +79,8 @@ public class ComplainDao extends Dao implements ComplainList {
 
             } catch (SQLException e) {
                 e.printStackTrace();
+            }finally {
+                close();
             }
 
 

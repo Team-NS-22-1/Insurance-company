@@ -4,9 +4,9 @@ import domain.contract.BuildingType;
 import domain.insurance.*;
 
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.sql.ResultSet;
 
 public class InsuranceDao extends Dao {
 
@@ -20,7 +20,7 @@ public class InsuranceDao extends Dao {
             String queryFormat =
                     "INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('%s','%s',%d,%d,'%s');";
             String queryInsurance =
-                    String.format(queryFormat, insurance.getName(), insurance.getDescription(), insurance.getContractPeriod(), insurance.getPaymentPeriod(), insurance.getInsuranceType().getName());
+                    String.format(queryFormat, insurance.getName(), insurance.getDescription(), insurance.getContractPeriod(), insurance.getPaymentPeriod(), insurance.getInsuranceType().name());
             int insuranceId = super.create(queryInsurance);
             insurance.setId(insuranceId);
 
@@ -39,7 +39,7 @@ public class InsuranceDao extends Dao {
             String queryFormatDevInfo =
                     "INSERT INTO dev_info (insurance_id, employee_id, dev_date, sales_auth_state) VALUES (%d, %d, '%s', '%s');";
             String queryDevInfo =
-                    String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevDate()), devInfo.getSalesAuthState().getName());
+                    String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevDate()), devInfo.getSalesAuthState().name());
             super.create(queryDevInfo);
 
             // CREATE insurance detail
@@ -54,8 +54,8 @@ public class InsuranceDao extends Dao {
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-                        // True(Male): 0 , False(Female): 1
-                        int targetSex = healthDetail.isTargetSex() ? 0 : 1;
+                        // True(Male): 1 , False(Female): 0
+                        int targetSex = healthDetail.isTargetSex() ? 1 : 0;
                         String queryFormatHealthDetail =
                                 "INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (%d, %d, %d, %d);";
                         String queryHealthDetail =
@@ -93,7 +93,7 @@ public class InsuranceDao extends Dao {
                         String queryFormatFireDetail =
                                 "INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (%d, '%s', %d);";
                         String queryFireDetail =
-                                String.format(queryFormatFireDetail, insuranceDetailId, fireDetail.getTargetBuildingType().getName(), fireDetail.getCollateralAmountCriterion());
+                                String.format(queryFormatFireDetail, insuranceDetailId, fireDetail.getTargetBuildingType().name(), fireDetail.getCollateralAmountCriterion());
                         super.create(queryFireDetail);
                     }
                 }
@@ -126,7 +126,7 @@ public class InsuranceDao extends Dao {
                         .setDescription(resultSet.getString("description"))
                         .setContractPeriod(resultSet.getInt("contract_period"))
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
-                        .setInsuranceType(InsuranceType.valueOfName(resultSet.getString("insurance_type")));
+                        .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type")));
             }
 
             // READ guarantee
@@ -152,7 +152,7 @@ public class InsuranceDao extends Dao {
                 devInfo.setId(resultSet.getInt("dev_info_id"))
                         .setEmployeeId(resultSet.getInt("employee_id"))
                         .setDevDate(resultSet.getDate("dev_date").toLocalDate())
-                        .setSalesAuthState(SalesAuthState.valueOfName(resultSet.getString("sales_auth_state")))
+                        .setSalesAuthState(SalesAuthState.valueOf(resultSet.getString("sales_auth_state")))
                         .setInsuranceId(resultSet.getInt("insurance_id"));
                 Date salesStartDate = resultSet.getDate("sales_start_date");
                 devInfo.setSalesStartDate(resultSet.wasNull() ? null : salesStartDate.toLocalDate());
@@ -172,7 +172,7 @@ public class InsuranceDao extends Dao {
                     while(resultSet.next()){
                         insuranceDetails.add(
                                 new HealthDetail().setTargetAge(resultSet.getInt("target_age"))
-                                        .setTargetSex(resultSet.getInt("target_sex")==0 ? true : false)
+                                        .setTargetSex(resultSet.getInt("target_sex")==1 ? true : false)
                                         .setRiskCriterion(resultSet.getInt("risk_criterion"))
                                         .setId(resultSet.getInt("health_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
@@ -208,7 +208,7 @@ public class InsuranceDao extends Dao {
                     super.read(queryFireDetail);
                     while(resultSet.next()) {
                         insuranceDetails.add(
-                                new FireDetail().setTargetBuildingType(BuildingType.valueOfName(resultSet.getString("target_building_type")))
+                                new FireDetail().setTargetBuildingType(BuildingType.valueOf(resultSet.getString("target_building_type")))
                                         .setCollateralAmountCriterion(resultSet.getLong("collateral_amount_criterion"))
                                         .setId(resultSet.getInt("fire_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
@@ -245,6 +245,7 @@ public class InsuranceDao extends Dao {
                 salesAuthFile.setSrActuaryVerification(resultSet.wasNull() ? null : srActuaryVerification);
                 java.sql.Timestamp modifiedSrActuary = resultSet.getTimestamp("modified_sr_actuary");
                 salesAuthFile.setModifiedSrActuary(resultSet.wasNull() ? null : modifiedSrActuary.toLocalDateTime());
+
             }
             insurance.setSalesAuthFile(salesAuthFile);
 
@@ -344,36 +345,44 @@ public class InsuranceDao extends Dao {
     public void updateByFss(Insurance insurance) {
         SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = " + insurance.getId() +";";
+                "UPDATE sales_auth_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedFss()));
+                String.format(queryFormat, salesAuthFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedFss()), insurance.getId());
         super.update(query);
     }
 
     public void updateByIso(Insurance insurance) {
         SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = " + insurance.getId() +";";
+                "UPDATE sales_auth_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedIso()));
+                String.format(queryFormat, salesAuthFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedIso()), insurance.getId());
         super.update(query);
     }
 
     public void updateByProd(Insurance insurance) {
         SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = " + insurance.getId() +";";
+                "UPDATE sales_auth_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedProd()));
+                String.format(queryFormat, salesAuthFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedProd()), insurance.getId());
         super.update(query);
     }
 
     public void updateBySrActuary(Insurance insurance) {
         SalesAuthFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = " + insurance.getId() +";";
+                "UPDATE sales_auth_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedSrActuary()));
+                String.format(queryFormat, salesAuthFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedSrActuary()), insurance.getId());
+        super.update(query);
+    }
+
+    public void updateBySalesAuthState(Insurance insurance) {
+        String queryFormat =
+                "UPDATE dev_info SET sales_auth_state = '%s' WHERE insurance_id = %d;";
+        String query =
+                String.format(queryFormat, insurance.getDevInfo().getSalesAuthState().name(), insurance.getId());
         super.update(query);
     }
 
