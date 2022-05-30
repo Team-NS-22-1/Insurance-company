@@ -115,7 +115,7 @@ public class ContractDao extends Dao {
 
             contract.setId(rs.getInt("contract_id"));
             contract.setReasonOfUw(rs.getString("reason_of_uw"));
-            //contract.setPayment(rs.getInt("payment_id"));
+            contract.setPaymentId(rs.getInt("payment_id"));
             contract.setInsuranceId(rs.getInt("insurance_id"));
             contract.setEmployeeId(rs.getInt("employee_id"));
             contract.setPremium(rs.getInt("premium"));
