@@ -1,6 +1,7 @@
 package utility;
 
 import dao.AccidentDao;
+import dao.EmployeeDao;
 import domain.accident.Accident;
 import domain.accident.AccidentList;
 import domain.employee.Employee;
@@ -22,6 +23,7 @@ import java.util.List;
 public class CompAssignUtil {
 
     public static Employee changeCompEmployee(EmployeeList employeeList, AccidentList accidentList, Employee employee) {
+        employeeList = new EmployeeDao();
         List<Employee> compEmployees = employeeList.readAllCompEmployee();
         compEmployees.remove(employee);
         int min = Integer.MAX_VALUE;
@@ -34,22 +36,25 @@ public class CompAssignUtil {
                 minId = compEmployee.getId();
             }
         }
+        employeeList = new EmployeeDao();
         return employeeList.read(minId);
     }
 
     public static Employee assignCompEmployee(EmployeeList employeeList, AccidentList accidentList) {
-        // TODO employeeDAO 생기면 여기에 추가하기.
+        employeeList = new EmployeeDao();
         List<Employee> compEmployees = employeeList.readAllCompEmployee();
         int min = Integer.MAX_VALUE;
         int minId = 0;
-        accidentList = new AccidentDao();
+
         for (Employee compEmployee : compEmployees) {
+            accidentList = new AccidentDao();
             List<Accident> accidents = accidentList.readAllByEmployeeId(compEmployee.getId());
             if (min > accidents.size()) {
                 min = accidents.size();
                 minId = compEmployee.getId();
             }
         }
+        employeeList = new EmployeeDao();
         return employeeList.read(minId);
     }
 }
