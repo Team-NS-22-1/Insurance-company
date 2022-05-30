@@ -125,7 +125,7 @@ public class UWViewLogic implements ViewLogic {
                 ContractDao contractDao = new ContractDao();
                 InsuranceDao insuranceDao = new InsuranceDao();
                 Contract contract = contractDao.read(Integer.parseInt(contractId));
-                Insurance insurance = insuranceDao.read(contract.getId());
+                Insurance insurance = insuranceDao.read(contract.getInsuranceId());
 
                 if (contract.getId() == 0) throw new MyIllegalArgumentException();
                 if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyIllegalArgumentException();

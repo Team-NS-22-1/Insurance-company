@@ -115,6 +115,9 @@ is_danger_activity boolean,
 is_drinking boolean,
 is_smoking boolean,
 is_taking_drug boolean,
+disease_detail varchar(255),
+is_having_disease boolean,
+is_driving boolean,
 foreign key (contract_id) references contract(contract_id) on delete cascade
 );
 

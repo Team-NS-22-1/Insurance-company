@@ -69,7 +69,7 @@ public class InsuranceDao extends Dao {
                         String queryFormatInsuranceDetail =
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
-                                String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceDetail.getInsuranceId());
+                                String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         CarDetail carDetail = (CarDetail) insuranceDetail;
@@ -86,7 +86,7 @@ public class InsuranceDao extends Dao {
                         String queryFormatInsuranceDetail =
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
-                                String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceDetail.getInsuranceId());
+                                String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         FireDetail fireDetail = (FireDetail) insuranceDetail;
@@ -126,7 +126,7 @@ public class InsuranceDao extends Dao {
                         .setDescription(resultSet.getString("description"))
                         .setContractPeriod(resultSet.getInt("contract_period"))
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
-                        .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type")));
+                        .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type").toUpperCase()));
             }
             // READ guarantee
             ArrayList<Guarantee> guarantees = new ArrayList<>();
@@ -151,7 +151,7 @@ public class InsuranceDao extends Dao {
                 devInfo.setId(resultSet.getInt("dev_info_id"))
                         .setEmployeeId(resultSet.getInt("employee_id"))
                         .setDevDate(resultSet.getDate("dev_date").toLocalDate())
-                        .setSalesAuthState(SalesAuthState.valueOf(resultSet.getString("sales_auth_state")))
+                        .setSalesAuthState(SalesAuthState.valueOf(resultSet.getString("sales_auth_state").toUpperCase()))
                         .setInsuranceId(resultSet.getInt("insurance_id"));
                 Date salesStartDate = resultSet.getDate("sales_start_date");
                 devInfo.setSalesStartDate(resultSet.wasNull() ? null : salesStartDate.toLocalDate());
@@ -207,7 +207,7 @@ public class InsuranceDao extends Dao {
                     super.read(queryFireDetail);
                     while(resultSet.next()) {
                         insuranceDetails.add(
-                                new FireDetail().setTargetBuildingType(BuildingType.valueOf(resultSet.getString("target_building_type")))
+                                new FireDetail().setTargetBuildingType(BuildingType.valueOf(resultSet.getString("target_building_type").toUpperCase()))
                                         .setCollateralAmountCriterion(resultSet.getLong("collateral_amount_criterion"))
                                         .setId(resultSet.getInt("fire_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
@@ -270,14 +270,14 @@ public class InsuranceDao extends Dao {
             insurance.setDescription(rs.getString("description"));
             insurance.setContractPeriod(rs.getInt("contract_period"));
             insurance.setPaymentPeriod(rs.getInt("payment_period"));
-            switch (rs.getString("insurance_type")) {
-                case "건강보험":
+            switch (rs.getString("insurance_type").toUpperCase()) {
+                case "HEALTH":
                     insurance.setInsuranceType(InsuranceType.HEALTH);
                     break;
-                case "화재보험":
+                case "FIRE":
                     insurance.setInsuranceType(InsuranceType.FIRE);
                     break;
-                case "자동차보험":
+                case "CAR":
                     insurance.setInsuranceType(InsuranceType.CAR);
                     break;
             }
@@ -298,14 +298,14 @@ public class InsuranceDao extends Dao {
             devInfo.setEmployeeId(rs.getInt("employee_id"));
             devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
             devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
-            switch (rs.getString("sales_auth_state")) {
-                case "대기":
+            switch (rs.getString("sales_auth_state").toUpperCase()) {
+                case "WAIT":
                     devInfo.setSalesAuthState(SalesAuthState.WAIT);
                     break;
-                case "허가":
+                case "PERMISSION":
                     devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
                     break;
-                case "불허":
+                case "DISALLOWANCE":
                     devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
                     break;
             }
@@ -319,7 +319,7 @@ public class InsuranceDao extends Dao {
         try {
             String query =
                     "select * from insurance\n" +
-                            "where insurance_id = (\n" +
+                            "where insurance_id IN (\n" +
                             "    select insurance_id\n" +
                             "    from dev_info\n" +
                             "    where employee_id = " + eid +
