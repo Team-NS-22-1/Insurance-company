@@ -3,11 +3,8 @@ package application;
 import application.viewlogic.*;
 import dao.*;
 import domain.accident.AccidentList;
-import domain.accident.AccidentListImpl;
 import domain.accident.accDocFile.AccDocFileList;
-import domain.accident.accDocFile.AccDocFileListImpl;
 import domain.complain.ComplainList;
-import domain.complain.ComplainListImpl;
 import domain.contract.ContractList;
 import domain.contract.ContractListImpl;
 import domain.customer.CustomerList;
@@ -18,7 +15,6 @@ import domain.insurance.InsuranceDetailListImpl;
 import domain.insurance.InsuranceList;
 import domain.insurance.InsuranceListImpl;
 import domain.payment.PaymentList;
-import domain.payment.PaymentListImpl;
 import exception.MyCloseSequence;
 import exception.MyIllegalArgumentException;
 import test.TestData;
@@ -60,9 +56,9 @@ public class Application {
         // 테스트 더미 데이터 생성
         new TestData();
 
-        map.put(UserType.GUEST,new GuestViewLogic(insuranceList, contractList, customerList));
+        map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic( customerList, contractList, insuranceList, paymentList,accidentList,accDocFileList, employeeList,complainList));
-        map.put(UserType.SALES, new SalesViewLogic(insuranceList, contractList, customerList, employeeList));
+        map.put(UserType.SALES, new SalesViewLogic());
         map.put(UserType.DEV, new DevViewLogic(employeeList, insuranceList, insuranceDetailList));
         map.put(UserType.UW, new UWViewLogic(employeeList, customerList, insuranceList, contractList));
         map.put(UserType.COMP, new CompVIewLogic(employeeList,accidentList,accDocFileList,customerList));

@@ -49,7 +49,7 @@ public class SalesViewLogic implements ViewLogic {
     private Insurance insurance;
     private InputValidation input;
 
-    public SalesViewLogic(InsuranceList insuranceList, ContractList contractList, CustomerList customerList, EmployeeList employeeList) {
+    public SalesViewLogic() {
         this.sc = new Scanner(System.in);
         this.input = new InputValidation();
     }
