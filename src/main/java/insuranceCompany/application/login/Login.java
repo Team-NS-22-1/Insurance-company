@@ -1,9 +1,9 @@
-package login;
+package insuranceCompany.application.login;
 
-import dao.UserDao;
-import domain.customer.Customer;
-import exception.InputException;
-import utility.MyBufferedReader;
+import insuranceCompany.application.dao.user.UserDaoImpl;
+import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.utility.MyBufferedReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,7 +49,7 @@ public class Login {
     }
 
     private int login(String id, String password) {
-        return new UserDao().login(id, password);
+        return new UserDaoImpl().login(id, password);
     }
 
     public Customer loginCustomer() throws IOException {

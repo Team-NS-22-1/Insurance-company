@@ -1,22 +1,26 @@
-package dao;
+package insuranceCompany.application.dao.user;
 
-import login.User;
+import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.login.User;
 
 import java.sql.SQLException;
 
-public class UserDao extends Dao {
-    public UserDao() {
+public class UserDaoImpl extends Dao implements UserDao {
+    public UserDaoImpl() {
         super.connect();
     }
 
+    @Override
     public void create(User user) {
 
     }
 
-    public void read(int id) {
-
+    @Override
+    public User read(int id) {
+        return null;
     }
 
+    @Override
     public int login(String userId, String password) {
         int role_id = -9999;
         try {
@@ -36,12 +40,14 @@ public class UserDao extends Dao {
         return role_id;
     }
 
-    public void update() {
-
+    @Override
+    public boolean update(int id) {
+        return false;
     }
 
-    public void delete() {
-
+    @Override
+    public boolean delete(int id) {
+        return false;
     }
 
 }
