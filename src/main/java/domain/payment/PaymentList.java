@@ -1,6 +1,6 @@
 package domain.payment;
 
-import ifs.CrudInterface;
+import dao.CrudInterface;
 
 import java.util.List;
 

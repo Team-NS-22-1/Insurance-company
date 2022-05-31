@@ -1,10 +1,9 @@
 package dao;
 
 import domain.accident.*;
-import exception.MyIllegalArgumentException;
-import utility.db.DBUtil;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

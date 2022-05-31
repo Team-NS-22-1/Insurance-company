@@ -1,6 +1,6 @@
 package domain.insurance;
 
-import ifs.CrudInterface;
+import dao.CrudInterface;
 
 import java.util.ArrayList;
 

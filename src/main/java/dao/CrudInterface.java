@@ -1,4 +1,4 @@
-package ifs;
+package dao;
 
 public interface CrudInterface<E> {
     void create(E e);

@@ -3,6 +3,8 @@ package application.viewlogic;
 import application.ViewLogic;
 import application.viewlogic.dto.accidentDto.AccidentReportDto;
 import dao.*;
+import dao.AccDocFileDao;
+import dao.AccidentDao;
 import domain.accident.Accident;
 import domain.accident.AccidentList;
 import domain.accident.AccidentType;
@@ -32,12 +34,10 @@ import java.util.*;
 
 
 import static utility.CompAssignUtil.changeCompEmployee;
-import static utility.CustomerInfoFormatUtil.*;
 
 import static utility.BankUtil.checkAccountFormat;
 import static utility.BankUtil.selectBankType;
 import static utility.CompAssignUtil.assignCompEmployee;
-import static utility.CompAssignUtil.changeCompEmployee;
 import static utility.CustomerInfoFormatUtil.isCarNo;
 import static utility.CustomerInfoFormatUtil.isPhone;
 import static utility.DocUtil.isExist;

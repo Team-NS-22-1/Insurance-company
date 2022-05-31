@@ -1,5 +1,6 @@
 package dao;
 
+import dao.Dao;
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocFileList;
 import domain.accident.accDocFile.AccDocType;

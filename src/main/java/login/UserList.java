@@ -1,6 +1,6 @@
 package login;
 
-import ifs.CrudInterface;
+import dao.CrudInterface;
 
 public interface UserList extends CrudInterface<User> {
 }

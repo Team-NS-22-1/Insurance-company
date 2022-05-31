@@ -1,7 +1,7 @@
 package domain.accident;
 
 
-import ifs.CrudInterface;
+import dao.CrudInterface;
 
 import java.util.List;
 

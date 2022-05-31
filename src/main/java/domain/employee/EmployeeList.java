@@ -1,7 +1,7 @@
 package domain.employee;
 
 
-import ifs.CrudInterface;
+import dao.CrudInterface;
 
 import java.util.ArrayList;
 import java.util.List;

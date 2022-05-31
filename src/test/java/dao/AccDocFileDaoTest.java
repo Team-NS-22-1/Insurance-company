@@ -2,7 +2,6 @@ package dao;
 
 import domain.accident.accDocFile.AccDocFile;
 import domain.accident.accDocFile.AccDocType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
