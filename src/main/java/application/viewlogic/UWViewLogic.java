@@ -227,7 +227,7 @@ public class UWViewLogic implements ViewLogic {
         for (Contract contract : contractList) {
             CustomerDao customerDao = new CustomerDao();
             Customer customer = customerDao.read(contract.getCustomerId());
-            System.out.println(contract.getId() + "        " + customer.getName() + " " + contract.getConditionOfUw().getName());
+            System.out.println(contract.getId() + "        " + customer.getName() + "     " + contract.getConditionOfUw().getName());
         }
     }
 
