@@ -13,8 +13,8 @@ public class DevelopInfo {
 	private int id;
 	private int insuranceId;
 	private int employeeId;
-	private LocalDate devDate;
-	private SalesAuthorizationState salesAuthState;
+	private LocalDate developDate;
+	private SalesAuthorizationState salesAuthorizationState;
 	private LocalDate salesStartDate;
 
 	public int getId() {
@@ -44,21 +44,21 @@ public class DevelopInfo {
 		return this;
 	}
 
-	public LocalDate getDevDate() {
-		return devDate;
+	public LocalDate getDevelopDate() {
+		return developDate;
 	}
 
-	public DevelopInfo setDevDate(LocalDate devDate) {
-		this.devDate = devDate;
+	public DevelopInfo setDevelopDate(LocalDate developDate) {
+		this.developDate = developDate;
 		return this;
 	}
 
-	public SalesAuthorizationState getSalesAuthState() {
-		return salesAuthState;
+	public SalesAuthorizationState getSalesAuthorizationState() {
+		return salesAuthorizationState;
 	}
 
-	public DevelopInfo setSalesAuthState(SalesAuthorizationState salesAuthState) {
-		this.salesAuthState = salesAuthState;
+	public DevelopInfo setSalesAuthorizationState(SalesAuthorizationState salesAuthorizationState) {
+		this.salesAuthorizationState = salesAuthorizationState;
 		return this;
 	}
 
@@ -74,11 +74,11 @@ public class DevelopInfo {
 	public String print() {
 		String value =
 				"{개발직원ID: " + employeeId +
-				", 개발일자: " + devDate.getYear() + "년 " +
-							devDate.getMonthValue() + "월 "+
-							devDate.getDayOfMonth() + "일" +
-				", 판매인가상태: " + salesAuthState.name();
-		if(salesAuthState == SalesAuthorizationState.PERMISSION) {
+				", 개발일자: " + developDate.getYear() + "년 " +
+							developDate.getMonthValue() + "월 "+
+							developDate.getDayOfMonth() + "일" +
+				", 판매인가상태: " + salesAuthorizationState.name();
+		if(salesAuthorizationState == SalesAuthorizationState.PERMISSION) {
 			value += ", 판매시작일자: " + salesStartDate.getYear() + "년 " +
 									salesStartDate.getMonthValue() + "월 " +
 									salesStartDate.getDayOfMonth() + "일";

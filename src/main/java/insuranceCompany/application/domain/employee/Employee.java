@@ -118,8 +118,8 @@ public class Employee {
 
 	private DevelopInfo developDevInfo() {
 		return new DevelopInfo().setEmployeeId(this.id)
-				.setDevDate(LocalDate.now())
-				.setSalesAuthState(SalesAuthorizationState.WAIT);
+				.setDevelopDate(LocalDate.now())
+				.setSalesAuthorizationState(SalesAuthorizationState.WAIT);
 	}
 
 	private Insurance developHealth(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
@@ -254,7 +254,7 @@ public class Employee {
 	}
 
 	public void modifySalesAuthState(Insurance insurance, SalesAuthorizationState modify) {
-		insurance.getDevInfo().setSalesAuthState(modify);
+		insurance.getDevInfo().setSalesAuthorizationState(modify);
 		new InsuranceDaoImpl().updateBySalesAuthState(insurance);
 	}
 

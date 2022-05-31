@@ -192,8 +192,8 @@ foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 create table develop_info(
 insurance_id int primary key not null,
 employee_id int,
-dev_date date,
-sales_auth_state varchar(10),
+develop_date date,
+sales_authorization_state varchar(10),
 sales_start_date date,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );

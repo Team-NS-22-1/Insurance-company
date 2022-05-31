@@ -9,16 +9,16 @@ import java.util.ArrayList;
  */
 public class Insurance {
 
-	public int id;
-	public String name;
-	public String description;
-	public int contractPeriod;
-	public int paymentPeriod;
-	public InsuranceType insuranceType;
-	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-	public ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
-	public DevelopInfo devInfo;
-	public SalesAuthorizationFile salesAuthFile;
+	private int id;
+	private String name;
+	private String description;
+	private int contractPeriod;
+	private int paymentPeriod;
+	private InsuranceType insuranceType;
+	private ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+	private ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
+	private DevelopInfo devInfo;
+	private SalesAuthorizationFile salesAuthFile;
 
 	public Insurance(){
 	}
