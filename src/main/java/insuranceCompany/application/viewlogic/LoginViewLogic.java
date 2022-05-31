@@ -82,35 +82,35 @@ public class LoginViewLogic implements ViewLogic {
                     DevelopViewLogic developViewLogic = new DevelopViewLogic(employee);
                     developViewLogic.showMenu();
                     String command = sc.nextLine();
-                    employee = isLogout(employee, command);
+                    employee = isLogoutEmployee(employee, command);
                     developViewLogic.work(command);
                 }
                 case UW -> {
                     UnderwritingViewLogic underwritingViewLogic = new UnderwritingViewLogic(employee);
                     underwritingViewLogic.showMenu();
                     String command = sc.nextLine();
-                    employee = isLogout(employee, command);
+                    employee = isLogoutEmployee(employee, command);
                     underwritingViewLogic.work(command);
                 }
                 case COMP -> {
                     CompensationViewLogic compensationViewLogic = new CompensationViewLogic(employee);
                     compensationViewLogic.showMenu();
                     String command = sc.nextLine();
-                    employee = isLogout(employee, command);
+                    employee = isLogoutEmployee(employee, command);
                     compensationViewLogic.work(command);
                 }
                 case SALES -> {
                     SalesViewLogic salesViewLogic = new SalesViewLogic(employee);
                     salesViewLogic.showMenu();
                     String command = sc.nextLine();
-                    employee = isLogout(employee, command);
+                    employee = isLogoutEmployee(employee, command);
                     salesViewLogic.work(command);
                 }
             }
         }
     }
 
-    private Employee isLogout(Employee employee, String command) {
+    private Employee isLogoutEmployee(Employee employee, String command) {
         if (checkLogoutOrExit(command)) {
             employee = null;
             System.out.println("정상적으로 로그아웃되었습니다!\n");

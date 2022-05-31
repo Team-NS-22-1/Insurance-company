@@ -6,6 +6,8 @@ import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.LoginIdFailedException;
+import insuranceCompany.application.global.exception.LoginPwFailedException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
 import java.io.IOException;
@@ -20,27 +22,25 @@ public class Login {
         MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
         String id = "", password = "";
         int roleId = -1;
+        System.out.println("<< 로그인 >>");
         loopLogin: while(true){
             try {
-                System.out.println("<< 로그인 >>");
                 id = (String) br.verifyRead("아이디: ", id);
                 if(id.equals("0")) break loopLogin;        // 로그인 취소
                 loopPw: while (true) {
                     password = (String) br.verifyRead("비밀번호: ", password);
                     if(password.equals("0")) break loopLogin;        // 로그인 취소
-                    int login = login(id, password);
-                    if(login < 0) {
-                        switch (login) {
-                            case -1 -> System.out.println("LOGIN ERROR:: 패스워드를 다시 입력하세요!");
-                            default -> {
-                                System.out.println("LOGIN ERROR:: 아이디를 다시 입력하세요!");
-                                break loopPw;
-                            }
-                        }
-                    }
-                    else{
+                    try {
+                        int login = login(id, password);
                         roleId = login;
                         break loopLogin;
+                    }
+                    catch (LoginPwFailedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    catch (LoginIdFailedException e) {
+                        System.out.println(e.getMessage());
+                        break loopPw;
                     }
                 }
             }

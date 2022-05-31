@@ -1,6 +1,8 @@
 package insuranceCompany.application.dao.user;
 
 import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.global.exception.LoginIdFailedException;
+import insuranceCompany.application.global.exception.LoginPwFailedException;
 import insuranceCompany.application.login.User;
 
 import java.sql.SQLException;
@@ -29,10 +31,10 @@ public class UserDaoImpl extends Dao implements UserDao {
                 if(password.equals(resultSet.getString("password")))
                     role_id = resultSet.getInt("role_id");
                 else
-                    role_id = -1;
+                    throw new LoginPwFailedException();
             }
             else
-                role_id = -2;
+                throw new LoginIdFailedException();
         } catch (SQLException e) {
             e.printStackTrace();
         }
