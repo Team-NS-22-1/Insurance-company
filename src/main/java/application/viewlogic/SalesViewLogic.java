@@ -7,12 +7,9 @@ import dao.EmployeeDao;
 import dao.InsuranceDao;
 import domain.contract.*;
 import domain.customer.Customer;
-import domain.customer.CustomerList;
 import domain.employee.Department;
 import domain.employee.Employee;
-import domain.employee.EmployeeList;
 import domain.insurance.Insurance;
-import domain.insurance.InsuranceList;
 import domain.insurance.SalesAuthState;
 import exception.InputException;
 import utility.InputValidation;
@@ -117,7 +114,7 @@ public class SalesViewLogic implements ViewLogic {
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -132,7 +129,7 @@ public class SalesViewLogic implements ViewLogic {
                 }
                 insuranceDao = new InsuranceDao();
                 insurance = insuranceDao.read(Integer.parseInt(command));
-                if (insurance != null &&insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION) {
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
@@ -492,7 +489,6 @@ public class SalesViewLogic implements ViewLogic {
                     case "1":
                         employee.registerContract(customer , contract, employee);
                         System.out.println(customer);
-                        System.out.println(employee.getId() == 0);
                         System.out.println(contract);
                         System.out.println("계약을 체결하였습니다.");
                         break;

@@ -261,10 +261,14 @@ public class InsuranceDao extends Dao {
     public ArrayList<Insurance> readAll() throws SQLException {
         Insurance insurance;
         ArrayList<Insurance> insuranceList = new ArrayList<>();
-        String query = "select * from insurance";
+        String query = "select * from insurance " +
+                "inner join dev_info " +
+                "on insurance.insurance_id = dev_info.insurance_id";
+
         ResultSet rs = super.read(query);
         while (rs.next()) {
             insurance = new Insurance();
+            insurance.devInfo = new DevInfo();
             insurance.setId(rs.getInt("insurance_id"));
             insurance.setName(rs.getString("name"));
             insurance.setDescription(rs.getString("description"));
@@ -281,37 +285,48 @@ public class InsuranceDao extends Dao {
                     insurance.setInsuranceType(InsuranceType.CAR);
                     break;
             }
+            switch (rs.getString("sales_auth_state").toUpperCase()) {
+                case "WAIT":
+                    insurance.devInfo.setSalesAuthState(SalesAuthState.WAIT);
+                    break;
+                case "PERMISSION":
+                    insurance.devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
+                    break;
+                case "DISALLOWANCE":
+                    insurance.devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
+                    break;
+            }
             insuranceList.add(insurance);
         }
         return insuranceList;
     }
 
-    public DevInfo readDevInfo(int id) throws SQLException {
-        DevInfo devInfo = null;
-        String query = "select * from dev_info where insurance_id = " + id;
-        ResultSet rs = super.read(query);
-
-        if (rs.next()) {
-            devInfo = new DevInfo();
-            devInfo.setId(rs.getInt("dev_info_id"));
-            devInfo.setInsuranceId(rs.getInt("insurance_id"));
-            devInfo.setEmployeeId(rs.getInt("employee_id"));
-            devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
-            devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
-            switch (rs.getString("sales_auth_state").toUpperCase()) {
-                case "WAIT":
-                    devInfo.setSalesAuthState(SalesAuthState.WAIT);
-                    break;
-                case "PERMISSION":
-                    devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
-                    break;
-                case "DISALLOWANCE":
-                    devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
-                    break;
-            }
-        }
-        return devInfo;
-    }
+//    public DevInfo readDevInfo(int id) throws SQLException {
+//        DevInfo devInfo = null;
+//        String query = "select * from dev_info where insurance_id = " + id;
+//        ResultSet rs = super.read(query);
+//
+//        if (rs.next()) {
+//            devInfo = new DevInfo();
+//            devInfo.setId(rs.getInt("dev_info_id"));
+//            devInfo.setInsuranceId(rs.getInt("insurance_id"));
+//            devInfo.setEmployeeId(rs.getInt("employee_id"));
+//            devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
+//            devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
+//            switch (rs.getString("sales_auth_state").toUpperCase()) {
+//                case "WAIT":
+//                    devInfo.setSalesAuthState(SalesAuthState.WAIT);
+//                    break;
+//                case "PERMISSION":
+//                    devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
+//                    break;
+//                case "DISALLOWANCE":
+//                    devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
+//                    break;
+//            }
+//        }
+//        return devInfo;
+//    }
 
     public ArrayList<Insurance> readByEmployeeId(int eid){
         ArrayList<Integer> insuranceIds = new ArrayList<>();
