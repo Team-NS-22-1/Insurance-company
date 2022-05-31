@@ -86,8 +86,8 @@ injury_site varchar(100),
 foreign key (accident_id) references accident (accident_id) on delete cascade
 );
 
-create table acc_doc_file(
-acc_doc_file_id int not null primary key auto_increment,
+create table accident_document_file(
+accident_document_file_id int not null primary key auto_increment,
 type varchar(50),
 file_address varchar(5000),
 accident_id int,
@@ -189,9 +189,8 @@ amount bigint,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );
 
-create table dev_info(
-dev_info_id int primary key not null auto_increment,
-insurance_id int,
+create table develop_info(
+insurance_id int primary key not null,
 employee_id int,
 dev_date date,
 sales_auth_state varchar(10),
@@ -199,7 +198,7 @@ sales_start_date date,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );
 
-create table sales_auth_file(
+create table sales_authorization_file(
 insurance_id int primary key not null,
 fss_official_doc varchar(50),
 modified_fss datetime,

@@ -1,7 +1,7 @@
 package uwDao;
 
-import dao.ContractDao;
-import domain.contract.Contract;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.domain.contract.Contract;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

@@ -1,9 +1,8 @@
 package utility;
 
-import domain.accident.InjuryAccident;
+import insuranceCompany.application.domain.accident.InjuryAccident;
+import insuranceCompany.application.global.utility.DocUtil;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * packageName :  utility
