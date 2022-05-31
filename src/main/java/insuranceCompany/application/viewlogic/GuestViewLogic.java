@@ -81,9 +81,9 @@ public class GuestViewLogic implements ViewLogic {
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insurance.devInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION)
+                if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
-                    System.out.println(insurance.devInfo.getSalesAuthState());
+                    System.out.println(insurance.getDevInfo().getSalesAuthorizationState());
             }
 
             try {
@@ -97,7 +97,7 @@ public class GuestViewLogic implements ViewLogic {
                 }
                 insuranceDao = new InsuranceDaoImpl();
                 insurance = insuranceDao.read(Integer.parseInt(command));
-                if (insurance != null && insurance.devInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION) {
+                if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning();
                 }
