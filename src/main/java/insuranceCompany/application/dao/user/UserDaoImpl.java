@@ -23,7 +23,7 @@ public class UserDaoImpl extends Dao implements UserDao {
 
     @Override
     public int login(String userId, String password) {
-        int role_id = -9999;
+        int role_id = -1;
         try {
             String query = "SELECT * FROM user WHERE user_id = '" + userId + "';";
             super.read(query);
