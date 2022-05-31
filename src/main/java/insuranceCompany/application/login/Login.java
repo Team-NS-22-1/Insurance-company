@@ -1,7 +1,10 @@
 package insuranceCompany.application.login;
 
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
@@ -53,9 +56,16 @@ public class Login {
     }
 
     public Customer loginCustomer() throws IOException {
-//        int roleId = this.menuLogin();
-//        return new CustomerDao().read(roleId);
-        return null;
+        int customerId = this.menuLogin();
+        if(customerId < 0) return null;
+        return new CustomerDaoImpl().read(customerId);
+    }
+
+    public Employee loginEmployee() throws IOException {
+        int employeeId = this.menuLogin();
+        if(employeeId < 0) return null;
+        return new EmployeeDao().read(employeeId);
+
     }
 
 

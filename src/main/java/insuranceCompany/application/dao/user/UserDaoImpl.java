@@ -12,7 +12,6 @@ public class UserDaoImpl extends Dao implements UserDao {
 
     @Override
     public void create(User user) {
-
     }
 
     @Override

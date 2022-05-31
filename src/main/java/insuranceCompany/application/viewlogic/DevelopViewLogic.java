@@ -1,14 +1,11 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.BuildingType;
-import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -18,6 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 
 /**
@@ -41,9 +39,14 @@ public class DevelopViewLogic implements ViewLogic {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
     }
 
+    public DevelopViewLogic(Employee employee) {
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
+        this.employee = employee;
+    }
+
     @Override
     public void showMenu() {
-        createMenuAndClose("개발팀 메뉴", "보험 개발", "판매인가 등록");
+        createMenuAndLogout("<< 개발팀 메뉴 >>", "보험 개발", "판매인가 등록");
     }
 
     @Override
@@ -51,18 +54,11 @@ public class DevelopViewLogic implements ViewLogic {
         try {
             switch (command){
                 case "1" -> {
-                    initEmployee();
-                    if(employee!=null){
-                        showInsuranceByEmployee();
-                        this.menuDevelop(this.menuInsuranceType());
-                    }
+                    showInsuranceByEmployee();
+                    this.menuDevelop(this.menuInsuranceType());
                 }
                 case "2" -> {
-                    initEmployee();
-                    if(employee!=null){
-                        this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
-                    }
-                    return;
+                    this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
                 }
             }
         }
@@ -74,32 +70,6 @@ public class DevelopViewLogic implements ViewLogic {
         }
     }
 
-    private void initEmployee() throws IOException {
-        while(true) {
-            try {
-                System.out.println("<< 직원을 선택하세요. >>");
-                ArrayList<Employee> devEmployees = new EmployeeDao().readAllDev();
-                for(Employee employee : devEmployees) {
-                    System.out.println(employee.print());
-                }
-                System.out.println("---------------------------------");
-                int eid = 0;
-                eid = (int) br.verifyRead("직원 ID: ", eid);
-                if(eid == 0) return;
-                this.employee = new EmployeeDao().read(eid);
-                if(this.employee != null) {
-                    if (this.employee.getDepartment() == Department.DEV)
-                        break;
-                    else
-                        System.out.println("개발팀 직원을 선택하세요!");
-                }
-            }
-            catch (InputException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
     private ArrayList<Insurance> showInsuranceByEmployee() {
         System.out.println("<< "+employee.getName()+" 보험 개발 리스트 >>");
         ArrayList<Insurance> insuranceArrayList = new InsuranceDaoImpl().readByEmployeeId(employee.getId());
@@ -108,7 +78,7 @@ public class DevelopViewLogic implements ViewLogic {
         }
         else{
             for(Insurance insurance : insuranceArrayList){
-                System.out.println(insurance.print());
+                System.out.println(insurance.printOnlyInsurance());
             }
             System.out.println("---------------------------------");
         }

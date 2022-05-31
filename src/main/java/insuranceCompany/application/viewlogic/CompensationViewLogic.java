@@ -57,7 +57,10 @@ public class CompensationViewLogic implements ViewLogic {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
     }
 
-
+    public CompensationViewLogic(Employee employee) {
+        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.employee = employee;
+    }
 
     @Override
     public void showMenu() {
