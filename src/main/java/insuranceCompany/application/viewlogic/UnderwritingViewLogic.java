@@ -69,10 +69,10 @@ public class UnderwritingViewLogic implements ViewLogic {
                 switch (command) {
                     case "1" -> isExit = selectInsuranceType();
                     case "0" -> isExit = true;
-                    default -> throw new InputException.InvalidMenuException();
+                    default -> throw new InputException.InputInvalidMenuException();
                 }
 
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InputException.InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
                 command = sc.next();
             }
@@ -96,9 +96,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "3"-> { insuranceType = InsuranceType.FIRE; readContract(insuranceType); }
                     case "0" -> isExit = true;
                     case "exit" -> throw new MyCloseSequence();
-                    default -> throw new InputException.InvalidMenuException();
+                    default -> throw new InputException.InputInvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InputException.InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }
@@ -169,7 +169,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                             case "1"-> conditionOfUw = ConditionOfUw.APPROVAL;
                             case "2"-> conditionOfUw = ConditionOfUw.REFUSE;
                             case "3"-> conditionOfUw = ConditionOfUw.RE_AUDIT;
-                            default -> new InputException.InvalidMenuException();
+                            default -> new InputException.InputInvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
                         break;
@@ -179,9 +179,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InvalidMenuException();
+                        throw new InputException.InputInvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InputException.InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             } catch (MyIllegalArgumentException e) {
                 System.out.println("계약 정보가 존재하지 않습니다.");
@@ -217,9 +217,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InvalidMenuException();
+                        throw new InputException.InputInvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InputException.InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }

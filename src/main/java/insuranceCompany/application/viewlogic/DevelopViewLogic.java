@@ -87,8 +87,13 @@ public class DevelopViewLogic implements ViewLogic {
 
     private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
         ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
+        if(insuranceArrayList.size() == 0) {
+            System.out.println("ERROR:: 개발한 보험이 없습니다!");
+            return null;
+        }
         System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
         int insuranceId = br.verifyMenu("보험 ID: ", insuranceArrayList.size());
+        if(insuranceId == 0) return null;
         Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
         System.out.println(insurance.print());
         return insurance;
@@ -128,7 +133,6 @@ public class DevelopViewLogic implements ViewLogic {
         description = (String) br.verifyRead("보험 설명: ", description);
         paymentPeriod = (int) br.verifyRead("납입 기간(년): ", paymentPeriod);
         contractPeriod = (int) br.verifyRead("만기 나이(세): ", contractPeriod);
-        System.out.println("보험이름: "+name+"\t보험설명: "+description+"\t납입기간: "+paymentPeriod+"\t만기나이: "+contractPeriod);
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
@@ -149,7 +153,7 @@ public class DevelopViewLogic implements ViewLogic {
             boolean targetSex;
             System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
             targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
-            targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
+            targetSex = br.verifyCategory("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
             while(true) {
                 riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", riskCriterion);
                 if(riskCriterion > 6){
@@ -157,14 +161,13 @@ public class DevelopViewLogic implements ViewLogic {
                 }
                 else break;
             }
-            System.out.println("대상나이: "+targetAge+"\t대상성별: "+targetSex+"\t위험부담 기준: "+riskCriterion);
             DtoHealth dtoHealth = new DtoHealth(targetAge, targetSex, riskCriterion);
 
             premium = employee.calcSpecificPremium(stPremium, dtoHealth);
             System.out.printf("보험료: %d(원)\n", premium);
             healthListInfo.add(dtoHealth.setPremium(premium));
 
-            switch (br.verifyMenu("<< 건강 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 건강 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddHealth = false;
             }
         }
@@ -180,14 +183,13 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.println("<< 자동차 보험 정보 >> (exit: 시스템 종료)");
             targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
             valueCriterion = (long) br.verifyRead("차량가액 기준(원): ", valueCriterion);
-            System.out.println("대상나이: "+targetAge+"\t차량가액 기준: "+valueCriterion);
             DtoCar dtoCar = new DtoCar(targetAge, valueCriterion);
 
             premium = employee.calcSpecificPremium(stPremium, dtoCar);
             System.out.printf("보험료: %d(원)\n", premium);
             carListInfo.add(dtoCar.setPremium(premium));
 
-            switch (br.verifyMenu("<< 자동차 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 자동차 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddCar = false;
             }
         }
@@ -203,21 +205,20 @@ public class DevelopViewLogic implements ViewLogic {
             int premium = -1;
             System.out.println("<< 화재 보험 정보 >> (exit: 시스템 종료)");
             System.out.println();
-            switch (br.verifyMenu("건물종류 선택: 1. 상업용 2. 산업용 3. 기관용 4. 거주용\n", 4)){
+            switch (br.verifyCategory("건물종류 선택: 1. 상업용 2. 산업용 3. 기관용 4. 거주용\n", 4)){
                 case 1 -> buildingType = BuildingType.COMMERCIAL;
                 case 2 -> buildingType = BuildingType.INDUSTRIAL;
                 case 3 -> buildingType = BuildingType.INSTITUTIONAL;
                 case 4 -> buildingType = BuildingType.RESIDENTIAL;
             }
             collateralAmount = (long) br.verifyRead("담보금액: ", collateralAmount);
-            System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
             DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
 
             premium = employee.calcSpecificPremium(stPremium, dtoFire);
             System.out.printf("보험료: %d(원)\n", premium);
             fireListInfo.add(dtoFire.setPremium(premium));
 
-            switch (br.verifyMenu("<< 화재 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 화재 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddFire = false;
             }
         }
@@ -234,9 +235,9 @@ public class DevelopViewLogic implements ViewLogic {
             gName = (String) br.verifyRead("보장명: ", gName);
             gDescription = (String) br.verifyRead("보장 상세 내용: ", gDescription);
             gAmount = (Long) br.verifyRead("보장금액: ", gAmount);
-            System.out.println("보장명: "+gName+"\t보장 설명: "+gDescription+"\t보장금액: "+gAmount);
+            
             guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
-            switch (br.verifyMenu("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddGuarantee = false;
             }
         }
@@ -247,13 +248,13 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
-            switch (br.verifyMenu("<< 보험료를 산출하시겠습니까? >>\n1.예 2.아니오\n",2)) {
+            switch (br.verifyCategory("<< 보험료를 산출하시겠습니까? >>\n1.예 2.아니오\n",2)) {
                 case 1 -> {
                     isCalcPremium = true;
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyMenu("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)) {
+                    switch (br.verifyCategory("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)) {
                         case 1 -> forWhile = false;
                     }
                 }
@@ -280,7 +281,7 @@ public class DevelopViewLogic implements ViewLogic {
             profitMargin = (Double) br.verifyRead("이익률(1-99%): ", profitMargin);
             stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
             System.out.printf("기준 보험료: %d(원)\n", stPremium);
-            switch (br.verifyMenu("<< 산출된 기준 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 산출된 기준 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
                 case 1 -> forWhile = false;
             }
         }
@@ -290,14 +291,14 @@ public class DevelopViewLogic implements ViewLogic {
     private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) throws IOException {
         boolean forWhile = true;
         while(forWhile){
-            switch (br.verifyMenu("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 1 -> {
                     employee.develop(type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
                     System.out.println("정상적으로 보험이 저장되었습니다!");
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyMenu("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                    switch (br.verifyCategory("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                         case 1 -> forWhile = false;
                     }
                 }
@@ -306,6 +307,7 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private void menuSalesAuthFile(Insurance insurance) throws IOException {
+        if(insurance==null) return;
         try {
             loop : while(true) {
                 System.out.println("<< 해당 보험의 추가할 파일을 선택하세요. >>");
@@ -321,25 +323,20 @@ public class DevelopViewLogic implements ViewLogic {
                             // 파일 업로드 성공
                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
-                            case -1 -> { return; }
+                            case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthProdDeclaration(insurance, null)) {
                                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
-                                            case -1 -> { return; }
+                                            case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> {
-                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
-                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
-                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
-                                }
-                            }
+                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
                         }
                     }
                     case 2 -> {
@@ -347,25 +344,20 @@ public class DevelopViewLogic implements ViewLogic {
                             // 파일 업로드 성공
                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
-                            case -1 -> { return; }
+                            case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
                                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
-                                            case -1 -> { return; }
+                                            case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> {
-                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
-                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
-                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
-                                }
-                            }
+                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
                         }
                     }
                     case 3 -> {
@@ -373,25 +365,20 @@ public class DevelopViewLogic implements ViewLogic {
                             // 파일 업로드 성공
                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
-                            case -1 -> { return; }
+                            case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthIsoVerification(insurance, null)) {
                                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
-                                            case -1 -> { return; }
+                                            case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> {
-                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", 2)){
-                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
-                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
-                                }
-                            }
+                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
                         }
                     }
                     case 4 -> {
@@ -399,25 +386,20 @@ public class DevelopViewLogic implements ViewLogic {
                             // 파일 업로드 성공
                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
                             // 파일 업로드 취소
-                            case -1 -> { return; }
+                            case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyMenu("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
                                             case 1 -> System.out.println("정상적으로 업로드되었습니다!");
-                                            case -1 -> { return; }
+                                            case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> {
-                                switch (br.verifyMenu("<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허\n", 2)){
-                                    case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
-                                    case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
-                                }
-                            }
+                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
                         }
                     }
                     case 0 -> {
@@ -428,6 +410,13 @@ public class DevelopViewLogic implements ViewLogic {
         }
         catch (MyFileException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    private void menuModifySalesAuthState(MyBufferedReader br, String query, Employee employee, Insurance insurance) {
+        switch (br.verifyCategory(query, 2)){
+            case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
+            case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
         }
     }
 }

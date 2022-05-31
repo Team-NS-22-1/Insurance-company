@@ -49,12 +49,12 @@ public class LoginViewLogic implements ViewLogic {
         createMenuAndClose("<< 고객 >>", "회원", "비회원");
         switch (br.verifyMenu("", 2)) {
             case 1 -> {
-                Login login = new Login();
-                Customer customer = login.loginCustomer();
+                Customer customer = new Login().loginCustomer();
                 while(customer != null) {
                     CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
                     customerViewLogic.showMenu();
                     String command = sc.nextLine();
+                    customer = isLogoutCustomer(customer, command);
                     customerViewLogic.work(command);
                 }
             }
@@ -70,8 +70,7 @@ public class LoginViewLogic implements ViewLogic {
 
     private void menuEmployeeLogin() throws IOException {
         Scanner sc = new Scanner(System.in);
-        Login login = new Login();
-        Employee employee = login.loginEmployee();
+        Employee employee = new Login().loginEmployee();
         System.out.println("LOGIN:: " + "부서[" + employee.getDepartment().name() + "] 직책[" + employee.getPosition().name() + "] " + employee.getName() + "\n");
         while(employee!=null) {
             switch (employee.getDepartment()) {
@@ -108,6 +107,14 @@ public class LoginViewLogic implements ViewLogic {
                 }
             }
         }
+    }
+
+    private Customer isLogoutCustomer(Customer customer, String command) {
+        if (checkLogoutOrExit(command)) {
+            customer = null;
+            System.out.println("정상적으로 로그아웃되었습니다!\n");
+        }
+        return customer;
     }
 
     private Employee isLogoutEmployee(Employee employee, String command) {

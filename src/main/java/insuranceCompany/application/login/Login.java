@@ -15,9 +15,6 @@ import java.io.InputStreamReader;
 
 public class Login {
 
-    public Login() throws IOException {
-    }
-
     public int menuLogin() throws IOException {
         MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
         String id = "", password = "";
@@ -31,8 +28,7 @@ public class Login {
                     password = (String) br.verifyRead("비밀번호: ", password);
                     if(password.equals("0")) break loopId;        // 로그인 취소
                     try {
-                        int login = login(id, password);
-                        roleId = login;
+                        roleId = login(id, password);
                         break loopId;
                     }
                     catch (LoginPwFailedException e) {
@@ -65,8 +61,6 @@ public class Login {
         int employeeId = this.menuLogin();
         if(employeeId < 0) return null;
         return new EmployeeDao().read(employeeId);
-
     }
-
 
 }
