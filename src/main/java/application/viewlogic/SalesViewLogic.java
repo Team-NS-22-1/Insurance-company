@@ -114,7 +114,7 @@ public class SalesViewLogic implements ViewLogic {
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState() == SalesAuthState.PERMISSION)
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -129,7 +129,7 @@ public class SalesViewLogic implements ViewLogic {
                 }
                 insuranceDao = new InsuranceDao();
                 insurance = insuranceDao.read(Integer.parseInt(command));
-                if (insurance != null &&insurance.getDevInfo().getSalesAuthState() == SalesAuthState.PERMISSION) {
+                if (insurance.devInfo.getSalesAuthState() == SalesAuthState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
