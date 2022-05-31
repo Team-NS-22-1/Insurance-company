@@ -2,6 +2,7 @@ package dao;
 
 import domain.customer.Customer;
 import domain.customer.CustomerList;
+import exception.MyIllegalArgumentException;
 import utility.db.DBUtil;
 import utility.db.DbConst;
 
@@ -54,6 +55,9 @@ public class CustomerDao extends Dao implements CustomerList {
             e.printStackTrace();
         }finally {
             close();
+        }
+        if (customer == null) {
+            throw new MyIllegalArgumentException(id + "에 해당하는 고객정보가 존재하지 않습니다.");
         }
         return customer;
     }
