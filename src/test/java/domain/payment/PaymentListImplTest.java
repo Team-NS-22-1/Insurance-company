@@ -1,6 +1,7 @@
 package domain.payment;
 
-import exception.MyIllegalArgumentException;
+import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

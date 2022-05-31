@@ -1,6 +1,11 @@
 package dao;
 
-import domain.accident.*;
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.accident.Accident;
+import insuranceCompany.application.domain.accident.AccidentType;
+import insuranceCompany.application.domain.accident.CarAccident;
+import insuranceCompany.application.domain.accident.InjuryAccident;
 import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;

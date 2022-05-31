@@ -1,8 +1,9 @@
 package dao;
 
-import domain.employee.Department;
-import domain.employee.Employee;
-import domain.employee.Position;
+import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.domain.employee.Department;
+import insuranceCompany.application.domain.employee.Employee;
+import insuranceCompany.application.domain.employee.Position;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

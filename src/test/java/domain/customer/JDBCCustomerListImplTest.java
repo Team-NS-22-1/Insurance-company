@@ -1,14 +1,11 @@
 package domain.customer;
 
-import lombok.extern.slf4j.Slf4j;
+import insuranceCompany.application.domain.customer.Customer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import utility.db.DBUtil;
-import utility.db.DbConst;
+import insuranceCompany.application.global.utility.db.DBUtil;
 
 import java.sql.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * packageName :  domain.customer
