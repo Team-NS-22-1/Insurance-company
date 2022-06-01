@@ -1,5 +1,6 @@
 package insuranceCompany.application;
 
+import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -24,10 +25,15 @@ public class ApplicationTest {
                 while (true){
                     loginViewLogic.showMenu();
                     String command = String.valueOf(br.verifyMenu("", 2));
+                    if(command.equals("0")) throw new InputException.InputInvalidMenuException();
                     loginViewLogic.work(command);
                 }
             }
-            catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
+            catch (InputException e) {
+                System.out.println(e.getMessage());
+            }
+            catch (ArrayIndexOutOfBoundsException | InputMismatchException |
+                    MyIllegalArgumentException | NullPointerException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             }
             catch (MyCloseSequence e) {
