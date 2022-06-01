@@ -1,6 +1,6 @@
 package uwDao;
 
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.domain.contract.Contract;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ import java.sql.SQLException;
  */
 class ContractDaoTest {
 
-    ContractDao dao = new ContractDao();
+    ContractDaoImpl dao = new ContractDaoImpl();
     @Test
     void updateTest() throws SQLException {
         Contract con = new Contract();

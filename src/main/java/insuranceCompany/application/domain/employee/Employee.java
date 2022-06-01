@@ -4,6 +4,8 @@ package insuranceCompany.application.domain.employee;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
@@ -12,7 +14,7 @@ import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
@@ -496,8 +498,8 @@ public class Employee {
 				.setConditionOfUw(ConditionOfUw.WAIT);
 		if (employee.getId() != 0)
 			contract.setEmployeeId(employee.getId());
-		ContractDao contractDao = new ContractDao();
-		contractDao.create(contract);
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		contractDaoImpl.create(contract);
 	}
 
 	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion, Insurance insurance){
@@ -592,20 +594,30 @@ public class Employee {
 
 	}
 
-	public List<Contract> readContract(InsuranceType insuranceType){
-		ContractDao contractDao = new ContractDao();
-		return contractDao.readAllByInsuranceType(insuranceType);
+	public Contract readContract(int contractId){
+		if (contractId < 1) throw new InputException.InputInvalidDataException();
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		Contract contract = contractDaoImpl.read(contractId);
+
+		if (contract == null) throw new MyNotExistContractException();
+		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+		Insurance insurance = insuranceDao.read(contract.getInsuranceId());
+
+		if (!insurance.getInsuranceType().equals(insurance.getInsuranceType())) throw new MyNotExistContractException();
+
+		return contract;
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractDao contractDao = new ContractDao();
-		Contract contract = contractDao.read(contractId);
+		ContractDaoImpl readContractDaoImpl = new ContractDaoImpl();
+		Contract contract = readContractDaoImpl.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
-		contract.setPublishStock(true);
 
-		ContractDao contractDao1 = new ContractDao();
-		contractDao1.update(contract);
+		if (conditionOfUw != ConditionOfUw.RE_AUDIT) contract.setPublishStock(true);
+
+		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
+		updateContractDaoImpl.update(contract);
 	}
 
 	public String print() {
