@@ -106,7 +106,7 @@ public class HealthContract extends Contract{
 	@Override
 	public String toString() {
 		return super.toString() +
-				" 건강정보: {" +
+				", 건강정보: {" +
 				"키: " + height +
 				", 위험활동여부: " + isDangerActivity +
 				", 음주여부: " + isDrinking +
