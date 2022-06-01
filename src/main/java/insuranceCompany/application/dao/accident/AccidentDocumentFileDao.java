@@ -2,7 +2,7 @@ package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 
 import java.sql.ResultSet;
@@ -23,9 +23,9 @@ import java.util.List;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-public class AccDocFileDao extends Dao implements AccDocFileList {
+public class AccidentDocumentFileDao extends Dao implements AccidentDocumentFileList {
 
-    public AccDocFileDao() {
+    public AccidentDocumentFileDao() {
         super.connect();
     }
 

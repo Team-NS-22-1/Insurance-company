@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * -----------------------------------------------------------
  * 2022-05-18                규현             최초 생성
  */
-public class AccDocFileListImpl implements AccDocFileList{
+public class AccidentDocumentFileListImpl implements AccidentDocumentFileList {
 
     private static Map<Integer, AccDocFile> accDocFilelist = new HashMap<>();
     private static int id;

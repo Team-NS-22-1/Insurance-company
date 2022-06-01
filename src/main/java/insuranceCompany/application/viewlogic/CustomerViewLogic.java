@@ -1,6 +1,6 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.accident.AccDocFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.dao.contract.ContractDao;
@@ -15,7 +15,7 @@ import insuranceCompany.application.domain.accident.AccidentList;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.domain.complain.ComplainList;
@@ -65,7 +65,7 @@ public class CustomerViewLogic implements ViewLogic {
     private CustomerDao customerList;
     private PaymentList paymentList;
     private AccidentList accidentList;
-    private AccDocFileList accDocFileList;
+    private AccidentDocumentFileList accidentDocumentFileList;
     private EmployeeList employeeList;
     private ComplainList complainList;
     private Customer customer;
@@ -158,15 +158,15 @@ public class CustomerViewLogic implements ViewLogic {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
                     }
-                    accDocFileList = new AccDocFileDao();
+                    accidentDocumentFileList = new AccidentDocumentFileDao();
                     for (AccDocFile value : accident.getAccDocFileList().values()) {
                         System.out.println(value);
                     }
 
                     if (accident.getAccDocFileList().containsKey(accDocType)) {
-                        accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+                        accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
                     } else {
-                        accDocFileList.create(accDocFile);
+                        accidentDocumentFileList.create(accDocFile);
                         accident.getAccDocFileList().put(accDocType,accDocFile);
                     }
                     break;
@@ -305,8 +305,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         if (accidentId != 0) {
-            accDocFileList = new AccDocFileDao();
-            List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
+            accidentDocumentFileList = new AccidentDocumentFileDao();
+            List<AccDocFile> files = accidentDocumentFileList.readAllByAccidentId(retAccident.getId());
             for (AccDocFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
                 System.out.println(file);

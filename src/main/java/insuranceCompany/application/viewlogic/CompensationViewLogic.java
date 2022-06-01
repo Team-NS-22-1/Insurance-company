@@ -5,11 +5,11 @@ import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.dao.accident.AccDocFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.dao.customer.CustomerDao;
@@ -47,7 +47,7 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
 public class CompensationViewLogic implements ViewLogic {
 
     private AccidentList accidentList;
-    private  AccDocFileList accDocFileList;
+    private AccidentDocumentFileList accidentDocumentFileList;
     private CustomerDao customerList;
     private EmployeeDao employeeList;
     private CustomMyBufferedReader br;
@@ -93,8 +93,8 @@ public class CompensationViewLogic implements ViewLogic {
             return;
 
         showAccidentDetail(accident);
-        accDocFileList = new AccDocFileDao();
-        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
+        accidentDocumentFileList = new AccidentDocumentFileDao();
+        List<AccDocFile> accDocFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
         downloadAccDocFile(accident, accDocFiles);
@@ -193,8 +193,8 @@ public class CompensationViewLogic implements ViewLogic {
         Accident accident = selectAccident();
         if(accident == null)
             return;
-        accDocFileList = new AccDocFileDao();
-        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
+        accidentDocumentFileList = new AccidentDocumentFileDao();
+        List<AccDocFile> accDocFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
         downloadAccDocFile(accident, accDocFiles);
@@ -209,11 +209,11 @@ public class CompensationViewLogic implements ViewLogic {
                 isExist = true;
             }
         }
-        accDocFileList = new AccDocFileDao();
+        accidentDocumentFileList = new AccidentDocumentFileDao();
         if (isExist) {
-            accDocFileList.update(lossId);
+            accidentDocumentFileList.update(lossId);
         } else {
-            accDocFileList.create(assessDamageResponseDto.getAccDocFile());
+            accidentDocumentFileList.create(assessDamageResponseDto.getAccDocFile());
         }
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;

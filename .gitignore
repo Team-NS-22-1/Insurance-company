@@ -49,7 +49,7 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
-#db관련
-src/main/java/utility/db/DbConst.java
+#db Const
+src/main/java/insuranceCompany/application/global/utility/db/DbConst.java
 #청구서류 관련
 AccDocFile/submit/**
