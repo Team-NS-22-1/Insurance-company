@@ -66,7 +66,8 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.println(e.getMessage());
         }
         catch (IOException ex) {
-            ex.printStackTrace();
+            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
+            System.exit(0);
         }
     }
 

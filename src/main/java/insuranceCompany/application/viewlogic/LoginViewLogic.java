@@ -30,12 +30,8 @@ public class LoginViewLogic implements ViewLogic {
     public void work(String command) {
         try {
             switch (command) {
-                case "1" -> {
-                    menuCustomerLogin();
-                }
-                case "2" -> {
-                    menuEmployeeLogin();
-                }
+                case "1" -> menuCustomerLogin();
+                case "2" -> menuEmployeeLogin();
             }
         }
         catch (IOException e) {
@@ -46,31 +42,36 @@ public class LoginViewLogic implements ViewLogic {
 
     private void menuCustomerLogin() throws IOException {
         Scanner sc = new Scanner(System.in);
-        createMenuAndClose("<< 고객 >>", "회원", "비회원");
-        switch (br.verifyMenu("", 2)) {
-            case 1 -> {
-                Customer customer = new Login().loginCustomer();
-                while(customer != null) {
-                    CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
-                    customerViewLogic.showMenu();
-                    String command = sc.nextLine();
-                    customer = isLogoutCustomer(customer, command);
-                    customerViewLogic.work(command);
+        loop: while(true) {
+            createMenuAndClose("<< 고객 >>", "회원", "비회원");
+            switch (br.verifyMenu("", 2)) {
+                case 1 -> {
+                    Customer customer = new Login().loginCustomer();
+                    if(customer==null) break;
+                    System.out.println("어서오세요! " + customer.getName() + " 고객님.\n");
+                    while(customer != null) {
+                        CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
+                        customerViewLogic.showMenu();
+                        String command = sc.nextLine();
+                        customer = isLogoutCustomer(customer, command);
+                        customerViewLogic.work(command);
+                    }
                 }
-            }
-            case 2 -> {
-                GuestViewLogic guestViewLogic = new GuestViewLogic();
-                guestViewLogic.showMenu();
-                String command = sc.nextLine();
-                guestViewLogic.work(command);
+                case 2 -> {
+                    GuestViewLogic guestViewLogic = new GuestViewLogic();
+                    guestViewLogic.showMenu();
+                    String command = sc.nextLine();
+                    guestViewLogic.work(command);
+                }
+                default -> { break loop; }
             }
         }
-
     }
 
     private void menuEmployeeLogin() throws IOException {
         Scanner sc = new Scanner(System.in);
         Employee employee = new Login().loginEmployee();
+        if(employee==null) return;
         System.out.println("LOGIN:: " + "부서[" + employee.getDepartment().name() + "] 직책[" + employee.getPosition().name() + "] " + employee.getName() + "\n");
         while(employee!=null) {
             switch (employee.getDepartment()) {
@@ -126,12 +127,10 @@ public class LoginViewLogic implements ViewLogic {
     }
 
     private boolean checkLogoutOrExit(String command) {
-        if (command.equals("0")) {
+        if (command.equals("0"))
             return true;
-        }
-        if (command.equalsIgnoreCase("EXIT")) {
+        if (command.equalsIgnoreCase("EXIT"))
             throw new MyCloseSequence();
-        }
         return false;
     }
 
