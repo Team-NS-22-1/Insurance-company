@@ -1,15 +1,17 @@
 package dao;
 
-import domain.accident.*;
-import org.junit.jupiter.api.Assertions;
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.accident.Accident;
+import insuranceCompany.application.domain.accident.AccidentType;
+import insuranceCompany.application.domain.accident.CarAccident;
+import insuranceCompany.application.domain.accident.InjuryAccident;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 

@@ -1,14 +1,10 @@
 package application.viewlogic;
 
-import domain.accident.InjuryAccident;
-import domain.customer.Customer;
-import org.junit.jupiter.api.Assertions;
+import insuranceCompany.application.domain.accident.InjuryAccident;
 import org.junit.jupiter.api.Test;
-import utility.db.DBUtil;
+import insuranceCompany.application.global.utility.db.DBUtil;
 
 import java.sql.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * packageName :  main.application.viewlogic

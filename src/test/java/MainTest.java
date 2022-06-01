@@ -1,10 +1,10 @@
-import application.Application;
-import domain.contract.*;
-import domain.customer.Customer;
-import domain.customer.CustomerListImpl;
-import domain.insurance.Insurance;
-import domain.insurance.InsuranceListImpl;
-import domain.insurance.InsuranceType;
+import insuranceCompany.application.Application;
+import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.domain.customer.CustomerListImpl;
+import insuranceCompany.application.domain.insurance.Insurance;
+import insuranceCompany.application.domain.insurance.InsuranceListImpl;
+import insuranceCompany.application.domain.insurance.InsuranceType;
 import org.junit.jupiter.api.Test;
 
 class MainTest {
