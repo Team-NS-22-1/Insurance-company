@@ -11,6 +11,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InvalidMenuException;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MessageUtil;
@@ -63,10 +64,10 @@ public class UnderwritingViewLogic implements ViewLogic {
                 switch (command) {
                     case "1" -> isExit = selectInsuranceType();
                     case "0" -> isExit = true;
-                    default -> throw new InputException.InvalidMenuException();
+                    default -> throw new InvalidMenuException();
                 }
 
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
                 command = sc.next();
             }
@@ -90,9 +91,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "3"-> { insuranceType = InsuranceType.FIRE; readContract(insuranceType); }
                     case "0" -> isExit = true;
                     case "exit" -> throw new MyCloseSequence();
-                    default -> throw new InputException.InvalidMenuException();
+                    default -> throw new InvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }
@@ -163,7 +164,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                             case "1"-> conditionOfUw = ConditionOfUw.APPROVAL;
                             case "2"-> conditionOfUw = ConditionOfUw.REFUSE;
                             case "3"-> conditionOfUw = ConditionOfUw.RE_AUDIT;
-                            default -> new InputException.InvalidMenuException();
+                            default -> new InvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
                         break;
@@ -173,9 +174,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InvalidMenuException();
+                        throw new InvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             } catch (MyIllegalArgumentException e) {
                 System.out.println("계약 정보가 존재하지 않습니다.");
@@ -211,9 +212,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InvalidMenuException();
+                        throw new InvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException e) {
+            } catch (InvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }

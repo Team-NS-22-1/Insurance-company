@@ -1,5 +1,7 @@
 package insuranceCompany.application.login;
 
+import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.InputNullDataException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.global.exception.InputException;
 
@@ -32,8 +34,8 @@ public class Login {
                     System.out.println((String) result);
                 else forWhile = false;
             }
-            catch (InputException.InputNullDataException |
-                   InputException.InputInvalidDataException e) {
+            catch (InputNullDataException |
+                    InputInvalidDataException e) {
                 System.out.println(e.getMessage());
             }
         }

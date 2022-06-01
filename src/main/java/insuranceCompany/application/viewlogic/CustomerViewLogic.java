@@ -100,9 +100,9 @@ public class CustomerViewLogic implements ViewLogic {
                     claimCompensation();
                     break;
                 case "":
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 default:
-                    throw new InputException.InvalidMenuException();
+                    throw new InvalidMenuException();
             }
         } catch (InputException e) {
             System.out.println(e.getMessage());
