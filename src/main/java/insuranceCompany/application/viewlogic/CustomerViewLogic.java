@@ -14,7 +14,7 @@ import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentList;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
@@ -152,22 +152,22 @@ public class CustomerViewLogic implements ViewLogic {
                 isExist(accident,accDocType);
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
-                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
+                    AccidentDocumentFile accidentDocumentFile = customer.claimCompensation(accident, new AccidentDocumentFile().setAccidentId(accident.getId())
                             .setType(accDocType));
-                    if (accDocFile == null) {
+                    if (accidentDocumentFile == null) {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
                     }
                     accidentDocumentFileList = new AccidentDocumentFileDao();
-                    for (AccDocFile value : accident.getAccDocFileList().values()) {
+                    for (AccidentDocumentFile value : accident.getAccDocFileList().values()) {
                         System.out.println(value);
                     }
 
                     if (accident.getAccDocFileList().containsKey(accDocType)) {
                         accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
                     } else {
-                        accidentDocumentFileList.create(accDocFile);
-                        accident.getAccDocFileList().put(accDocType,accDocFile);
+                        accidentDocumentFileList.create(accidentDocumentFile);
+                        accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
                     }
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
@@ -269,7 +269,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private boolean isAllDocSubmitted(Accident accident, AccDocType ... accDocTypes) {
-        Map<AccDocType, AccDocFile> accDocFileList = accident.getAccDocFileList();
+        Map<AccDocType, AccidentDocumentFile> accDocFileList = accident.getAccDocFileList();
         for (AccDocType accDocType : accDocTypes) {
             if (!accDocFileList.containsKey(accDocType)) {
                 return false;
@@ -306,8 +306,8 @@ public class CustomerViewLogic implements ViewLogic {
         }
         if (accidentId != 0) {
             accidentDocumentFileList = new AccidentDocumentFileDao();
-            List<AccDocFile> files = accidentDocumentFileList.readAllByAccidentId(retAccident.getId());
-            for (AccDocFile file : files) {
+            List<AccidentDocumentFile> files = accidentDocumentFileList.readAllByAccidentId(retAccident.getId());
+            for (AccidentDocumentFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
                 System.out.println(file);
             }

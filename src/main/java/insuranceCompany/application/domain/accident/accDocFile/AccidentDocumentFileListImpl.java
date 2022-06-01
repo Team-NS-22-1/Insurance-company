@@ -19,21 +19,21 @@ import java.util.stream.Collectors;
  */
 public class AccidentDocumentFileListImpl implements AccidentDocumentFileList {
 
-    private static Map<Integer, AccDocFile> accDocFilelist = new HashMap<>();
+    private static Map<Integer, AccidentDocumentFile> accDocFilelist = new HashMap<>();
     private static int id;
 
     @Override
-    public void create(AccDocFile accDocFile) {
-        accDocFile.setId(++id);
-        accDocFilelist.put(accDocFile.getId(), accDocFile);
+    public void create(AccidentDocumentFile accidentDocumentFile) {
+        accidentDocumentFile.setId(++id);
+        accDocFilelist.put(accidentDocumentFile.getId(), accidentDocumentFile);
     }
 
     @Override
-    public AccDocFile read(int id) {
-        AccDocFile accDocFile = accDocFilelist.get(id);
-        if(accDocFile==null)
+    public AccidentDocumentFile read(int id) {
+        AccidentDocumentFile accidentDocumentFile = accDocFilelist.get(id);
+        if(accidentDocumentFile ==null)
             throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
-        return accDocFile;
+        return accidentDocumentFile;
     }
 
     @Override
@@ -43,15 +43,15 @@ public class AccidentDocumentFileListImpl implements AccidentDocumentFileList {
 
     @Override
     public boolean delete(int id) {
-        AccDocFile accDocFile = accDocFilelist.remove(id);
-        if(accDocFile==null)
+        AccidentDocumentFile accidentDocumentFile = accDocFilelist.remove(id);
+        if(accidentDocumentFile ==null)
             throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
         return true;
     }
     @Override
-    public List<AccDocFile> readAllByAccidentId(int accidentId) {
-        List<AccDocFile> list = new ArrayList<>(accDocFilelist.values());
-        List<AccDocFile> collect = list.stream().filter(ac -> ac.getAccidentId() == accidentId)
+    public List<AccidentDocumentFile> readAllByAccidentId(int accidentId) {
+        List<AccidentDocumentFile> list = new ArrayList<>(accDocFilelist.values());
+        List<AccidentDocumentFile> collect = list.stream().filter(ac -> ac.getAccidentId() == accidentId)
                 .collect(Collectors.toList());
         if(collect.size()==0)
             throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");

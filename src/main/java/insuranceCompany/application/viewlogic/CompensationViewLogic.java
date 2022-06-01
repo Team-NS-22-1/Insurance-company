@@ -8,7 +8,7 @@ import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageReque
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.customer.Customer;
@@ -94,10 +94,10 @@ public class CompensationViewLogic implements ViewLogic {
 
         showAccidentDetail(accident);
         accidentDocumentFileList = new AccidentDocumentFileDao();
-        List<AccDocFile> accDocFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
+        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
-        downloadAccDocFile(accident, accDocFiles);
+        downloadAccDocFile(accident, accidentDocumentFiles);
         System.out.println("다운로드 종료");
         // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
 
@@ -194,18 +194,18 @@ public class CompensationViewLogic implements ViewLogic {
         if(accident == null)
             return;
         accidentDocumentFileList = new AccidentDocumentFileDao();
-        List<AccDocFile> accDocFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
+        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
-        downloadAccDocFile(accident, accDocFiles);
+        downloadAccDocFile(accident, accidentDocumentFiles);
         AccountRequestDto compAccount = createCompAccount();
         System.out.println("손해사정서를 업로드해주세요.");
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
         boolean isExist = false;
         int lossId = 0;
-        for (AccDocFile accDocFile : accDocFiles) {
-            if (accDocFile.getType() == AccDocType.LOSSASSESSMENT) {
-                lossId = accDocFile.getId();
+        for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
+            if (accidentDocumentFile.getType() == AccDocType.LOSSASSESSMENT) {
+                lossId = accidentDocumentFile.getId();
                 isExist = true;
             }
         }
@@ -213,7 +213,7 @@ public class CompensationViewLogic implements ViewLogic {
         if (isExist) {
             accidentDocumentFileList.update(lossId);
         } else {
-            accidentDocumentFileList.create(assessDamageResponseDto.getAccDocFile());
+            accidentDocumentFileList.create(assessDamageResponseDto.getAccidentDocumentFile());
         }
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
@@ -303,15 +303,15 @@ public class CompensationViewLogic implements ViewLogic {
 
     }
 
-    private void downloadAccDocFile(Accident accident, List<AccDocFile> accDocFiles) {
+    private void downloadAccDocFile(Accident accident, List<AccidentDocumentFile> accidentDocumentFiles) {
         DocUtil instance = DocUtil.getInstance();
-        for (AccDocFile accDocFile : accDocFiles) {
+        for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
             while (true) {
-                String query = accDocFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
+                String query = accidentDocumentFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 if (result.equals("Y")) {
-                    instance.download(accDocFile.getFileAddress());
+                    instance.download(accidentDocumentFile.getFileAddress());
                     break;
                 } else if (result.equals("N")) {
                     break;

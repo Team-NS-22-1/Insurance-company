@@ -9,7 +9,7 @@ import java.util.Objects;
  * @version 1.0
  * @created 09-5-2022 오전 2:42:22
  */
-public class AccDocFile {
+public class AccidentDocumentFile {
 
 	private int accidentId;
 	private String fileAddress;
@@ -17,7 +17,7 @@ public class AccDocFile {
 	private AccDocType type;
 	private LocalDateTime lastModifedDate;
 
-	public AccDocFile(){
+	public AccidentDocumentFile(){
 
 	}
 
@@ -25,7 +25,7 @@ public class AccDocFile {
 		return accidentId;
 	}
 
-	public AccDocFile setAccidentId(int accidentId) {
+	public AccidentDocumentFile setAccidentId(int accidentId) {
 		this.accidentId = accidentId;
 		return this;
 	}
@@ -34,7 +34,7 @@ public class AccDocFile {
 		return fileAddress;
 	}
 
-	public AccDocFile setFileAddress(String fileAddress) {
+	public AccidentDocumentFile setFileAddress(String fileAddress) {
 		this.fileAddress = fileAddress;
 		return this;
 	}
@@ -43,7 +43,7 @@ public class AccDocFile {
 		return id;
 	}
 
-	public AccDocFile setId(int id) {
+	public AccidentDocumentFile setId(int id) {
 		this.id = id;
 		return this;
 	}
@@ -52,7 +52,7 @@ public class AccDocFile {
 		return type;
 	}
 
-	public AccDocFile setType(AccDocType type) {
+	public AccidentDocumentFile setType(AccDocType type) {
 		this.type = type;
 		return this;
 	}
@@ -61,7 +61,7 @@ public class AccDocFile {
 		return lastModifedDate;
 	}
 
-	public AccDocFile setLastModifedDate(LocalDateTime lastModifedDate) {
+	public AccidentDocumentFile setLastModifedDate(LocalDateTime lastModifedDate) {
 		this.lastModifedDate = lastModifedDate;
 		return this;
 	}
@@ -81,7 +81,7 @@ public class AccDocFile {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		AccDocFile that = (AccDocFile) o;
+		AccidentDocumentFile that = (AccidentDocumentFile) o;
 		return Objects.equals(getFileAddress(), that.getFileAddress()) && getType() == that.getType();
 	}
 

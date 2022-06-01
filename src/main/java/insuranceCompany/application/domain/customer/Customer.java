@@ -4,7 +4,7 @@ package insuranceCompany.application.domain.customer;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
@@ -124,11 +124,11 @@ public class Customer {
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
-	public AccDocFile claimCompensation(Accident accident, AccDocFile accDocFile){
+	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
 		DocUtil docUtil = DocUtil.getInstance();
-		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+accDocFile.getType().getDesc();
+		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+ accidentDocumentFile.getType().getDesc();
 		String extension = "";
-		if(accDocFile.getType()== AccDocType.PICTUREOFSITE)
+		if(accidentDocumentFile.getType()== AccDocType.PICTUREOFSITE)
 			extension = ".jpg";
 		else
 			extension = ".hwp";
@@ -137,8 +137,8 @@ public class Customer {
 		if (directory.equals("close")) {
 			return null;
 		}
-		accDocFile.setFileAddress(directory);
-		return accDocFile;
+		accidentDocumentFile.setFileAddress(directory);
+		return accidentDocumentFile;
 	}
 
 	public void pay(Contract contract, Payment payment){

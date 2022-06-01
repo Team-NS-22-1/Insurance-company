@@ -1,7 +1,7 @@
 package dao;
 
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import org.junit.jupiter.api.Test;
 
@@ -26,16 +26,16 @@ class AccidentDocumentFileDaoTest {
 
     @Test
     void create() {
-        AccDocFile accDocFile = new AccDocFile();
-        accDocFile.setFileAddress("testAddress");
-        accDocFile.setType(AccDocType.CLAIMCOMP);
-        accDocFile.setAccidentId(5);
-        dao.create(accDocFile);
+        AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
+        accidentDocumentFile.setFileAddress("testAddress");
+        accidentDocumentFile.setType(AccDocType.CLAIMCOMP);
+        accidentDocumentFile.setAccidentId(5);
+        dao.create(accidentDocumentFile);
 
         dao = new AccidentDocumentFileDao();
-        AccDocFile read = dao.read(accDocFile.getId());
+        AccidentDocumentFile read = dao.read(accidentDocumentFile.getId());
         System.out.println(read);
-        assertEquals(accDocFile.getId(),read.getId());
+        assertEquals(accidentDocumentFile.getId(),read.getId());
         assertNotNull(read.getFileAddress());
     }
 
@@ -50,27 +50,27 @@ class AccidentDocumentFileDaoTest {
 
     @Test
     void update() {
-        AccDocFile accDocFile = new AccDocFile();
+        AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
 //        accDocFile.setFileAddress("testAddress");
-        accDocFile.setType(AccDocType.CLAIMCOMP);
+        accidentDocumentFile.setType(AccDocType.CLAIMCOMP);
 //        accDocFile.setAccidentId(22);
-        dao.create(accDocFile);
+        dao.create(accidentDocumentFile);
 
-        dao.update(accDocFile.getId());
+        dao.update(accidentDocumentFile.getId());
 
-        AccDocFile read = dao.read(accDocFile.getId());
+        AccidentDocumentFile read = dao.read(accidentDocumentFile.getId());
         System.out.println(read);
-        System.out.println(accDocFile.getLastModifedDate());
+        System.out.println(accidentDocumentFile.getLastModifedDate());
         System.out.println(read.getLastModifedDate());
-        assertNotEquals(accDocFile.getLastModifedDate(),read.getLastModifedDate());
+        assertNotEquals(accidentDocumentFile.getLastModifedDate(),read.getLastModifedDate());
     }
 
     @Test
     void readAllByAccidentId() {
-        List<AccDocFile> accDocFileList = dao.readAllByAccidentId(22);
-        for (AccDocFile accDocFile : accDocFileList) {
-            System.out.println(accDocFile);
+        List<AccidentDocumentFile> accidentDocumentFileList = dao.readAllByAccidentId(22);
+        for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFileList) {
+            System.out.println(accidentDocumentFile);
         }
-        assertEquals(accDocFileList.size(),3);
+        assertEquals(accidentDocumentFileList.size(),3);
     }
 }

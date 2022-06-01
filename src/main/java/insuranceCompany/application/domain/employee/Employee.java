@@ -10,7 +10,7 @@ import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageReque
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
@@ -354,19 +354,19 @@ public class Employee {
 				.build();
 	}
 
-	private AccDocFile uploadLossAssessment(Accident accident) {
+	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
 		DocUtil instance = DocUtil.getInstance();
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
 		String fileDir = instance.upload(dir);
 		if (fileDir == null) {
 			return null;
 		}
-		AccDocFile accDocFile = new AccDocFile();
-		accDocFile.setFileAddress(fileDir)
+		AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
+		accidentDocumentFile.setFileAddress(fileDir)
 				.setAccidentId(accident.getId())
 				.setType(AccDocType.LOSSASSESSMENT);
-		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT,accDocFile);
-		return accDocFile;
+		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT, accidentDocumentFile);
+		return accidentDocumentFile;
 	}
 
 	public void assessDamage(){

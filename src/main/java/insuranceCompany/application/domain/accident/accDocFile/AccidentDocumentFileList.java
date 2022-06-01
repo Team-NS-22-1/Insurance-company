@@ -15,7 +15,7 @@ import java.util.List;
  * -----------------------------------------------------------
  * 2022-05-18                규현             최초 생성
  */
-public interface AccidentDocumentFileList extends CrudInterface<AccDocFile> {
+public interface AccidentDocumentFileList extends CrudInterface<AccidentDocumentFile> {
 
-    List<AccDocFile> readAllByAccidentId(int accidentId);
+    List<AccidentDocumentFile> readAllByAccidentId(int accidentId);
 }
