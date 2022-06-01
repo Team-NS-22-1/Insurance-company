@@ -300,7 +300,6 @@ public class CustomerViewLogic implements ViewLogic {
             List<AccidentDocumentFile> files = accidentDocumentFileList.readAllByAccidentId(retAccident.getId());
             for (AccidentDocumentFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
-                System.out.println(file);
             }
         }
 

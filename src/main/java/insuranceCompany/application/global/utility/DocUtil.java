@@ -35,7 +35,6 @@ public class DocUtil extends JFrame {
 
     public void download(String dir) {
         FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
-        dialog.setAlwaysOnTop(true);
         dialog.setModal(true);
         dialog.setVisible(true);
 
@@ -63,6 +62,7 @@ public class DocUtil extends JFrame {
             }
 
             FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
+            dialog.setFile(getExtension(dir));
             dialog.setModal(true);
             dialog.setVisible(true);
 
@@ -81,6 +81,10 @@ public class DocUtil extends JFrame {
         return dir;
     }
 
+    private String getExtension(String path) {
+        int lastIndexOf = path.lastIndexOf(".");
+        return "*"+path.substring(lastIndexOf);
+    }
 
 
     private void readIOBuffer() throws IOException {
