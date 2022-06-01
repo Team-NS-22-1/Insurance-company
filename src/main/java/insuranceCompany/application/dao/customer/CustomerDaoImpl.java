@@ -2,13 +2,11 @@ package insuranceCompany.application.dao.customer;
 
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.db.DBUtil;
 import insuranceCompany.application.global.utility.db.DbConst;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * packageName :  domain.customer
@@ -57,6 +55,9 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
             e.printStackTrace();
         }finally {
             close();
+        }
+        if (customer == null) {
+            throw new MyIllegalArgumentException(id + "에 해당하는 고객정보가 존재하지 않습니다.");
         }
         return customer;
     }

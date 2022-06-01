@@ -3,6 +3,8 @@ package insuranceCompany.application.global.utility;
 import insuranceCompany.application.domain.payment.BankType;
 import insuranceCompany.application.global.exception.MyInadequateFormatException;
 
+import static insuranceCompany.application.global.utility.FormatUtil.*;
+
 /**
  * packageName :  utility
  * fileName : BankTuil
@@ -37,31 +39,31 @@ public class BankUtil {
         boolean result = false;
         switch (bankType) {
             case KB :
-                result = FormatUtil.isKB(accountNo);
+                result = isKB(accountNo);
                 break;
             case NH:
-                result = FormatUtil.isNH(accountNo);
+                result = isNH(accountNo);
                 break;
             case KAKAOBANK:
-                result = FormatUtil.isKakaoBank(accountNo);
+                result = isKakaoBank(accountNo);
                 break;
             case SINHAN:
-                result = FormatUtil.isSinhan(accountNo);
+                result = isSinhan(accountNo);
                 break;
             case WOORI:
-                result = FormatUtil.isWoori(accountNo);
+                result = isWoori(accountNo);
                 break;
             case IBK:
-                result = FormatUtil.isIBK(accountNo);
+                result = isIBK(accountNo);
                 break;
             case HANA:
-                result = FormatUtil.isHana(accountNo);
+                result = isHana(accountNo);
                 break;
             case CITY:
-                result = FormatUtil.isCity(accountNo);
+                result = isCity(accountNo);
                 break;
             case SAEMAUL:
-                result = FormatUtil.isSaemaul(accountNo);
+                result = isSaemaul(accountNo);
                 break;
         }
         if (!result)

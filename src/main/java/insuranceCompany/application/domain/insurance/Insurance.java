@@ -9,16 +9,16 @@ import java.util.ArrayList;
  */
 public class Insurance {
 
-	public int id;
-	public String name;
-	public String description;
-	public int contractPeriod;
-	public int paymentPeriod;
-	public InsuranceType insuranceType;
-	public ArrayList<Guarantee> guaranteeList = new ArrayList<>();
-	public ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
-	public DevelopInfo developInfo;
-	public SalesAuthorizationFile salesAuthorizationFile;
+	private int id;
+	private String name;
+	private String description;
+	private int contractPeriod;
+	private int paymentPeriod;
+	private InsuranceType insuranceType;
+	private ArrayList<Guarantee> guaranteeList = new ArrayList<>();
+	private ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
+	private DevelopInfo devInfo;
+	private SalesAuthorizationFile salesAuthFile;
 
 	public Insurance(){
 	}
@@ -96,20 +96,20 @@ public class Insurance {
 	}
 
 	public DevelopInfo getDevInfo() {
-		return developInfo;
+		return devInfo;
 	}
 
-	public Insurance setDevInfo(DevelopInfo developInfo) {
-		this.developInfo = developInfo;
+	public Insurance setDevInfo(DevelopInfo devInfo) {
+		this.devInfo = devInfo;
 		return this;
 	}
 
 	public SalesAuthorizationFile getSalesAuthFile() {
-		return salesAuthorizationFile;
+		return salesAuthFile;
 	}
 
-	public Insurance setSalesAuthFile(SalesAuthorizationFile salesAuthorizationFile) {
-		this.salesAuthorizationFile = salesAuthorizationFile;
+	public Insurance setSalesAuthFile(SalesAuthorizationFile salesAuthFile) {
+		this.salesAuthFile = salesAuthFile;
 		return this;
 	}
 

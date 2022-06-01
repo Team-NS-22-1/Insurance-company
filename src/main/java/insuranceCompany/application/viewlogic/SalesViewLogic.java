@@ -107,13 +107,13 @@ public class SalesViewLogic implements ViewLogic {
 
 
     public void planInsurance() throws SQLException {
-        InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
-        ArrayList<Insurance> insurances = insuranceDaoImpl.readAll();
+        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+        ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insurance.developInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION)
+                if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
             }
 
@@ -126,9 +126,9 @@ public class SalesViewLogic implements ViewLogic {
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                insuranceDaoImpl = new InsuranceDaoImpl();
-                insurance = insuranceDaoImpl.read(Integer.parseInt(command));
-                if (insurance.developInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION) {
+                insuranceDao = new InsuranceDaoImpl();
+                insurance = insuranceDao.read(Integer.parseInt(command));
+                if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     switch (insurance.getInsuranceType()) {
                         case HEALTH:
@@ -336,8 +336,8 @@ public class SalesViewLogic implements ViewLogic {
                     case "1":
                         System.out.println("고객 ID를 입력해주세요.");
                         int customerId = sc.nextInt();
-                        CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-                        customer = customerDaoImpl.read(customerId);
+                        CustomerDaoImpl customerDao = new CustomerDaoImpl();
+                        customer = customerDao.read(customerId);
                         isLoop = false;
                         break;
                     // 미등록 고객

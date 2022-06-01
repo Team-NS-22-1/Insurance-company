@@ -11,7 +11,7 @@ import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
-import insuranceCompany.application.viewlogic.dto.InsuranceDto.*;
+import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

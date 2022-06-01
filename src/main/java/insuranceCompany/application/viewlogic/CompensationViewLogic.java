@@ -1,27 +1,27 @@
 package insuranceCompany.application.viewlogic;
 
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
+import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import insuranceCompany.application.dao.accident.AccDocFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.customer.CustomerDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.BankType;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyInadequateFormatException;
+import insuranceCompany.outerSystem.Bank;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
-import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.outerSystem.Bank;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -47,7 +47,7 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
 public class CompensationViewLogic implements ViewLogic {
 
     private AccidentList accidentList;
-    private AccDocFileList accDocFileList;
+    private  AccDocFileList accDocFileList;
     private CustomerDao customerList;
     private EmployeeDao employeeList;
     private CustomMyBufferedReader br;

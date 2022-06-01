@@ -9,7 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class InsuranceDaoImpl extends Dao {
+public class InsuranceDaoImpl extends Dao implements InsuranceDao {
 
     public InsuranceDaoImpl() {
         super.connect();
@@ -36,11 +36,11 @@ public class InsuranceDaoImpl extends Dao {
             }
 
             // CREATE devInfo
-            DevelopInfo developInfo = insurance.getDevInfo();
+            DevelopInfo devInfo = insurance.getDevInfo();
             String queryFormatDevInfo =
-                    "INSERT INTO dev_info (insurance_id, employee_id, dev_date, sales_auth_state) VALUES (%d, %d, '%s', '%s');";
+                    "INSERT INTO dev_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (%d, %d, '%s', '%s');";
             String queryDevInfo =
-                    String.format(queryFormatDevInfo, insuranceId, developInfo.getEmployeeId(), java.sql.Date.valueOf(developInfo.getDevDate()), developInfo.getSalesAuthState().name());
+                    String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevelopDate()), devInfo.getSalesAuthorizationState().name());
             super.create(queryDevInfo);
 
             // CREATE insurance detail
@@ -101,10 +101,10 @@ public class InsuranceDaoImpl extends Dao {
             }
 
             // CREATE sales auth file
-            SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
-            salesAuthorizationFile.setInsuranceId(insuranceId);
+            SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
+            salesAuthFile.setInsuranceId(insuranceId);
             String queryFormatSalesAuthFile =
-                    "INSERT INTO sales_auth_file (insurance_id) VALUES (%d);";
+                    "INSERT INTO sales_authorization_file (insurance_id) VALUES (%d);";
             String querySalesAuthFile =
                     String.format(queryFormatSalesAuthFile, insuranceId);
             super.create(querySalesAuthFile);
@@ -129,7 +129,6 @@ public class InsuranceDaoImpl extends Dao {
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
                         .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type").toUpperCase()));
             }
-
             // READ guarantee
             ArrayList<Guarantee> guarantees = new ArrayList<>();
             String queryGuarantee = "SELECT * FROM guarantee WHERE insurance_id = " + id + ";";
@@ -147,14 +146,13 @@ public class InsuranceDaoImpl extends Dao {
 
             // READ devInfo
             DevelopInfo developInfo = new DevelopInfo();
-            String queryDevInfo = "SELECT * FROM dev_info WHERE insurance_id = " + id + ";";
+            String queryDevInfo = "SELECT * FROM develop_info WHERE insurance_id = " + id + ";";
             super.read(queryDevInfo);
             if(resultSet.next()){
-                developInfo.setId(resultSet.getInt("dev_info_id"))
+                developInfo.setId(resultSet.getInt("insurance_id"))
                         .setEmployeeId(resultSet.getInt("employee_id"))
-                        .setDevDate(resultSet.getDate("dev_date").toLocalDate())
-                        .setSalesAuthState(SalesAuthorizationState.valueOf(resultSet.getString("sales_auth_state").toUpperCase()))
-                        .setInsuranceId(resultSet.getInt("insurance_id"));
+                        .setDevelopDate(resultSet.getDate("develop_date").toLocalDate())
+                        .setSalesAuthorizationState(SalesAuthorizationState.valueOf(resultSet.getString("sales_authorization_state").toUpperCase()));
                 Date salesStartDate = resultSet.getDate("sales_start_date");
                 developInfo.setSalesStartDate(resultSet.wasNull() ? null : salesStartDate.toLocalDate());
             }
@@ -221,35 +219,34 @@ public class InsuranceDaoImpl extends Dao {
             }
 
             // READ salesAuthFile
-            SalesAuthorizationFile salesAuthorizationFile = new SalesAuthorizationFile();
+            SalesAuthorizationFile salesAuthFile = new SalesAuthorizationFile();
             String querySalesAuthFile =
-                    "SELECT * FROM sales_auth_file WHERE insurance_id = " + id + ";";
+                    "SELECT * FROM sales_authorization_file WHERE insurance_id = " + id + ";";
             super.read(querySalesAuthFile);
             if (resultSet.next()) {
-                salesAuthorizationFile.setInsuranceId(resultSet.getInt("insurance_id"));
+                salesAuthFile.setInsuranceId(resultSet.getInt("insurance_id"));
                 String fssOfficialDoc = resultSet.getString("fss_official_doc");
-                salesAuthorizationFile.setFssOfficialDoc(resultSet.wasNull() ? null : fssOfficialDoc);
+                salesAuthFile.setFssOfficialDoc(resultSet.wasNull() ? null : fssOfficialDoc);
                 java.sql.Timestamp modifiedFss = resultSet.getTimestamp("modified_fss");
-                salesAuthorizationFile.setModifiedFss(resultSet.wasNull() ? null : modifiedFss.toLocalDateTime());
+                salesAuthFile.setModifiedFss(resultSet.wasNull() ? null : modifiedFss.toLocalDateTime());
 
                 String isoVerification = resultSet.getString("iso_verification");
-                salesAuthorizationFile.setIsoVerification(resultSet.wasNull() ? null : isoVerification);
+                salesAuthFile.setIsoVerification(resultSet.wasNull() ? null : isoVerification);
                 java.sql.Timestamp modifiedIso = resultSet.getTimestamp("modified_iso");
-                salesAuthorizationFile.setModifiedIso(resultSet.wasNull() ? null : modifiedIso.toLocalDateTime());
+                salesAuthFile.setModifiedIso(resultSet.wasNull() ? null : modifiedIso.toLocalDateTime());
 
                 String prodDeclaration = resultSet.getString("prod_declaration");
-                salesAuthorizationFile.setProdDeclaration(resultSet.wasNull() ? null : prodDeclaration);
+                salesAuthFile.setProdDeclaration(resultSet.wasNull() ? null : prodDeclaration);
                 java.sql.Timestamp modifiedProd = resultSet.getTimestamp("modified_prod");
-                salesAuthorizationFile.setModifiedProd(resultSet.wasNull() ? null : modifiedProd.toLocalDateTime());
+                salesAuthFile.setModifiedProd(resultSet.wasNull() ? null : modifiedProd.toLocalDateTime());
 
                 String srActuaryVerification = resultSet.getString("sr_actuary_verification");
-                salesAuthorizationFile.setSrActuaryVerification(resultSet.wasNull() ? null : srActuaryVerification);
+                salesAuthFile.setSrActuaryVerification(resultSet.wasNull() ? null : srActuaryVerification);
                 java.sql.Timestamp modifiedSrActuary = resultSet.getTimestamp("modified_sr_actuary");
-                salesAuthorizationFile.setModifiedSrActuary(resultSet.wasNull() ? null : modifiedSrActuary.toLocalDateTime());
+                salesAuthFile.setModifiedSrActuary(resultSet.wasNull() ? null : modifiedSrActuary.toLocalDateTime());
 
             }
-            insurance.setSalesAuthFile(salesAuthorizationFile);
-
+            insurance.setSalesAuthFile(salesAuthFile);
         }
         catch (NullPointerException | SQLException e) {
             e.printStackTrace();
@@ -260,45 +257,50 @@ public class InsuranceDaoImpl extends Dao {
         return insurance;
     }
 
-    public ArrayList<Insurance> readAll() throws SQLException {
+    public ArrayList<Insurance> readAll() {
         Insurance insurance;
         ArrayList<Insurance> insuranceList = new ArrayList<>();
-        String query = "select * from insurance " +
-                "inner join dev_info " +
-                "on insurance.insurance_id = dev_info.insurance_id";
+        try {
+            String query = "select * from insurance " +
+                    "inner join develop_info " +
+                    "on insurance.insurance_id = dev_info.insurance_id";
 
-        ResultSet rs = super.read(query);
-        while (rs.next()) {
-            insurance = new Insurance();
-            insurance.developInfo = new DevelopInfo();
-            insurance.setId(rs.getInt("insurance_id"));
-            insurance.setName(rs.getString("name"));
-            insurance.setDescription(rs.getString("description"));
-            insurance.setContractPeriod(rs.getInt("contract_period"));
-            insurance.setPaymentPeriod(rs.getInt("payment_period"));
-            switch (rs.getString("insurance_type").toUpperCase()) {
-                case "HEALTH":
-                    insurance.setInsuranceType(InsuranceType.HEALTH);
-                    break;
-                case "FIRE":
-                    insurance.setInsuranceType(InsuranceType.FIRE);
-                    break;
-                case "CAR":
-                    insurance.setInsuranceType(InsuranceType.CAR);
-                    break;
+            ResultSet rs = super.read(query);
+            while (rs.next()) {
+                insurance = new Insurance();
+                insurance.setDevInfo(new DevelopInfo());
+                insurance.setId(rs.getInt("insurance_id"));
+                insurance.setName(rs.getString("name"));
+                insurance.setDescription(rs.getString("description"));
+                insurance.setContractPeriod(rs.getInt("contract_period"));
+                insurance.setPaymentPeriod(rs.getInt("payment_period"));
+                switch (rs.getString("insurance_type").toUpperCase()) {
+                    case "HEALTH":
+                        insurance.setInsuranceType(InsuranceType.HEALTH);
+                        break;
+                    case "FIRE":
+                        insurance.setInsuranceType(InsuranceType.FIRE);
+                        break;
+                    case "CAR":
+                        insurance.setInsuranceType(InsuranceType.CAR);
+                        break;
+                }
+                switch (rs.getString("sales_authorization_state").toUpperCase()) {
+                    case "WAIT":
+                        insurance.getDevInfo().setSalesAuthorizationState(SalesAuthorizationState.WAIT);
+                        break;
+                    case "PERMISSION":
+                        insurance.getDevInfo().setSalesAuthorizationState(SalesAuthorizationState.PERMISSION);
+                        break;
+                    case "DISALLOWANCE":
+                        insurance.getDevInfo().setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
+                        break;
+                }
+                insuranceList.add(insurance);
             }
-            switch (rs.getString("sales_auth_state").toUpperCase()) {
-                case "WAIT":
-                    insurance.developInfo.setSalesAuthState(SalesAuthorizationState.WAIT);
-                    break;
-                case "PERMISSION":
-                    insurance.developInfo.setSalesAuthState(SalesAuthorizationState.PERMISSION);
-                    break;
-                case "DISALLOWANCE":
-                    insurance.developInfo.setSalesAuthState(SalesAuthorizationState.DISALLOWANCE);
-                    break;
-            }
-            insuranceList.add(insurance);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
         return insuranceList;
     }
@@ -338,7 +340,7 @@ public class InsuranceDaoImpl extends Dao {
                     "select * from insurance\n" +
                             "where insurance_id IN (\n" +
                             "    select insurance_id\n" +
-                            "    from dev_info\n" +
+                            "    from develop_info\n" +
                             "    where employee_id = " + eid +
                             ");";
             super.read(query);
@@ -354,56 +356,63 @@ public class InsuranceDaoImpl extends Dao {
         return insurances;
     }
 
+    @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+
     public void update(Insurance insurance) {
 
     }
 
     public void updateByFss(Insurance insurance) {
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
+        SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = %d;";
+                "UPDATE sales_authorization_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthorizationFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthorizationFile.getModifiedFss()), insurance.getId());
+                String.format(queryFormat, salesAuthFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedFss()), insurance.getId());
         super.update(query);
     }
 
     public void updateByIso(Insurance insurance) {
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
+        SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = %d;";
+                "UPDATE sales_authorization_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthorizationFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthorizationFile.getModifiedIso()), insurance.getId());
+                String.format(queryFormat, salesAuthFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedIso()), insurance.getId());
         super.update(query);
     }
 
     public void updateByProd(Insurance insurance) {
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
+        SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = %d;";
+                "UPDATE sales_authorization_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthorizationFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthorizationFile.getModifiedProd()), insurance.getId());
+                String.format(queryFormat, salesAuthFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedProd()), insurance.getId());
         super.update(query);
     }
 
     public void updateBySrActuary(Insurance insurance) {
-        SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
+        SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
         String queryFormat =
-                "UPDATE sales_auth_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = %d;";
+                "UPDATE sales_authorization_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, salesAuthorizationFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthorizationFile.getModifiedSrActuary()), insurance.getId());
+                String.format(queryFormat, salesAuthFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedSrActuary()), insurance.getId());
         super.update(query);
     }
 
     public void updateBySalesAuthState(Insurance insurance) {
         String queryFormat =
-                "UPDATE dev_info SET sales_auth_state = '%s' WHERE insurance_id = %d;";
+                "UPDATE develop_info SET sales_authorization_state = '%s' WHERE insurance_id = %d;";
         String query =
-                String.format(queryFormat, insurance.getDevInfo().getSalesAuthState().name(), insurance.getId());
+                String.format(queryFormat, insurance.getDevInfo().getSalesAuthorizationState().name(), insurance.getId());
         super.update(query);
     }
 
-    public void delete(int id) throws SQLException {
+    public boolean delete(int id) {
         String query = "DELETE FROM insurance WHERE insurance_id = " + id + ";";
+        return false;
     }
 
     public int readHealthPremium(int targetAge, boolean targetSex, boolean riskPremiumCriterion) {

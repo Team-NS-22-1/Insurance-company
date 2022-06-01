@@ -75,15 +75,15 @@ public class GuestViewLogic implements ViewLogic {
 
     private void selectInsurance() throws SQLException {
 //        insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState()
-        InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
-        ArrayList<Insurance> insurances = insuranceDaoImpl.readAll();
+        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+        ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
             throw new InputException.NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
-                if (insurance.developInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION)
+                if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
-                    System.out.println(insurance.developInfo.getSalesAuthState());
+                    System.out.println(insurance.getDevInfo().getSalesAuthorizationState());
             }
 
             try {
@@ -95,9 +95,9 @@ public class GuestViewLogic implements ViewLogic {
                 if (command.isBlank()){
                     throw new InputException.InputNullDataException();
                 }
-                insuranceDaoImpl = new InsuranceDaoImpl();
-                insurance = insuranceDaoImpl.read(Integer.parseInt(command));
-                if (insurance != null && insurance.developInfo.getSalesAuthState() == SalesAuthorizationState.PERMISSION) {
+                insuranceDao = new InsuranceDaoImpl();
+                insurance = insuranceDao.read(Integer.parseInt(command));
+                if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     decideSigning();
                 }

@@ -1,10 +1,10 @@
 package insuranceCompany.application.dao.contract;
 
 import insuranceCompany.application.dao.Dao;
-import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.domain.contract.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,7 +54,7 @@ public class ContractDao extends Dao {
                     case "CAR" -> {
                         CarContract carContract = (CarContract) contract;
                         inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value)" +
-                                "values (%d, '%s', '%s', %d, '%s', %d) ";;
+                                "values (%d, '%s', '%s', %d, '%s', %d) ";
                         input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType().name(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
                         super.create(input);
@@ -117,7 +117,8 @@ public class ContractDao extends Dao {
                 "       ON c.contract_id = hc.contract_id\n" +
                 "LEFT JOIN insurance i\n" +
                 "       ON c.insurance_id = i.insurance_id\n" +
-                "WHERE i.insurance_type = '" + insuranceType +"'";
+                "WHERE i.insurance_type = '" + insuranceType +"'" +
+                    "AND c.condition_of_uw = 'WAIT' OR c.condition_of_uw = 'RE_AUDIT'";
 
         try {
             ResultSet rs = super.read(query);

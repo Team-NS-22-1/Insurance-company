@@ -1,33 +1,31 @@
 package insuranceCompany.application.domain.employee;
 
 
-import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
+import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputException.InputInvalidDataException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
-import insuranceCompany.application.viewlogic.dto.InsuranceDto.*;
-import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
+import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author SeungHo
@@ -120,8 +118,8 @@ public class Employee {
 
 	private DevelopInfo developDevInfo() {
 		return new DevelopInfo().setEmployeeId(this.id)
-				.setDevDate(LocalDate.now())
-				.setSalesAuthState(SalesAuthorizationState.WAIT);
+				.setDevelopDate(LocalDate.now())
+				.setSalesAuthorizationState(SalesAuthorizationState.WAIT);
 	}
 
 	private Insurance developHealth(Insurance insurance, ArrayList<DtoTypeInfo> typeInfoList) {
@@ -256,13 +254,13 @@ public class Employee {
 	}
 
 	public void modifySalesAuthState(Insurance insurance, SalesAuthorizationState modify) {
-		insurance.getDevInfo().setSalesAuthState(modify);
+		insurance.getDevInfo().setSalesAuthorizationState(modify);
 		new InsuranceDaoImpl().updateBySalesAuthState(insurance);
 	}
 
 	private boolean checkSalesAuthState(Insurance insurance) {
-		SalesAuthorizationFile salesAuthorizationFile = insurance.getSalesAuthFile();
-		if(salesAuthorizationFile.getProdDeclaration()!=null && salesAuthorizationFile.getFssOfficialDoc()!=null && salesAuthorizationFile.getIsoVerification()!=null && salesAuthorizationFile.getSrActuaryVerification()!=null)
+		SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
+		if(salesAuthFile.getProdDeclaration()!=null && salesAuthFile.getFssOfficialDoc()!=null && salesAuthFile.getIsoVerification()!=null && salesAuthFile.getSrActuaryVerification()!=null)
 			return true;
 		return false;
 	}
@@ -358,7 +356,7 @@ public class Employee {
 
 	private AccDocFile uploadLossAssessment(Accident accident) {
 		DocUtil instance = DocUtil.getInstance();
-		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+ AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
+		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
 		String fileDir = instance.upload(dir);
 		if (fileDir == null) {
 			return null;
@@ -491,8 +489,8 @@ public class Employee {
 
 	public void registerContract(Customer customer, Contract contract, Employee employee) throws SQLException {
 		if (customer.getId() == 0) {
-			CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-			customerDaoImpl.create(customer);
+			CustomerDaoImpl customerDao = new CustomerDaoImpl();
+			customerDao.create(customer);
 		}
 		contract.setCustomerId(customer.getId())
 				.setConditionOfUw(ConditionOfUw.WAIT);

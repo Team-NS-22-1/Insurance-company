@@ -3,7 +3,8 @@ package insuranceCompany.application.dao.accident;
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.accident.*;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;

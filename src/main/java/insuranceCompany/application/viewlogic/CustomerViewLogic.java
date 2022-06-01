@@ -4,10 +4,12 @@ import insuranceCompany.application.dao.accident.AccDocFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.*;
+import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentList;
 import insuranceCompany.application.domain.accident.AccidentType;
@@ -19,15 +21,13 @@ import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.domain.complain.ComplainList;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.EmployeeList;
 import insuranceCompany.application.domain.insurance.Insurance;
-import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.*;
+import insuranceCompany.outerSystem.CarAccidentService;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.outerSystem.CarAccidentService;
 
 import java.io.InputStreamReader;
 import java.time.LocalDate;
@@ -35,10 +35,12 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+
+import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
+
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
-import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isCarNo;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isPhone;
 import static insuranceCompany.application.global.utility.DocUtil.isExist;

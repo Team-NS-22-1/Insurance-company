@@ -4,6 +4,8 @@ import insuranceCompany.application.global.exception.InputException;
 
 import java.util.Scanner;
 
+import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.*;
+
 public class InputValidation {
     private Scanner sc;
 
@@ -117,27 +119,27 @@ public class InputValidation {
     }
 
     public void validateNameFormat(String name) {
-        if(!CustomerInfoFormatUtil.isName(name))
+        if(!isName(name))
             throw new InputException.InputInvalidDataException();
     }
 
     public void validateSsnFormat(String ssn) {
-        if(!CustomerInfoFormatUtil.isSsn(ssn))
+        if(!isSsn(ssn))
             throw new InputException.InputInvalidDataException();
     }
 
     public void validatePhoneFormat(String phone) {
-        if(!CustomerInfoFormatUtil.isPhone(phone))
+        if(!isPhone(phone))
             throw new InputException.InputInvalidDataException();
     }
 
     public void validateEmailFormat(String email) {
-        if(!CustomerInfoFormatUtil.isEmail(email))
+        if(!isEmail(email))
             throw new InputException.InputInvalidDataException();
     }
 
     public void validateCarNoFormat(String carNo) {
-        if(!CustomerInfoFormatUtil.isCarNo(carNo))
+        if(!isCarNo(carNo))
             throw new InputException.InputInvalidDataException();
     }
 }

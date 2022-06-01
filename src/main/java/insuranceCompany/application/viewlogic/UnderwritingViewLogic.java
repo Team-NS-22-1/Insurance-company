@@ -122,9 +122,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
 
                 ContractDao contractDao = new ContractDao();
-                InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+                InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
                 Contract contract = contractDao.read(Integer.parseInt(contractId));
-                Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
+                Insurance insurance = insuranceDao.read(contract.getInsuranceId());
 
                 if (contract.getId() == 0) throw new MyIllegalArgumentException();
                 if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyIllegalArgumentException();
@@ -224,21 +224,21 @@ public class UnderwritingViewLogic implements ViewLogic {
     public void printContractList(List<Contract> contractList) {
 
         for (Contract contract : contractList) {
-            CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-            Customer customer = customerDaoImpl.read(contract.getCustomerId());
-            System.out.println(contract.getId() + "        " + customer.getName() + " " + contract.getConditionOfUw().getName());
+            CustomerDaoImpl customerDao = new CustomerDaoImpl();
+            Customer customer = customerDao.read(contract.getCustomerId());
+            System.out.println(contract.getId() + "        " + customer.getName() + "     " + contract.getConditionOfUw().getName());
         }
     }
 
     public Contract printContractInfo(Contract contract) {
         System.out.println(contract.toString());
 
-        CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
-        Customer customer = customerDaoImpl.read(contract.getCustomerId());
+        CustomerDaoImpl customerDao = new CustomerDaoImpl();
+        Customer customer = customerDao.read(contract.getCustomerId());
         System.out.println(customer.toString());
 
-        InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
-        Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
+        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+        Insurance insurance = insuranceDao.read(contract.getInsuranceId());
         System.out.println(insurance.print());
 
         //InsuranceDetailDao insuranceDetailDao = new InsuranceDetailDao();
