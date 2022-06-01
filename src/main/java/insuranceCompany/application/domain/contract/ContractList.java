@@ -2,6 +2,7 @@ package insuranceCompany.application.domain.contract;
 
 
 import insuranceCompany.application.dao.CrudInterface;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  */
 public interface ContractList extends CrudInterface<Contract> {
 
+    List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId);
     List<Contract> findAllByCustomerId(int customerId);
     void updatePayment(int contractId, int paymentId);
 }

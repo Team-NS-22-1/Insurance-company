@@ -349,7 +349,7 @@ public class Employee {
 		return 1;
 	}
 	public AssessDamageResponseDto assessDamage(Accident accident, AccountRequestDto accountRequestDto){
-		return AssessDamageResponseDto.builder().accDocFile(uploadLossAssessment(accident))
+		return AssessDamageResponseDto.builder().accidentDocumentFile(uploadLossAssessment(accident))
 				.account(new Account().setBankType(accountRequestDto.getBankType()).setAccountNo(accountRequestDto.getAccountNo()))
 				.build();
 	}

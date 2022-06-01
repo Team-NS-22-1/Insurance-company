@@ -5,18 +5,19 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContractDao extends Dao {
+public class ContractDao extends Dao implements ContractList{
     public ContractDao() {
         super.connect();
     }
 
-    public void create(Contract contract) throws SQLException {
+    public void create(Contract contract) {
         try {
             String query = "insert into contract (insurance_id, customer_id, employee_id, premium, is_publish_stock, condition_of_uw) values ('%d', '%d', '%d', '%d', '%d', '%s');";
             String contractQuery = String.format(query, contract.getInsuranceId(), contract.getCustomerId(), contract.getEmployeeId(), contract.getPremium(), contract.isPublishStock() ? 1 : 0, contract.getConditionOfUw());
@@ -39,8 +40,8 @@ public class ContractDao extends Dao {
                                 "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_driving, disease_detail) " +
                                 "VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, '%s');";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
-                                healthContract.isDangerActivity()?1:0, healthContract.isDrinking()?1:0, healthContract.isSmoking()?1:0, healthContract.isSmoking()?1:0,
-                                healthContract.isTakingDrug()?1:0, healthContract.isHavingDisease()?1:0, healthContract.isDriving()?1:0, healthContract.getDiseaseDetail());
+                                healthContract.isDangerActivity() ? 1 : 0, healthContract.isDrinking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0,
+                                healthContract.isTakingDrug() ? 1 : 0, healthContract.isHavingDisease() ? 1 : 0, healthContract.isDriving() ? 1 : 0, healthContract.getDiseaseDetail());
                         super.create(input);
                     }
                     case "FIRE" -> {
@@ -48,7 +49,7 @@ public class ContractDao extends Dao {
                         inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, is_actual_residence, is_self_owned)" +
                                 "VALUES (%d, %d, '%s', %d, %d, %d);";
                         input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType().name(),
-                                fireContract.getCollateralAmount(), fireContract.isActualResidence()?1:0, fireContract.isSelfOwned()?1:0);
+                                fireContract.getCollateralAmount(), fireContract.isActualResidence() ? 1 : 0, fireContract.isSelfOwned() ? 1 : 0);
                         super.create(input);
                     }
                     case "CAR" -> {
@@ -60,6 +61,8 @@ public class ContractDao extends Dao {
                         super.create(input);
                     }
                 }
+        } catch (SQLException e) {
+            e.printStackTrace();
         } finally {
             close();
         }
@@ -104,6 +107,16 @@ public class ContractDao extends Dao {
         return contract;
     }
 
+    @Override
+    public boolean update(int id) {
+        return false;
+    }
+
+    @Override
+    public boolean delete(int id) {
+        return false;
+    }
+
 
     public ArrayList<Contract> readAllByInsuranceType(InsuranceType insuranceType) {
         ArrayList<Contract> contractList = new ArrayList<>();
@@ -143,6 +156,8 @@ public class ContractDao extends Dao {
 
         return contractList;
     }
+
+
 
     public void update(Contract contract) {
         String query = "UPDATE contract \n" +
@@ -235,9 +250,33 @@ public class ContractDao extends Dao {
 
     }
 
+    public List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId) {
+        String query = "select c.*, i.insurance_type from contract c left join insurance i on c.insurance_id = i.insurance_id where c.customer_id = %d";
+        String formattedQuery = String.format(query, customerId);
+
+        ResultSet rs = super.read(formattedQuery);
+        List<ContractwithTypeDto> contracts = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Contract contract = new Contract();
+                setContract(rs,contract);
+                ContractwithTypeDto contractDto = new ContractwithTypeDto(contract);
+                contractDto.setInsuranceType(InsuranceType.valueOf(rs.getString("insurance_type").toUpperCase()));
+                contracts.add(contractDto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        if (contracts.size() == 0)
+            throw new MyIllegalArgumentException("해당 ID로 검색되는 계약이 존재하지 않습니다");
+        return contracts;
+    }
 
     public List<Contract> findAllByCustomerId(int customerId) {
-        String query = "select * from contract where customer_id = %d";
+        String query = "select * from contract c left join insurance i on  where customer_id = %d";
         String formattedQuery = String.format(query, customerId);
 
         ResultSet rs = super.read(formattedQuery);
@@ -245,15 +284,7 @@ public class ContractDao extends Dao {
             try {
                 while (rs.next()) {
                     Contract contract = new Contract();
-                    contract.setId(rs.getInt("contract_id"));
-                    contract.setReasonOfUw(rs.getString("reason_of_uw"));
-                    contract.setPaymentId(rs.getInt("payment_id"));
-                    contract.setInsuranceId(rs.getInt("insurance_id"));
-                    contract.setEmployeeId(rs.getInt("employee_id"));
-                    contract.setPremium(rs.getInt("premium"));
-                    contract.setPublishStock((rs.getInt("is_publish_stock") != 0));
-                    contract.setConditionOfUw(ConditionOfUw.valueOf(rs.getString("condition_of_uw")));
-                    contract.setCustomerId(rs.getInt("customer_id"));
+                    setContract(rs,contract);
                     contracts.add(contract);
                 }
             } catch (SQLException e) {

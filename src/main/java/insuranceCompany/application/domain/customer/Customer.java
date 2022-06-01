@@ -1,6 +1,7 @@
 package insuranceCompany.application.domain.customer;
 
 
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
@@ -128,16 +129,25 @@ public class Customer {
 		DocUtil docUtil = DocUtil.getInstance();
 		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+ accidentDocumentFile.getType().getDesc();
 		String extension = "";
-		if(accidentDocumentFile.getType()== AccDocType.PICTUREOFSITE)
+		AccDocType accDocType = accidentDocumentFile.getType();
+		if(accDocType == AccDocType.PICTUREOFSITE)
 			extension = ".jpg";
 		else
 			extension = ".hwp";
 
 		String directory = docUtil.upload(path+extension);
-		if (directory.equals("close")) {
+		if (directory==null) {
 			return null;
 		}
 		accidentDocumentFile.setFileAddress(directory);
+
+		AccidentDocumentFileDao accidentDocumentFileList = new AccidentDocumentFileDao();
+		if (accident.getAccDocFileList().containsKey(accDocType)) {
+			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+		} else {
+			accidentDocumentFileList.create(accidentDocumentFile);
+			accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
+		}
 		return accidentDocumentFile;
 	}
 

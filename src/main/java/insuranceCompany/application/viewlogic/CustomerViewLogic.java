@@ -7,6 +7,7 @@ import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
@@ -25,6 +26,7 @@ import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.EmployeeList;
 import insuranceCompany.application.domain.insurance.Insurance;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 import insuranceCompany.outerSystem.CarAccidentService;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
@@ -157,17 +159,6 @@ public class CustomerViewLogic implements ViewLogic {
                     if (accidentDocumentFile == null) {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
-                    }
-                    accidentDocumentFileList = new AccidentDocumentFileDao();
-                    for (AccidentDocumentFile value : accident.getAccDocFileList().values()) {
-                        System.out.println(value);
-                    }
-
-                    if (accident.getAccDocFileList().containsKey(accDocType)) {
-                        accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-                    } else {
-                        accidentDocumentFileList.create(accidentDocumentFile);
-                        accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
                     }
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
@@ -514,20 +505,45 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private AccidentType selectAccidentType() {
-        int insType = 0;
-        createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
-        insType = br.verifyMenu("", 4);
+        contractList = new ContractDao();
+        List<ContractwithTypeDto> contractTypes = contractList.findAllContractWithTypeByCustomerId(this.customer.getId());
+        AccidentType accidentType = null;
+            while (true) {
+                try {
+                    int insType = 0;
+                    createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
+                    insType = br.verifyMenu("", 4);
 
+                    switch (insType) {
+                        case 1 -> accidentType = AccidentType.CARACCIDENT;
+                        case 2 -> accidentType = AccidentType.CARBREAKDOWN;
+                        case 3 -> accidentType = AccidentType.INJURYACCIDENT;
+                        case 4 -> accidentType = AccidentType.FIREACCIDENT;
+                        case 0 -> accidentType = null;
+                        default -> throw new IllegalStateException("Unexpected value: " + insType);
+                    }
 
-        return switch (insType) {
-            case 1 -> AccidentType.CARACCIDENT;
-            case 2 -> AccidentType.CARBREAKDOWN;
-            case 3 -> AccidentType.INJURYACCIDENT;
-            case 4 -> AccidentType.FIREACCIDENT;
-            case 0 -> null;
-            default -> throw new IllegalStateException("Unexpected value: " + insType);
+                    if (accidentType == null)
+                        break;
+
+                    for (ContractwithTypeDto contractType : contractTypes) {
+                        if(isValidateReportAccident(accidentType,contractType.getInsuranceType()))
+                            return accidentType;
+                    }
+                    throw new MyIllegalArgumentException("해당 사고를 접수하기 위한 보험에 가입되어있지 않습니다. 다시 확인해주세요.");
+                } catch (MyIllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        return accidentType;
+    }
+
+    private boolean isValidateReportAccident(AccidentType accidentType, InsuranceType insuranceType) {
+        return switch (accidentType) {
+            case CARACCIDENT, CARBREAKDOWN -> insuranceType == InsuranceType.CAR;
+            case FIREACCIDENT -> insuranceType == InsuranceType.FIRE;
+            case INJURYACCIDENT -> insuranceType == InsuranceType.HEALTH;
         };
-
     }
 
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.

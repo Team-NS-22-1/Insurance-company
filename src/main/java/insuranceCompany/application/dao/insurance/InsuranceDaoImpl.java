@@ -263,7 +263,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         try {
             String query = "select * from insurance " +
                     "inner join develop_info " +
-                    "on insurance.insurance_id = dev_info.insurance_id";
+                    "on insurance.insurance_id = develop_info.insurance_id";
 
             ResultSet rs = super.read(query);
             while (rs.next()) {

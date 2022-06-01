@@ -2,6 +2,7 @@ package insuranceCompany.application.domain.contract;
 
 
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +51,11 @@ public class ContractListImpl implements ContractList {
 		throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
 	}
 
+
+	@Override
+	public List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId) {
+		return null;
+	}
 
 	@Override
 	public List<Contract> findAllByCustomerId(int customerId) {
