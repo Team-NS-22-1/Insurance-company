@@ -155,14 +155,14 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
-            int targetAge = 0, premium = -1, riskCriterion = -1;
-            boolean targetSex;
+            int targetAge = 0, premium = -1, riskCount = -1;
+            boolean targetSex, riskCriterion;
             System.out.println(TITLE_INPUT_HEALTH_INFO + EXIT_SYSTEM);
             targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
             targetSex = br.verifyCategory(QUERY_TARGET_SEX, 2) == 1;
             while(true) {
-                riskCriterion = (int) br.verifyRead(QUERY_RISK_CRITERION, riskCriterion);
-                if(riskCriterion > 6){
+                riskCount = (int) br.verifyRead(QUERY_RISK_CRITERION, riskCount);
+                if(riskCount > 6){
                     System.out.println(ERROR_RISK_CRITERION_COUNT);
                 }
                 else {
@@ -221,7 +221,6 @@ public class DevelopViewLogic implements ViewLogic {
                 case 4 -> buildingType = BuildingType.RESIDENTIAL;
             }
             collateralAmount = setCollateralAmountCriterion ((long) br.verifyRead(QUERY_COLLATERAL_AMOUNT, collateralAmount));
-            System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
             DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
 
             premium = employee.calcSpecificPremium(stPremium, dtoFire);

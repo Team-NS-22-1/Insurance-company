@@ -13,28 +13,17 @@ import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.AccidentType;
-import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.customer.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.utility.DocUtil;
-import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
@@ -47,12 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.EXCEPTION_NO_RESULT_LIST;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 
 /**
  * @author SeungHo

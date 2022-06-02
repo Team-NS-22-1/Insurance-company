@@ -56,7 +56,6 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-                        // True(Male): 1 , False(Female): 0
                         int targetSex = healthDetail.isTargetSex() ? 1 : 0;
                         int RiskCriterion = healthDetail.getRiskCriterion() ? 1 : 0;
                         String queryFormatHealthDetail =
