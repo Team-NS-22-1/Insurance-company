@@ -6,7 +6,6 @@ import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.Login;
-import insuranceCompany.application.login.UserType;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,7 +42,6 @@ public class LoginViewLogic implements ViewLogic {
     }
 
     private void menuCustomerLogin() throws IOException {
-        Scanner sc = new Scanner(System.in);
         loop: while(true) {
             switch (br.verifyMenu(createMenuAndExitQuery(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), 2)) {
                 case 1 -> {
@@ -80,24 +78,6 @@ public class LoginViewLogic implements ViewLogic {
         System.out.printf(MSG_WELCOME_EMPLOYEE, employee.getDepartment().name(), employee.getPosition().name(), employee.getName());
         while(employee!=null) {
             switch (employee.getDepartment()) {
-                case ADMIN -> {
-                    while(true) {
-                        AdminViewLogic adminViewLogic = new AdminViewLogic(employee);
-                        adminViewLogic.showMenu();
-                        int userType = Integer.parseInt(sc.nextLine());
-                        employee = isLogoutEmployee(employee, String.valueOf(userType));
-                        if (employee == null) break;
-                        UserType[] values = UserType.values();
-                        UserType type = values[userType - 1];
-                        while (employee != null) {
-                            ViewLogic viewLogic = adminViewLogic.getMap().get(type);
-                            viewLogic.showMenu();
-                            String command = sc.nextLine();
-                            employee = isLogoutAdmin(employee, command);
-                            viewLogic.work(command);
-                        }
-                    }
-                }
                 case DEV -> {
                     DevelopViewLogic developViewLogic = new DevelopViewLogic(employee);
                     String command = String.valueOf(br.verifyMenu(developViewLogic.showMenu(), 2));
