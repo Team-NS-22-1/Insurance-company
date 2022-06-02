@@ -3,15 +3,15 @@ INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (1, '건�
 INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (1, '건강보험 보장 2', '건강보험 보장 2 설명입니다.', 20000000000);
 INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (1, 2, '2022-05-31', 'WAIT');
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (38904, 1);
-INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (1, 20, 1, 5);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (1, 20, 1, 1);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (36958, 1);
-INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (2, 30, 0, 4);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (2, 30, 0, 0);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (41733, 1);
-INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (3, 40, 1, 5);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (3, 40, 1, 1);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (43148, 1);
-INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (4, 50, 1, 4);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (4, 50, 1, 1);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (29178, 1);
-INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (5, 60, 0, 3);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (5, 60, 0, 0);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (1);
 
 INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('자동차 보험 1','자동차 보험 1 설명입니다.',60,40,'CAR');

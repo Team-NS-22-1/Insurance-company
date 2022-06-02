@@ -37,7 +37,7 @@ public class GuestViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
     private InputValidation input;
-    private CriterionSetUtil csu;
+    private CriterionSetUtil cs;
 
     private HealthContract healthContract;
     private FireContract fireContract;
@@ -50,7 +50,7 @@ public class GuestViewLogic implements ViewLogic {
     public GuestViewLogic() {
         this.sc = new Scanner(System.in);
         this.input = new InputValidation();
-        this.csu = new CriterionSetUtil();
+        this.cs = new CriterionSetUtil();
     }
 
     @Override
@@ -60,20 +60,20 @@ public class GuestViewLogic implements ViewLogic {
 
     @Override
     public void work(String command) {
-
-        try {
-            switch (command) {
-                case "1":
-                    selectInsurance();
-                    break;
-                case "":
-                    throw new InputException.InputNullDataException();
-                default:
-                    throw new InputException.InputInvalidMenuException();
-            }
-        } catch (InputException | SQLException e) {
-            System.out.println(e.getMessage());
-        }
+//
+//        try {
+//            switch (command) {
+//                case "1":
+//                    selectInsurance();
+//                    break;
+//                case "":
+//                    throw new InputException.InputNullDataException();
+//                default:
+//                    throw new InputException.InputInvalidMenuException();
+//            }
+//        } catch (InputException | SQLException e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     private void selectInsurance() throws SQLException {
@@ -102,7 +102,7 @@ public class GuestViewLogic implements ViewLogic {
                 if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
                     for(Guarantee guarantee : insurance.getGuaranteeList()){
-                        System.out.println(guarantee);
+                        System.out.println();
                     }
                     decideSigning();
                 }
@@ -229,9 +229,9 @@ public class GuestViewLogic implements ViewLogic {
         int age = targetAgeCalculator(customer.getSsn());
         boolean sex = targetSexCalculator(customer.getSsn());
 
-        int premium = employee.planHealthInsurance(csu.setTargetAge(age), sex, csu.setRiskCriterion(riskCount), insurance);
+        int premium = customer.planHealthInsurance(customer.getSsn(),riskCount, insurance);
 
-        healthContract = employee.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
+        healthContract = customer.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
                                                 isTakingDrug, isHavingDisease, diseaseDetail, insurance.getId(), premium);
         signContract(healthContract);
     }
@@ -280,9 +280,9 @@ public class GuestViewLogic implements ViewLogic {
         question = "실거주 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isActualResidence = input.validateBooleanFormat(question);
 
-        int premium = employee.planFireInsurance(buildingType, csu.setCollateralAmountCriterion(collateralAmount), insurance);
+        int premium = customer.planFireInsurance(buildingType, cs.setCollateralAmountCriterion(collateralAmount), insurance);
 
-        fireContract = employee.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, insurance.getId(), premium);
+        fireContract = customer.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, insurance.getId(), premium);
         signContract(fireContract);
     }
 
@@ -340,9 +340,9 @@ public class GuestViewLogic implements ViewLogic {
         Long value = input.validateLongFormat(question);
 
         int age = targetAgeCalculator(customer.getSsn());
-        int premium = employee.planCarInsurance(csu.setTargetAge(age), csu.setValueCriterion(value), insurance);
+        int premium = customer.planCarInsurance(customer.getSsn(), cs.setValueCriterion(value), insurance);
 
-        carContract = employee.inputCarInfo(carNo, carType, modelName, modelYear, value, insurance.getId(), premium);
+        carContract = customer.inputCarInfo(carNo, carType, modelName, modelYear, value, insurance.getId(), premium);
         signContract(carContract);
     }
 
@@ -370,8 +370,6 @@ public class GuestViewLogic implements ViewLogic {
                 break;
             } catch (InputException e) {
                 System.out.println(e.getMessage());
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
         }
     }

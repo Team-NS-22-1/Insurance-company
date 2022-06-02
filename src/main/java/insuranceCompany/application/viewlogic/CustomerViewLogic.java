@@ -4,12 +4,10 @@ import insuranceCompany.application.dao.accident.AccDocFileDao;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentList;
 import insuranceCompany.application.domain.accident.AccidentType;
@@ -19,28 +17,33 @@ import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.domain.complain.ComplainList;
-import insuranceCompany.application.domain.contract.Contract;
+import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.EmployeeList;
+import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
-import insuranceCompany.outerSystem.CarAccidentService;
+import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
+import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import insuranceCompany.outerSystem.CarAccidentService;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
-import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
-
+import static insuranceCompany.application.domain.contract.BuildingType.*;
+import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
+import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isCarNo;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isPhone;
 import static insuranceCompany.application.global.utility.DocUtil.isExist;
@@ -69,12 +72,17 @@ public class CustomerViewLogic implements ViewLogic {
     private EmployeeList employeeList;
     private ComplainList complainList;
     private Customer customer;
+    private HealthContract healthContract;
+    private FireContract fireContract;
+    private CarContract carContract;
     private Scanner sc;
     private CustomMyBufferedReader br;
+    private Insurance insurance;
 
     public CustomerViewLogic() {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
+        this.customer = new Customer();
     }
 
     public CustomerViewLogic(Customer customer) {
@@ -85,33 +93,221 @@ public class CustomerViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-        createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
+        if (customer.getId() == 0)
+            createMenuAndExit("<<고객메뉴>>", "보험가입");
+        else
+            createMenuAndLogout("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
     }
 
     @Override
     public void work(String command) {
         try {
-            switch (command) {
-//                    case "1":
-//                        System.out.println("1선택");
-                case "2" :
-                    payPremiumButton();
-                    break;
-                case "3":
-                    reportAccident();
-                    break;
-                case "4":
-                    claimCompensation();
-                    break;
-                case "":
-                    throw new InputException.InputNullDataException();
-                default:
-                    throw new InputException.InputInvalidMenuException();
+            if (customer.getId() == 0) {
+                switch (command) {
+                    case "1" -> selectInsurance();
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InputInvalidMenuException();
+                }
             }
-        } catch (InputException e) {
+            else {
+                switch (command) {
+                    case "1" -> selectInsurance();
+                    case "2" -> payPremiumButton();
+                    case "3" -> reportAccident();
+                    case "4" -> claimCompensation();
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InputInvalidMenuException();
+                }
+            }
+        } catch(InputException e) {
             System.out.println(e.getMessage());
+        } catch (IOException e) {
+            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
+            System.exit(0);
         }
     }
+
+    private void selectInsurance() throws IOException {
+        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+        ArrayList<Insurance> insurances = insuranceDao.readAll();
+        if(insurances.size() == 0)
+            throw new InputException.NoResultantException();
+        while (true) {
+            System.out.println("<< 보험상품목록 >>");
+            for (Insurance insurance : insurances) {
+                if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
+                    System.out.println("상품번호: " + insurance.getId() + " | 보험이름: " + insurance.getName() + "   \t보험종류: " + insurance.getInsuranceType());
+            }
+
+            try {
+                System.out.println("가입할 보험상품의 번호를 입력하세요. \t(0: 뒤로가기)");
+                int insuranceId = br.verifyMenu("보험상품 번호: ", insurances.size());
+                if (insuranceId == 0) break;
+
+                insuranceDao = new InsuranceDaoImpl();
+                insurance = insuranceDao.read(insuranceId);
+                if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
+                    System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
+                    for(Guarantee guarantee : insurance.getGuaranteeList()){
+                        System.out.println(guarantee);
+                    }
+                    decideSigning();
+                }
+                else {
+                    throw new InputException.NoResultantException();
+                }
+            } catch (InputException e) {
+                System.out.println(e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("형식에 맞는 코드를 입력해주세요");
+            }
+        }
+    }
+
+    private void decideSigning() throws IOException {
+        while (true) {
+                createMenu("해당 보험상품을 가입하시겠습니까?", "가입", "취소");
+                int choice = br.verifyCategory("", 2);
+
+                if (choice == 1) {
+                    if (customer.getId() == 0)
+                        inputCustomerInfo();
+                    else {
+                        switch (insurance.getInsuranceType()) {
+                            case HEALTH -> inputHealthInfo();
+                            case FIRE -> inputFireInfo();
+                            case CAR -> inputCarInfo();
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    private void inputCustomerInfo() throws IOException {
+        String name = null, ssn = null, phone = null, address = null, email = null, job = null;
+
+        System.out.println("<<고객님의 개인정보를 입력해주세요.>>");
+        name = (String) br.verifySpecificRead("이름: ", name, "name");
+        ssn = (String) br.verifySpecificRead("주민번호 (입력형식: ______-*******): ", ssn, "ssn");
+        phone = (String) br.verifySpecificRead("연락처 (입력형식: 0__-____-____): ", phone, "phone");
+        address = (String) br.verifyRead("주소: ", address);
+        email = (String) br.verifySpecificRead("이메일 (입력형식: _____@_____.___): ", email, "email");
+        job = (String) br.verifyRead("직업: ", job);
+
+        customer = customer.inputCustomerInfo(name, ssn, phone, address, email, job, customer);
+
+        switch (insurance.getInsuranceType()) {
+            case HEALTH -> inputHealthInfo();
+            case FIRE -> inputFireInfo();
+            case CAR -> inputCarInfo();
+        }
+    }
+
+    private void inputHealthInfo() {
+        int riskCount = 0, height = 0, weight = 0;
+        String diseaseDetail = null;
+        boolean isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
+
+        System.out.println("<<고객님의 건강정보를 입력해주세요.>>");
+        height = (int) br.verifyRead("키 (단위: cm): ", height);
+        weight = (int) br.verifyRead("몸무게 (단위: kg): ", weight);
+        isDrinking = br.verifyCategory("음주 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if(isDrinking) riskCount++;
+        isSmoking = br.verifyCategory("흡연 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if(isSmoking) riskCount++;
+        isDriving = br.verifyCategory("운전 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if(isDriving) riskCount++;
+        isDangerActivity = br.verifyCategory("위험 취미 활동 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if(isDangerActivity) riskCount++;
+        isTakingDrug = br.verifyCategory("약물 복용 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if(isTakingDrug) riskCount++;
+        isHavingDisease = br.verifyCategory("질병 이력 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        if (isHavingDisease) {
+            riskCount++;
+            diseaseDetail = (String) br.verifyRead("질병에 대한 상세 내용를 입력해주세요.\n", diseaseDetail);
+        }
+
+        int premium = customer.planHealthInsurance(customer.getSsn(), riskCount, insurance);
+
+        healthContract = customer.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
+                isTakingDrug, isHavingDisease, diseaseDetail, insurance.getId(), premium);
+        signContract(healthContract);
+    }
+
+    private void inputFireInfo() {
+        BuildingType buildingType;
+        int buildingArea = 0;
+        Long collateralAmount = null;
+        boolean isSelfOwned, isActualResidence;
+
+        buildingType = switch (br.verifyCategory("건물종류를 선택해주세요.\n1. 상업용\n 2. 산업용\n3. 기관용\n4. 거주용", 4)) {
+            case 1 -> COMMERCIAL;
+            case 2 -> INDUSTRIAL;
+            case 3 -> INSTITUTIONAL;
+            case 4 -> RESIDENTIAL;
+            default -> throw new IllegalStateException();
+        };
+
+        buildingArea = (int) br.verifyRead("건물면적 (단위: m^2): ", buildingArea);
+        collateralAmount = (Long) br.verifyRead("담보금액: (단워: 원): ", collateralAmount);
+        isSelfOwned = br.verifyCategory("자가 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        isActualResidence = br.verifyCategory("실거주 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+
+        int premium = customer.planFireInsurance(buildingType, collateralAmount, insurance);
+
+        fireContract = customer.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, insurance.getId(), premium);
+        signContract(fireContract);
+    }
+
+    private void inputCarInfo() throws IOException {
+        CarType carType;
+        String modelName = null, carNo = null;
+        int modelYear = 0;
+        Long value = null;
+
+        carNo = (String) br.verifySpecificRead("차량번호: ", carNo, "carNo");
+
+        carType = switch (br.verifyCategory("차종을 선택해주세요.\n1. 경형\n2. 소형\n3. 준중형\n4. 중형\n5. 준대형\n6. 대형\n7. 스포츠카", 7)) {
+            case 1 -> URBAN;
+            case 2 -> SUBCOMPACT;
+            case 3 -> COMPACT;
+            case 4 -> MIDSIZE;
+            case 5 -> LARGESIZE;
+            case 6 -> FULLSIZE;
+            case 7 -> SPORTS;
+            default -> throw new IllegalStateException();
+        };
+
+        modelName = (String) br.verifyRead("모델 이름: ", modelName);
+        modelYear = (int) br.verifyRead("차량 연식 (단위: 년): ", modelYear);
+        value = (Long) br.verifyRead("차량가액 (단위: 원): ", value);
+
+        int premium = customer.planCarInsurance(customer.getSsn(), value, insurance);
+
+        carContract = customer.inputCarInfo(carNo, carType, modelName, modelYear, value, insurance.getId(), premium);
+        signContract(carContract);
+    }
+
+    private void signContract(Contract contract) {
+        System.out.println("조회된 귀하의 보험료는 " + contract.getPremium() + "원 입니다.");
+        while (true) {
+                createMenu("보험가입을 신청하시겠습니까??", "가입", "취소");
+                int choice = br.verifyCategory("", 2);
+                switch (choice) {
+                    case 1 -> {
+                        customer.registerContract(customer, contract);
+                        System.out.println(customer);
+                        System.out.println(contract);
+                        System.out.println("가입이 완료되었습니다.");
+                    }
+                    case 2 -> System.out.println("가입이 취소되었습니다.");
+                }
+                break;
+        }
+    }
+
+
 
     private void claimCompensation() {
         if (!login()) return;
@@ -180,7 +376,6 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
-
     }
 
     private void submitDocFile(Accident accident, AccDocType accDocType) {

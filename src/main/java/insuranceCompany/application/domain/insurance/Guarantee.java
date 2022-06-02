@@ -75,7 +75,7 @@ public class Guarantee {
 	public String toString() {
 		return	name +
 				" | 보장내용: " + description +
-				"\t 보장금액: " + guaranteeAmount;
+				"\t 보장금액: " + guaranteeAmount + "원";
 	}
 
 }

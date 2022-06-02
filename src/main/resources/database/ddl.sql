@@ -161,8 +161,8 @@ foreign key (insurance_id) references insurance(insurance_id) on delete cascade
 create table health_detail(
 health_detail_id int primary key not null,
 target_age int,
-target_sex int,
-risk_criterion int,
+target_sex boolean,
+risk_criterion boolean,
 foreign key (health_detail_id) references insurance_detail(insurance_detail_id) on delete cascade
 );
 

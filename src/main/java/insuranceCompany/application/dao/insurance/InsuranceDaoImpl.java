@@ -173,7 +173,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         insuranceDetails.add(
                                 new HealthDetail().setTargetAge(resultSet.getInt("target_age"))
                                         .setTargetSex(resultSet.getInt("target_sex")==1 ? true : false)
-                                        .setRiskCriterion(resultSet.getInt("risk_criterion")>3 ? true : false)
+                                        .setRiskCriterion(resultSet.getInt("risk_criterion")==1 ? true : false)
                                         .setId(resultSet.getInt("health_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
                                         .setInsuranceId(resultSet.getInt("insurance_id"))

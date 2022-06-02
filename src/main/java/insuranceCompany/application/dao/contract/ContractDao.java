@@ -16,7 +16,7 @@ public class ContractDao extends Dao {
         super.connect();
     }
 
-    public void create(Contract contract) throws SQLException {
+    public void create(Contract contract) {
         try {
             String query = "insert into contract (insurance_id, customer_id, employee_id, premium, is_publish_stock, condition_of_uw) values ('%d', '%d', '%d', '%d', '%d', '%s');";
             String contractQuery = String.format(query, contract.getInsuranceId(), contract.getCustomerId(), contract.getEmployeeId(), contract.getPremium(), contract.isPublishStock() ? 1 : 0, contract.getConditionOfUw());
@@ -39,8 +39,8 @@ public class ContractDao extends Dao {
                                 "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_driving, disease_detail) " +
                                 "VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, '%s');";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
-                                healthContract.isDangerActivity()?1:0, healthContract.isDrinking()?1:0, healthContract.isSmoking()?1:0, healthContract.isSmoking()?1:0,
-                                healthContract.isTakingDrug()?1:0, healthContract.isHavingDisease()?1:0, healthContract.isDriving()?1:0, healthContract.getDiseaseDetail());
+                                healthContract.isDangerActivity() ? 1 : 0, healthContract.isDrinking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0,
+                                healthContract.isTakingDrug() ? 1 : 0, healthContract.isHavingDisease() ? 1 : 0, healthContract.isDriving() ? 1 : 0, healthContract.getDiseaseDetail());
                         super.create(input);
                     }
                     case "FIRE" -> {
@@ -48,7 +48,7 @@ public class ContractDao extends Dao {
                         inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, is_actual_residence, is_self_owned)" +
                                 "VALUES (%d, %d, '%s', %d, %d, %d);";
                         input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType().name(),
-                                fireContract.getCollateralAmount(), fireContract.isActualResidence()?1:0, fireContract.isSelfOwned()?1:0);
+                                fireContract.getCollateralAmount(), fireContract.isActualResidence() ? 1 : 0, fireContract.isSelfOwned() ? 1 : 0);
                         super.create(input);
                     }
                     case "CAR" -> {
@@ -60,6 +60,8 @@ public class ContractDao extends Dao {
                         super.create(input);
                     }
                 }
+        } catch (SQLException e){
+           e.printStackTrace();
         } finally {
             close();
         }

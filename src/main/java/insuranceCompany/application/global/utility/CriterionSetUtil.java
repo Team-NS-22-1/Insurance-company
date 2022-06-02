@@ -2,7 +2,7 @@ package insuranceCompany.application.global.utility;
 
 public class CriterionSetUtil {
 
-    public int setTargetAge(int age) {
+    public static int setTargetAge(int age) {
         int targetAge = 0;
 
         if(age >= 100) targetAge = 100;
@@ -16,7 +16,7 @@ public class CriterionSetUtil {
         return targetAge;
     }
 
-    public Long setCollateralAmountCriterion (Long collateralAmount){
+    public static Long setCollateralAmountCriterion (Long collateralAmount){
         long collateralAmountCriterion = 0L;
 
         if(collateralAmount >= 5000000000L) collateralAmountCriterion = 5000000000L;
@@ -27,7 +27,7 @@ public class CriterionSetUtil {
         return collateralAmountCriterion;
     }
 
-    public Long setValueCriterion (Long value) {
+    public static Long setValueCriterion (Long value) {
         long valueCriterion = 0L;
 
         if (value >= 150000000L) valueCriterion = 150000000L;
@@ -40,7 +40,7 @@ public class CriterionSetUtil {
         return valueCriterion;
     }
 
-    public boolean setRiskCriterion (int riskCount) {
+    public static boolean setRiskCriterion (int riskCount) {
         boolean riskCriterion = riskCount >= 4;
         return riskCriterion;
     }
