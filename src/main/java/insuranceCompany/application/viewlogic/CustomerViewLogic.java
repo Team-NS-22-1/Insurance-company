@@ -96,11 +96,11 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
+    public String showMenu() {
         if (customer.getId() == 0)
-            createMenuAndExit(CUSTOMERMENU, SIGNININSURANCE);
+            return createMenuAndExitQuery("<<고객메뉴>>", "보험가입");
         else
-            createMenuAndLogout(CUSTOMERMENU, SIGNININSURANCE, PAYPREMIUM, REPORTACCIDENT, CLAIMCOMPENSATION);
+            return createMenuAndLogout(CUSTOMERMENU, SIGNININSURANCE, PAYPREMIUM, REPORTACCIDENT, CLAIMCOMPENSATION);
     }
 
     @Override
@@ -722,7 +722,7 @@ public class CustomerViewLogic implements ViewLogic {
             while (true) {
                 try {
                     int insType = 0;
-                    String query = createMenuAndClose(ACCIDENTMENU, CARACCIDENT, CARBREAKDOWN, INJURYACCIDENT, FIREACCIDENT);
+                    createMenuAndClose(ACCIDENTMENU, CARACCIDENT, CARBREAKDOWN, INJURYACCIDENT, FIREACCIDENT);
                     insType = br.verifyMenu("", 4);
 
                     switch (insType) {
@@ -1073,10 +1073,10 @@ public class CustomerViewLogic implements ViewLogic {
                     System.out.println(REGISTERACCOUNTINFO);
                     String result = sc.next();
                     result = result.toUpperCase();
-                    if (result.equals(YES)) {
+                    if (result.equals(NO)) {
                         System.out.println(CANCELREGISTERPAYMENT);
                         return;
-                    } else if (result.equals(NO))
+                    } else if (result.equals(YES))
                         break;
                     else
                         throw new InputInvalidDataException();

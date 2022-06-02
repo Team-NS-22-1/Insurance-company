@@ -2,7 +2,6 @@ package insuranceCompany.application.global.utility;
 
 import insuranceCompany.application.global.exception.MyFileNotFoundException;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,14 +14,15 @@ public class FileDialogUtil {
 
     private static FileInputStream in;
     private static FileOutputStream out;
-    private static JFrame frame;
+    private static Frame frame;
     private static FileDialog dialog;
     private static String serverPath = "fileServer/";
 
     public static String upload(String dirInsurance) throws IOException {
-        frame = new JFrame();
+        frame = new Frame();
+        frame.setVisible(true);
+        frame.setAlwaysOnTop(true);
         dialog = new FileDialog(frame, "파일 업로드", FileDialog.LOAD);
-        dialog.setModal(true);
         dialog.setVisible(true);
         String fileName = dialog.getFile();
         String originPath = dialog.getDirectory()+fileName;
@@ -31,8 +31,10 @@ public class FileDialogUtil {
         Files.createDirectories(Paths.get(saveDirectory));
         String savePath = saveDirectory + "/" + fileName;
 
-        if(dialog.getDirectory() == null)
+        if(dialog.getDirectory() == null) {
+            frame.dispose();
             return null;
+        }
 
         try {
             in = new FileInputStream(originPath);

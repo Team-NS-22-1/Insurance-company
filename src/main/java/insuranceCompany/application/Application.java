@@ -2,6 +2,7 @@ package insuranceCompany.application;
 
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.login.UserType;
 import insuranceCompany.application.viewlogic.*;
 
 import java.util.HashMap;

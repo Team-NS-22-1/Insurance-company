@@ -57,8 +57,8 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuAndLogout("<<영업팀 메뉴>>", "보험상품설계");
+    public String showMenu() {
+        return createMenuAndLogout("<<영업팀 메뉴>>", "보험상품설계");
     }
 
     @Override

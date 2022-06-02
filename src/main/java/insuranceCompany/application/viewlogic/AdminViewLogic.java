@@ -1,9 +1,9 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.UserType;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
+import insuranceCompany.application.login.UserType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,8 +28,8 @@ public class AdminViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuAndLogout("<< 관리자 메뉴 >>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
+    public String showMenu() {
+        return createMenuAndLogout("<< 관리자 메뉴 >>", "보험가입희망자", "고객", "영업팀", "언더라이팅팀", "개발팀", "보상팀");
     }
 
     @Override

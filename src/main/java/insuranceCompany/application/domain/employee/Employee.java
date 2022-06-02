@@ -181,8 +181,8 @@ public class Employee {
 		damageAmount *= 10000;
 		businessExpense *= 10000;
 		profitMargin /= 100;
-		int purePremium = (int) (damageAmount / countContract);
-		int riskCost = (int) (businessExpense / countContract);
+		long purePremium = damageAmount / countContract;
+		long riskCost = businessExpense / countContract;
 		int stPremium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return stPremium;
 	}
@@ -272,6 +272,9 @@ public class Employee {
 
 	public void modifySalesAuthState(Insurance insurance, SalesAuthorizationState modify) {
 		insurance.getDevInfo().setSalesAuthorizationState(modify);
+		if(modify == SalesAuthorizationState.PERMISSION){
+			insurance.getDevInfo().setSalesStartDate(LocalDate.now());
+		}
 		new InsuranceDaoImpl().updateBySalesAuthState(insurance);
 	}
 

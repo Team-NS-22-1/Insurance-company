@@ -5,9 +5,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.MyFileNotFoundException;
-import insuranceCompany.application.global.exception.MyIOException;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
@@ -17,8 +15,7 @@ import java.util.ArrayList;
 
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 
 /**
@@ -48,8 +45,8 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuAndLogout(MENU_TITLE, MENU_ELEMENTS);
+    public String showMenu() {
+        return createMenuAndLogout(MENU_TITLE_DEV_VIEW_LOGIC, MENU_ELEMENTS_DEV_VIEW_LOGIC);
     }
 
     @Override
@@ -61,6 +58,7 @@ public class DevelopViewLogic implements ViewLogic {
                     this.menuDevelop(this.menuInsuranceType());
                 }
                 case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
+                default -> throw new InputInvalidMenuException();
             }
         }
         catch (IllegalStateException e){
@@ -86,7 +84,7 @@ public class DevelopViewLogic implements ViewLogic {
         return insuranceArrayList;
     }
 
-    private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
+    private Insurance showInsuranceByEmployeeAndSelect()  {
         while (true) {
             try {
                 ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
@@ -108,7 +106,7 @@ public class DevelopViewLogic implements ViewLogic {
         }
     }
 
-    private InsuranceType menuInsuranceType() throws IOException {
+    private InsuranceType menuInsuranceType() {
         createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS);
         return switch (br.verifyMenu("",3)){
             case 1 -> InsuranceType.HEALTH;
@@ -118,7 +116,7 @@ public class DevelopViewLogic implements ViewLogic {
         };
     }
 
-    private void menuDevelop(InsuranceType type) throws IOException {
+    private void menuDevelop(InsuranceType type) {
         if (type == null) return;
 
         DtoBasicInfo dtoBasicInfo = formInputBasicInfo();
@@ -131,7 +129,7 @@ public class DevelopViewLogic implements ViewLogic {
         formRegisterInsurance(type, dtoBasicInfo, dtoGuarantees,  dtoTypeInfo);
     }
 
-    private DtoBasicInfo formInputBasicInfo() throws IOException {
+    private DtoBasicInfo formInputBasicInfo() {
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
         System.out.println(TITLE_INPUT_BASIC_INFO + EXIT_SYSTEM);
@@ -142,7 +140,7 @@ public class DevelopViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private ArrayList<DtoTypeInfo> formInputTypeInfo(InsuranceType type, int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formInputTypeInfo(InsuranceType type, int stPremium) {
         return switch (type) {
             case HEALTH -> formDtoHealth(stPremium);
             case CAR -> formDtoCar(stPremium);
@@ -151,7 +149,7 @@ public class DevelopViewLogic implements ViewLogic {
         };
     }
 
-    private ArrayList<DtoTypeInfo> formDtoHealth(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoHealth(int stPremium) {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
@@ -183,7 +181,7 @@ public class DevelopViewLogic implements ViewLogic {
         return healthListInfo;
     }
 
-    private ArrayList<DtoTypeInfo> formDtoCar(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoCar(int stPremium) {
         boolean isAddCar = true;
         ArrayList<DtoTypeInfo> carListInfo = new ArrayList<>();
         while(isAddCar) {
@@ -205,7 +203,7 @@ public class DevelopViewLogic implements ViewLogic {
         return carListInfo;
     }
 
-    private ArrayList<DtoTypeInfo> formDtoFire(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoFire(int stPremium) {
         boolean isAddFire = true;
         ArrayList<DtoTypeInfo> fireListInfo = new ArrayList<>();
         while(isAddFire){
@@ -234,7 +232,7 @@ public class DevelopViewLogic implements ViewLogic {
         return fireListInfo;
     }
 
-    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException {
+    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() {
         boolean isAddGuarantee = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         while(isAddGuarantee) {
@@ -253,7 +251,7 @@ public class DevelopViewLogic implements ViewLogic {
         return guaranteeListInfo;
     }
 
-    private boolean isCalcPremium() throws IOException {
+    private boolean isCalcPremium() {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
@@ -272,26 +270,31 @@ public class DevelopViewLogic implements ViewLogic {
         return isCalcPremium;
     }
 
-    private int formCalculatePremium(boolean isCalcPremium) throws IOException {
+    private int formCalculatePremium(boolean isCalcPremium) {
         if(!isCalcPremium) return -1;
         return calcStandardPremium();
     }
 
-    private int calcStandardPremium() throws IOException {
+    private int calcStandardPremium() {
         boolean forWhile = true;
         int stPremium= -1;
         while(forWhile) {
-            long damageAmount = 0, countContract = 0, businessExpense = 0;
-            double profitMargin = 0;
-            System.out.println(TITLE_CALC_ST_PREMIUM + EXIT_SYSTEM);
-            damageAmount = (long) br.verifyRead(QUERY_DAMAGE_AMOUNT, damageAmount);
-            countContract = (long) br.verifyRead(QUERY_COUNT_CONTRACT, countContract);
-            businessExpense = (long) br.verifyRead(QUERY_BIZ_EXPENSE, businessExpense);
-            profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
-            stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
-            System.out.printf(PRINT_ST_PREMIUM, stPremium);
-            switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
-                case 1 -> forWhile = false;
+            try {
+                long damageAmount = 0, countContract = 0, businessExpense = 0;
+                double profitMargin = 0;
+                System.out.println(TITLE_CALC_ST_PREMIUM + EXIT_SYSTEM);
+                damageAmount = (long) br.verifyRead(QUERY_DAMAGE_AMOUNT, damageAmount);
+                countContract = (long) br.verifyRead(QUERY_COUNT_CONTRACT, countContract);
+                businessExpense = (long) br.verifyRead(QUERY_BIZ_EXPENSE, businessExpense);
+                profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
+                stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
+                System.out.printf(PRINT_ST_PREMIUM, stPremium);
+                switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
+                    case 1 -> forWhile = false;
+                }
+            }
+            catch (InputException e) {
+                System.out.println(e.getMessage());
             }
         }
         return stPremium;
