@@ -1,4 +1,4 @@
-package insuranceCompany.application;
+package insuranceCompany.application.login;
 
 /**
  * 작성자 : 김규현

@@ -1,9 +1,10 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.UserType;
+import insuranceCompany.application.login.UserType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.MyCloseSequence;
+import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.Login;
 
@@ -11,8 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuOnlyExit;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 public class LoginViewLogic implements ViewLogic {
 
@@ -23,8 +23,8 @@ public class LoginViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuOnlyExit("<< INSURANCE-COMPANY >>", "고객", "직원");
+    public String showMenu() {
+        return createMenuOnlyExitQuery("<< INSURANCE-COMPANY >>", "고객", "직원");
     }
 
     @Override
@@ -36,36 +36,29 @@ public class LoginViewLogic implements ViewLogic {
             }
         }
         catch (IOException e) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         }
     }
 
     private void menuCustomerLogin() throws IOException {
         Scanner sc = new Scanner(System.in);
         loop: while(true) {
-            createMenuAndClose("<< 고객 >>", "회원", "비회원");
-            switch (br.verifyMenu("", 2)) {
+            switch (br.verifyMenu(createMenuAndExitQuery("<< 고객 >>", "회원", "비회원"), 2)) {
                 case 1 -> {
                     Customer customer = new Login().loginCustomer();
                     if (customer == null) break;
                     System.out.println("어서오세요! " + customer.getName() + " 고객님.\n");
                     while (customer != null) {
-                            CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
-                            customerViewLogic.showMenu();
-                            String command = sc.nextLine();
-                            customer = isLogoutCustomer(customer, command);
-                            customerViewLogic.work(command);
+                        CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
+                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(),4));
+                        customer = isLogoutCustomer(customer, command);
+                        customerViewLogic.work(command);
                     }
                 }
                 case 2 -> {
-                    while(true){
-                        CustomerViewLogic customerViewLogic = new CustomerViewLogic();
-                        customerViewLogic.showMenu();
-                        String command = sc.nextLine();
-                        checkLogoutOrExit(command);
-                        customerViewLogic.work(command);
-                    }
+                    CustomerViewLogic customerViewLogic = new CustomerViewLogic();
+                    String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
+                    customerViewLogic.work(command);
                 }
                 default -> {
                     break loop;
@@ -101,29 +94,26 @@ public class LoginViewLogic implements ViewLogic {
                 }
                 case DEV -> {
                     DevelopViewLogic developViewLogic = new DevelopViewLogic(employee);
-                    developViewLogic.showMenu();
-                    String command = sc.nextLine();
+                    String command = String.valueOf(br.verifyMenu(developViewLogic.showMenu(), 2));
                     employee = isLogoutEmployee(employee, command);
                     developViewLogic.work(command);
                 }
                 case UW -> {
                     UnderwritingViewLogic underwritingViewLogic = new UnderwritingViewLogic(employee);
-                    underwritingViewLogic.showMenu();
-                    String command = sc.nextLine();
+                    String command = String.valueOf(br.verifyMenu(underwritingViewLogic.showMenu(), 1));
                     employee = isLogoutEmployee(employee, command);
                     underwritingViewLogic.work(command);
                 }
                 case COMP -> {
                     CompensationViewLogic compensationViewLogic = new CompensationViewLogic(employee);
-                    compensationViewLogic.showMenu();
-                    String command = sc.nextLine();
+                    ;
+                    String command = String.valueOf(br.verifyMenu(compensationViewLogic.showMenu(), 3));
                     employee = isLogoutEmployee(employee, command);
                     compensationViewLogic.work(command);
                 }
                 case SALES -> {
                     SalesViewLogic salesViewLogic = new SalesViewLogic(employee);
-                    salesViewLogic.showMenu();
-                    String command = sc.nextLine();
+                    String command = String.valueOf(br.verifyMenu(salesViewLogic.showMenu(), 1));
                     employee = isLogoutEmployee(employee, command);
                     salesViewLogic.work(command);
                 }

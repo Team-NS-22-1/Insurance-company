@@ -18,8 +18,7 @@ import java.util.Scanner;
 
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetAgeCalculator;
 import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetSexCalculator;
 
@@ -55,8 +54,8 @@ public class GuestViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuAndClose("보험가입희망자메뉴", "보험가입");
+    public String showMenu() {
+        return createMenuAndExitQuery("보험가입희망자메뉴", "보험가입");
     }
 
     @Override

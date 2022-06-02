@@ -1,6 +1,7 @@
-package insuranceCompany.application.domain.payment;
+package insuranceCompany.application.dao.customer;
 
 import insuranceCompany.application.dao.CrudInterface;
+import insuranceCompany.application.domain.payment.Payment;
 
 import java.util.List;
 
