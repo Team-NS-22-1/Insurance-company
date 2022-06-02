@@ -1,37 +1,26 @@
 package insuranceCompany.application.domain.employee;
 
 
-import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.domain.contract.*;
-import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.Account;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.MyNotExistContractException;
-import insuranceCompany.application.global.exception.InputInvalidDataException;
-import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.AccidentType;
-import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
+import insuranceCompany.application.domain.accident.Accident;
+import insuranceCompany.application.domain.accident.AccidentType;
+import insuranceCompany.application.domain.accident.CarAccident;
+import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.InputException.InputInvalidDataException;
+import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyNotExistContractException;
+import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
@@ -516,7 +505,7 @@ public class Employee {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -533,7 +522,7 @@ public class Employee {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -552,7 +541,7 @@ public class Employee {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -568,7 +557,7 @@ public class Employee {
 				.setConditionOfUw(ConditionOfUw.WAIT);
 		if (employee.getId() != 0)
 			contract.setEmployeeId(employee.getId());
-		ContractDao contractDao = new ContractDao();
+		ContractDaoImpl contractDao = new ContractDaoImpl();
 		contractDao.create(contract);
 	}
 
@@ -577,6 +566,11 @@ public class Employee {
 		user.setUserId(userId)
 				.setPassword(password);
 		return user;
+	}
+
+	public List<Accident> readAccident(){
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
 	public Contract readContract(int contractId, InsuranceType insuranceType) {

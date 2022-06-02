@@ -73,7 +73,7 @@ public class MyBufferedReader extends BufferedReader {
                     case "carNo" -> check = isCarNo(value);
                 }
                 if (check == false) {
-                    throw new InputException.InputInvalidDataException();
+                    throw new InputInvalidDataException();
                 }
                 try {
                     if(returnType instanceof String)
@@ -91,10 +91,10 @@ public class MyBufferedReader extends BufferedReader {
                         return doubleValue;
                     }
                     else
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 catch (NumberFormatException e) {
-                    throw new InputException.InputInvalidDataException();
+                    throw new InputInvalidDataException();
                 }
             }
             catch (InputException e){

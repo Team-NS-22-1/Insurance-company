@@ -7,7 +7,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.CriterionSetUtil;
 import insuranceCompany.application.global.utility.InputValidation;
 import insuranceCompany.application.login.User;
@@ -81,7 +81,7 @@ public class GuestViewLogic implements ViewLogic {
         InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
         ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
-            throw new InputException.NoResultantException();
+            throw new NoResultantException();
         while (true) {
             System.out.println("<< 보험상품목록 >>");
             for (Insurance insurance : insurances) {
@@ -96,7 +96,7 @@ public class GuestViewLogic implements ViewLogic {
                     break;
                 }
                 if (command.isBlank()){
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 }
                 insuranceDao = new InsuranceDaoImpl();
                 insurance = insuranceDao.read(Integer.parseInt(command));
@@ -108,7 +108,7 @@ public class GuestViewLogic implements ViewLogic {
                     decideSigning();
                 }
                 else {
-                    throw new InputException.NoResultantException();
+                    throw new NoResultantException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -133,9 +133,9 @@ public class GuestViewLogic implements ViewLogic {
                     case "2":
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -259,9 +259,9 @@ public class GuestViewLogic implements ViewLogic {
                         buildingType = INSTITUTIONAL;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 break;
             } catch (InputException e){
@@ -321,9 +321,9 @@ public class GuestViewLogic implements ViewLogic {
                         carType = SPORTS;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 break;
             } catch (InputException e){
@@ -365,9 +365,9 @@ public class GuestViewLogic implements ViewLogic {
                         System.out.println("가입이 취소되었습니다.");
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {

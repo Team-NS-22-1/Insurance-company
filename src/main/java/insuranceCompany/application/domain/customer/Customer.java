@@ -4,22 +4,19 @@ package insuranceCompany.application.domain.customer;
 import insuranceCompany.application.dao.accident.*;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyInvalidAccessException;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
+import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
@@ -28,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
-
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetAgeCalculator;
 import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetSexCalculator;
@@ -201,7 +197,7 @@ public class Customer {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -219,7 +215,7 @@ public class Customer {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -237,7 +233,7 @@ public class Customer {
 			}
 		}
 		if (premium == 0)
-			throw new InputException.NoResultantException();
+			throw new NoResultantException();
 		return premium;
 	}
 
@@ -251,7 +247,7 @@ public class Customer {
 		}
 		contract.setCustomerId(customer.getId())
 				.setConditionOfUw(ConditionOfUw.WAIT);
-		ContractDao contractDao = new ContractDao();
+		ContractDaoImpl contractDao = new ContractDaoImpl();
 		contractDao.create(contract);
 	}
 

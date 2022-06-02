@@ -1,45 +1,32 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.insurance.InsuranceType;
-import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.complain.Complain;
-import insuranceCompany.application.domain.complain.ComplainList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.contract.*;
-import insuranceCompany.application.dao.accident.ComplainDao;
-import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.employee.EmployeeList;
 import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
+import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
-import insuranceCompany.outerSystem.CarAccidentService;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 import insuranceCompany.outerSystem.CarAccidentService;
 
 import java.io.IOException;
@@ -47,14 +34,16 @@ import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
-import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isCarNo;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isPhone;
 import static insuranceCompany.application.global.utility.DocUtil.isExist;
@@ -114,8 +103,8 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0) {
                 switch (command) {
                     case "1" -> selectInsurance();
-                    case "" -> throw new InputException.InputNullDataException();
-                    default -> throw new InputException.InputInvalidMenuException();
+                    case "" -> throw new InputNullDataException();
+                    default -> throw new InputInvalidMenuException();
                 }
             }
             else {
@@ -124,8 +113,8 @@ public class CustomerViewLogic implements ViewLogic {
                     case "2" -> payPremiumButton();
                     case "3" -> reportAccident();
                     case "4" -> claimCompensation();
-                    case "" -> throw new InputException.InputNullDataException();
-                    default -> throw new InputException.InputInvalidMenuException();
+                    case "" -> throw new InputNullDataException();
+                    default -> throw new InputInvalidMenuException();
                 }
             }
         } catch(InputException e) {
@@ -140,7 +129,7 @@ public class CustomerViewLogic implements ViewLogic {
         InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
         ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
-            throw new InputException.NoResultantException();
+            throw new NoResultantException();
         while (true) {
             System.out.println("<< 보험상품목록 >>");
             for (Insurance insurance : insurances) {
@@ -163,7 +152,7 @@ public class CustomerViewLogic implements ViewLogic {
                     decideSigning();
                 }
                 else {
-                    throw new InputException.NoResultantException();
+                    throw new NoResultantException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());

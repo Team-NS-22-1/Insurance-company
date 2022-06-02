@@ -9,6 +9,9 @@ import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InputInvalidMenuException;
+import insuranceCompany.application.global.exception.InputNullDataException;
+import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
 
@@ -62,8 +65,8 @@ public class SalesViewLogic implements ViewLogic {
                 case "1" -> {
                     selectInsurance();
                 }
-                case "" -> throw new InputException.InputNullDataException();
-                default -> throw new InputException.InputInvalidMenuException();
+                case "" -> throw new InputNullDataException();
+                default -> throw new InputInvalidMenuException();
             }
         } catch(InputException e) {
             System.out.println(e.getMessage());
@@ -77,7 +80,7 @@ public class SalesViewLogic implements ViewLogic {
         InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
         ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
-            throw new InputException.NoResultantException();
+            throw new NoResultantException();
         while (true) {
             System.out.println("<< 보험상품목록 >>");
             for (Insurance insurance : insurances) {
@@ -104,7 +107,7 @@ public class SalesViewLogic implements ViewLogic {
                     }
                 }
                 else {
-                    throw new InputException.NoResultantException();
+                    throw new NoResultantException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
