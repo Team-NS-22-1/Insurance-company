@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * -----------------------------------------------------------
  * 2022-05-18                규현             최초 생성
  */
-public class AccidentDocumentFileDaoImpl implements AccidentDocumentFileDao {
+public class AccidentDocumentFileListImpl implements AccidentDocumentFileDao {
 
     private static Map<Integer, AccidentDocumentFile> accDocFilelist = new HashMap<>();
     private static int id;

@@ -118,7 +118,7 @@ public class CustomerViewLogic implements ViewLogic {
                     return;
                 showRequiredDocFile(accident);
                 break;
-            } catch (IllegalArgumentException e) {
+            } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
                 return;
             }
@@ -132,7 +132,7 @@ public class CustomerViewLogic implements ViewLogic {
             case CARACCIDENT -> showCarAccidentDoc(accident);
             case FIREACCIDENT -> showFireAccidentDoc(accident);
             case INJURYACCIDENT ->showInjuryAccidentDoc(accident);
-            case CARBREAKDOWN -> throw new IllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
+            case CARBREAKDOWN -> throw new MyIllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
         }
     }
     private void showCommonAccidentDoc(Accident accident) {
@@ -291,15 +291,21 @@ public class CustomerViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 retAccident = accidentDao.read(accidentId);
                 break;
-            } catch (InputException | IllegalArgumentException e) {
+            } catch (InputException  e) {
                 System.out.println("정확한 값을 입력해 주세요");
+            } catch (MyIllegalArgumentException e) {
+                System.out.println(e.getMessage());
             }
         }
         if (accidentId != 0) {
-            accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
-            List<AccidentDocumentFile> files = accidentDocumentFileDao.readAllByAccidentId(retAccident.getId());
-            for (AccidentDocumentFile file : files) {
-                retAccident.getAccDocFileList().put(file.getType(),file);
+            try{
+                accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+                List<AccidentDocumentFile> files = accidentDocumentFileDao.readAllByAccidentId(retAccident.getId());
+                for (AccidentDocumentFile file : files) {
+                    retAccident.getAccDocFileList().put(file.getType(),file);
+                }
+            }catch (MyIllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
 
@@ -553,7 +559,6 @@ public class CustomerViewLogic implements ViewLogic {
             customer.readPayment();
         } catch (MyIllegalArgumentException e) {
             System.out.println(e.getMessage());
-            System.out.println("결제 수단을 추가한 후, 계약에 결제 수단을 등록해주세요.");
         }
     }
 
@@ -583,7 +588,7 @@ public class CustomerViewLogic implements ViewLogic {
                         setPaymentOnContract(contract);
                         break;
                     case"3":
-                        addnewPayment();
+                        addNewPayment();
                         break;
                     case "0" :
                         break loop;
@@ -599,18 +604,23 @@ public class CustomerViewLogic implements ViewLogic {
     private boolean login() {
         while (true) {
             try {
-                System.out.println("고객 ID 입력 : ");
-                System.out.println("0. 취소하기");
-                String id = sc.next();
-                if (id.equals("0")) {
-                    return false;
+                try {
+                    System.out.println("고객 ID 입력 : ");
+                    System.out.println("0. 취소하기");
+                    String id = sc.next();
+                    if (id.equals("0")) {
+                        return false;
+                    }
+                    login(Integer.parseInt(id));
+                    break;
+                } catch (MyIllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                } catch (InputMismatchException | NumberFormatException e) {
+                    throw new InputInvalidDataException(e);
+
                 }
-                login(Integer.parseInt(id));
-                break;
-            } catch (MyIllegalArgumentException e) {
+            }catch (InputInvalidDataException e){
                 System.out.println(e.getMessage());
-            } catch (InputMismatchException| NumberFormatException e) {
-                System.out.println("올바른 값을 입력해주세요");
             }
         }
         return true;
@@ -681,7 +691,7 @@ public class CustomerViewLogic implements ViewLogic {
         ArrayList<Payment> paymentList = this.customer.getPaymentList();
         if (paymentList.size() == 0) {
             System.out.println("등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요");
-            addnewPayment();
+            addNewPayment();
             return;
         }
         while (true) {
@@ -697,21 +707,19 @@ public class CustomerViewLogic implements ViewLogic {
                     return;
                 if(key.equals("exit"))
                     throw new MyCloseSequence();
-                this.paymentDao = new PaymentDaoImpl();
-                Payment payment = this.paymentDao.read(Integer.parseInt(key));
-                this.customer.registerPayment(contract, payment);
-                contractList = new ContractDaoImpl();
-                contractList.updatePayment(contract.getId(),payment.getId());
+                int paymentId = Integer.parseInt(key);
+                this.customer.registerPayment(contract, paymentId);
                 break;
             } catch (NumberFormatException e) {
-                System.out.println("정확한 형식의 값을 입력해주세요.");
-            } catch (IllegalArgumentException| MyIllegalArgumentException e ) {
+                throw new InputInvalidDataException("정확한 형식의 값을 입력해주세요.",e);
+
+            } catch (IllegalArgumentException| MyIllegalArgumentException |InputInvalidDataException  e ) {
                 System.out.println(e.getMessage());
             }
         }
     }
     // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
-    public void addnewPayment() {
+    public void addNewPayment() {
         loop :while (true) {
             createMenu("결제수단추가하기","카드추가하기","계좌추가하기");
             System.out.println("0. 취소하기");
@@ -789,10 +797,7 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        Payment payment = customer.createPayment(card);
-        paymentDao = new PaymentDaoImpl();
-        paymentDao.create(payment);
-        customer.addPayment(payment);
+        customer.addPayment(card);
         System.out.println("결제 수단이 추가되었습니다.");
 
     }
@@ -893,10 +898,7 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        Payment payment = customer.createPayment(account);
-        paymentDao = new PaymentDaoImpl();
-        paymentDao.create(payment);
-        customer.addPayment(payment);
+        customer.addPayment(account);
         System.out.println("결제 수단이 추가되었습니다.");
     }
 

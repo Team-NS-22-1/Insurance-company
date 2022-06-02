@@ -2,6 +2,8 @@ package insuranceCompany.application.domain.customer;
 
 
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.payment.*;
@@ -168,7 +170,7 @@ public class Customer {
 		this.setPaymentList((ArrayList<Payment>) payments);
 	}
 
-	public Payment createPayment(PaymentDto paymentDto) {
+	private Payment createPayment(PaymentDto paymentDto) {
 		PayType payType = paymentDto.getPayType();
 		Payment payment;
 		if (payType.equals(PayType.CARD)) {
@@ -189,13 +191,19 @@ public class Customer {
 
 	}
 
-	public void addPayment(Payment payment){
+	public void addPayment(PaymentDto paymentDto){
+		Payment payment = createPayment(paymentDto);
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		paymentDao.create(payment);
 		this.paymentList.add(payment);
-		payment.setCustomerId(this.id);
 	}
 
-	public void registerPayment(Contract contract, Payment payment) {
+	public void registerPayment(Contract contract, int paymentId) {
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		Payment payment = paymentDao.read(paymentId);
 		contract.setPaymentId(payment.getId());
+		ContractDao contractList = new ContractDaoImpl();
+		contractList.updatePayment(contract.getId(),payment.getId());
 	}
 
 	public Accident reportAccident(AccidentReportDto accidentReportDto){

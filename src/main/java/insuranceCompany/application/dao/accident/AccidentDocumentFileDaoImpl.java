@@ -3,6 +3,7 @@ package insuranceCompany.application.dao.accident;
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,7 +63,7 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
             close();
         }
         if(accidentDocumentFile ==null)
-            throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
+            throw new IllegalArgumentException("사고 서류 아이디 ["+id+"]에 해당하는 사고 서류 파일 정보가 존재하지 않습니다.");
         return accidentDocumentFile;
     }
 
@@ -101,8 +102,8 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
 
                 close();
             }
-//        if(accDocFileList.size()==0)
-//            throw new IllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
+        if(accidentDocumentFileList.size()==0)
+            throw new MyIllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
         return accidentDocumentFileList;
     }
 

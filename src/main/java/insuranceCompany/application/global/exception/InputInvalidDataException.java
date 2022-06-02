@@ -21,7 +21,7 @@ public class InputInvalidDataException extends InputException{
     }
 
     public InputInvalidDataException(String message, Throwable cause) {
-        super(message, cause);
+        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n", cause);
     }
 
     public InputInvalidDataException(Throwable cause) {

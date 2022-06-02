@@ -10,6 +10,7 @@ import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
@@ -116,12 +117,23 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
-        ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
-        System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
-        int insuranceId = br.verifyMenu("보험 ID: ", insuranceArrayList.size());
-        Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-        System.out.println(insurance.print());
-        return insurance;
+        while (true) {
+            try {
+                ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
+                System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
+
+                int insuranceId = 0;
+                insuranceId = (int) br.verifyRead("보험 ID: ", insuranceId);
+                Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+                if (insurance.getDevInfo().getEmployeeId() != this.employee.getId()) {
+                    throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
+                }
+                System.out.println(insurance.print());
+                return insurance;
+            } catch (MyIllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private InsuranceType menuInsuranceType() throws IOException {

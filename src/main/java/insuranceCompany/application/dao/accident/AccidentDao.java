@@ -3,6 +3,7 @@ package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.CrudInterface;
 import insuranceCompany.application.domain.accident.Accident;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface AccidentDao extends CrudInterface<Accident> {
 
     void updateLossReserveAndErrorRate(Accident accident);
     void updateCompEmployeeId(Accident accident);
+    
 }

@@ -301,7 +301,10 @@ public class ContractDaoImpl extends Dao implements ContractDao {
     public void updatePayment(int contractId, int paymentId) {
         String query = "update contract set payment_id = %d where contract_id = %d";
         String formattedQuery = String.format(query, paymentId, contractId);
-        super.update(formattedQuery);
+
+        boolean result = super.update(formattedQuery);
         close();
+        if(!result)
+            throw new MyIllegalArgumentException("입력하신 ID에 오류가 발생했습니다.");
     }
 }
