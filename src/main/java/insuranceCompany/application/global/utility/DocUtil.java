@@ -2,6 +2,7 @@ package insuranceCompany.application.global.utility;
 
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.global.exception.MyFileException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,8 +74,7 @@ public class DocUtil extends JFrame {
             out = new FileOutputStream(dir);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-//            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
-            e.printStackTrace();
+            throw new MyFileException("ERROR :: 파일을 찾을 수 없습니다!");
         } catch (IOException e) {
             e.printStackTrace();
         }
