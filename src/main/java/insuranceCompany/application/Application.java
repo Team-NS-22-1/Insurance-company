@@ -37,7 +37,6 @@ public class Application {
 
     }
 
-
     public void run() {
         while (true) {
             Scanner sc = new Scanner(System.in);

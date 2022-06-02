@@ -4,26 +4,30 @@ package insuranceCompany.application.domain.customer;
 import insuranceCompany.application.dao.accident.*;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyInvalidAccessException;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.complain.Complain;
-
-import insuranceCompany.application.domain.contract.Contract;
+import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.employee.Employee;
+import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
+import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.login.User;
+import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
+import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetAgeCalculator;
+import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetSexCalculator;
 
 /**
  * @author 규현
@@ -124,6 +128,134 @@ public class Customer {
 
 	public Customer(){
 
+	}
+
+	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job, Customer customer) {
+		customer.setName(name)
+				.setSsn(ssn)
+				.setPhone(phone)
+				.setAddress(address)
+				.setEmail(email)
+				.setJob(job);
+		return customer;
+	};
+
+	public HealthContract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
+										  Boolean isTakingDrug, boolean isHavingDisease, String diseaseDetail, int insuranceId, int premium){
+		HealthContract healthContract = new HealthContract();
+		healthContract.setHeight(height)
+				.setWeight(weight)
+				.setDrinking(isDrinking)
+				.setSmoking(isSmoking)
+				.setDriving(isDriving)
+				.setDangerActivity(isDangerActivity)
+				.setTakingDrug(isTakingDrug)
+				.setHavingDisease(isHavingDisease)
+				.setDiseaseDetail(diseaseDetail)
+				.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		return healthContract;
+	}
+
+	public FireContract inputFireInfo(BuildingType buildingType, int buildingArea, Long collateralAmount, boolean isSelfOwned, boolean isActualResidence, int insuranceId, int premium){
+		FireContract fireContract = new FireContract();
+		fireContract.setBuildingType(buildingType)
+				.setBuildingArea(buildingArea)
+				.setCollateralAmount(collateralAmount)
+				.setSelfOwned(isSelfOwned)
+				.setActualResidence(isActualResidence)
+				.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		return fireContract;
+	}
+
+	public CarContract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, Long value, int insuranceId, int premium) {
+		CarContract carContract = new CarContract();
+		carContract.setCarNo(carNo)
+				.setCarType(carType)
+				.setModelName(modelName)
+				.setModelYear(modelYear)
+				.setValue(value)
+				.setInsuranceId(insuranceId)
+				.setPremium(premium);
+		return carContract;
+	}
+
+	public int inquireHealthPremium(String ssn, int riskCount, Insurance insurance){
+		int premium = 0;
+		int targerAge = setTargetAge((targetAgeCalculator(ssn)));
+		boolean targetSex = targetSexCalculator(ssn);
+		boolean riskCriterion = setRiskCriterion(riskCount);
+
+
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
+			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
+				premium = healthDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
+
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+		int premium = 0;
+		Long collateralAmountCriterion = setCollateralAmountCriterion(collateralAmount);
+
+
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			FireDetail fireDetail = (FireDetail) insuranceDetail;
+			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
+				premium = fireDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
+
+	public int inquireCarPremium(String ssn, Long value, Insurance insurance){
+		int premium = 0;
+		int targetAge = setTargetAge(targetAgeCalculator(ssn));
+		Long valueCriterion = setValueCriterion(value);
+
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			CarDetail carDetail = (CarDetail) insuranceDetail;
+			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
+				premium = carDetail.getPremium();
+				break;
+			}
+		}
+		if (premium == 0)
+			throw new NoResultantException();
+		return premium;
+	}
+
+	public void registerContract(Customer customer, Contract contract, User user) {
+		if (customer.getId() == 0) {
+			CustomerDaoImpl customerDao = new CustomerDaoImpl();
+			customerDao.create(customer);
+			user.setRoleId(customer.getId());
+			UserDaoImpl userDao = new UserDaoImpl();
+			userDao.create(user);
+		}
+		contract.setCustomerId(customer.getId())
+				.setConditionOfUw(ConditionOfUw.WAIT);
+		ContractDaoImpl contractDao = new ContractDaoImpl();
+		contractDao.create(contract);
+	}
+
+	public User createAccount(String userId, String password) {
+		User user = new User();
+		user.setUserId(userId)
+			.setPassword(password);
+		return user;
 	}
 
 	public Employee changeCompEmp(String reason, Employee compEmployee){
@@ -256,8 +388,8 @@ public class Customer {
 	}
 
 	public void signUp() {
-
 	}
+
 	public void terminate(){
 	}
 

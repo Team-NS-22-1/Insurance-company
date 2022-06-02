@@ -9,7 +9,7 @@ public class User {
     private String password;
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
-    private int role_id;
+    private int roleId;
 
     public User(){
     }
@@ -59,12 +59,12 @@ public class User {
         return this;
     }
 
-    public int getRole_id() {
-        return role_id;
+    public int getRoleId() {
+        return roleId;
     }
 
-    public User setRole_id(int role_id) {
-        this.role_id = role_id;
+    public User setRoleId(int role_id) {
+        this.roleId = role_id;
         return this;
     }
 }
