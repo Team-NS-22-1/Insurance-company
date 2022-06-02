@@ -522,8 +522,8 @@ public class CustomerViewLogic implements ViewLogic {
                         if(isValidateReportAccident(accidentType,contractType.getInsuranceType()))
                             return accidentType;
                     }
-                    throw new MyIllegalArgumentException("해당 사고를 접수하기 위한 보험에 가입되어있지 않습니다. 다시 확인해주세요.");
-                } catch (MyIllegalArgumentException e) {
+                    throw new MyInvalidAccessException("해당 사고를 접수하기 위한 보험에 가입되어있지 않습니다. 다시 확인해주세요.");
+                } catch (MyInvalidAccessException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -632,11 +632,11 @@ public class CustomerViewLogic implements ViewLogic {
                     contractList = new ContractDaoImpl();
                     contract = contractList.read(Integer.parseInt(key));
                     if (contract.getCustomerId() != this.customer.getId()) {
-                        throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요");
+                        throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요");
                     }
 
                     break;
-                } catch (MyIllegalArgumentException e) {
+                } catch (MyIllegalArgumentException | MyInvalidAccessException e) {
                     System.out.println(e.getMessage());
                 } catch (NumberFormatException e) {
                     throw new InputInvalidDataException(e);
