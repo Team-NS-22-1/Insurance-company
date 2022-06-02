@@ -67,7 +67,6 @@ public class CompensationViewLogic implements ViewLogic {
     @Override
     public void work(String command) {
 
-
         switch (command) {
             case "1" :
                 break;
@@ -79,8 +78,6 @@ public class CompensationViewLogic implements ViewLogic {
                 break;
             default:
                 throw new MyIllegalArgumentException();
-
-
         }
     }
 
@@ -161,7 +158,6 @@ public class CompensationViewLogic implements ViewLogic {
         customerList = new CustomerDaoImpl();
         Customer customer = customerList.read(accident.getCustomerId());
 
-
         accident.printForComEmployee();
         System.out.println("접수자 명 : " + customer.getName());
         AccidentType accidentType = accident.getAccidentType();
@@ -181,7 +177,6 @@ public class CompensationViewLogic implements ViewLogic {
                 break;
             }
         }
-
     }
 
     private void assessDamage() {
@@ -273,8 +268,6 @@ public class CompensationViewLogic implements ViewLogic {
         return account;
     }
 
-
-
     private void inputLossReserve(InvestigateDamageRequestDto accident) {
         while (true) {
             long loss_reserve = -1;
@@ -290,17 +283,16 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void inputErrorRate(InvestigateDamageRequestDto accident) {
 
-            while (true) {
-                int errorRate = -1;
-                errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
-                if (isErrorRate(errorRate)) {
-                    accident.setErrorRate(errorRate);
-                    break;
-                } else {
-                    System.out.println("범위에 맞게 입력해주세요.");
-                }
+        while (true) {
+            int errorRate = -1;
+            errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
+            if (isErrorRate(errorRate)) {
+                accident.setErrorRate(errorRate);
+                break;
+            } else {
+                System.out.println("범위에 맞게 입력해주세요.");
             }
-
+        }
     }
 
     private void downloadAccDocFile(Accident accident, List<AccDocFile> accDocFiles) {
@@ -348,8 +340,4 @@ public class CompensationViewLogic implements ViewLogic {
             }
         }
     }
-
-
-
-
 }

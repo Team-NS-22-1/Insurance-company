@@ -10,16 +10,16 @@ public class HealthDetail extends InsuranceDetail {
 
 	private int targetAge;
 	private boolean targetSex;
-	private int riskCriterion;
+	private boolean riskCriterion;
 
 	public HealthDetail(){
 	}
 
-	public int getRiskPremiumCriterion() {
+	public boolean getRiskCriterion() {
 		return riskCriterion;
 	}
 
-	public HealthDetail setRiskCriterion(int riskCriterion) {
+	public HealthDetail setRiskCriterion(boolean riskCriterion) {
 		this.riskCriterion = riskCriterion;
 		return this;
 	}

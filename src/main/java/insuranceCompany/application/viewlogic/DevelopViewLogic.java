@@ -10,6 +10,7 @@ import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.utility.CriterionSetUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
@@ -36,9 +37,11 @@ public class DevelopViewLogic implements ViewLogic {
     private Employee employee;
 
     private MyBufferedReader br;
+    private CriterionSetUtil csu;
 
     public DevelopViewLogic() {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
+        this.csu = new CriterionSetUtil();
     }
 
     @Override
@@ -175,17 +178,20 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
-            int targetAge = 0, premium = -1, riskCriterion = -1;
-            boolean targetSex;
+            int targetAge = 0, premium = -1, riskCount = 0;
+            boolean targetSex, riskCriterion;
             System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
-            targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
+            targetAge = csu.setTargetAge((int) br.verifyRead("보험 대상 나이: ", targetAge));
             targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
             while(true) {
-                riskCriterion = (int) br.verifyRead("위험부담 기준(개): ", riskCriterion);
-                if(riskCriterion > 6){
+                riskCount = (int) br.verifyRead("위험부담 기준(개): ", riskCount);
+                if(riskCount > 6) {
                     System.out.println("위험부담 기준은 6개 이하여야 합니다.");
                 }
-                else break;
+                else {
+                    riskCriterion = csu.setRiskCriterion(riskCount);
+                    break;
+                }
             }
             System.out.println("대상나이: "+targetAge+"\t대상성별: "+targetSex+"\t위험부담 기준: "+riskCriterion);
             DtoHealth dtoHealth = new DtoHealth(targetAge, targetSex, riskCriterion);
@@ -208,8 +214,8 @@ public class DevelopViewLogic implements ViewLogic {
             int targetAge = 0, premium = -1;
             long valueCriterion = -1;
             System.out.println("<< 자동차 보험 정보 >> (exit: 시스템 종료)");
-            targetAge = (int) br.verifyRead("보험 대상 나이: ", targetAge);
-            valueCriterion = (long) br.verifyRead("차량가액 기준(원): ", valueCriterion);
+            targetAge = csu.setTargetAge((int) br.verifyRead("보험 대상 나이: ", targetAge));
+            valueCriterion = csu.setValueCriterion ((long) br.verifyRead("차량가액 기준(원): ", valueCriterion));
             System.out.println("대상나이: "+targetAge+"\t차량가액 기준: "+valueCriterion);
             DtoCar dtoCar = new DtoCar(targetAge, valueCriterion);
 
@@ -239,7 +245,7 @@ public class DevelopViewLogic implements ViewLogic {
                 case 3 -> buildingType = BuildingType.INSTITUTIONAL;
                 case 4 -> buildingType = BuildingType.RESIDENTIAL;
             }
-            collateralAmount = (long) br.verifyRead("담보금액: ", collateralAmount);
+            collateralAmount = csu.setCollateralAmountCriterion ((long) br.verifyRead("담보금액: ", collateralAmount));
             System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
             DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
 

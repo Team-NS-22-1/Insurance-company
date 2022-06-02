@@ -9,7 +9,6 @@ import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil
 public class InputValidation {
     private Scanner sc;
 
-
     public InputValidation(){
         sc = new Scanner(System.in);
     }

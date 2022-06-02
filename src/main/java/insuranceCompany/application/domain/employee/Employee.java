@@ -190,21 +190,22 @@ public class Employee {
 		double weightRatio = 1.0;
 		int targetAge = dtoHealth.getTargetAge();
 		boolean targetSex = dtoHealth.isTargetSex();
-		int riskCriterion = dtoHealth.getRiskCriterion();
+		boolean riskCriterion = dtoHealth.getRiskCriterion();
 
-		if(targetAge < 10) weightRatio *= 1.02;
-		else if(targetAge < 20) weightRatio *= 1.06;
-		else if(targetAge < 30) weightRatio *= 1.1;
-		else if(targetAge < 40) weightRatio *= 1.14;
-		else if(targetAge < 50) weightRatio *= 1.18;
-		else if(targetAge < 60) weightRatio *= 1.22;
-		else if(targetAge < 80) weightRatio *= 1.26;
-		else if(targetAge < 100) weightRatio *= 1.3;
-		else weightRatio *= 1.34;
+		switch (targetAge) {
+			case 100 -> weightRatio *= 1.34;
+			case 80 -> weightRatio *= 1.3;
+			case 60 -> weightRatio *= 1.26;
+			case 50 -> weightRatio *= 1.22;
+			case 40 -> weightRatio *= 1.18;
+			case 30 -> weightRatio *= 1.14;
+			case 20 -> weightRatio *= 1.1;
+			default -> weightRatio *= 1.06;
+		}
 
 		weightRatio = (targetSex) ? weightRatio * 1.2 : weightRatio * 1.1;
 
-		weightRatio = (riskCriterion > 3) ? weightRatio * 1.4 : weightRatio;
+		weightRatio = (riskCriterion) ? weightRatio * 1.4 : weightRatio;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -214,22 +215,24 @@ public class Employee {
 		int targetAge = dtoCar.getTargetAge();
 		long valueCriterion = dtoCar.getValueCriterion();
 
-		if(targetAge < 20) weightRatio *= 1.4;
-		else if(targetAge < 30) weightRatio *= 1.35;
-		else if(targetAge < 40) weightRatio *= 1.2;
-		else if(targetAge < 50) weightRatio *= 1.15;
-		else if(targetAge < 60) weightRatio *= 1.15;
-		else if(targetAge < 80) weightRatio *= 1.2;
-		else if(targetAge < 100) weightRatio *= 1.35;
-		else weightRatio *= 1.4;
+		switch (targetAge) {
+			case 100 -> weightRatio *= 1.4;
+			case 80 -> weightRatio *= 1.35;
+			case 60 -> weightRatio *= 1.2;
+			case 50 -> weightRatio *= 1.15;
+			case 40 -> weightRatio *= 1.15;
+			case 30 -> weightRatio *= 1.2;
+			case 20 -> weightRatio *= 1.35;
+			default -> weightRatio *= 1.4;
+		}
 
-		if(valueCriterion < 10000000L) weightRatio *= 1.05;
-		else if(valueCriterion < 30000000L) weightRatio *= 1.15;
-		else if(valueCriterion < 50000000L) weightRatio *= 1.3;
-		else if(valueCriterion < 70000000L) weightRatio *= 1.4;
-		else if(valueCriterion < 90000000L) weightRatio *= 1.6;
-		else if(valueCriterion < 150000000L) weightRatio *= 1.8;
-		else weightRatio *= 2.2;
+		if(valueCriterion == 150000000L) weightRatio *= 2.2;
+		else if(valueCriterion == 90000000L) weightRatio *= 1.8;
+		else if(valueCriterion == 70000000L) weightRatio *= 1.6;
+		else if(valueCriterion == 50000000L) weightRatio *= 1.4;
+		else if(valueCriterion == 30000000L) weightRatio *= 1.3;
+		else if(valueCriterion == 10000000L) weightRatio *= 1.15;
+		else weightRatio *= 1.05;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -239,16 +242,18 @@ public class Employee {
 		BuildingType targetBuildingType = dtoFire.getBuildingType();
 		long collateralAmountCriterion = dtoFire.getCollateralAmount();
 
-		if(targetBuildingType == BuildingType.COMMERCIAL) weightRatio *= 1.3;
-		else if(targetBuildingType == BuildingType.INDUSTRIAL) weightRatio *= 1.25;
-		else if(targetBuildingType == BuildingType.INSTITUTIONAL) weightRatio *= 1.15;
-		else if(targetBuildingType == BuildingType.RESIDENTIAL) weightRatio *= 1.1;
+		switch (targetBuildingType){
+			case COMMERCIAL -> weightRatio *= 1.3;
+			case INDUSTRIAL -> weightRatio *= 1.25;
+			case INSTITUTIONAL -> weightRatio *= 1.15;
+			case RESIDENTIAL -> weightRatio *= 1.1;
+		}
 
-		if(collateralAmountCriterion < 100000000L) weightRatio *= 1.3;
-		else if(collateralAmountCriterion < 500000000L) weightRatio *= 1.25;
-		else if(collateralAmountCriterion < 1000000000L) weightRatio *= 1.2;
-		else if(collateralAmountCriterion < 5000000000L) weightRatio *= 1.15;
-		else weightRatio *= 1.1;
+		if(collateralAmountCriterion == 5000000000L) weightRatio *= 1.1;
+		else if(collateralAmountCriterion == 1000000000L) weightRatio *= 1.15;
+		else if(collateralAmountCriterion == 500000000L) weightRatio *= 1.2;
+		else if(collateralAmountCriterion == 100000000L) weightRatio *= 1.25;
+		else weightRatio *= 1.3;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -369,15 +374,10 @@ public class Employee {
 		return accDocFile;
 	}
 
-	public void assessDamage(){
-
-	}
-
 	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
 		accident.setLossReserves(dto.getLossReserves());
 		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
 			((CarAccident)accident).setErrorRate(dto.getErrorRate());
-
 	}
 
 	public HealthContract concludeHealthContract(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
@@ -399,7 +399,7 @@ public class Employee {
 		fireContract.setBuildingType(buildingType)
 					.setCollateralAmount(collateralAmount)
 					.setInsuranceId(insuranceId)
-					.setPremium(premium);		;
+					.setPremium(premium);
 		return fireContract;
 	}
 
@@ -500,45 +500,24 @@ public class Employee {
 		contractDao.create(contract);
 	}
 
-	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion, Insurance insurance){
+	public int planHealthInsurance(int targerAge, boolean targetSex, boolean riskCriterion, Insurance insurance){
 		int premium = 0;
 
-		if(targetAge > 100) targetAge = 100;
-		else if(targetAge > 80) targetAge = 80;
-		else if(targetAge > 60) targetAge = 60;
-		else if(targetAge > 50) targetAge = 50;
-		else if(targetAge > 40) targetAge = 40;
-		else if(targetAge > 30) targetAge = 30;
-		else if(targetAge > 20) targetAge = 20;
-		else if(targetAge > 10) targetAge = 10;
-		else targetAge = 0;
-
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskPremiumCriterion() > 3) == riskPremiumCriterion) {
+			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
 			}
 		}
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readHealthPremium(targetAge, targetSex, riskPremiumCriterion);
 		return premium;
 	}
 
-	public int planFireInsurance(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+	public int planFireInsurance(BuildingType buildingType, Long collateralAmountCriterion, Insurance insurance){
 		int premium = 0;
 
-		Long collateralAmountCriterion;
-		if(collateralAmount > 5000000000L) collateralAmountCriterion = 5000000000L;
-		else if(collateralAmount > 1000000000L) collateralAmountCriterion = 1000000000L;
-		else if(collateralAmount > 500000000L) collateralAmountCriterion = 500000000L;
-		else if(collateralAmount > 100000000L) collateralAmountCriterion = 100000000L;
-		else collateralAmountCriterion = 0L;;
-
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			FireDetail fireDetail = (FireDetail) insuranceDetail;
 			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
@@ -546,35 +525,13 @@ public class Employee {
 				break;
 			}
 		}
-
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readFirePremium(buildingType, collateralAmountCriterion);
 		return premium;
 	}
 
-	public int planCarInsurance(int targetAge, Long value, Insurance insurance){
+	public int planCarInsurance(int targetAge, Long valueCriterion, Insurance insurance){
 		int premium = 0;
 
-		if(targetAge > 100) targetAge = 100;
-		else if(targetAge > 80) targetAge = 80;
-		else if(targetAge > 60) targetAge = 60;
-		else if(targetAge > 50) targetAge = 50;
-		else if(targetAge > 40) targetAge = 40;
-		else if(targetAge > 30) targetAge = 30;
-		else if(targetAge > 20) targetAge = 20;
-		else targetAge = 0;
-
-		Long valueCriterion;
-		if(value > 150000000L) valueCriterion = 150000000L;
-		else if(value > 90000000L) valueCriterion = 90000000L;
-		else if(value > 70000000L) valueCriterion = 70000000L;
-		else if(value > 50000000L) valueCriterion = 50000000L;
-		else if(value > 30000000L) valueCriterion = 30000000L;
-		else if(value > 10000000L) valueCriterion = 10000000L;
-		else valueCriterion = 0L;
-
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			CarDetail carDetail = (CarDetail) insuranceDetail;
 			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
@@ -582,14 +539,7 @@ public class Employee {
 				break;
 			}
 		}
-
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readCarPremium(targetAge, valueCriterion);
 		return premium;
-	}
-
-	public void readAccident(){
-
 	}
 
 	public List<Contract> readContract(InsuranceType insuranceType){

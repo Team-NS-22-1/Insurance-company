@@ -37,7 +37,6 @@ public class Application {
 
     }
 
-
     public void run() {
         while (true) {
             Scanner sc = new Scanner(System.in);
@@ -63,7 +62,7 @@ public class Application {
                     viewLogic.work(command);
                 }
             }
-            catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException | NullPointerException e) {
+            catch (ArrayIndexOutOfBoundsException | InputMismatchException | MyIllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             }
             catch (MyCloseSequence e) {

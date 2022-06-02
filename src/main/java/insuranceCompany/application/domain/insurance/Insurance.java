@@ -141,8 +141,8 @@ public class Insurance {
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 개발정보 " + developInfo.print() +
-				", 인가파일 " + salesAuthorizationFile.print() +
+				", 개발정보 " + devInfo.print() +
+				", 인가파일 " + salesAuthFile.print() +
 				", " + printGuarantee() +
 				printInsuranceDetail() +
 				'}';

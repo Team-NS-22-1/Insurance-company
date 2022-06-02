@@ -4,9 +4,11 @@ import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
+import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.utility.CriterionSetUtil;
 import insuranceCompany.application.global.utility.InputValidation;
 
 import java.sql.SQLException;
@@ -17,8 +19,8 @@ import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
-import static insuranceCompany.application.global.utility.PremiumInfoFinder.customerAgeFinder;
-import static insuranceCompany.application.global.utility.PremiumInfoFinder.customerSexFinder;
+import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetAgeCalculator;
+import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetSexCalculator;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -34,6 +36,8 @@ import static insuranceCompany.application.global.utility.PremiumInfoFinder.cust
 public class GuestViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
+    private InputValidation input;
+    private CriterionSetUtil csu;
 
     private HealthContract healthContract;
     private FireContract fireContract;
@@ -41,13 +45,12 @@ public class GuestViewLogic implements ViewLogic {
     private Customer customer;
     private Insurance insurance;
 
-
-    private InputValidation input;
     private Employee employee = new Employee();
 
     public GuestViewLogic() {
         this.sc = new Scanner(System.in);
         this.input = new InputValidation();
+        this.csu = new CriterionSetUtil();
     }
 
     @Override
@@ -74,20 +77,19 @@ public class GuestViewLogic implements ViewLogic {
     }
 
     private void selectInsurance() throws SQLException {
-//        insuranceDao.readDevInfo(insurance.getId()).getSalesAuthState()
         InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
         ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
             throw new InputException.NoResultantException();
         while (true) {
+            System.out.println("<< 보험상품목록 >>");
             for (Insurance insurance : insurances) {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
-                    System.out.println("보험코드 : " + insurance.getId() + "\t보험이름 : " + insurance.getName() + "\t보험종류 : " + insurance.getInsuranceType());
-                    System.out.println(insurance.getDevInfo().getSalesAuthorizationState());
+                    System.out.println("상품번호: " + insurance.getId() + " | 보험이름: " + insurance.getName() + "   \t보험종류: " + insurance.getInsuranceType());
             }
 
             try {
-                System.out.println("가입할 보험상품의 보험코드를 입력하세요. \t(0 : 취소하기)");
+                System.out.println("가입할 보험상품의 번호를 입력하세요. \t(0: 뒤로가기)");
                 command = sc.nextLine();
                 if (command.equals("0")) {
                     break;
@@ -98,7 +100,10 @@ public class GuestViewLogic implements ViewLogic {
                 insuranceDao = new InsuranceDaoImpl();
                 insurance = insuranceDao.read(Integer.parseInt(command));
                 if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
-                    System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
+                    System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
+                    for(Guarantee guarantee : insurance.getGuaranteeList()){
+                        System.out.println(guarantee);
+                    }
                     decideSigning();
                 }
                 else {
@@ -144,16 +149,16 @@ public class GuestViewLogic implements ViewLogic {
         question = "이름을 입력해주세요.";
         String name = input.validateDistinctFormat(question, 1);
 
-        question = "주민번호를 입력해주세요. \t(______-*******)";
+        question = "주민번호를 입력해주세요. (______-*******)";
         String ssn = input.validateDistinctFormat(question, 2);
 
-        question = "연락처를 입력해주세요. \t(0__-____-____)";
+        question = "연락처를 입력해주세요. (0__-____-____)";
         String phone = input.validateDistinctFormat(question, 3);
 
         question = "주소를 입력해주세요.";
         String address = input.validateStringFormat(question);
 
-        question = "이메일을 입력해주세요. \t(_____@_____.___)";
+        question = "이메일을 입력해주세요. (_____@_____.___)";
         String email = input.validateDistinctFormat(question, 4);
 
         question = "직업을 입력해주세요.";
@@ -175,45 +180,45 @@ public class GuestViewLogic implements ViewLogic {
     }
 
     private void inputHealthInfo() {
-        int count = 0;
+        int riskCount = 0;
         String question;
         String diseaseDetail;
 
-        question = "키를 입력해주세요. \t(단위 : cm)";
+        question = "키를 입력해주세요. (단위: cm)";
         int height = input.validateIntFormat(question);
 
-        question = "몸무게를 입력해주세요. \t(단위 : kg)";
+        question = "몸무게를 입력해주세요. (단위: kg)";
         int weight = input.validateIntFormat(question);
 
-        question = "음주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "음주 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isDrinking = input.validateBooleanFormat(question);
         if (isDrinking)
-            count++;
+            riskCount++;
 
-        question = "흡연 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "흡연 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isSmoking = input.validateBooleanFormat(question);
         if (isSmoking)
-            count++;
+            riskCount++;
 
-        question = "운전 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "운전 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isDriving = input.validateBooleanFormat(question);
         if (isDriving)
-            count++;
+            riskCount++;
 
-        question = "위험 취미 활동 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "위험 취미 활동 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isDangerActivity = input.validateBooleanFormat(question);
         if (isDangerActivity)
-            count++;
+            riskCount++;
 
-        question = "약물 복용 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "약물 복용 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isTakingDrug = input.validateBooleanFormat(question);
         if (isTakingDrug)
-            count++;
+            riskCount++;
 
-        question = "질병 이력 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "질병 이력 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isHavingDisease = input.validateBooleanFormat(question);
         if (isHavingDisease)
-            count++;
+            riskCount++;
 
         if (isHavingDisease) {
             question = "질병에 대한 상세 내용를 입력해주세요.";
@@ -221,14 +226,13 @@ public class GuestViewLogic implements ViewLogic {
         } else
             diseaseDetail = null;
 
-        int age = customerAgeFinder(customer.getSsn());
-        boolean sex = customerSexFinder(customer.getSsn());
-        boolean riskPremiumCriterion = count >= 4;
+        int age = targetAgeCalculator(customer.getSsn());
+        boolean sex = targetSexCalculator(customer.getSsn());
 
-        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion, insurance);
+        int premium = employee.planHealthInsurance(csu.setTargetAge(age), sex, csu.setRiskCriterion(riskCount), insurance);
 
         healthContract = employee.inputHealthInfo(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
-                isTakingDrug, isHavingDisease, diseaseDetail, insurance.getId(), premium);
+                                                isTakingDrug, isHavingDisease, diseaseDetail, insurance.getId(), premium);
         signContract(healthContract);
     }
 
@@ -264,19 +268,19 @@ public class GuestViewLogic implements ViewLogic {
             }
         }
 
-        question = "건물면적을 입력해주세요. \t(단위 : m^2 )";
+        question = "건물면적을 입력해주세요. (단위: m^2 )";
         int buildingArea = input.validateIntFormat(question);
 
-        question = "담보 금액을 입력해주세요. \t(단워 : 원)";
+        question = "담보 금액을 입력해주세요. (단워: 원)";
         Long collateralAmount = input.validateLongFormat(question);
 
-        question = "자가 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "자가 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isSelfOwned = input.validateBooleanFormat(question);
 
-        question = "실거주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
+        question = "실거주 여부를 입력해주세요. \n1. 예  2. 아니요";
         boolean isActualResidence = input.validateBooleanFormat(question);
 
-        int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
+        int premium = employee.planFireInsurance(buildingType, csu.setCollateralAmountCriterion(collateralAmount), insurance);
 
         fireContract = employee.inputFireInfo(buildingType, buildingArea, collateralAmount, isSelfOwned, isActualResidence, insurance.getId(), premium);
         signContract(fireContract);
@@ -286,7 +290,7 @@ public class GuestViewLogic implements ViewLogic {
         String question;
         CarType carType;
 
-        question = "차량번호를 입력해주세요. \t(__-**_-****, 처음 두 자리는 지역명)";
+        question = "차량번호를 입력해주세요.";
         String carNo = input.validateDistinctFormat(question, 5);
 
         while(true) {
@@ -329,14 +333,14 @@ public class GuestViewLogic implements ViewLogic {
         question = "모델이름을 입력해주세요.";
         String modelName = input.validateStringFormat(question);
 
-        question = "차량연식을 입력해주세요. \t(단위 : 년)";
+        question = "차량연식을 입력해주세요. (단위: 년)";
         int modelYear = input.validateIntFormat(question);
 
-        question = "차량가액을 입력해주세요. \t(단위 : 년)";
+        question = "차량가액을 입력해주세요. (단위: 년)";
         Long value = input.validateLongFormat(question);
 
-        int age = customerAgeFinder(customer.getSsn());
-        int premium = employee.planCarInsurance(age, value, insurance);
+        int age = targetAgeCalculator(customer.getSsn());
+        int premium = employee.planCarInsurance(csu.setTargetAge(age), csu.setValueCriterion(value), insurance);
 
         carContract = employee.inputCarInfo(carNo, carType, modelName, modelYear, value, insurance.getId(), premium);
         signContract(carContract);

@@ -120,7 +120,6 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println(e.getMessage());
                 return;
             }
-
         }
     }
 
@@ -137,8 +136,6 @@ public class CustomerViewLogic implements ViewLogic {
 
         submitDocFile(accident,AccDocType.CLAIMCOMP);
     }
-
-
 
     private void submitMedicalConfirmation(Accident accident) {
         submitDocFile(accident, AccDocType.MEDICALCERTIFICATION); // 진단서 제출
@@ -312,7 +309,6 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println(file);
             }
         }
-
         return retAccident;
     }
 

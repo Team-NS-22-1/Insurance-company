@@ -73,11 +73,9 @@ public class Guarantee {
 
 	@Override
 	public String toString() {
-		return "{" +
-				"이름 : " + name +
-				", 설명 : " + description +
-				", 보장금액: " + guaranteeAmount +
-				"}";
+		return	name +
+				" | 보장내용: " + description +
+				"\t 보장금액: " + guaranteeAmount;
 	}
 
 }

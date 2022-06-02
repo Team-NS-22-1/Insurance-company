@@ -11,6 +11,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.utility.CriterionSetUtil;
 import insuranceCompany.application.global.utility.InputValidation;
 
 import java.sql.SQLException;
@@ -36,6 +37,8 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
 public class SalesViewLogic implements ViewLogic {
     String command;
     private Scanner sc;
+    private InputValidation input;
+    private CriterionSetUtil csu;
 
     private HealthContract healthContract;
     private FireContract fireContract;
@@ -43,11 +46,12 @@ public class SalesViewLogic implements ViewLogic {
     private Employee employee;
     private Customer customer;
     private Insurance insurance;
-    private InputValidation input;
+
 
     public SalesViewLogic() {
         this.sc = new Scanner(System.in);
         this.input = new InputValidation();
+        this.csu = new CriterionSetUtil();
     }
 
     @Override
@@ -60,14 +64,12 @@ public class SalesViewLogic implements ViewLogic {
         try {
             switch (command) {
                 // 보험상품설계
-                case "1":
+                case "1" -> {
                     initEmployee();
                     planInsurance();
-                    break;
-                case "":
-                    throw new InputException.InputNullDataException();
-                default:
-                    throw new InputException.InvalidMenuException();
+                }
+                case "" -> throw new InputException.InputNullDataException();
+                default -> throw new InputException.InvalidMenuException();
             }
         } catch(InputException e) {
             System.out.println(e.getMessage());
@@ -131,15 +133,9 @@ public class SalesViewLogic implements ViewLogic {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("보험설명: " + insurance.getDescription() + "\n보장내역: " + insurance.getGuaranteeList());
                     switch (insurance.getInsuranceType()) {
-                        case HEALTH:
-                            planHealthInsurance();
-                            break;
-                        case FIRE:
-                            planFireInsurance();
-                            break;
-                        case CAR:
-                            planCarInsurance();
-                            break;
+                        case HEALTH -> planHealthInsurance();
+                        case FIRE -> planFireInsurance();
+                        case CAR -> planCarInsurance();
                     }
                 }
                 else {
@@ -154,7 +150,7 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void planHealthInsurance() {
-        int count = 0;
+        int riskCount = 0;
         String question;
 
         question = "대상 나이를 입력하세요.";
@@ -166,36 +162,35 @@ public class SalesViewLogic implements ViewLogic {
         question = "음주 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDrinking = input.validateBooleanFormat(question);
         if (isDrinking)
-            count++;
+            riskCount++;
 
         question = "흡연 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isSmoking = input.validateBooleanFormat(question);
         if (isSmoking)
-            count++;
+            riskCount++;
 
         question = "운전 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDriving = input.validateBooleanFormat(question);
         if (isDriving)
-            count++;
+            riskCount++;
 
         question = "위험 취미 활동 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isDangerActivity = input.validateBooleanFormat(question);
         if (isDangerActivity)
-            count++;
+            riskCount++;
 
         question = "약물 복용 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isTakingDrug = input.validateBooleanFormat(question);
         if (isTakingDrug)
-            count++;
+            riskCount++;
 
         question = "질병 이력 여부를 입력해주세요. \t1. 예 \t2. 아니요";
         boolean isHavingDisease = input.validateBooleanFormat(question);
         if (isHavingDisease)
-            count++;
+            riskCount++;
 
-        boolean riskPremiumCriterion = count >= 4;
 
-        int premium = employee.planHealthInsurance(age, sex, riskPremiumCriterion, insurance);
+        int premium = employee.planHealthInsurance(csu.setTargetAge(age), sex, csu.setRiskCriterion(riskCount), insurance);
 
         System.out.println("조회된 귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -204,17 +199,13 @@ public class SalesViewLogic implements ViewLogic {
                 createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
                 command = sc.nextLine();
                 switch (command) {
-                    case "1":
+                    case "1" -> {
                         healthContract = employee.concludeHealthContract(insurance.getId(), premium, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
                         inputCustomerInfo();
-                        break;
-                    case "2":
-                        System.out.println("계약이 취소되었습니다.");
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
+                    }
+                    case "2" -> System.out.println("계약이 취소되었습니다.");
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -231,24 +222,14 @@ public class SalesViewLogic implements ViewLogic {
             try {
                 createMenu("건물종류를 입력해주세요.","주거용", "상업용", "산업용", "공업용");
                 command  = sc.nextLine();
-                switch (command) {
-                    case "1":
-                        buildingType = RESIDENTIAL;
-                        break;
-                    case "2":
-                        buildingType = COMMERCIAL;
-                        break;
-                    case "3":
-                        buildingType = INDUSTRIAL;
-                        break;
-                    case "4":
-                        buildingType = INSTITUTIONAL;
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InputInvalidDataException();
-                }
+                buildingType = switch (command) {
+                    case "1" -> RESIDENTIAL;
+                    case "2" -> COMMERCIAL;
+                    case "3" -> INDUSTRIAL;
+                    case "4" -> INSTITUTIONAL;
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InputInvalidDataException();
+                };
                 break;
             } catch (InputException e){
                 System.out.println(e.getMessage());
@@ -258,7 +239,7 @@ public class SalesViewLogic implements ViewLogic {
         question = "담보 금액을 입력해주세요. \t(단워 : 원)";
         Long collateralAmount = input.validateLongFormat(question);
 
-        int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
+        int premium = employee.planFireInsurance(buildingType, csu.setCollateralAmountCriterion(collateralAmount), insurance);
 
         System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -267,17 +248,13 @@ public class SalesViewLogic implements ViewLogic {
                 createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
                 command = sc.nextLine();
                 switch (command) {
-                    case "1":
+                    case "1" -> {
                         fireContract = employee.concludeFireContract(insurance.getId(), premium, buildingType, collateralAmount);
                         inputCustomerInfo();
-                        break;
-                    case "2":
-                        System.out.println("계약이 취소되었습니다.");
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
+                    }
+                    case "2" -> System.out.println("계약이 취소되었습니다.");
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -295,7 +272,7 @@ public class SalesViewLogic implements ViewLogic {
         question = "차량가액을 입력하세요.";
         Long value = input.validateLongFormat(question);
 
-        int premium = employee.planCarInsurance(age, value, insurance);
+        int premium = employee.planCarInsurance(csu.setTargetAge(age), csu.setValueCriterion(value), insurance);
 
         System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
 
@@ -304,17 +281,13 @@ public class SalesViewLogic implements ViewLogic {
                 createMenu("보험계약을 진행하시겠습니까?","계약", "취소");
                 command = sc.nextLine();
                 switch (command) {
-                    case "1":
+                    case "1" -> {
                         carContract = employee.concludeCarContract(insurance.getId(), premium, value);
                         inputCustomerInfo();
-                        break;
-                    case "2":
-                        System.out.println("계약이 취소되었습니다.");
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
+                    }
+                    case "2" -> System.out.println("계약이 취소되었습니다.");
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -333,43 +306,33 @@ public class SalesViewLogic implements ViewLogic {
 
                 switch (command) {
                     // 등록 고객
-                    case "1":
+                    case "1" -> {
                         System.out.println("고객 ID를 입력해주세요.");
                         int customerId = sc.nextInt();
                         CustomerDaoImpl customerDao = new CustomerDaoImpl();
                         customer = customerDao.read(customerId);
                         isLoop = false;
-                        break;
+                    }
                     // 미등록 고객
-                    case "2":
+                    case "2" -> {
                         String question;
-
                         question = "고객 이름을 입력해주세요.";
                         String name = input.validateDistinctFormat(question, 1);
-
                         question = "고객 주민번호를 입력해주세요. \t(______-*******)";
                         String ssn = input.validateDistinctFormat(question, 2);
-
                         question = "고객 연락처를 입력해주세요. \t(0__-____-____)";
                         String phone = input.validateDistinctFormat(question, 3);
-
                         question = "고객 주소를 입력해주세요.";
                         String address = input.validateStringFormat(question);
-
                         question = "고객 이메일을 입력해주세요. \t(_____@_____.___)";
                         String email = input.validateDistinctFormat(question, 4);
-
                         question = "고객 직업을 입력해주세요.";
                         String job = input.validateStringFormat(question);
-
                         customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
-
                         isLoop = false;
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
+                    }
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InvalidMenuException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -377,15 +340,9 @@ public class SalesViewLogic implements ViewLogic {
         }
 
         switch (insurance.getInsuranceType()) {
-            case HEALTH:
-                inputHealthInfo();
-                break;
-            case FIRE:
-                inputFireInfo();
-                break;
-            case CAR:
-                inputCarInfo();
-                break;
+            case HEALTH -> inputHealthInfo();
+            case FIRE -> inputFireInfo();
+            case CAR -> inputCarInfo();
         }
     }
     private void inputHealthInfo() {
@@ -435,33 +392,17 @@ public class SalesViewLogic implements ViewLogic {
             try {
                 createMenu("차종을 입력해주세요.", "경형", "소형", "준중형", "중형", "준대형", "대형", "스포츠카");
                 command = sc.nextLine();
-                switch (command) {
-                    case "1":
-                        carType = URBAN;
-                        break;
-                    case "2":
-                        carType = SUBCOMPACT;
-                        break;
-                    case "3":
-                        carType = COMPACT;
-                        break;
-                    case "4":
-                        carType = MIDSIZE;
-                        break;
-                    case "5":
-                        carType = LARGESIZE;
-                        break;
-                    case "6":
-                        carType = FULLSIZE;
-                        break;
-                    case "7":
-                        carType = SPORTS;
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InputInvalidDataException();
-                }
+                carType = switch (command) {
+                    case "1" -> URBAN;
+                    case "2" -> SUBCOMPACT;
+                    case "3" -> COMPACT;
+                    case "4" -> MIDSIZE;
+                    case "5" -> LARGESIZE;
+                    case "6" -> FULLSIZE;
+                    case "7" -> SPORTS;
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InputInvalidDataException();
+                };
                 break;
             } catch (InputException e){
                 System.out.println(e.getMessage());
@@ -485,19 +426,15 @@ public class SalesViewLogic implements ViewLogic {
                 createMenu("보험 계약을을 체결하시겠습니까?", "계약체결", "취소");
                 command = sc.nextLine();
                 switch (command) {
-                    case "1":
-                        employee.registerContract(customer , contract, employee);
+                    case "1" -> {
+                        employee.registerContract(customer, contract, employee);
                         System.out.println(customer);
                         System.out.println(contract);
                         System.out.println("계약을 체결하였습니다.");
-                        break;
-                    case "2":
-                        System.out.println("계약을 취소되었습니다.");
-                        break;
-                    case "":
-                        throw new InputException.InputNullDataException();
-                    default:
-                        throw new InputException.InvalidMenuException();
+                    }
+                    case "2" -> System.out.println("계약을 취소되었습니다.");
+                    case "" -> throw new InputException.InputNullDataException();
+                    default -> throw new InputException.InvalidMenuException();
                 }
                 break;
             } catch (InputException e) {

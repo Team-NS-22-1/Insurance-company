@@ -57,10 +57,11 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
                         // True(Male): 1 , False(Female): 0
                         int targetSex = healthDetail.isTargetSex() ? 1 : 0;
+                        int RiskCriterion = healthDetail.getRiskCriterion() ? 1 : 0;
                         String queryFormatHealthDetail =
                                 "INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (%d, %d, %d, %d);";
                         String queryHealthDetail =
-                                String.format(queryFormatHealthDetail, insuranceDetailId, healthDetail.getTargetAge(), targetSex, healthDetail.getRiskPremiumCriterion());
+                                String.format(queryFormatHealthDetail, insuranceDetailId, healthDetail.getTargetAge(), targetSex, RiskCriterion);
                         super.create(queryHealthDetail);
                     }
                 }
@@ -172,7 +173,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         insuranceDetails.add(
                                 new HealthDetail().setTargetAge(resultSet.getInt("target_age"))
                                         .setTargetSex(resultSet.getInt("target_sex")==1 ? true : false)
-                                        .setRiskCriterion(resultSet.getInt("risk_criterion"))
+                                        .setRiskCriterion(resultSet.getInt("risk_criterion")>3 ? true : false)
                                         .setId(resultSet.getInt("health_detail_id"))
                                         .setPremium(resultSet.getInt("premium"))
                                         .setInsuranceId(resultSet.getInt("insurance_id"))
@@ -263,7 +264,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         try {
             String query = "select * from insurance " +
                     "inner join develop_info " +
-                    "on insurance.insurance_id = dev_info.insurance_id";
+                    "on insurance.insurance_id = develop_info.insurance_id";
 
             ResultSet rs = super.read(query);
             while (rs.next()) {

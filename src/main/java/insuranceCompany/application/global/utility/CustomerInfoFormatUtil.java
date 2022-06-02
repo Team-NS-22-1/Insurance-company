@@ -21,6 +21,6 @@ public class CustomerInfoFormatUtil {
     }
 
     public static boolean isCarNo(String carNo){
-        return Pattern.matches("^[가-힣]{2}-[0-9]{2}[가-힣]-[0-9]{4}$", carNo);
+        return Pattern.matches("^[0-9]{2,3}[가-힣][\\s]{0,1}[0-9]{4}$", carNo);
     }
 }

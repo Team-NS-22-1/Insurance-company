@@ -3,9 +3,9 @@ package insuranceCompany.application.global.utility;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PremiumInfoFinder {
+public class TargetInfoCalculator {
 
-    public static int customerAgeFinder(String ssn) {
+    public static int targetAgeCalculator(String ssn) {
         SimpleDateFormat date = new SimpleDateFormat("yyyyMMdd");
         String today = date.format(new Date());
         int thisYear = Integer.parseInt(today.substring(0, 4));
@@ -32,7 +32,7 @@ public class PremiumInfoFinder {
         return age;
     }
 
-    public static boolean customerSexFinder(String ssn) {
+    public static boolean targetSexCalculator(String ssn) {
         boolean sex;
         int num = Integer.parseInt(ssn.substring(7, 8));
         if(num == 1 || num == 3)
