@@ -1,6 +1,5 @@
 package insuranceCompany.application.domain.employee;
 
-
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
@@ -19,6 +18,7 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.EXCEPTION_NO_RESULT_LIST;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 
 /**
@@ -597,6 +598,18 @@ public class Employee {
 
 		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
 		updateContractDaoImpl.update(contract);
+	}
+
+	public ArrayList<Insurance> readMyInsuranceList() {
+		return new InsuranceDaoImpl().readByEmployeeId(this.id);
+	}
+
+	public Insurance readMyInsurance(int insuranceId) {
+		Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+		if (insurance.getDevInfo().getEmployeeId() != this.id) {
+			throw new MyIllegalArgumentException(EXCEPTION_NO_RESULT_LIST);
+		}
+		return insurance;
 	}
 
 	public String print() {

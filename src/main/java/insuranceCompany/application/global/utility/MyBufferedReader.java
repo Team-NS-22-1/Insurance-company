@@ -104,7 +104,7 @@ public class MyBufferedReader extends BufferedReader {
     }
 
     // verifyMenu()는 '0'을 입력 가능하여 return Menu가 가능토록 구성
-    public int verifyMenu(String query, int categorySize) throws IOException {
+    public int verifyMenu(String query, int categorySize) throws IOException, InputInvalidMenuException {
         while(true){
             System.out.print(query);
             try {
