@@ -103,6 +103,9 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if (contract == null) {
+            throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
+        }
 
         return contract;
     }
@@ -215,7 +218,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             fireContract.setBuildingArea(rs.getInt("building_area"));
             fireContract.setBuildingType(BuildingType.valueOf(rs.getString("building_type")));
             fireContract.setActualResidence((rs.getInt("is_actual_residence")) != 0);
-            fireContract.setCollateralAmount(Long.valueOf(rs.getInt("collateral_amount")));
+            fireContract.setCollateralAmount((rs.getLong("collateral_amount")));
             fireContract.setSelfOwned((rs.getInt("is_self_owned")) != 0);
 
         } catch (SQLException e) {

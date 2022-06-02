@@ -314,17 +314,9 @@ public class CustomerViewLogic implements ViewLogic {
 
     private void reportAccident()  {
         if (!login()) return;
-        while (true) {
-            try {
                 AccidentType accidentType = selectAccidentType();
                 if (accidentType == null)
-                    return;
                 inputAccidentInfo(accidentType);
-                break;
-            } catch (IllegalStateException e) {
-                System.out.println(e.getMessage());
-            }
-        }
     }
 
     private void inputAccidentInfo(AccidentType selectAccidentType) {
@@ -516,8 +508,8 @@ public class CustomerViewLogic implements ViewLogic {
             while (true) {
                 try {
                     int insType = 0;
-                    createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
-                    insType = br.verifyMenu("", 4);
+                    String query = createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
+                    insType = br.verifyMenu(query, 4);
 
                     switch (insType) {
                         case 1 -> accidentType = AccidentType.CARACCIDENT;
@@ -525,7 +517,6 @@ public class CustomerViewLogic implements ViewLogic {
                         case 3 -> accidentType = AccidentType.INJURYACCIDENT;
                         case 4 -> accidentType = AccidentType.FIREACCIDENT;
                         case 0 -> accidentType = null;
-                        default -> throw new IllegalStateException("Unexpected value: " + insType);
                     }
 
                     if (accidentType == null)
@@ -634,22 +625,31 @@ public class CustomerViewLogic implements ViewLogic {
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
-                System.out.println("가입된 계약 목록");
-                for (Contract con : contracts) {
-                    showContractInfoForPay(con);
-                }
-                System.out.println("0. 취소하기");
-                String key = sc.next();
-                if (key.equals("0"))
+                try {
+                    System.out.println("가입된 계약 목록");
+                    for (Contract con : contracts) {
+                        showContractInfoForPay(con);
+                    }
+                    System.out.println("0. 취소하기");
+                    String key = sc.next();
+                    if (key.equals("0"))
+                        break;
+                    contractList = new ContractDaoImpl();
+                    contract = contractList.read(Integer.parseInt(key));
+                    if (contract.getCustomerId() != this.customer.getId()) {
+                        throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요");
+                    }
+
                     break;
-                contractList = new ContractDaoImpl();
-                contract = contractList.read(Integer.parseInt(key));
-                break;
-            } catch (MyIllegalArgumentException e) {
+                } catch (MyIllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                } catch (NumberFormatException e) {
+                    throw new InputInvalidDataException(e);
+                }
+            } catch (InputInvalidDataException e) {
                 System.out.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("제대로 된 ID를 입력해주세요");
             }
+
         }
         return contract;
     }

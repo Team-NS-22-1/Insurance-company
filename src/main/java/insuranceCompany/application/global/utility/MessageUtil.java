@@ -33,15 +33,16 @@ public class MessageUtil {
         System.out.println("exit : 시스템 종료");
     }
 
-    public static void createMenuAndClose(String menuName, String ... elements) {
+    public static String createMenuAndClose(String menuName, String ... elements) {
         StringBuilder sb = new StringBuilder();
         sb.append(menuName).append("\n");
         for (int i = 0; i < elements.length; i++) {
             sb.append(i + 1).append(".").append(" ").append(elements[i]).append("\n");
         }
         sb.append("0.").append(" ").append("취소하기").append("\n")
-                        .append("exit.").append(" ").append("종료하기");
+                        .append("exit.").append(" ").append("종료하기\n");
         System.out.println(sb.toString());
+        return sb.toString();
     }
 
     public static void createMenuEX(String menuName, UserType userType) {
