@@ -149,7 +149,7 @@ public class Insurance {
 	}
 
 	public String printOnlyInsurance() {
-		return "보험 정보 {\n" +
+		return "보험 정보 { " +
 				"보험ID: " + id +
 				", 보험유형: " + insuranceType.name() +
 				", 이름: '" + name + '\'' +
@@ -158,6 +158,8 @@ public class Insurance {
 				", 납입기간: " + paymentPeriod +
 				", 개발정보 " + devInfo.print() +
 				", 인가파일 " + salesAuthFile.print() +
+				", 보장정보 개수: " + (guaranteeList.size()-1) +
+				", 보험상세정보 개수: " + (insuranceDetailList.size()-1) +
 				"}";
 	}
 
