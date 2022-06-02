@@ -50,6 +50,12 @@ public class SalesViewLogic implements ViewLogic {
         this.input = new InputValidation();
     }
 
+    public SalesViewLogic(Employee employee) {
+        this.sc = new Scanner(System.in);
+        this.input = new InputValidation();
+        this.employee = employee;
+    }
+
     @Override
     public void showMenu() {
         createMenuAndClose("영업팀 메뉴", "보험상품설계");

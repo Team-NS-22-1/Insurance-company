@@ -47,6 +47,12 @@ public class UnderwritingViewLogic implements ViewLogic {
         this.employee = employeeDao.read(2);
     }
 
+    public UnderwritingViewLogic(Employee employee) {
+        this.sc = new Scanner(System.in);
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
+        this.employee = employee;
+    }
+
     @Override
     public void showMenu() {
 

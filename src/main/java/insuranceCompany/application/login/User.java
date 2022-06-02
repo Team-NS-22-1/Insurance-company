@@ -1,29 +1,17 @@
 package insuranceCompany.application.login;
 
-import java.util.StringTokenizer;
+import java.time.LocalDateTime;
 
 public class User {
 
-    int id;
-
-    String userId;
-
-    String password;
-
-    int customerId;
-
-    int employeeId;
+    private int id;
+    private String userId;
+    private String password;
+    private LocalDateTime createDate;
+    private LocalDateTime modifyDate;
+    private int role_id;
 
     public User(){
-    }
-
-    public User(String inputString){
-        StringTokenizer stn = new StringTokenizer(inputString, "'");
-        this.id = Integer.parseInt(stn.nextToken());
-        this.userId = stn.nextToken();
-        this.password = stn.nextToken();
-        this.customerId = Integer.parseInt(stn.nextToken());
-        this.employeeId = Integer.parseInt(stn.nextToken());
     }
 
     public int getId() {
@@ -53,21 +41,30 @@ public class User {
         return this;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public LocalDateTime getCreateDate() {
+        return createDate;
     }
 
-    public User setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public User setCreateDate(LocalDateTime createDate) {
+        this.createDate = createDate;
         return this;
     }
 
-    public int getEmployeeId() {
-        return employeeId;
+    public LocalDateTime getModifyDate() {
+        return modifyDate;
     }
 
-    public User setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
+    public User setModifyDate(LocalDateTime modifyDate) {
+        this.modifyDate = modifyDate;
+        return this;
+    }
+
+    public int getRole_id() {
+        return role_id;
+    }
+
+    public User setRole_id(int role_id) {
+        this.role_id = role_id;
         return this;
     }
 }

@@ -264,14 +264,13 @@ public class Employee {
 
 	private boolean checkSalesAuthState(Insurance insurance) {
 		SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
-		if(salesAuthFile.getProdDeclaration()!=null && salesAuthFile.getFssOfficialDoc()!=null && salesAuthFile.getIsoVerification()!=null && salesAuthFile.getSrActuaryVerification()!=null)
-			return true;
-		return false;
+		return (salesAuthFile.getProdDeclaration()!=null) && (salesAuthFile.getFssOfficialDoc()!=null)
+				&& (salesAuthFile.getIsoVerification()!=null) && (salesAuthFile.getSrActuaryVerification()!=null);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 0;
-		return uploadProd(insurance);
+		else return uploadProd(insurance);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance, String nullValue) throws IOException {
@@ -292,7 +291,7 @@ public class Employee {
 
 	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 0;
-		return uploadSrActuary(insurance);
+		else return uploadSrActuary(insurance);
 	}
 
 	public int registerAuthSrActuaryVerification(Insurance insurance, String nullValue) throws IOException {
@@ -313,7 +312,7 @@ public class Employee {
 
 	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 0;
-		return uploadIso(insurance);
+		else return uploadIso(insurance);
 	}
 
 	public int registerAuthIsoVerification(Insurance insurance, String nullValue) throws IOException {
@@ -334,7 +333,7 @@ public class Employee {
 
 	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 0;
-		return uploadFss(insurance);
+		else return uploadFss(insurance);
 	}
 
 	public int registerAuthFssOfficialDoc(Insurance insurance, String nullValue) throws IOException {
@@ -652,7 +651,6 @@ public class Employee {
 				", 직책: " + position.getName() +
 				'}';
 	}
-
 
 	@Override
 	public boolean equals(Object o) {

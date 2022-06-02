@@ -210,3 +210,10 @@ sr_actuary_verification varchar(50),
 modified_sr_actuary datetime,
 foreign key(insurance_id) references insurance(insurance_id) on delete cascade
 );
+
+create table user (
+id int primary key not null auto_increment,
+user_id varchar(255) not null,
+password varchar(255) not null,
+role_id int not null
+);

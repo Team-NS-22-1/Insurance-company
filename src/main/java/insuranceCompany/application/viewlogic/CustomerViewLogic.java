@@ -78,6 +78,12 @@ public class CustomerViewLogic implements ViewLogic {
         this.sc = new Scanner(System.in);
     }
 
+    public CustomerViewLogic(Customer customer) {
+        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.sc = new Scanner(System.in);
+        this.customer = customer;
+    }
+
     @Override
     public void showMenu() {
         createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
@@ -641,7 +647,6 @@ public class CustomerViewLogic implements ViewLogic {
             } catch (InputInvalidDataException e) {
                 System.out.println(e.getMessage());
             }
-
         }
         return contract;
     }
