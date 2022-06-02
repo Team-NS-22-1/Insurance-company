@@ -73,6 +73,7 @@ public class CompensationViewLogic implements ViewLogic {
 
             switch (command) {
                 case "1":
+                    showAccidentList();
                     break;
                 case "2":
                     investigateDamage();
@@ -124,22 +125,19 @@ public class CompensationViewLogic implements ViewLogic {
 
     }
 
+    private void showAccidentList() {
+        List<Accident> accidents = getAccidentList();
+        if (accidents == null) return;
+        showAccidentInfo(accidents);
+    }
+
     private Accident selectAccident() {
-        List<Accident> accidents = null;
-        try {
-            accidentDao = new AccidentDaoImpl();
-            accidents =  this.accidentDao.readAllByEmployeeId(this.employee.getId());
-        } catch (NoResultantException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        List<Accident> accidents = getAccidentList();
+        if (accidents == null) return null;
         while (true) {
             try {
                 System.out.println("<< 사고를 선택하세요. >>");
-                System.out.println(accidents.size());
-                for (Accident accident : accidents) {
-                    accident.printForComEmployee();
-                }
+                showAccidentInfo(accidents);
                 System.out.println("---------------------------------");
                 int accidentId = 0;
                 accidentId = (int) br.verifyRead("사고 ID : ", accidentId);
@@ -158,6 +156,23 @@ public class CompensationViewLogic implements ViewLogic {
                 System.out.println(e.getMessage());
             }
             return null;
+        }
+    }
+
+    private List<Accident> getAccidentList() {
+        List<Accident> accidents = null;
+        try {
+            accidents = employee.readAccident();
+        } catch (NoResultantException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return accidents;
+    }
+
+    private void showAccidentInfo(List<Accident> accidents) {
+        for (Accident accident : accidents) {
+            accident.printForComEmployee();
         }
     }
 

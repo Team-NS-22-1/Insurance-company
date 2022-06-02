@@ -622,8 +622,9 @@ public class Employee {
 		return premium;
 	}
 
-	public void readAccident(){
-
+	public List<Accident> readAccident(){
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
 	public List<Contract> readContract(InsuranceType insuranceType){
