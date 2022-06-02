@@ -22,13 +22,13 @@ import java.util.List;
  */
 public class CompAssignUtil {
 
-    public static Employee changeCompEmployee(EmployeeDao employeeDao, AccidentDao accidentDao, Employee employee) {
-        employeeDao = new EmployeeDaoImpl();
+    public static Employee changeCompEmployee(Employee employee) {
+        EmployeeDao employeeDao = new EmployeeDaoImpl();
         List<Employee> compEmployees = employeeDao.readAllCompEmployee();
         compEmployees.remove(employee);
         int min = Integer.MAX_VALUE;
         int minId = 0;
-        accidentDao = new AccidentDaoImpl();
+        AccidentDao accidentDao = new AccidentDaoImpl();
         for (Employee compEmployee : compEmployees) {
             List<Accident> accidents = accidentDao.readAllByEmployeeId(compEmployee.getId());
             if (min > accidents.size()) {

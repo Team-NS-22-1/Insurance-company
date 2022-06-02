@@ -17,11 +17,11 @@ public class InputInvalidDataException extends InputException{
     }
 
     public InputInvalidDataException(String message) {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
+        super(message);
     }
 
     public InputInvalidDataException(String message, Throwable cause) {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n", cause);
+        super(message, cause);
     }
 
     public InputInvalidDataException(Throwable cause) {

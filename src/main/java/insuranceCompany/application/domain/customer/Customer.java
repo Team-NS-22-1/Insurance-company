@@ -2,11 +2,16 @@ package insuranceCompany.application.domain.customer;
 
 
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.ComplainDao;
+import insuranceCompany.application.dao.accident.ComplainDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
@@ -18,6 +23,8 @@ import insuranceCompany.application.global.utility.DocUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 
 /**
  * @author 규현
@@ -120,12 +127,15 @@ public class Customer {
 
 	}
 
-	public Complain changeCompEmp(String reason){
+	public Employee changeCompEmp(String reason, Employee compEmployee){
 		Complain complain = Complain.builder().reason(reason)
 				.customerId(this.id).build();
 
 		this.complainList.add(complain);
-		return complain;
+		ComplainDao complainDao = new ComplainDaoImpl();
+		complainDao.create(complain);
+
+		return changeCompEmployee(compEmployee);
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
@@ -155,16 +165,20 @@ public class Customer {
 		return accidentDocumentFile;
 	}
 
-	public void pay(Contract contract, Payment payment){
+	public void pay(Contract contract){
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		Payment payment = paymentDao.read(contract.getPaymentId());
+
 		if(payment != null)
 			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
 	}
 
-	public void readContract(){
-
+	public List<Contract> readContracts(){
+		ContractDao contractList = new ContractDaoImpl();
+		return contractList.findAllByCustomerId(this.getId());
 	}
 
-	public void readPayment(){
+	public void readPayments(){
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		List<Payment> payments = paymentDao.findAllByCustomerId(this.id);
 		this.setPaymentList((ArrayList<Payment>) payments);
@@ -201,6 +215,10 @@ public class Customer {
 	public void registerPayment(Contract contract, int paymentId) {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
+		if (payment.getCustomerId() != this.id) {
+			throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
+		}
+
 		contract.setPaymentId(payment.getId());
 		ContractDao contractList = new ContractDaoImpl();
 		contractList.updatePayment(contract.getId(),payment.getId());

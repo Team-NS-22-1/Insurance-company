@@ -5,7 +5,6 @@ import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.accident.ComplainDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
@@ -225,10 +224,7 @@ public class CustomerViewLogic implements ViewLogic {
             if (rtVal.equals("Y")) {
                 String reasons = "";
                 reasons=(String)br.verifyRead("변경 사유를 입력해주세요 : ",reasons);
-                Complain complain = this.customer.changeCompEmp(reasons);
-                complainDao = new ComplainDaoImpl();
-                complainDao.create(complain);
-                compEmployee = changeCompEmployee(employeeDao, accidentDao,compEmployee);
+                compEmployee = this.customer.changeCompEmp(reasons,compEmployee);
                 System.out.println(compEmployee.print());
                 System.out.println("보상처리담당자 변경이 완료되었습니다.");
                 break;
@@ -547,7 +543,7 @@ public class CustomerViewLogic implements ViewLogic {
         customerList = new CustomerDaoImpl();
         this.customer  = customerList.read(customerId);
         try {
-            customer.readPayment();
+            customer.readPayments();
         } catch (MyIllegalArgumentException e) {
             System.out.println(e.getMessage());
         }
@@ -621,8 +617,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
-        contractList = new ContractDaoImpl();
-        List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
+        List<Contract> contracts = customer.readContracts();
         while (true) {
             try {
                 try {
@@ -680,9 +675,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계약에 대해서 보험료를 납부하는 기능
     private void pay(Contract contract) {
-        paymentDao = new PaymentDaoImpl();
-        Payment payment = paymentDao.read(contract.getPaymentId());
-        customer.pay(contract,payment);
+        customer.pay(contract);
     }
 
 
@@ -695,29 +688,32 @@ public class CustomerViewLogic implements ViewLogic {
             return;
         }
         while (true) {
-            try {
-                for (Payment payment : paymentList) {
-                    System.out.println(payment);
-                }
-                System.out.println("0 : 취소하기");
-                System.out.println("exit : 시스템 종료");
-                String key = sc.next();
-                key = key.toUpperCase();
-                if (key.equals("0"))
-                    return;
-                if(key.equals("exit"))
-                    throw new MyCloseSequence();
-                int paymentId = Integer.parseInt(key);
-                this.customer.registerPayment(contract, paymentId);
-                break;
-            } catch (NumberFormatException e) {
-                throw new InputInvalidDataException("정확한 형식의 값을 입력해주세요.",e);
+            try{
 
-            } catch (IllegalArgumentException| MyIllegalArgumentException |InputInvalidDataException  e ) {
-                System.out.println(e.getMessage());
+                try {
+                    for (Payment payment : paymentList) {
+                        System.out.println(payment);
+                    }
+                    System.out.println("0 : 취소하기");
+                    System.out.println("exit : 시스템 종료");
+                    String key = sc.next();
+                    key = key.toUpperCase();
+                    if (key.equals("0"))
+                        return;
+                    if(key.equals("EXIT"))
+                        throw new MyCloseSequence();
+                    int paymentId = Integer.parseInt(key);
+                    this.customer.registerPayment(contract, paymentId);
+                    break;
+                } catch (NumberFormatException e) {
+                    throw new InputInvalidDataException("ERROR!! : 정확한 형식의 값을 입력해주세요.", e);
+                }
+                } catch (IllegalArgumentException| MyIllegalArgumentException |InputInvalidDataException  e ) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
-    }
+
     // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
     public void addNewPayment() {
         loop :while (true) {
