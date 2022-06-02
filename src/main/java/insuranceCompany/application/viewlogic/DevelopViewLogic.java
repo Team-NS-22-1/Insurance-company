@@ -5,7 +5,8 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.exception.MyFileNotFoundException;
+import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -66,8 +67,7 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.println(e.getMessage());
         }
         catch (IOException ex) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         }
     }
 
@@ -297,7 +297,7 @@ public class DevelopViewLogic implements ViewLogic {
         return stPremium;
     }
 
-    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) throws IOException {
+    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) {
         boolean forWhile = true;
         while(forWhile){
             switch (br.verifyCategory(MENU_IS_REGISTER_INSURANCE, 2)){
@@ -317,8 +317,8 @@ public class DevelopViewLogic implements ViewLogic {
 
     private void menuSalesAuthFile(Insurance insurance) throws IOException {
         if(insurance==null) return;
-        try {
-            loop : while(true) {
+        loop : while(true) {
+            try {
                 System.out.println(TITLE_REGISTER_SALES_AUTH_FILE);
                 switch (br.verifyMenu(MENU_SALES_AUTH_FILE_TYPE, 5)){
                     // 보험상품신고서
@@ -340,7 +340,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 2 -> {
@@ -361,7 +361,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 3 -> {
@@ -382,7 +382,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 4 -> {
@@ -403,7 +403,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 0 -> {
@@ -411,13 +411,13 @@ public class DevelopViewLogic implements ViewLogic {
                     }
                 }
             }
-        }
-        catch (MyFileException e) {
-            System.out.println(e.getMessage());
+            catch (MyFileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    private void menuModifySalesAuthState(MyBufferedReader br, String query, Employee employee, Insurance insurance) {
+    private void menuModifySalesAuthState(String query, Employee employee, Insurance insurance) {
         switch (br.verifyCategory(query, 2)){
             case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
             case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);

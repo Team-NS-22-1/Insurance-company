@@ -22,8 +22,8 @@ import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
@@ -73,17 +73,17 @@ public class CustomerViewLogic implements ViewLogic {
     private FireContract fireContract;
     private CarContract carContract;
     private Scanner sc;
-    private CustomMyBufferedReader br;
+    private MyBufferedReader br;
     private Insurance insurance;
 
     public CustomerViewLogic() {
-        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.customer = new Customer();
     }
 
     public CustomerViewLogic(Customer customer) {
-        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.customer = customer;
         setPayment();
@@ -347,7 +347,7 @@ public class CustomerViewLogic implements ViewLogic {
                 } else if (uploadMedicalCertification.equals("N")) {
                     break;
                 }
-            } catch (MyFileException e) {
+            } catch (MyFileNotFoundException e) {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
@@ -368,7 +368,7 @@ public class CustomerViewLogic implements ViewLogic {
                 } else if (medicalCertification.equals("N")) {
                     break;
                 }
-            } catch (MyFileException e) {
+            } catch (MyFileNotFoundException e) {
                 System.out.println("파일 다운로드에 이상이 생겼습니다.");
             }
         }
