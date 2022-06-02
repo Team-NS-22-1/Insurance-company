@@ -1,7 +1,6 @@
 package insuranceCompany.application.viewlogic;
 
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
@@ -77,8 +76,7 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     public void selectInsurance() throws IOException {
-        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-        ArrayList<Insurance> insurances = insuranceDao.readAll();
+        ArrayList<Insurance> insurances = employee.readInsurances();
         if(insurances.size() == 0)
             throw new NoResultantException();
         while (true) {
@@ -93,8 +91,7 @@ public class SalesViewLogic implements ViewLogic {
                 int insuranceId = br.verifyMenu("보험상품 번호: ", insurances.size());
                 if (insuranceId == 0) break;
 
-                insuranceDao = new InsuranceDaoImpl();
-                insurance = insuranceDao.read(insuranceId);
+                insurance = customer.readInsurance(insuranceId);
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
                     System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
                     for(Guarantee guarantee : insurance.getGuaranteeList()){
@@ -142,7 +139,16 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
         switch (choice) {
             case 1 -> {
-                healthContract = employee.planHealthInsurance(insurance.getId(), premium, isDrinking, isSmoking,
+//                HealthContractDto healthContractDto = null;
+//                healthContractDto.setDrinking(isDrinking)
+//                        .setSmoking(isSmoking)
+//                        .setDriving(isDriving)
+//                        .setDangerActivity(isDangerActivity)
+//                        .setTakingDrug(isTakingDrug)
+//                        .setHavingDisease(isHavingDisease)
+//                        .setPremium(premium);
+
+                employee.planHealthInsurance(insurance.getId(), premium, isDrinking, isSmoking,
                                                                 isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
                 inputCustomerInfo();
             }
@@ -169,6 +175,16 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
         switch (choice) {
             case 1 -> {
+//                FireContractDto fireContractDto = null;
+//                fireContractDto.setDrinking(isDrinking)
+//                        .setSmoking(isSmoking)
+//                        .setDriving(isDriving)
+//                        .setDangerActivity(isDangerActivity)
+//                        .setTakingDrug(isTakingDrug)
+//                        .setHavingDisease(isHavingDisease)
+//                        .setPremium(premium);
+
+
                 fireContract = employee.planFireInsurance(insurance.getId(), premium, buildingType, collateralAmount);
                 inputCustomerInfo();
             }

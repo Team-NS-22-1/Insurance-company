@@ -6,6 +6,7 @@ import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
@@ -19,7 +20,13 @@ import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.login.User;
+import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
+import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,55 +137,14 @@ public class Customer {
 
 	}
 
-	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job, Customer customer) {
-		customer.setName(name)
-				.setSsn(ssn)
-				.setPhone(phone)
-				.setAddress(address)
-				.setEmail(email)
-				.setJob(job);
-		return customer;
-	};
-
-	public HealthContract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
-										  Boolean isTakingDrug, boolean isHavingDisease, String diseaseDetail, int insuranceId, int premium){
-		HealthContract healthContract = new HealthContract();
-		healthContract.setHeight(height)
-				.setWeight(weight)
-				.setDrinking(isDrinking)
-				.setSmoking(isSmoking)
-				.setDriving(isDriving)
-				.setDangerActivity(isDangerActivity)
-				.setTakingDrug(isTakingDrug)
-				.setHavingDisease(isHavingDisease)
-				.setDiseaseDetail(diseaseDetail)
-				.setInsuranceId(insuranceId)
-				.setPremium(premium);
-		return healthContract;
+	public ArrayList<Insurance> readInsurances() {
+		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+		return insuranceDao.readAll();
 	}
 
-	public FireContract inputFireInfo(BuildingType buildingType, int buildingArea, Long collateralAmount, boolean isSelfOwned, boolean isActualResidence, int insuranceId, int premium){
-		FireContract fireContract = new FireContract();
-		fireContract.setBuildingType(buildingType)
-				.setBuildingArea(buildingArea)
-				.setCollateralAmount(collateralAmount)
-				.setSelfOwned(isSelfOwned)
-				.setActualResidence(isActualResidence)
-				.setInsuranceId(insuranceId)
-				.setPremium(premium);
-		return fireContract;
-	}
-
-	public CarContract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, Long value, int insuranceId, int premium) {
-		CarContract carContract = new CarContract();
-		carContract.setCarNo(carNo)
-				.setCarType(carType)
-				.setModelName(modelName)
-				.setModelYear(modelYear)
-				.setValue(value)
-				.setInsuranceId(insuranceId)
-				.setPremium(premium);
-		return carContract;
+	public Insurance readInsurance(int insuranceId) {
+		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+		return insuranceDao.read(insuranceId);
 	}
 
 	public int inquireHealthPremium(String ssn, int riskCount, Insurance insurance){
@@ -186,7 +152,6 @@ public class Customer {
 		int targerAge = setTargetAge((targetAgeCalculator(ssn)));
 		boolean targetSex = targetSexCalculator(ssn);
 		boolean riskCriterion = setRiskCriterion(riskCount);
-
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
@@ -204,7 +169,6 @@ public class Customer {
 	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
 		int premium = 0;
 		Long collateralAmountCriterion = setCollateralAmountCriterion(collateralAmount);
-
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
@@ -237,25 +201,88 @@ public class Customer {
 		return premium;
 	}
 
-	public void registerContract(Customer customer, Contract contract, User user) {
-		if (customer.getId() == 0) {
-			CustomerDaoImpl customerDao = new CustomerDaoImpl();
-			customerDao.create(customer);
-			user.setRoleId(customer.getId());
-			UserDaoImpl userDao = new UserDaoImpl();
-			userDao.create(user);
-		}
-		contract.setCustomerId(customer.getId())
-				.setConditionOfUw(ConditionOfUw.WAIT);
-		ContractDaoImpl contractDao = new ContractDaoImpl();
-		contractDao.create(contract);
+	public Customer registerCustomer(CustomerDto customerDto) {
+		Customer customer = new Customer();
+		customer.setName(customerDto.getName())
+				.setSsn(customerDto.getSsn())
+				.setAddress(customer.getAddress())
+				.setPhone(customerDto.getPhone())
+				.setEmail(customerDto.getEmail())
+				.setJob(customer.getJob());
+		CustomerDaoImpl customerDao = new CustomerDaoImpl();
+		customerDao.create(customer);
+		return customer;
 	}
 
-	public User createAccount(String userId, String password) {
+	public User registerUser(UserDto userDto) {
 		User user = new User();
-		user.setUserId(userId)
-			.setPassword(password);
+		user.setUserId(userDto.getUserId())
+			.setPassword(userDto.getPassword());
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.create(user);
 		return user;
+	}
+
+	public Contract registerContract(Customer customer, ContractDto contractDto, Insurance insurance) {
+		Contract contract = null;
+		switch (insurance.getInsuranceType()){
+			case HEALTH -> {
+				HealthContract healthContract = new HealthContract();
+
+				healthContract.setHeight(((HealthContractDto) contractDto).getHeight())
+						.setWeight(((HealthContractDto) contractDto).getWeight())
+						.setDrinking(((HealthContractDto) contractDto).isDrinking())
+						.setSmoking(((HealthContractDto) contractDto).isSmoking())
+						.setDriving(((HealthContractDto) contractDto).isDriving())
+						.setDangerActivity(((HealthContractDto) contractDto).isDangerActivity())
+						.setHavingDisease(((HealthContractDto) contractDto).isHavingDisease())
+						.setTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
+						.setDiseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(healthContract);
+				contract = healthContract;
+			}
+			case FIRE -> {
+				FireContract fireContract = new FireContract();
+
+				fireContract.setBuildingArea(((FireContractDto) contractDto).getBuildingArea())
+						.setBuildingType(((FireContractDto) contractDto).getBuildingType())
+						.setCollateralAmount(((FireContractDto) contractDto).getCollateralAmount())
+						.setActualResidence(((FireContractDto) contractDto).isActualResidence())
+						.setSelfOwned(((FireContractDto) contractDto).isSelfOwned())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(fireContract);
+				contract = fireContract;
+			}
+			case CAR -> {
+				CarContract carContract = new CarContract();
+
+				carContract.setCarNo(((CarContractDto) contractDto).getCarNo())
+						.setCarType(((CarContractDto) contractDto).getCarType())
+						.setModelName(((CarContractDto) contractDto).getModelName())
+						.setModelYear(((CarContractDto) contractDto).getModelYear())
+						.setValue(((CarContractDto) contractDto).getValue())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(carContract);
+				contract = carContract;
+			}
+		}
+		return contract;
 	}
 
 	public Employee changeCompEmp(String reason, Employee compEmployee){

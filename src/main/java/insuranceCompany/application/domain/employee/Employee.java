@@ -426,6 +426,16 @@ public class Employee {
 
 	}
 
+	public ArrayList<Insurance> readInsurances() {
+		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+		return insuranceDao.readAll();
+	}
+
+	public Insurance readInsurance(int insuranceId) {
+		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
+		return insuranceDao.read(insuranceId);
+	}
+
 	public HealthContract planHealthInsurance(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
 											  boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
 		HealthContract healthContract = new HealthContract();
@@ -545,7 +555,7 @@ public class Employee {
 		return premium;
 	}
 
-	public void registerContract(Customer customer, Contract contract, User user,Employee employee) {
+	public void registerContract(Customer customer, Contract contract, User user, Employee employee) {
 		if (customer.getId() == 0) {
 			CustomerDaoImpl customerDao = new CustomerDaoImpl();
 			customerDao.create(customer);
@@ -554,9 +564,8 @@ public class Employee {
 			userDao.create(user);
 		}
 		contract.setCustomerId(customer.getId())
-				.setConditionOfUw(ConditionOfUw.WAIT);
-		if (employee.getId() != 0)
-			contract.setEmployeeId(employee.getId());
+				.setConditionOfUw(ConditionOfUw.WAIT)
+				.setEmployeeId(employee.getId());
 		ContractDaoImpl contractDao = new ContractDaoImpl();
 		contractDao.create(contract);
 	}

@@ -16,7 +16,6 @@ public class AdminViewLogic implements ViewLogic {
 
     public AdminViewLogic(Employee employee) {
         Customer customer = new CustomerDaoImpl().read(employee.getId());
-        map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic(customer));
         map.put(UserType.SALES, new SalesViewLogic(employee));
         map.put(UserType.DEV, new DevelopViewLogic(employee));

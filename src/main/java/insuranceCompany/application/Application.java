@@ -28,7 +28,6 @@ public class Application {
     private Map<UserType, ViewLogic> map = new HashMap<>();
 
     public Application() {
-        map.put(UserType.GUEST,new GuestViewLogic());
         map.put(UserType.CUSTOMER, new CustomerViewLogic());
         map.put(UserType.SALES, new SalesViewLogic());
         map.put(UserType.DEV, new DevelopViewLogic());
