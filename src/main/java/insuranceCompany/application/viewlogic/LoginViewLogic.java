@@ -1,5 +1,6 @@
 package insuranceCompany.application.viewlogic;
 
+import insuranceCompany.application.UserType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.MyCloseSequence;
@@ -76,7 +77,22 @@ public class LoginViewLogic implements ViewLogic {
         while(employee!=null) {
             switch (employee.getDepartment()) {
                 case ADMIN -> {
-
+                    while(true) {
+                        AdminViewLogic adminViewLogic = new AdminViewLogic(employee);
+                        adminViewLogic.showMenu();
+                        int userType = Integer.parseInt(sc.nextLine());
+                        employee = isLogoutEmployee(employee, String.valueOf(userType));
+                        if (employee == null) break;
+                        UserType[] values = UserType.values();
+                        UserType type = values[userType - 1];
+                        while (employee != null) {
+                            ViewLogic viewLogic = adminViewLogic.getMap().get(type);
+                            viewLogic.showMenu();
+                            String command = sc.nextLine();
+                            employee = isLogoutAdmin(employee, command);
+                            viewLogic.work(command);
+                        }
+                    }
                 }
                 case DEV -> {
                     DevelopViewLogic developViewLogic = new DevelopViewLogic(employee);
@@ -123,6 +139,12 @@ public class LoginViewLogic implements ViewLogic {
             employee = null;
             System.out.println("정상적으로 로그아웃되었습니다!\n");
         }
+        return employee;
+    }
+
+    private Employee isLogoutAdmin(Employee employee, String command) {
+        if (checkLogoutOrExit(command))
+            employee = null;
         return employee;
     }
 
