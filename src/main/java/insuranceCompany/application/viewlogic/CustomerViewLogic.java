@@ -104,7 +104,6 @@ public class CustomerViewLogic implements ViewLogic {
                 switch (command) {
                     case "1" -> selectInsurance();
                     case "" -> throw new InputNullDataException();
-                    default -> throw new InputInvalidMenuException();
                 }
             }
             else {
@@ -114,11 +113,8 @@ public class CustomerViewLogic implements ViewLogic {
                     case "3" -> reportAccident();
                     case "4" -> claimCompensation();
                     case "" -> throw new InputNullDataException();
-                    default -> throw new InputInvalidMenuException();
                 }
             }
-        } catch(InputException e) {
-            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);

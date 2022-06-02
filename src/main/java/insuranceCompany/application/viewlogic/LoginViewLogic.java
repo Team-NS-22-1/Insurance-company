@@ -48,14 +48,14 @@ public class LoginViewLogic implements ViewLogic {
             switch (br.verifyMenu("", 2)) {
                 case 1 -> {
                     Customer customer = new Login().loginCustomer();
-                    if(customer==null) break;
+                    if (customer == null) break;
                     System.out.println("어서오세요! " + customer.getName() + " 고객님.\n");
-                    while(customer != null) {
-                        CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
-                        customerViewLogic.showMenu();
-                        String command = sc.nextLine();
-                        customer = isLogoutCustomer(customer, command);
-                        customerViewLogic.work(command);
+                    while (customer != null) {
+                            CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
+                            customerViewLogic.showMenu();
+                            String command = sc.nextLine();
+                            customer = isLogoutCustomer(customer, command);
+                            customerViewLogic.work(command);
                     }
                 }
                 case 2 -> {
@@ -64,7 +64,9 @@ public class LoginViewLogic implements ViewLogic {
                     String command = sc.nextLine();
                     customerViewLogic.work(command);
                 }
-                default -> { break loop; }
+                default -> {
+                    break loop;
+                }
             }
         }
     }
