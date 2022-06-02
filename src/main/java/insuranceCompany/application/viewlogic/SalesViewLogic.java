@@ -13,6 +13,11 @@ import insuranceCompany.application.global.exception.InputNullDataException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
+import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
+import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -114,6 +119,10 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
+    private void decideSigning() {
+
+    }
+
     private void planHealthInsurance() throws IOException {
         int riskCount = 0, targetAge = 0;
         boolean targetSex, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
@@ -139,18 +148,18 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
         switch (choice) {
             case 1 -> {
-//                HealthContractDto healthContractDto = null;
-//                healthContractDto.setDrinking(isDrinking)
-//                        .setSmoking(isSmoking)
-//                        .setDriving(isDriving)
-//                        .setDangerActivity(isDangerActivity)
-//                        .setTakingDrug(isTakingDrug)
-//                        .setHavingDisease(isHavingDisease)
-//                        .setPremium(premium);
+                HealthContractDto healthContractDto = null;
+                healthContractDto.setDrinking(isDrinking)
+                        .setSmoking(isSmoking)
+                        .setDriving(isDriving)
+                        .setDangerActivity(isDangerActivity)
+                        .setTakingDrug(isTakingDrug)
+                        .setHavingDisease(isHavingDisease)
+                        .setPremium(premium);
 
-                employee.planHealthInsurance(insurance.getId(), premium, isDrinking, isSmoking,
-                                                                isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
-                inputCustomerInfo();
+//                employee.planHealthInsurance(insurance.getId(), premium, isDrinking, isSmoking,
+//                                                                isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
+                inputCustomerInfo(healthContractDto);
             }
             case 2 -> System.out.println("계약이 취소되었습니다.");
         }
@@ -175,18 +184,13 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
         switch (choice) {
             case 1 -> {
-//                FireContractDto fireContractDto = null;
-//                fireContractDto.setDrinking(isDrinking)
-//                        .setSmoking(isSmoking)
-//                        .setDriving(isDriving)
-//                        .setDangerActivity(isDangerActivity)
-//                        .setTakingDrug(isTakingDrug)
-//                        .setHavingDisease(isHavingDisease)
-//                        .setPremium(premium);
+                FireContractDto fireContractDto = null;
+                fireContractDto.setBuildingType(buildingType)
+                        .setCollateralAmount(collateralAmount)
+                        .setPremium(premium);
 
-
-                fireContract = employee.planFireInsurance(insurance.getId(), premium, buildingType, collateralAmount);
-                inputCustomerInfo();
+//                fireContract = employee.planFireInsurance(insurance.getId(), premium, buildingType, collateralAmount);
+                inputCustomerInfo(fireContractDto);
             }
             case 2 -> System.out.println("계약이 취소되었습니다.");
         }
@@ -205,14 +209,18 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
         switch (choice) {
             case 1 -> {
-                carContract = employee.planCarInsurance(insurance.getId(), premium, value);
-                inputCustomerInfo();
+                CarContractDto carContractDto = null;
+                carContractDto.setValue(value)
+                        .setPremium(premium);
+
+//                carContract = employee.planCarInsurance(insurance.getId(), premium, value);
+                inputCustomerInfo(carContractDto);
             }
             case 2 -> System.out.println("계약이 취소되었습니다.");
         }
     }
 
-    private void inputCustomerInfo() throws IOException {
+    private void inputCustomerInfo(ContractDto contract) throws IOException {
         int customerId = 0;
 
         int choice = br.verifyCategory("등록된 회원입니까?\n1. 예\n2. 아니요\n", 2);
@@ -236,7 +244,9 @@ public class SalesViewLogic implements ViewLogic {
                 email = (String) br.verifySpecificRead("이메일 (_____@_____.___): ", email, "email");
                 job = (String) br.verifyRead("직업: ", job);
 
-                customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
+                CustomerDto customerDto = new CustomerDto(name, ssn, phone, address, email, job);
+
+//                customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
             }
         }
 

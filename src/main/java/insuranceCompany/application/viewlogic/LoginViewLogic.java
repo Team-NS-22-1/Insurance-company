@@ -64,6 +64,8 @@ public class LoginViewLogic implements ViewLogic {
                         customerViewLogic.showMenu();
                         String command = sc.nextLine();
                         checkLogoutOrExit(command);
+                        if (command.equals("0"))
+                            break;
                         customerViewLogic.work(command);
                     }
                 }

@@ -109,7 +109,8 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0) {
                 switch (command) {
                     case "1" -> selectInsurance();
-                    case "" -> throw new InputNullDataException();
+                    case "0" -> System.out.println("");
+                    default -> throw new InputNullDataException();
                 }
             } else {
                 switch (command) {
@@ -117,13 +118,14 @@ public class CustomerViewLogic implements ViewLogic {
                     case "2" -> payPremiumButton();
                     case "3" -> reportAccident();
                     case "4" -> claimCompensation();
-                    case "" -> throw new InputNullDataException();
+                    case "0" -> System.out.println("로그아웃이 되었습니다.");
+                    default -> throw new InputNullDataException();
                 }
             }
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);
-        } catch (MyIllegalArgumentException | NoResultantException e) {
+        } catch (MyIllegalArgumentException | NoResultantException | InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }

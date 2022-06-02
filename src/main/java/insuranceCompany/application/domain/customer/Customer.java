@@ -217,7 +217,8 @@ public class Customer {
 	public User registerUser(UserDto userDto) {
 		User user = new User();
 		user.setUserId(userDto.getUserId())
-			.setPassword(userDto.getPassword());
+			.setPassword(userDto.getPassword())
+				.setRoleId(userDto.getRoleId());
 		UserDaoImpl userDao = new UserDaoImpl();
 		userDao.create(user);
 		return user;

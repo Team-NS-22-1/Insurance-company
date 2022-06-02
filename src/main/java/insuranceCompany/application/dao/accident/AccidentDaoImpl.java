@@ -122,7 +122,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
                         .setAccidentType(accident_type)
                         .setDateOfAccident(rs.getTimestamp("date_of_accident").toLocalDateTime())
                         .setDateOfReport(rs.getTimestamp("date_of_report").toLocalDateTime())
-                        .setLossReserves(rs.getInt("loss_reserves"));
+                        .setLossReserves(rs.getLong("loss_reserves"));
 
             }
         } catch (SQLException e) {
@@ -224,7 +224,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
                         .setAccidentType(accident_type)
                         .setDateOfAccident(rs.getTimestamp("date_of_accident").toLocalDateTime())
                         .setDateOfReport(rs.getTimestamp("date_of_report").toLocalDateTime())
-                        .setLossReserves(rs.getInt("loss_reserves"));
+                        .setLossReserves(rs.getLong("loss_reserves"));
                 accidentList.add(ac);
             }
 
