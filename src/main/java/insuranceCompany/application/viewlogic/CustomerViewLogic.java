@@ -96,7 +96,7 @@ public class CustomerViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
         if (customer.getId() == 0)
-            createMenuAndExit("<<고객메뉴>>", "보험가입");
+            createMenuAndExit(CUSTOMERMENU, SIGNININSURANCE);
         else
             createMenuAndLogout(CUSTOMERMENU, SIGNININSURANCE, PAYPREMIUM, REPORTACCIDENT, CLAIMCOMPENSATION);
     }
@@ -109,8 +109,7 @@ public class CustomerViewLogic implements ViewLogic {
                     case "1" -> selectInsurance();
                     case "" -> throw new InputNullDataException();
                 }
-            }
-            else {
+            } else {
                 switch (command) {
                     case "1" -> selectInsurance();
                     case "2" -> payPremiumButton();
@@ -122,6 +121,8 @@ public class CustomerViewLogic implements ViewLogic {
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);
+        } catch (MyIllegalArgumentException | NoResultantException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -392,6 +393,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void isFinishedClaimComp(Accident accident, boolean submitted) {
+
         if (submitted) {
             connectCompEmployee(accident);
         } else {
@@ -720,7 +722,7 @@ public class CustomerViewLogic implements ViewLogic {
                 try {
                     int insType = 0;
                     String query = createMenuAndClose(ACCIDENTMENU, CARACCIDENT, CARBREAKDOWN, INJURYACCIDENT, FIREACCIDENT);
-                    insType = br.verifyMenu(query, 4);
+                    insType = br.verifyMenu("", 4);
 
                     switch (insType) {
                         case 1 -> accidentType = AccidentType.CARACCIDENT;
