@@ -1,4 +1,3 @@
-INSERT INTO employee (name, phone, department, position) VALUES ('관리자', '010-9999-9999', 'ADMIN', 'ADMIN');
 INSERT INTO employee (name, phone, department, position) VALUES ('황승호', '010-1234-1234', 'DEV', 'TEAMLEADER');
 INSERT INTO employee (name, phone, department, position) VALUES ('윤여찬', '010-2345-2345', 'UW', 'TEAMLEADER');
 INSERT INTO employee (name, phone, department, position) VALUES ('김규현', '010-3456-3456', 'COMP', 'TEAMLEADER');
@@ -12,18 +11,17 @@ INSERT INTO employee (name, phone, department, position) VALUES ('UW팀원', '01
 INSERT INTO employee (name, phone, department, position) VALUES ('보상팀원', '010-3141-2312', 'COMP', 'MEMBER');
 INSERT INTO employee (name, phone, department, position) VALUES ('영업팀원', '010-6534-5135', 'SALES', 'MEMBER');
 
-INSERT INTO user (user_id, password, role_id) VALUES ('admin', 'admin', 1);
-INSERT INTO user (user_id, password, role_id) VALUES ('dev', '1234', 2);
-INSERT INTO user (user_id, password, role_id) VALUES ('uw', '1234', 3);
-INSERT INTO user (user_id, password, role_id) VALUES ('comp', '1234', 4);
-INSERT INTO user (user_id, password, role_id) VALUES ('sales', '1234', 5);
-INSERT INTO user (user_id, password, role_id) VALUES ('devmanager', '1234', 6);
-INSERT INTO user (user_id, password, role_id) VALUES ('uwmanager', '1234', 7);
-INSERT INTO user (user_id, password, role_id) VALUES ('compmanager', '1234', 8);
-INSERT INTO user (user_id, password, role_id) VALUES ('salesmanager', '1234', 9);
-INSERT INTO user (user_id, password, role_id) VALUES ('devmember', '1234', 10);
-INSERT INTO user (user_id, password, role_id) VALUES ('uwmember', '1234', 11);
-INSERT INTO user (user_id, password, role_id) VALUES ('compmember', '1234', 12);
-INSERT INTO user (user_id, password, role_id) VALUES ('salesmember', '1234', 13);
+INSERT INTO user (user_id, password, role_id) VALUES ('dev', '1234', 1);
+INSERT INTO user (user_id, password, role_id) VALUES ('uw', '1234', 2);
+INSERT INTO user (user_id, password, role_id) VALUES ('comp', '1234', 3);
+INSERT INTO user (user_id, password, role_id) VALUES ('sales', '1234', 4);
+INSERT INTO user (user_id, password, role_id) VALUES ('devmanager', '1234', 5);
+INSERT INTO user (user_id, password, role_id) VALUES ('uwmanager', '1234', 6);
+INSERT INTO user (user_id, password, role_id) VALUES ('compmanager', '1234', 7);
+INSERT INTO user (user_id, password, role_id) VALUES ('salesmanager', '1234', 8);
+INSERT INTO user (user_id, password, role_id) VALUES ('devmember', '1234', 9);
+INSERT INTO user (user_id, password, role_id) VALUES ('uwmember', '1234', 10);
+INSERT INTO user (user_id, password, role_id) VALUES ('compmember', '1234', 11);
+INSERT INTO user (user_id, password, role_id) VALUES ('salesmember', '1234', 12);
 
 INSERT INTO customer (name, job, ssn, phone, email, address) VALUES ('관리자', '관리자', '900101-1000000', '010-9999-9999', 'admin@naver.com', '관리자');
