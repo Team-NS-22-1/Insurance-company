@@ -3,6 +3,7 @@ package insuranceCompany.application.domain.customer;
 
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
@@ -12,6 +13,7 @@ import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 
 import java.util.ArrayList;
@@ -172,81 +174,81 @@ public class Customer {
 		return carContract;
 	}
 
-	public int planHealthInsurance(String ssn, int riskCount, Insurance insurance){
+	public int inquireHealthPremium(String ssn, int riskCount, Insurance insurance){
 		int premium = 0;
 		int targerAge = setTargetAge((targetAgeCalculator(ssn)));
 		boolean targetSex = targetSexCalculator(ssn);
 		boolean riskCriterion = setRiskCriterion(riskCount);
 
-		try {
-			ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-			for (InsuranceDetail insuranceDetail : insuranceDetails) {
-				HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-				if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
-					premium = healthDetail.getPremium();
-					break;
-				}
-				else
-					throw new InputException.NoResultantException();
-			}
 
-		} catch (InputException e){
-			e.getMessage();
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
+			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
+				premium = healthDetail.getPremium();
+				break;
+			}
 		}
+		if (premium == 0)
+			throw new InputException.NoResultantException();
 		return premium;
 	}
 
-	public int planFireInsurance(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
 		int premium = 0;
 		Long collateralAmountCriterion = setCollateralAmountCriterion(collateralAmount);
 
-		try {
-			ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-			for (InsuranceDetail insuranceDetail : insuranceDetails) {
-				FireDetail fireDetail = (FireDetail) insuranceDetail;
-				if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
-					premium = fireDetail.getPremium();
-					break;
-				}
-				else
-					throw new InputException.NoResultantException();
+
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			FireDetail fireDetail = (FireDetail) insuranceDetail;
+			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
+				premium = fireDetail.getPremium();
+				break;
 			}
-		} catch (InputException e){
-			e.getMessage();
 		}
+		if (premium == 0)
+			throw new InputException.NoResultantException();
 		return premium;
 	}
 
-	public int planCarInsurance(String ssn, Long value, Insurance insurance){
+	public int inquireCarPremium(String ssn, Long value, Insurance insurance){
 		int premium = 0;
 		int targetAge = setTargetAge(targetAgeCalculator(ssn));
 		Long valueCriterion = setValueCriterion(value);
 
-		try {
-			ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-			for (InsuranceDetail insuranceDetail : insuranceDetails) {
-				CarDetail carDetail = (CarDetail) insuranceDetail;
-				if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
-					premium = carDetail.getPremium();
-					break;
-				} else
-					throw new InputException.NoResultantException();
+		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
+		for (InsuranceDetail insuranceDetail : insuranceDetails) {
+			CarDetail carDetail = (CarDetail) insuranceDetail;
+			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
+				premium = carDetail.getPremium();
+				break;
 			}
-		} catch (InputException e){
-				e.getMessage();
-			}
+		}
+		if (premium == 0)
+			throw new InputException.NoResultantException();
 		return premium;
 	}
 
-	public void registerContract(Customer customer, Contract contract) {
+	public void registerContract(Customer customer, Contract contract, User user) {
 		if (customer.getId() == 0) {
 			CustomerDaoImpl customerDao = new CustomerDaoImpl();
 			customerDao.create(customer);
+			user.setRoleId(customer.getId());
+			UserDaoImpl userDao = new UserDaoImpl();
+			userDao.create(user);
 		}
 		contract.setCustomerId(customer.getId())
 				.setConditionOfUw(ConditionOfUw.WAIT);
 		ContractDao contractDao = new ContractDao();
 		contractDao.create(contract);
+	}
+
+	public User createAccount(String userId, String password) {
+		User user = new User();
+		user.setUserId(userId)
+			.setPassword(password);
+		return user;
 	}
 
 
@@ -348,9 +350,6 @@ public class Customer {
 				.setCustomerId(this.id);
 	}
 
-	public void signUp() {
-
-	}
 	public void terminate(){
 	}
 
@@ -366,5 +365,8 @@ public class Customer {
 				", 주민등록번호: '" + ssn + '\'' +
 				", 결제수단: " + paymentList +
 				'}';
+	}
+
+	public void signUp(String userId, String password) {
 	}
 }

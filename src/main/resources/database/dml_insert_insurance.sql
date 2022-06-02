@@ -22,11 +22,11 @@ INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authori
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (60750, 2);
 INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (6, 20, 100000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (66000, 2);
-INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (7, 30, 2000000000);
+INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (7, 30, 500000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (63249, 2);
-INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (8, 40, 100000000000);
+INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (8, 40, 1000000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (63249, 2);
-INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (9, 50, 20000000000);
+INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (9, 50, 5000000000);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (2);
 
 INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('화재보험 1','화재보험 1 설명입니다.',50,20,'FIRE');
@@ -34,11 +34,11 @@ INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (3, '화�
 INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (3, '화재보험 보장 2', '화재보험 보장 2 설명입니다.', 2000000000000);
 INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (3, 6, '2022-05-31', 'WAIT');
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (2247142, 3);
-INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (10, 'COMMERCIAL', 10000000000);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (10, 'COMMERCIAL', 100000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (2160713, 3);
-INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (11, 'INDUSTRIAL', 200000000000);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (11, 'INDUSTRIAL', 5000000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (1987856, 3);
-INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (12, 'INSTITUTIONAL', 10000000000);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (12, 'INSTITUTIONAL', 500000000);
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (1901427, 3);
-INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (13, 'RESIDENTIAL', 20000000000);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (13, 'RESIDENTIAL', 100000000);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (3);

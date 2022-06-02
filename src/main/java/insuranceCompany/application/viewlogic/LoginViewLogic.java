@@ -63,11 +63,6 @@ public class LoginViewLogic implements ViewLogic {
                     customerViewLogic.showMenu();
                     String command = sc.nextLine();
                     customerViewLogic.work(command);
-
-//                    GuestViewLogic guestViewLogic = new GuestViewLogic();
-//                    guestViewLogic.showMenu();
-//                    String command = sc.nextLine();
-//                    guestViewLogic.work(command);
                 }
                 default -> { break loop; }
             }
