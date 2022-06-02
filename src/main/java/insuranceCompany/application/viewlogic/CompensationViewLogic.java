@@ -62,8 +62,8 @@ public class CompensationViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-       createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+    public String showMenu() {
+       return createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
     }
 
     @Override

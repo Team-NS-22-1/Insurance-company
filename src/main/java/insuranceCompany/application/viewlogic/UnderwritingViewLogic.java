@@ -18,8 +18,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -52,9 +51,8 @@ public class UnderwritingViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-
-        createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
+    public String showMenu() {
+        return createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
     }
 
     @Override

@@ -10,6 +10,6 @@ package insuranceCompany.application.viewlogic;
  */
 public interface ViewLogic {
 
-    void showMenu();
+    String showMenu();
     void work(String command);
 }
