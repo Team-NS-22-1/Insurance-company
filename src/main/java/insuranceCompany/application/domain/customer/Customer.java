@@ -5,20 +5,16 @@ import insuranceCompany.application.dao.accident.*;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.complain.Complain;
+import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.*;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
-import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.complain.Complain;
-
-import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 
 import java.util.ArrayList;
 import java.util.List;

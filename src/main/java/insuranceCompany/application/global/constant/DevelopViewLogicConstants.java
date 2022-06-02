@@ -19,6 +19,7 @@ public class DevelopViewLogicConstants {
     public static final String ERROR_NONE_INSURANCE_LIST = "ERROR:: 개발한 보험이 없습니다!";
     public static final String MENU_SELECT_INSURANCE_FOR_REGISTER_FILE = "<< 파일을 추가할 보험을 선택하세요. >>";
     public static final String QUERY_INSURANCE_ID = "보험 ID: ";
+    public static final String EXCEPTION_NO_RESULT_LIST = "ERROR:: 리스트에 있는 아이디를 입력해주세요.";
     
     // Method menuInsuranceType()
     public static final String MENU_INSURANCE_TYPE_TITLE = "<< 보험 종류 선택 >>";

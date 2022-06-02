@@ -1,33 +1,23 @@
 package insuranceCompany.application.domain.employee;
 
-
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.domain.contract.*;
-import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.Account;
-import insuranceCompany.application.global.exception.InputInvalidDataException;
-import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.contract.*;
-import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.domain.customer.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
@@ -42,6 +32,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.EXCEPTION_NO_RESULT_LIST;
 
 /**
  * @author SeungHo
@@ -653,6 +645,18 @@ public class Employee {
 
 		ContractDaoImpl contractDaoImpl1 = new ContractDaoImpl();
 		contractDaoImpl1.update(contract);
+	}
+
+	public ArrayList<Insurance> readMyInsuranceList() {
+		return new InsuranceDaoImpl().readByEmployeeId(this.id);
+	}
+
+	public Insurance readMyInsurance(int insuranceId) {
+		Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+		if (insurance.getDevInfo().getEmployeeId() != this.id) {
+			throw new MyIllegalArgumentException(EXCEPTION_NO_RESULT_LIST);
+		}
+		return insurance;
 	}
 
 	public String print() {

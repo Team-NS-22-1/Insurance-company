@@ -1,6 +1,5 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
@@ -59,9 +58,7 @@ public class DevelopViewLogic implements ViewLogic {
                     showInsuranceByEmployee();
                     this.menuDevelop(this.menuInsuranceType());
                 }
-                case "2" -> {
-                    this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
-                }
+                case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
             }
         }
         catch (IllegalStateException e){
@@ -75,7 +72,7 @@ public class DevelopViewLogic implements ViewLogic {
 
     private ArrayList<Insurance> showInsuranceByEmployee() {
         System.out.printf(EMPLOYEE_INSURANCE_LIST, employee.getName());
-        ArrayList<Insurance> insuranceArrayList = new InsuranceDaoImpl().readByEmployeeId(employee.getId());
+        ArrayList<Insurance> insuranceArrayList = employee.readMyInsuranceList();
         if(insuranceArrayList.size() == 0) {
             System.out.println(NONE_INSURANCE_LIST);
         }
@@ -101,10 +98,7 @@ public class DevelopViewLogic implements ViewLogic {
                 int insuranceId = 0;
                 insuranceId = (int) br.verifyRead(QUERY_INSURANCE_ID, insuranceId);
                 if(insuranceId == 0) return null;
-                Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-                if (insurance.getDevInfo().getEmployeeId() != this.employee.getId()) {
-                    throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
-                }
+                Insurance insurance = employee.readMyInsurance(insuranceId);
                 System.out.println(insurance.printOnlyInsurance());
                 return insurance;
             } catch (MyIllegalArgumentException e) {
