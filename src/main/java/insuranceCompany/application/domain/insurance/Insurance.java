@@ -148,4 +148,17 @@ public class Insurance {
 				'}';
 	}
 
+	public String printOnlyInsurance() {
+		return "보험 정보 {\n" +
+				"보험ID: " + id +
+				", 보험유형: " + insuranceType.name() +
+				", 이름: '" + name + '\'' +
+				", 설명: '" + description + '\'' +
+				", 계약기간: " + contractPeriod +
+				", 납입기간: " + paymentPeriod +
+				", 개발정보 " + devInfo.print() +
+				", 인가파일 " + salesAuthFile.print() +
+				"}";
+	}
+
 }
