@@ -1,9 +1,7 @@
 package insuranceCompany.application.domain.customer;
 
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.dao.accident.ComplainDao;
-import insuranceCompany.application.dao.accident.ComplainDaoImpl;
+import insuranceCompany.application.dao.accident.*;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
@@ -246,10 +244,14 @@ public class Customer {
 			accident = new FireAccident();
 			((FireAccident)accident).setPlaceAddress(accidentReportDto.getPlaceAddress());
 		}
-		return accident.setAccidentType(accidentType)
+		 accident.setAccidentType(accidentType)
 				.setDateOfAccident(accidentReportDto.getDateOfAccident())
 				.setDateOfReport(accidentReportDto.getDateOfReport())
 				.setCustomerId(this.id);
+
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		accidentDao.create(accident);
+		return accident;
 	}
 
 	public void signUp() {

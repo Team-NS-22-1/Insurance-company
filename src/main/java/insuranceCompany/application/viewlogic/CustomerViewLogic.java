@@ -319,9 +319,6 @@ public class CustomerViewLogic implements ViewLogic {
 
         AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
         Accident accident = customer.reportAccident(accidentReportDto);
-        accidentDao = new AccidentDaoImpl();
-        accidentDao.create(accident);
-
         accident.printForCustomer();
 
         AccidentType accidentType = accident.getAccidentType();
