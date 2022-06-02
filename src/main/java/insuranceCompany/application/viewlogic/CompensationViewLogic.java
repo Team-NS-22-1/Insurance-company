@@ -28,7 +28,7 @@ import java.util.List;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndExit;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 
 /**
@@ -63,7 +63,7 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-       createMenuAndExit("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+       createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
     }
 
     @Override
@@ -80,6 +80,8 @@ public class CompensationViewLogic implements ViewLogic {
                 case "3":
                     assessDamage();
                     break;
+                case "0" :
+                    break;
                 default:
                     throw new MyIllegalArgumentException();
             }
@@ -89,30 +91,20 @@ public class CompensationViewLogic implements ViewLogic {
     }
 
     private void investigateDamage() {
-
-        loginCompEmployee();
-
         Accident accident = selectAccident();
         if(accident == null)
             return;
-
         showAccidentDetail(accident);
-
-
 
         downloadAccDocFile(accident);
         System.out.println("다운로드 종료");
-        // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
-
-
 
         InvestigateDamageRequestDto dto = new InvestigateDamageRequestDto();
         dto.setAccidentType(accident.getAccidentType());
 
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-        inputErrorRate(dto);
-        // 지급 준비금 입력.
-        inputLossReserve(dto);
+        inputErrorRate(dto); // 과실비율 입력
+        inputLossReserve(dto); // 지급 준비금 입력.
         if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
             System.out.println("사고 조사 보고서를 제출해주세요");
         }
@@ -123,7 +115,7 @@ public class CompensationViewLogic implements ViewLogic {
             String rtVal = "";
             rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
             if (rtVal.equals("Y")) {
-                assessDamageWithoutLogin();
+                assessDamage();
                 break;
             } else if (rtVal.equals("N")) {
                 break;
@@ -197,11 +189,6 @@ public class CompensationViewLogic implements ViewLogic {
     }
 
     private void assessDamage() {
-        loginCompEmployee();
-        assessDamageWithoutLogin();
-    }
-
-    private void assessDamageWithoutLogin() {
         Accident accident = selectAccident();
         if(accident == null) // 배정된 사고가 없을 떄 null. 이거도 exception인가???
             return;
@@ -336,34 +323,4 @@ public class CompensationViewLogic implements ViewLogic {
             }
         }
     }
-
-    private void loginCompEmployee() {
-        while(true){
-            try {
-                System.out.println("<< 직원을 선택하세요. >>");
-                employeeList = new EmployeeDaoImpl();
-                List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
-                for(Employee employee : employeeArrayList){
-                    System.out.println(employee.print());
-                }
-                System.out.println("---------------------------------");
-                int employeeId = 0;
-                employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
-                if(employeeId == 0) break;
-                this.employeeList = new EmployeeDaoImpl();
-                this.employee = this.employeeList.read(employeeId);
-                if(this.employee.getDepartment() != Department.COMP){
-                    throw new MyInvalidAccessException("해당 직원은 보상팀 직원이 아닙니다!");
-                }
-                break;
-            }
-            catch (InputException | MyInvalidAccessException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-    }
-
-
-
-
 }

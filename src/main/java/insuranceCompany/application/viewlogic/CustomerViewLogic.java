@@ -3,7 +3,6 @@ package insuranceCompany.application.viewlogic;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
@@ -78,11 +77,12 @@ public class CustomerViewLogic implements ViewLogic {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.customer = customer;
+        setPayment();
     }
 
     @Override
     public void showMenu() {
-        createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
+        createMenuAndLogout("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
     }
 
     @Override
@@ -100,6 +100,8 @@ public class CustomerViewLogic implements ViewLogic {
                 case "4":
                     claimCompensation();
                     break;
+                case "0":
+                    break;
                 case "":
                     throw new InputNullDataException();
                 default:
@@ -111,20 +113,14 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void claimCompensation() {
-        if (!login()) return;
-        while (true) {
             try {
                 Accident accident = selectAccident();
                 if (accident == null)
                     return;
                 showRequiredDocFile(accident);
-                break;
             } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                return;
             }
-
-        }
     }
 
     private void showRequiredDocFile(Accident accident) {
@@ -311,10 +307,9 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void reportAccident()  {
-        if (!login()) return;
-                AccidentType accidentType = selectAccidentType();
-                if (accidentType != null)
-                inputAccidentInfo(accidentType);
+        AccidentType accidentType = selectAccidentType();
+        if (accidentType != null)
+            inputAccidentInfo(accidentType);
     }
 
     private void inputAccidentInfo(AccidentType selectAccidentType) {
@@ -538,9 +533,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
-    public void login(int customerId) {
-        customerList = new CustomerDaoImpl();
-        this.customer  = customerList.read(customerId);
+    public void setPayment() {
         try {
             customer.readPayments();
         } catch (MyIllegalArgumentException e) {
@@ -552,9 +545,6 @@ public class CustomerViewLogic implements ViewLogic {
     // 이후 진행될 작업으로 보험료를 납입할 계약을 선택하고, 해당 계약으로 즉시 결제를 할지, 계약에 기존에 등록된 결제수단을 등록할지,
     // 고객에게 새로운 결제 수단을 추가할지 정할 수 있다.
     private void payPremiumButton() {
-        if (!login()) return;
-
-
         while (true) {
             Contract contract = selectContract();
             if (contract == null) {
@@ -587,30 +577,30 @@ public class CustomerViewLogic implements ViewLogic {
         }
     }
 
-    private boolean login() {
-        while (true) {
-            try {
-                try {
-                    System.out.println("고객 ID 입력 : ");
-                    System.out.println("0. 취소하기");
-                    String id = sc.next();
-                    if (id.equals("0")) {
-                        return false;
-                    }
-                    login(Integer.parseInt(id));
-                    break;
-                } catch (MyIllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-                } catch (InputMismatchException | NumberFormatException e) {
-                    throw new InputInvalidDataException(e);
-
-                }
-            }catch (InputInvalidDataException e){
-                System.out.println(e.getMessage());
-            }
-        }
-        return true;
-    }
+//    private boolean login() {
+//        while (true) {
+//            try {
+//                try {
+//                    System.out.println("고객 ID 입력 : ");
+//                    System.out.println("0. 취소하기");
+//                    String id = sc.next();
+//                    if (id.equals("0")) {
+//                        return false;
+//                    }
+//                    login(Integer.parseInt(id));
+//                    break;
+//                } catch (MyIllegalArgumentException e) {
+//                    System.out.println(e.getMessage());
+//                } catch (InputMismatchException | NumberFormatException e) {
+//                    throw new InputInvalidDataException(e);
+//
+//                }
+//            }catch (InputInvalidDataException e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        return true;
+//    }
 
     // 고객이 보험료 납입 버튼을 클릭한 이후 사용할 계약을 선택하는 기능이다.
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
