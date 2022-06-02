@@ -1,18 +1,20 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.login.UserType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.Login;
+import insuranceCompany.application.login.UserType;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndExitQuery;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuOnlyExitQuery;
 
 public class LoginViewLogic implements ViewLogic {
 
@@ -24,7 +26,7 @@ public class LoginViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuOnlyExitQuery("<< INSURANCE-COMPANY >>", "고객", "직원");
+        return createMenuOnlyExitQuery(MENU_TITLE_LOGIN_VIEW_LOGIC, MENU_ELEMENTS_LOGIN_VIEW_LOGIC);
     }
 
     @Override
@@ -43,11 +45,11 @@ public class LoginViewLogic implements ViewLogic {
     private void menuCustomerLogin() throws IOException {
         Scanner sc = new Scanner(System.in);
         loop: while(true) {
-            switch (br.verifyMenu(createMenuAndExitQuery("<< 고객 >>", "회원", "비회원"), 2)) {
+            switch (br.verifyMenu(createMenuAndExitQuery(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), 2)) {
                 case 1 -> {
                     Customer customer = new Login().loginCustomer();
                     if (customer == null) break;
-                    System.out.println("어서오세요! " + customer.getName() + " 고객님.\n");
+                    System.out.printf(MSG_WELCOME_CUSTOMER, customer.getName());
                     while (customer != null) {
                         CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
                         String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(),4));
@@ -56,10 +58,13 @@ public class LoginViewLogic implements ViewLogic {
                     }
                 }
                 case 2 -> {
-                    CustomerViewLogic customerViewLogic = new CustomerViewLogic();
-                    customerViewLogic.showMenu();
-                    String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
-                    customerViewLogic.work(command);
+                    while(true){
+                        CustomerViewLogic customerViewLogic = new CustomerViewLogic();
+                        customerViewLogic.showMenu();
+                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
+                        if(command.equals("0")) break;
+                        customerViewLogic.work(command);
+                    }
                 }
                 default -> {
                     break loop;
@@ -72,7 +77,7 @@ public class LoginViewLogic implements ViewLogic {
         Scanner sc = new Scanner(System.in);
         Employee employee = new Login().loginEmployee();
         if(employee==null) return;
-        System.out.println("LOGIN:: " + "부서[" + employee.getDepartment().name() + "] 직책[" + employee.getPosition().name() + "] " + employee.getName() + "\n");
+        System.out.printf(MSG_WELCOME_EMPLOYEE, employee.getDepartment().name(), employee.getPosition().name(), employee.getName());
         while(employee!=null) {
             switch (employee.getDepartment()) {
                 case ADMIN -> {
@@ -125,7 +130,7 @@ public class LoginViewLogic implements ViewLogic {
     private Customer isLogoutCustomer(Customer customer, String command) {
         if (checkLogoutOrExit(command)) {
             customer = null;
-            System.out.println("정상적으로 로그아웃되었습니다!\n");
+            System.out.println(SUCCESS_LOGOUT);
         }
         return customer;
     }
@@ -133,7 +138,7 @@ public class LoginViewLogic implements ViewLogic {
     private Employee isLogoutEmployee(Employee employee, String command) {
         if (checkLogoutOrExit(command)) {
             employee = null;
-            System.out.println("정상적으로 로그아웃되었습니다!\n");
+            System.out.println(SUCCESS_LOGOUT);
         }
         return employee;
     }
