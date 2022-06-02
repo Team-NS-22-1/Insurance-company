@@ -1,5 +1,7 @@
 package insuranceCompany.application.global.exception;
 
+import static insuranceCompany.application.global.constants.ExceptionConstants.INPUTINVALIDMENUEXCEPTION;
+
 /**
  * packageName :  insuranceCompany.application.global.exception
  * fileName : InvalidMenuException
@@ -13,11 +15,11 @@ package insuranceCompany.application.global.exception;
  */
 public class InputInvalidMenuException extends InputException{
     public InputInvalidMenuException() {
-        super("ERROR!! : 올바른 메뉴를 입력해주세요.\n");
+        super(INPUTINVALIDMENUEXCEPTION);
     }
 
     public InputInvalidMenuException(String message) {
-        super("ERROR!! : 올바른 메뉴를 입력해주세요.\n");
+        super(INPUTINVALIDMENUEXCEPTION);
     }
 
     public InputInvalidMenuException(String message, Throwable cause) {
