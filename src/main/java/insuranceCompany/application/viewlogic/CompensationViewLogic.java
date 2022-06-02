@@ -2,6 +2,7 @@ package insuranceCompany.application.viewlogic;
 
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
@@ -48,7 +49,6 @@ public class CompensationViewLogic implements ViewLogic {
     private AccidentDao accidentDao;
     private AccidentDocumentFileDao accidentDocumentFileDao;
     private CustomerDao customerList;
-    private EmployeeDaoImpl employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 

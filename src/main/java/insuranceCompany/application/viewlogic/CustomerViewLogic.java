@@ -2,7 +2,9 @@ package insuranceCompany.application.viewlogic;
 
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
@@ -56,14 +58,11 @@ import static insuranceCompany.application.global.utility.MessageUtil.*;
  */
 public class CustomerViewLogic implements ViewLogic {
 
-    private ContractDaoImpl contractList;
-    private InsuranceDaoImpl insuranceList;
-    private CustomerDao customerList;
-    private PaymentDao paymentDao;
+    private ContractDao contractList;
+    private InsuranceDao insuranceList;
     private AccidentDao accidentDao;
     private AccidentDocumentFileDao accidentDocumentFileDao;
-    private EmployeeDao employeeDao;
-    private ComplainDao complainDao;
+
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
