@@ -4,6 +4,8 @@ import insuranceCompany.application.domain.accident.InjuryAccident;
 import insuranceCompany.application.global.utility.DocUtil;
 import org.junit.jupiter.api.Test;
 
+import java.awt.*;
+
 /**
  * packageName :  utility
  * fileName : DocUtilTest
@@ -24,5 +26,31 @@ class DocUtilTest {
         accident.setId(1);
         accident.setCustomerId(2);
         DocUtil.deleteDir(accident);
+    }
+
+    @Test
+    void findExtension() {
+        String path = "안녕하세요.hwp";
+        int i = path.lastIndexOf(".");
+        String sub = path.substring(i);
+        System.out.println(sub);
+    }
+    
+    @Test
+    void findExtensionWithMulitpleDot() {
+        String path = "안.녕.하.세.요.hwp";
+        int i = path.lastIndexOf(".");
+        String sub = path.substring(i);
+        System.out.println(sub);
+    }
+
+    @Test
+    void 확장자필터적용하기() {
+        FileDialog f = new FileDialog(new Frame(), "테스트");
+        f.setFile("*.hwp");
+        f.setVisible(true);
+
+        String originPath = f.getDirectory()+f.getFile();
+        System.out.println(originPath);
     }
 }

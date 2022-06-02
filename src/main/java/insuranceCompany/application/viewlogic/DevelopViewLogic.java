@@ -1,5 +1,6 @@
 package insuranceCompany.application.viewlogic;
 
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.employee.Employee;
@@ -7,6 +8,7 @@ import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
@@ -87,17 +89,23 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
-        ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
-        if(insuranceArrayList.size() == 0) {
-            System.out.println("ERROR:: 개발한 보험이 없습니다!");
-            return null;
+        while (true) {
+            try {
+                ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
+                System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
+
+                int insuranceId = 0;
+                insuranceId = (int) br.verifyRead("보험 ID: ", insuranceId);
+                Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+                if (insurance.getDevInfo().getEmployeeId() != this.employee.getId()) {
+                    throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
+                }
+                System.out.println(insurance.print());
+                return insurance;
+            } catch (MyIllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
-        int insuranceId = br.verifyMenu("보험 ID: ", insuranceArrayList.size());
-        if(insuranceId == 0) return null;
-        Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-        System.out.println(insurance.print());
-        return insurance;
     }
 
     private InsuranceType menuInsuranceType() throws IOException {
@@ -236,7 +244,7 @@ public class DevelopViewLogic implements ViewLogic {
             gName = (String) br.verifyRead("보장명: ", gName);
             gDescription = (String) br.verifyRead("보장 상세 내용: ", gDescription);
             gAmount = (Long) br.verifyRead("보장금액: ", gAmount);
-            
+
             guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
             switch (br.verifyCategory("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
                 case 2 -> isAddGuarantee = false;

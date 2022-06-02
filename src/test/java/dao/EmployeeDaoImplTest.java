@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.Position;
@@ -22,13 +22,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-class EmployeeDaoTest {
+class EmployeeDaoImplTest {
 
-    EmployeeDao dao = new EmployeeDao();
+    EmployeeDaoImpl dao = new EmployeeDaoImpl();
 
     @Test
     void readAllCompEmployee() {
-        dao = new EmployeeDao();
+        dao = new EmployeeDaoImpl();
         List<Employee> compEmployee = dao.readAllCompEmployee();
         for (Employee employee : compEmployee) {
             System.out.println(employee.print());
@@ -48,10 +48,10 @@ class EmployeeDaoTest {
                 .setDepartment(Department.COMP)
                 .setPosition(Position.DEPTMANAGER);
 
-        dao = new EmployeeDao();
+        dao = new EmployeeDaoImpl();
         dao.create(employee);
 
-        dao = new EmployeeDao();
+        dao = new EmployeeDaoImpl();
         Employee read = dao.read(employee.getId());
         System.out.println(read.print());
         Assertions.assertEquals(read.getId(),employee.getId());

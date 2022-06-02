@@ -1,6 +1,6 @@
 package insuranceCompany.application.domain.accident;
 
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public abstract class Accident {
 
-	protected Map<AccDocType, AccDocFile> accDocFileList = new HashMap<>();
+	protected Map<AccDocType, AccidentDocumentFile> accDocFileList = new HashMap<>();
 	protected AccidentType accidentType;
 	protected int customerId;
 	protected LocalDateTime dateOfAccident;
@@ -32,11 +32,11 @@ public abstract class Accident {
 
 	}
 
-	public Map<AccDocType, AccDocFile> getAccDocFileList() {
+	public Map<AccDocType, AccidentDocumentFile> getAccDocFileList() {
 		return accDocFileList;
 	}
 
-	public Accident setAccDocFileList(Map<AccDocType, AccDocFile> accDocFileList) {
+	public Accident setAccDocFileList(Map<AccDocType, AccidentDocumentFile> accDocFileList) {
 		this.accDocFileList = accDocFileList;
 		return this;
 	}

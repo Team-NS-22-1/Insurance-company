@@ -1,7 +1,9 @@
 package insuranceCompany.application.domain.contract;
 
 
+import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:58
  */
-public class ContractListImpl implements ContractList {
+public class ContractListImpl implements ContractDao {
 
 
 	private static Map<Integer, Contract> contractList = new HashMap<>();
@@ -50,6 +52,11 @@ public class ContractListImpl implements ContractList {
 		throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
 	}
 
+
+	@Override
+	public List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId) {
+		return null;
+	}
 
 	@Override
 	public List<Contract> findAllByCustomerId(int customerId) {

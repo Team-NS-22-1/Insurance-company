@@ -1,30 +1,30 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.accident.AccDocFileDao;
-import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.accident.ComplainDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDao;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.AccidentList;
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.complain.Complain;
-import insuranceCompany.application.domain.complain.ComplainList;
+import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.employee.EmployeeList;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.insurance.Insurance;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 import insuranceCompany.outerSystem.CarAccidentService;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
@@ -35,8 +35,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
-import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
@@ -61,13 +59,10 @@ import static insuranceCompany.application.global.utility.MessageUtil.*;
 public class CustomerViewLogic implements ViewLogic {
 
     private ContractDao contractList;
-    private InsuranceDaoImpl insuranceList;
-    private CustomerDao customerList;
-    private PaymentList paymentList;
-    private AccidentList accidentList;
-    private AccDocFileList accDocFileList;
-    private EmployeeList employeeList;
-    private ComplainList complainList;
+    private InsuranceDao insuranceList;
+    private AccidentDao accidentDao;
+    private AccidentDocumentFileDao accidentDocumentFileDao;
+
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
@@ -81,11 +76,12 @@ public class CustomerViewLogic implements ViewLogic {
         this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
         this.sc = new Scanner(System.in);
         this.customer = customer;
+        setPayment();
     }
 
     @Override
     public void showMenu() {
-        createMenuAndExit("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
+        createMenuAndLogout("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
     }
 
     @Override
@@ -103,10 +99,12 @@ public class CustomerViewLogic implements ViewLogic {
                 case "4":
                     claimCompensation();
                     break;
+                case "0":
+                    break;
                 case "":
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 default:
-                    throw new InputException.InputInvalidMenuException();
+                    throw new InputInvalidMenuException();
             }
         } catch (InputException e) {
             System.out.println(e.getMessage());
@@ -114,20 +112,14 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void claimCompensation() {
-        if (!login()) return;
-        while (true) {
             try {
                 Accident accident = selectAccident();
                 if (accident == null)
                     return;
                 showRequiredDocFile(accident);
-                break;
-            } catch (IllegalArgumentException e) {
+            } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
-                return;
             }
-
-        }
     }
 
     private void showRequiredDocFile(Accident accident) {
@@ -136,7 +128,7 @@ public class CustomerViewLogic implements ViewLogic {
             case CARACCIDENT -> showCarAccidentDoc(accident);
             case FIREACCIDENT -> showFireAccidentDoc(accident);
             case INJURYACCIDENT ->showInjuryAccidentDoc(accident);
-            case CARBREAKDOWN -> throw new IllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
+            case CARBREAKDOWN -> throw new MyIllegalArgumentException("자동차 고장은 보상금 청구가 되지 않습니다.");
         }
     }
     private void showCommonAccidentDoc(Accident accident) {
@@ -158,22 +150,11 @@ public class CustomerViewLogic implements ViewLogic {
                 isExist(accident,accDocType);
                 uploadMedicalCertification = (String) br.verifyRead(accDocType.getDesc()+"를 제출하시겠습니까?(Y/N)",uploadMedicalCertification);
                 if (uploadMedicalCertification.equals("Y")) {
-                    AccDocFile accDocFile = customer.claimCompensation(accident, new AccDocFile().setAccidentId(accident.getId())
+                    AccidentDocumentFile accidentDocumentFile = customer.claimCompensation(accident, new AccidentDocumentFile().setAccidentId(accident.getId())
                             .setType(accDocType));
-                    if (accDocFile == null) {
+                    if (accidentDocumentFile == null) {
                         System.out.println(accDocType.getDesc() + "의 제출을 취소하셨습니다.");
                         break;
-                    }
-                    accDocFileList = new AccDocFileDao();
-                    for (AccDocFile value : accident.getAccDocFileList().values()) {
-                        System.out.println(value);
-                    }
-
-                    if (accident.getAccDocFileList().containsKey(accDocType)) {
-                        accDocFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-                    } else {
-                        accDocFileList.create(accDocFile);
-                        accident.getAccDocFileList().put(accDocType,accDocFile);
                     }
                     break;
                 } else if (uploadMedicalCertification.equals("N")) {
@@ -230,7 +211,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     private void connectCompEmployee(Accident accident) {
 
-        Employee compEmployee = assignCompEmployee(employeeList, accidentList);
+        Employee compEmployee = assignCompEmployee();
         System.out.println(compEmployee.print());
 
 
@@ -240,10 +221,7 @@ public class CustomerViewLogic implements ViewLogic {
             if (rtVal.equals("Y")) {
                 String reasons = "";
                 reasons=(String)br.verifyRead("변경 사유를 입력해주세요 : ",reasons);
-                Complain complain = this.customer.changeCompEmp(reasons);
-                complainList = new ComplainDao();
-                complainList.create(complain);
-                compEmployee = changeCompEmployee(employeeList, accidentList,compEmployee);
+                compEmployee = this.customer.changeCompEmp(reasons,compEmployee);
                 System.out.println(compEmployee.print());
                 System.out.println("보상처리담당자 변경이 완료되었습니다.");
                 break;
@@ -252,8 +230,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         accident.setEmployeeId(compEmployee.getId());
-        accidentList = new AccidentDao();
-        accidentList.updateCompEmployeeId(accident);
+        accidentDao = new AccidentDaoImpl();
+        accidentDao.updateCompEmployeeId(accident);
     }
 
     private void showFireAccidentDoc(Accident accident) {
@@ -275,7 +253,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private boolean isAllDocSubmitted(Accident accident, AccDocType ... accDocTypes) {
-        Map<AccDocType, AccDocFile> accDocFileList = accident.getAccDocFileList();
+        Map<AccDocType, AccidentDocumentFile> accDocFileList = accident.getAccDocFileList();
         for (AccDocType accDocType : accDocTypes) {
             if (!accDocFileList.containsKey(accDocType)) {
                 return false;
@@ -289,8 +267,8 @@ public class CustomerViewLogic implements ViewLogic {
         Accident retAccident = null;
         int accidentId = 0;
         while (true) {
-            accidentList = new AccidentDao();
-            List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
+            accidentDao = new AccidentDaoImpl();
+            List<Accident> accidents = accidentDao.readAllByCustomerId(customer.getId());
             for (Accident accident : accidents) {
                 accident.printForCustomer();
             }
@@ -303,19 +281,24 @@ public class CustomerViewLogic implements ViewLogic {
                 if (accidentId == 0) {
                     break;
                 }
-                accidentList = new AccidentDao();
-                retAccident = accidentList.read(accidentId);
+                accidentDao = new AccidentDaoImpl();
+                retAccident = accidentDao.read(accidentId);
+                if(retAccident.getCustomerId() != this.customer.getId())
+                    throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
                 break;
-            } catch (InputException | IllegalArgumentException e) {
-                System.out.println("정확한 값을 입력해 주세요");
+            } catch (InputException | MyIllegalArgumentException | MyInvalidAccessException e) {
+                System.out.println(e.getMessage());
             }
         }
         if (accidentId != 0) {
-            accDocFileList = new AccDocFileDao();
-            List<AccDocFile> files = accDocFileList.readAllByAccidentId(retAccident.getId());
-            for (AccDocFile file : files) {
-                retAccident.getAccDocFileList().put(file.getType(),file);
-                System.out.println(file);
+            try{
+                accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+                List<AccidentDocumentFile> files = accidentDocumentFileDao.readAllByAccidentId(retAccident.getId());
+                for (AccidentDocumentFile file : files) {
+                    retAccident.getAccDocFileList().put(file.getType(),file);
+                }
+            }catch (MyIllegalArgumentException e){
+                System.out.println(e.getMessage());
             }
         }
 
@@ -323,27 +306,15 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void reportAccident()  {
-        if (!login()) return;
-        while (true) {
-            try {
-                AccidentType accidentType = selectAccidentType();
-                if (accidentType == null)
-                    return;
-                inputAccidentInfo(accidentType);
-                break;
-            } catch (IllegalStateException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+        AccidentType accidentType = selectAccidentType();
+        if (accidentType != null)
+            inputAccidentInfo(accidentType);
     }
 
     private void inputAccidentInfo(AccidentType selectAccidentType) {
 
         AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
         Accident accident = customer.reportAccident(accidentReportDto);
-        accidentList = new AccidentDao();
-        accidentList.create(accident);
-
         accident.printForCustomer();
 
         AccidentType accidentType = accident.getAccidentType();
@@ -520,33 +491,52 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private AccidentType selectAccidentType() {
-        int insType = 0;
-        createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
-        insType = br.verifyMenu("", 4);
+        contractList = new ContractDaoImpl();
+        List<ContractwithTypeDto> contractTypes = contractList.findAllContractWithTypeByCustomerId(this.customer.getId());
+        AccidentType accidentType = null;
+            while (true) {
+                try {
+                    int insType = 0;
+                    String query = createMenuAndClose("<< 사고 종류 선택 >>", "자동차 사고", "자동차 고장", "상해 사고", "화재 사고");
+                    insType = br.verifyMenu(query, 4);
 
+                    switch (insType) {
+                        case 1 -> accidentType = AccidentType.CARACCIDENT;
+                        case 2 -> accidentType = AccidentType.CARBREAKDOWN;
+                        case 3 -> accidentType = AccidentType.INJURYACCIDENT;
+                        case 4 -> accidentType = AccidentType.FIREACCIDENT;
+                        case 0 -> accidentType = null;
+                    }
 
-        return switch (insType) {
-            case 1 -> AccidentType.CARACCIDENT;
-            case 2 -> AccidentType.CARBREAKDOWN;
-            case 3 -> AccidentType.INJURYACCIDENT;
-            case 4 -> AccidentType.FIREACCIDENT;
-            case 0 -> null;
-            default -> throw new IllegalStateException("Unexpected value: " + insType);
+                    if (accidentType == null)
+                        break;
+
+                    for (ContractwithTypeDto contractType : contractTypes) {
+                        if(isValidateReportAccident(accidentType,contractType.getInsuranceType()))
+                            return accidentType;
+                    }
+                    throw new MyInvalidAccessException("해당 사고를 접수하기 위한 보험에 가입되어있지 않습니다. 다시 확인해주세요.");
+                } catch (MyInvalidAccessException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+        return accidentType;
+    }
+
+    private boolean isValidateReportAccident(AccidentType accidentType, InsuranceType insuranceType) {
+        return switch (accidentType) {
+            case CARACCIDENT, CARBREAKDOWN -> insuranceType == InsuranceType.CAR;
+            case FIREACCIDENT -> insuranceType == InsuranceType.FIRE;
+            case INJURYACCIDENT -> insuranceType == InsuranceType.HEALTH;
         };
-
     }
 
     // customer ID를 입력하여 customerViewLogic에서 진행되는 작업에서 사용되는 고객 정보를 불러온다.
-    public void login(int customerId) {
-        customerList = new CustomerDaoImpl();
-        this.customer  = customerList.read(customerId);
+    public void setPayment() {
         try {
-            paymentList = new PaymentDao();
-            List<Payment> payments = paymentList.findAllByCustomerId(customerId);
-            this.customer.setPaymentList((ArrayList<Payment>) payments);
-        } catch (IllegalArgumentException e) {
+            customer.readPayments();
+        } catch (MyIllegalArgumentException e) {
             System.out.println(e.getMessage());
-            System.out.println("결제 수단을 추가한 후, 계약에 결제 수단을 등록해주세요.");
         }
     }
 
@@ -554,9 +544,6 @@ public class CustomerViewLogic implements ViewLogic {
     // 이후 진행될 작업으로 보험료를 납입할 계약을 선택하고, 해당 계약으로 즉시 결제를 할지, 계약에 기존에 등록된 결제수단을 등록할지,
     // 고객에게 새로운 결제 수단을 추가할지 정할 수 있다.
     private void payPremiumButton() {
-        if (!login()) return;
-
-
         while (true) {
             Contract contract = selectContract();
             if (contract == null) {
@@ -576,7 +563,7 @@ public class CustomerViewLogic implements ViewLogic {
                         setPaymentOnContract(contract);
                         break;
                     case"3":
-                        addnewPayment();
+                        addNewPayment();
                         break;
                     case "0" :
                         break loop;
@@ -589,49 +576,61 @@ public class CustomerViewLogic implements ViewLogic {
         }
     }
 
-    private boolean login() {
-        while (true) {
-            try {
-                System.out.println("고객 ID 입력 : ");
-                System.out.println("0. 취소하기");
-                String id = sc.next();
-                if (id.equals("0")) {
-                    return false;
-                }
-                login(Integer.parseInt(id));
-                break;
-            } catch (MyIllegalArgumentException e) {
-                System.out.println(e.getMessage());
-            } catch (InputMismatchException| NumberFormatException e) {
-                System.out.println("올바른 값을 입력해주세요");
-            }
-        }
-        return true;
-    }
+//    private boolean login() {
+//        while (true) {
+//            try {
+//                try {
+//                    System.out.println("고객 ID 입력 : ");
+//                    System.out.println("0. 취소하기");
+//                    String id = sc.next();
+//                    if (id.equals("0")) {
+//                        return false;
+//                    }
+//                    login(Integer.parseInt(id));
+//                    break;
+//                } catch (MyIllegalArgumentException e) {
+//                    System.out.println(e.getMessage());
+//                } catch (InputMismatchException | NumberFormatException e) {
+//                    throw new InputInvalidDataException(e);
+//
+//                }
+//            }catch (InputInvalidDataException e){
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        return true;
+//    }
 
     // 고객이 보험료 납입 버튼을 클릭한 이후 사용할 계약을 선택하는 기능이다.
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
-        contractList = new ContractDao();
-        List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
+        List<Contract> contracts = customer.readContracts();
         while (true) {
             try {
-                System.out.println("가입된 계약 목록");
-                for (Contract con : contracts) {
-                    showContractInfoForPay(con);
-                }
-                System.out.println("0. 취소하기");
-                String key = sc.next();
-                if (key.equals("0"))
+                try {
+                    System.out.println("가입된 계약 목록");
+                    for (Contract con : contracts) {
+                        showContractInfoForPay(con);
+                    }
+                    System.out.println("0. 취소하기");
+                    String key = sc.next();
+                    if (key.equals("0"))
+                        break;
+                    contractList = new ContractDaoImpl();
+                    contract = contractList.read(Integer.parseInt(key));
+                    if (contract.getCustomerId() != this.customer.getId()) {
+                        throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요");
+                    }
+
                     break;
-                contractList = new ContractDao();
-                contract = contractList.read(Integer.parseInt(key));
-                break;
-            } catch (MyIllegalArgumentException e) {
+                } catch (MyIllegalArgumentException | MyInvalidAccessException e) {
+                    System.out.println(e.getMessage());
+                } catch (NumberFormatException e) {
+                    throw new InputInvalidDataException(e);
+                }
+            } catch (InputInvalidDataException e) {
                 System.out.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("제대로 된 ID를 입력해주세요");
             }
         }
         return contract;
@@ -663,9 +662,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계약에 대해서 보험료를 납부하는 기능
     private void pay(Contract contract) {
-        paymentList = new PaymentDao();
-        Payment payment = paymentList.read(contract.getPaymentId());
-        customer.pay(contract,payment);
+        customer.pay(contract);
     }
 
 
@@ -674,37 +671,38 @@ public class CustomerViewLogic implements ViewLogic {
         ArrayList<Payment> paymentList = this.customer.getPaymentList();
         if (paymentList.size() == 0) {
             System.out.println("등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요");
-            addnewPayment();
+            addNewPayment();
             return;
         }
         while (true) {
-            try {
-                for (Payment payment : paymentList) {
-                    System.out.println(payment);
+            try{
+
+                try {
+                    for (Payment payment : paymentList) {
+                        System.out.println(payment);
+                    }
+                    System.out.println("0 : 취소하기");
+                    System.out.println("exit : 시스템 종료");
+                    String key = sc.next();
+                    key = key.toUpperCase();
+                    if (key.equals("0"))
+                        return;
+                    if(key.equals("EXIT"))
+                        throw new MyCloseSequence();
+                    int paymentId = Integer.parseInt(key);
+                    this.customer.registerPayment(contract, paymentId);
+                    break;
+                } catch (NumberFormatException e) {
+                    throw new InputInvalidDataException("ERROR!! : 정확한 형식의 값을 입력해주세요.", e);
                 }
-                System.out.println("0 : 취소하기");
-                System.out.println("exit : 시스템 종료");
-                String key = sc.next();
-                key = key.toUpperCase();
-                if (key.equals("0"))
-                    return;
-                if(key.equals("exit"))
-                    throw new MyCloseSequence();
-                this.paymentList = new PaymentDao();
-                Payment payment = this.paymentList.read(Integer.parseInt(key));
-                this.customer.registerPayment(contract, payment);
-                contractList = new ContractDao();
-                contractList.updatePayment(contract.getId(),payment.getId());
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("정확한 형식의 값을 입력해주세요.");
-            } catch (IllegalArgumentException| MyIllegalArgumentException e ) {
-                System.out.println(e.getMessage());
+                } catch (MyIllegalArgumentException |InputInvalidDataException| MyInvalidAccessException  e ) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
-    }
+
     // 고객에게 새로운 결제수단을 추가하는 기능. 카드와 계좌의 정보를 추가할 수 있다.
-    public void addnewPayment() {
+    public void addNewPayment() {
         loop :while (true) {
             createMenu("결제수단추가하기","카드추가하기","계좌추가하기");
             System.out.println("0. 취소하기");
@@ -782,10 +780,7 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        Payment payment = customer.createPayment(card);
-        paymentList = new PaymentDao();
-        paymentList.create(payment);
-        customer.addPayment(payment);
+        customer.addPayment(card);
         System.out.println("결제 수단이 추가되었습니다.");
 
     }
@@ -886,10 +881,7 @@ public class CustomerViewLogic implements ViewLogic {
                 System.out.println("정확한 값을 입력해주세요");
             }
         }
-        Payment payment = customer.createPayment(account);
-        paymentList = new PaymentDao();
-        paymentList.create(payment);
-        customer.addPayment(payment);
+        customer.addPayment(account);
         System.out.println("결제 수단이 추가되었습니다.");
     }
 
