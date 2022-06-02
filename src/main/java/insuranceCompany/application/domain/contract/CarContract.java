@@ -65,17 +65,13 @@ public class CarContract extends Contract{
 
 	@Override
 	public String toString() {
-		return "계약정보 {" +
-				"계약 ID: " + getId() +
-				", 인수심사상태: " + getConditionOfUw() +
-				", 인수사유: '" + getReasonOfUw() + '\'' +
-				", 증권발행여부: " + isPublishStock() +
-				", 보험료: " + getPremium() +
-				", 자동차번호: '" + carNo + '\'' +
+		return super.toString() +
+				", 자동차정보: {" +
+				"자동차번호: '" + carNo + '\'' +
 				", 차량유형: " + carType +
 				", 연식: " + modelYear +
 				", 차명: '" + modelName + '\'' +
 				", 차량가액: " + value +
-				'}';
+				"}}";
 	}
 }

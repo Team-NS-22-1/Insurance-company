@@ -15,6 +15,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
@@ -164,7 +165,10 @@ public class DevelopViewLogic implements ViewLogic {
                 if(riskCriterion > 6){
                     System.out.println(ERROR_RISK_CRITERION_COUNT);
                 }
-                else break;
+                else {
+                    riskCriterion = setRiskCriterion(riskCount);
+                    break;
+                }
             }
             DtoHealth dtoHealth = new DtoHealth(targetAge, targetSex, riskCriterion);
 
@@ -216,7 +220,8 @@ public class DevelopViewLogic implements ViewLogic {
                 case 3 -> buildingType = BuildingType.INSTITUTIONAL;
                 case 4 -> buildingType = BuildingType.RESIDENTIAL;
             }
-            collateralAmount = (long) br.verifyRead(QUERY_COLLATERAL_AMOUNT, collateralAmount);
+            collateralAmount = setCollateralAmountCriterion ((long) br.verifyRead(QUERY_COLLATERAL_AMOUNT, collateralAmount));
+            System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
             DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
 
             premium = employee.calcSpecificPremium(stPremium, dtoFire);
@@ -240,7 +245,7 @@ public class DevelopViewLogic implements ViewLogic {
             gName = (String) br.verifyRead(QUERY_GUARANTEE_NAME, gName);
             gDescription = (String) br.verifyRead(QUERY_GUARANTEE_DESCRIPTION, gDescription);
             gAmount = (Long) br.verifyRead(QUERY_GUARANTEE_AMOUNT, gAmount);
-            
+
             guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
             switch (br.verifyCategory(MENU_ADD_GUARANTEE, 2)){
                 case 2 -> isAddGuarantee = false;

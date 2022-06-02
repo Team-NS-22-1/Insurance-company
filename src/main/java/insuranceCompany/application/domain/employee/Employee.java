@@ -7,16 +7,31 @@ import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
+import insuranceCompany.application.domain.accident.Accident;
+import insuranceCompany.application.domain.accident.AccidentType;
+import insuranceCompany.application.domain.accident.CarAccident;
+import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.customer.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyNotExistContractException;
+import insuranceCompany.application.global.exception.NoResultantException;
+import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.FileDialogUtil;
+import insuranceCompany.application.login.User;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
@@ -26,9 +41,13 @@ import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageReque
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -198,21 +217,22 @@ public class Employee {
 		double weightRatio = 1.0;
 		int targetAge = dtoHealth.getTargetAge();
 		boolean targetSex = dtoHealth.isTargetSex();
-		int riskCriterion = dtoHealth.getRiskCriterion();
+		boolean riskCriterion = dtoHealth.getRiskCriterion();
 
-		if(targetAge < 10) weightRatio *= 1.02;
-		else if(targetAge < 20) weightRatio *= 1.06;
-		else if(targetAge < 30) weightRatio *= 1.1;
-		else if(targetAge < 40) weightRatio *= 1.14;
-		else if(targetAge < 50) weightRatio *= 1.18;
-		else if(targetAge < 60) weightRatio *= 1.22;
-		else if(targetAge < 80) weightRatio *= 1.26;
-		else if(targetAge < 100) weightRatio *= 1.3;
-		else weightRatio *= 1.34;
+		switch (targetAge) {
+			case 100 -> weightRatio *= 1.34;
+			case 80 -> weightRatio *= 1.3;
+			case 60 -> weightRatio *= 1.26;
+			case 50 -> weightRatio *= 1.22;
+			case 40 -> weightRatio *= 1.18;
+			case 30 -> weightRatio *= 1.14;
+			case 20 -> weightRatio *= 1.1;
+			default -> weightRatio *= 1.06;
+		}
 
 		weightRatio = (targetSex) ? weightRatio * 1.2 : weightRatio * 1.1;
 
-		weightRatio = (riskCriterion > 3) ? weightRatio * 1.4 : weightRatio;
+		weightRatio = (riskCriterion) ? weightRatio * 1.4 : weightRatio;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -222,22 +242,24 @@ public class Employee {
 		int targetAge = dtoCar.getTargetAge();
 		long valueCriterion = dtoCar.getValueCriterion();
 
-		if(targetAge < 20) weightRatio *= 1.4;
-		else if(targetAge < 30) weightRatio *= 1.35;
-		else if(targetAge < 40) weightRatio *= 1.2;
-		else if(targetAge < 50) weightRatio *= 1.15;
-		else if(targetAge < 60) weightRatio *= 1.15;
-		else if(targetAge < 80) weightRatio *= 1.2;
-		else if(targetAge < 100) weightRatio *= 1.35;
-		else weightRatio *= 1.4;
+		switch (targetAge) {
+			case 100 -> weightRatio *= 1.4;
+			case 80 -> weightRatio *= 1.35;
+			case 60 -> weightRatio *= 1.2;
+			case 50 -> weightRatio *= 1.15;
+			case 40 -> weightRatio *= 1.15;
+			case 30 -> weightRatio *= 1.2;
+			case 20 -> weightRatio *= 1.35;
+			default -> weightRatio *= 1.4;
+		}
 
-		if(valueCriterion < 10000000L) weightRatio *= 1.05;
-		else if(valueCriterion < 30000000L) weightRatio *= 1.15;
-		else if(valueCriterion < 50000000L) weightRatio *= 1.3;
-		else if(valueCriterion < 70000000L) weightRatio *= 1.4;
-		else if(valueCriterion < 90000000L) weightRatio *= 1.6;
-		else if(valueCriterion < 150000000L) weightRatio *= 1.8;
-		else weightRatio *= 2.2;
+		if(valueCriterion == 150000000L) weightRatio *= 2.2;
+		else if(valueCriterion == 90000000L) weightRatio *= 1.8;
+		else if(valueCriterion == 70000000L) weightRatio *= 1.6;
+		else if(valueCriterion == 50000000L) weightRatio *= 1.4;
+		else if(valueCriterion == 30000000L) weightRatio *= 1.3;
+		else if(valueCriterion == 10000000L) weightRatio *= 1.15;
+		else weightRatio *= 1.05;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -247,16 +269,18 @@ public class Employee {
 		BuildingType targetBuildingType = dtoFire.getBuildingType();
 		long collateralAmountCriterion = dtoFire.getCollateralAmount();
 
-		if(targetBuildingType == BuildingType.COMMERCIAL) weightRatio *= 1.3;
-		else if(targetBuildingType == BuildingType.INDUSTRIAL) weightRatio *= 1.25;
-		else if(targetBuildingType == BuildingType.INSTITUTIONAL) weightRatio *= 1.15;
-		else if(targetBuildingType == BuildingType.RESIDENTIAL) weightRatio *= 1.1;
+		switch (targetBuildingType){
+			case COMMERCIAL -> weightRatio *= 1.3;
+			case INDUSTRIAL -> weightRatio *= 1.25;
+			case INSTITUTIONAL -> weightRatio *= 1.15;
+			case RESIDENTIAL -> weightRatio *= 1.1;
+		}
 
-		if(collateralAmountCriterion < 100000000L) weightRatio *= 1.3;
-		else if(collateralAmountCriterion < 500000000L) weightRatio *= 1.25;
-		else if(collateralAmountCriterion < 1000000000L) weightRatio *= 1.2;
-		else if(collateralAmountCriterion < 5000000000L) weightRatio *= 1.15;
-		else weightRatio *= 1.1;
+		if(collateralAmountCriterion == 5000000000L) weightRatio *= 1.1;
+		else if(collateralAmountCriterion == 1000000000L) weightRatio *= 1.15;
+		else if(collateralAmountCriterion == 500000000L) weightRatio *= 1.2;
+		else if(collateralAmountCriterion == 100000000L) weightRatio *= 1.25;
+		else weightRatio *= 1.3;
 
 		return (int) (stPremium * weightRatio);
 	}
@@ -418,8 +442,8 @@ public class Employee {
 
 	}
 
-	public HealthContract concludeHealthContract(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
-												 boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
+	public HealthContract planHealthInsurance(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
+											  boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
 		HealthContract healthContract = new HealthContract();
 		healthContract.setDrinking(isDrinking)
 						.setSmoking(isSmoking)
@@ -432,16 +456,16 @@ public class Employee {
 		return healthContract;
 	}
 
-	public FireContract concludeFireContract(int insuranceId, int premium, BuildingType buildingType, Long collateralAmount){
+	public FireContract planFireInsurance(int insuranceId, int premium, BuildingType buildingType, Long collateralAmount){
 		FireContract fireContract = new FireContract();
 		fireContract.setBuildingType(buildingType)
 					.setCollateralAmount(collateralAmount)
 					.setInsuranceId(insuranceId)
-					.setPremium(premium);		;
+					.setPremium(premium);
 		return fireContract;
 	}
 
-	public CarContract concludeCarContract(int insuranceId, int premium, Long value){
+	public CarContract planCarInsurance(int insuranceId, int premium, Long value){
 		CarContract carContract = new CarContract();
 		carContract.setValue(value)
 				.setInsuranceId(insuranceId)
@@ -461,23 +485,6 @@ public class Employee {
 		return customer;
 	};
 
-	public HealthContract inputHealthInfo(int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
-									Boolean isTakingDrug, boolean isHavingDisease, String diseaseDetail, int insuranceId, int premium){
-		HealthContract healthContract = new HealthContract();
-		healthContract.setHeight(height)
-						.setWeight(weight)
-						.setDrinking(isDrinking)
-						.setSmoking(isSmoking)
-						.setDriving(isDriving)
-						.setDangerActivity(isDangerActivity)
-						.setTakingDrug(isTakingDrug)
-						.setHavingDisease(isHavingDisease)
-						.setDiseaseDetail(diseaseDetail)
-						.setInsuranceId(insuranceId)
-						.setPremium(premium);
-		return healthContract;
-	}
-
 	public HealthContract inputHealthInfo(HealthContract healthContract, int height, int weight, String diseaseDetail){
 		healthContract.setHeight(height)
 						.setWeight(weight)
@@ -485,35 +492,11 @@ public class Employee {
 		return healthContract;
 	}
 
-	public FireContract inputFireInfo(BuildingType buildingType, int buildingArea, Long collateralAmount, boolean isSelfOwned, boolean isActualResidence, int insuranceId, int premium){
-		FireContract fireContract = new FireContract();
-		fireContract.setBuildingType(buildingType)
-				 	.setBuildingArea(buildingArea)
-					.setCollateralAmount(collateralAmount)
-					.setSelfOwned(isSelfOwned)
-					.setActualResidence(isActualResidence)
-					.setInsuranceId(insuranceId)
-					.setPremium(premium);
-		return fireContract;
-	}
-
 	public FireContract inputFireInfo(FireContract fireContract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
 		fireContract.setBuildingArea(buildingArea)
 				.setSelfOwned(isSelfOwned)
 				.setActualResidence(isActualResidence);
 		return fireContract;
-	}
-
-	public CarContract inputCarInfo(String carNo, CarType carType, String modelName, int modelYear, Long value, int insuranceId, int premium) {
-		CarContract carContract = new CarContract();
-		carContract.setCarNo(carNo)
-					.setCarType(carType)
-					.setModelName(modelName)
-					.setModelYear(modelYear)
-					.setValue(value)
-					.setInsuranceId(insuranceId)
-					.setPremium(premium);
-		return carContract;
 	}
 
 	public CarContract inputCarInfo(CarContract carContract, String carNo, CarType carType, String modelName, int modelYear) {
@@ -524,59 +507,29 @@ public class Employee {
 		return carContract;
 	}
 
-
-	public void registerContract(Customer customer, Contract contract, Employee employee) throws SQLException {
-		if (customer.getId() == 0) {
-			CustomerDaoImpl customerDao = new CustomerDaoImpl();
-			customerDao.create(customer);
-		}
-		contract.setCustomerId(customer.getId())
-				.setConditionOfUw(ConditionOfUw.WAIT);
-		if (employee.getId() != 0)
-			contract.setEmployeeId(employee.getId());
-		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		contractDaoImpl.create(contract);
-	}
-
-	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion, Insurance insurance){
+	public int inquireHealthPremium(int targetAge, boolean targetSex, int riskCount, Insurance insurance){
 		int premium = 0;
-
-		if(targetAge > 100) targetAge = 100;
-		else if(targetAge > 80) targetAge = 80;
-		else if(targetAge > 60) targetAge = 60;
-		else if(targetAge > 50) targetAge = 50;
-		else if(targetAge > 40) targetAge = 40;
-		else if(targetAge > 30) targetAge = 30;
-		else if(targetAge > 20) targetAge = 20;
-		else if(targetAge > 10) targetAge = 10;
-		else targetAge = 0;
+		targetAge = setTargetAge(targetAge);
+		boolean riskCriterion = setRiskCriterion(riskCount);
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskPremiumCriterion() > 3) == riskPremiumCriterion) {
+			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
 			}
 		}
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readHealthPremium(targetAge, targetSex, riskPremiumCriterion);
+		if (premium == 0)
+			throw new NoResultantException();
 		return premium;
 	}
 
-	public int planFireInsurance(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
 		int premium = 0;
-
-		Long collateralAmountCriterion;
-		if(collateralAmount > 5000000000L) collateralAmountCriterion = 5000000000L;
-		else if(collateralAmount > 1000000000L) collateralAmountCriterion = 1000000000L;
-		else if(collateralAmount > 500000000L) collateralAmountCriterion = 500000000L;
-		else if(collateralAmount > 100000000L) collateralAmountCriterion = 100000000L;
-		else collateralAmountCriterion = 0L;;
+		Long collateralAmountCriterion = setCollateralAmountCriterion(collateralAmount);
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			FireDetail fireDetail = (FireDetail) insuranceDetail;
 			if (fireDetail.getTargetBuildingType() == buildingType && fireDetail.getCollateralAmountCriterion() == collateralAmountCriterion) {
@@ -584,35 +537,18 @@ public class Employee {
 				break;
 			}
 		}
-
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readFirePremium(buildingType, collateralAmountCriterion);
+		if (premium == 0)
+			throw new NoResultantException();
 		return premium;
 	}
 
-	public int planCarInsurance(int targetAge, Long value, Insurance insurance){
+	public int inquireCarPremium(int targetAge, Long value, Insurance insurance){
 		int premium = 0;
+		targetAge = setTargetAge(targetAge);
+		Long valueCriterion = setValueCriterion(value);
 
-		if(targetAge > 100) targetAge = 100;
-		else if(targetAge > 80) targetAge = 80;
-		else if(targetAge > 60) targetAge = 60;
-		else if(targetAge > 50) targetAge = 50;
-		else if(targetAge > 40) targetAge = 40;
-		else if(targetAge > 30) targetAge = 30;
-		else if(targetAge > 20) targetAge = 20;
-		else targetAge = 0;
-
-		Long valueCriterion;
-		if(value > 150000000L) valueCriterion = 150000000L;
-		else if(value > 90000000L) valueCriterion = 90000000L;
-		else if(value > 70000000L) valueCriterion = 70000000L;
-		else if(value > 50000000L) valueCriterion = 50000000L;
-		else if(value > 30000000L) valueCriterion = 30000000L;
-		else if(value > 10000000L) valueCriterion = 10000000L;
-		else valueCriterion = 0L;
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
-
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			CarDetail carDetail = (CarDetail) insuranceDetail;
 			if (carDetail.getTargetAge() == targetAge && carDetail.getValueCriterion() == valueCriterion) {
@@ -620,10 +556,32 @@ public class Employee {
 				break;
 			}
 		}
-
-//		InsuranceDao insuranceDao = new InsuranceDao();
-//		int premium = insuranceDao.readCarPremium(targetAge, valueCriterion);
+		if (premium == 0)
+			throw new NoResultantException();
 		return premium;
+	}
+
+	public void registerContract(Customer customer, Contract contract, User user,Employee employee) {
+		if (customer.getId() == 0) {
+			CustomerDaoImpl customerDao = new CustomerDaoImpl();
+			customerDao.create(customer);
+			user.setRoleId(customer.getId());
+			UserDaoImpl userDao = new UserDaoImpl();
+			userDao.create(user);
+		}
+		contract.setCustomerId(customer.getId())
+				.setConditionOfUw(ConditionOfUw.WAIT);
+		if (employee.getId() != 0)
+			contract.setEmployeeId(employee.getId());
+		ContractDaoImpl contractDao = new ContractDaoImpl();
+		contractDao.create(contract);
+	}
+
+	public User createUserAccount(String userId, String password) {
+		User user = new User();
+		user.setUserId(userId)
+				.setPassword(password);
+		return user;
 	}
 
 	public List<Accident> readAccident(){
@@ -631,20 +589,30 @@ public class Employee {
 		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
-	public List<Contract> readContract(InsuranceType insuranceType){
+	public Contract readContract(int contractId, InsuranceType insuranceType) {
+		if (contractId < 1) throw new InputInvalidDataException();
 		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		return contractDaoImpl.readAllByInsuranceType(insuranceType);
+		Contract contract = contractDaoImpl.read(contractId);
+
+		//if (contract == null) throw new MyNotExistContractException();
+		InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+		Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
+
+		if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyNotExistContractException();
+
+		return contract;
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		Contract contract = contractDaoImpl.read(contractId);
+		ContractDaoImpl readContractDaoImpl = new ContractDaoImpl();
+		Contract contract = readContractDaoImpl.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
-		contract.setPublishStock(true);
 
-		ContractDaoImpl contractDaoImpl1 = new ContractDaoImpl();
-		contractDaoImpl1.update(contract);
+		if (!conditionOfUw.getName().equals(ConditionOfUw.RE_AUDIT.getName())) contract.setPublishStock(true);
+
+		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
+		updateContractDaoImpl.update(contract);
 	}
 
 	public ArrayList<Insurance> readMyInsuranceList() {

@@ -1,7 +1,6 @@
 package insuranceCompany.application.viewlogic.dto.insuranceDto;
 
 public class DtoBasicInfo {
-
     private String name;
     private String description;
     private int paymentPeriod;

@@ -134,7 +134,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                 "LEFT JOIN insurance i\n" +
                 "       ON c.insurance_id = i.insurance_id\n" +
                 "WHERE i.insurance_type = '" + insuranceType +"'" +
-                    "AND c.condition_of_uw = 'WAIT' OR c.condition_of_uw = 'RE_AUDIT'";
+                    "AND (c.condition_of_uw = 'WAIT' OR c.condition_of_uw = 'RE_AUDIT')";
 
         try {
             ResultSet rs = super.read(query);
@@ -162,14 +162,14 @@ public class ContractDaoImpl extends Dao implements ContractDao {
 
 
 
-    public void update(Contract contract) {
+    public boolean update(Contract contract) {
         String query = "UPDATE contract \n" +
                 "SET reason_of_uw = '" + contract.getReasonOfUw() +"',\n" +
                 "condition_of_uw = '" + contract.getConditionOfUw() + "',\n" +
                 "is_publish_stock = " + (contract.isPublishStock() ? 1 : 0) + "\n" +
                 "WHERE contract_id = " + contract.getId();
         super.update(query);
-
+        return true;
     }
 
     public Contract setContract(ResultSet rs, Contract contract) {

@@ -14,6 +14,12 @@ public class UserDaoImpl extends Dao implements UserDao {
 
     @Override
     public void create(User user) {
+        String query = "insert into user (user_id, password, role_id) values ('%s', '%s','%d')";
+        String formattedQuery = String.format(query, user.getUserId(), user.getPassword(), user.getRoleId());
+        int id = super.create(formattedQuery);
+        user.setId(id);
+
+        close();
     }
 
     @Override

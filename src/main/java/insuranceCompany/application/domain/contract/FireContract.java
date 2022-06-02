@@ -65,7 +65,7 @@ public class FireContract extends Contract{
 	@Override
 	public String toString() {
 		return super.toString() +
-				" 주택정보: {" +
+				", 주택정보: {" +
 				"주택면적: " + buildingArea +
 				", 건물종류: " + buildingType.getName() +
 				", 담보금액: " + collateralAmount +
