@@ -8,6 +8,8 @@ import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
@@ -627,20 +629,30 @@ public class Employee {
 		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
-	public List<Contract> readContract(InsuranceType insuranceType){
+	public Contract readContract(int contractId, InsuranceType insuranceType) {
+		if (contractId < 1) throw new InputInvalidDataException();
 		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		return contractDaoImpl.readAllByInsuranceType(insuranceType);
+		Contract contract = contractDaoImpl.read(contractId);
+
+		//if (contract == null) throw new MyNotExistContractException();
+		InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+		Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
+
+		if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyNotExistContractException();
+
+		return contract;
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		Contract contract = contractDaoImpl.read(contractId);
+		ContractDaoImpl readContractDaoImpl = new ContractDaoImpl();
+		Contract contract = readContractDaoImpl.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
-		contract.setPublishStock(true);
 
-		ContractDaoImpl contractDaoImpl1 = new ContractDaoImpl();
-		contractDaoImpl1.update(contract);
+		if (!conditionOfUw.getName().equals(ConditionOfUw.RE_AUDIT.getName())) contract.setPublishStock(true);
+
+		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
+		updateContractDaoImpl.update(contract);
 	}
 
 	public String print() {

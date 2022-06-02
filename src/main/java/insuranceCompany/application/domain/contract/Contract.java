@@ -105,7 +105,7 @@ public class Contract {
 	@Override
 	public String toString() {
 		String text =
-		 "계약 정보 {" +
+		 "계약정보 {" +
 				 "계약 ID: " + id +
 				", 인수심사상태: " + conditionOfUw.getName() +
 				 ", 인수사유: '" + reasonOfUw + '\'' +
