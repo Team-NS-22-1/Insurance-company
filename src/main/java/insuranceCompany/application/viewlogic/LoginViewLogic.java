@@ -59,10 +59,13 @@ public class LoginViewLogic implements ViewLogic {
                     }
                 }
                 case 2 -> {
-                    CustomerViewLogic customerViewLogic = new CustomerViewLogic();
-                    customerViewLogic.showMenu();
-                    String command = sc.nextLine();
-                    customerViewLogic.work(command);
+                    while(true){
+                        CustomerViewLogic customerViewLogic = new CustomerViewLogic();
+                        customerViewLogic.showMenu();
+                        String command = sc.nextLine();
+                        checkLogoutOrExit(command);
+                        customerViewLogic.work(command);
+                    }
                 }
                 default -> {
                     break loop;

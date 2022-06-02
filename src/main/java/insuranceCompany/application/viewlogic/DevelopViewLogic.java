@@ -1,13 +1,12 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.exception.MyFileNotFoundException;
+import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -16,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
@@ -49,7 +49,7 @@ public class DevelopViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-        createMenuAndLogout("<< 개발팀 메뉴 >>", "보험 개발", "판매인가 등록");
+        createMenuAndLogout(MENU_TITLE, MENU_ELEMENTS);
     }
 
     @Override
@@ -60,31 +60,28 @@ public class DevelopViewLogic implements ViewLogic {
                     showInsuranceByEmployee();
                     this.menuDevelop(this.menuInsuranceType());
                 }
-                case "2" -> {
-                    this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
-                }
+                case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
             }
         }
         catch (IllegalStateException e){
             System.out.println(e.getMessage());
         }
         catch (IOException ex) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         }
     }
 
     private ArrayList<Insurance> showInsuranceByEmployee() {
-        System.out.println("<< "+employee.getName()+" 보험 개발 리스트 >>");
-        ArrayList<Insurance> insuranceArrayList = new InsuranceDaoImpl().readByEmployeeId(employee.getId());
+        System.out.printf(EMPLOYEE_INSURANCE_LIST, employee.getName());
+        ArrayList<Insurance> insuranceArrayList = employee.readMyInsuranceList();
         if(insuranceArrayList.size() == 0) {
-            System.out.println("--------------NONE---------------");
+            System.out.println(NONE_INSURANCE_LIST);
         }
         else{
             for(Insurance insurance : insuranceArrayList){
                 System.out.println(insurance.printOnlyInsurance());
             }
-            System.out.println("---------------------------------");
+            System.out.println(INSURANCE_LIST_LINE);
         }
         return insuranceArrayList;
     }
@@ -93,15 +90,17 @@ public class DevelopViewLogic implements ViewLogic {
         while (true) {
             try {
                 ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
-                System.out.println("<< 파일을 추가할 보험을 선택하세요. >>");
+                if(insuranceArrayList.size() == 0) {
+                    System.out.println(ERROR_NONE_INSURANCE_LIST);
+                    return null;
+                }
+                System.out.println(MENU_SELECT_INSURANCE_FOR_REGISTER_FILE);
 
                 int insuranceId = 0;
-                insuranceId = (int) br.verifyRead("보험 ID: ", insuranceId);
-                Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-                if (insurance.getDevInfo().getEmployeeId() != this.employee.getId()) {
-                    throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
-                }
-                System.out.println(insurance.print());
+                insuranceId = (int) br.verifyRead(QUERY_INSURANCE_ID, insuranceId);
+                if(insuranceId == 0) return null;
+                Insurance insurance = employee.readMyInsurance(insuranceId);
+                System.out.println(insurance.printOnlyInsurance());
                 return insurance;
             } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -110,15 +109,12 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private InsuranceType menuInsuranceType() throws IOException {
-        int insType = 0;
-        createMenuAndClose("<< 보험 종류 선택 >>", "건강보험", "자동차보험", "화재보험");
-        insType = br.verifyMenu("",3);
-        return switch (insType){
+        createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS);
+        return switch (br.verifyMenu("",3)){
             case 1 -> InsuranceType.HEALTH;
             case 2 -> InsuranceType.CAR;
             case 3 -> InsuranceType.FIRE;
-            case 0 -> null;
-            default -> throw new IllegalStateException("Unexpected value: " + insType);
+            default -> null;
         };
     }
 
@@ -138,11 +134,11 @@ public class DevelopViewLogic implements ViewLogic {
     private DtoBasicInfo formInputBasicInfo() throws IOException {
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
-        System.out.println("<< 보험 기본 정보 >> (exit: 시스템 종료)");
-        name = (String) br.verifyRead("보험 이름: ", name);
-        description = (String) br.verifyRead("보험 설명: ", description);
-        paymentPeriod = (int) br.verifyRead("납입 기간(년): ", paymentPeriod);
-        contractPeriod = (int) br.verifyRead("만기 나이(세): ", contractPeriod);
+        System.out.println(TITLE_INPUT_BASIC_INFO + EXIT_SYSTEM);
+        name = (String) br.verifyRead(QUERY_INSURANCE_NAME, name);
+        description = (String) br.verifyRead(QUERY_INSURANCE_DESCRIPTION, description);
+        contractPeriod = (int) br.verifyRead(QUERY_INSURANCE_CONTRACT_PERIOD, contractPeriod);
+        paymentPeriod = (int) br.verifyRead(QUERY_INSURANCE_PAYMENT_PERIOD, paymentPeriod);
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
@@ -159,15 +155,15 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
-            int targetAge = 0, premium = -1, riskCount = 0;
+            int targetAge = 0, premium = -1, riskCount = -1;
             boolean targetSex, riskCriterion;
-            System.out.println("<< 건강 보험 정보 >> (exit: 시스템 종료)");
-            targetAge = setTargetAge((int) br.verifyRead("보험 대상 나이: ", targetAge));
-            targetSex = br.verifyMenu("보험 대상 성별 (1.남자 2.여자): ", 2) == 1;
+            System.out.println(TITLE_INPUT_HEALTH_INFO + EXIT_SYSTEM);
+            targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
+            targetSex = br.verifyCategory(QUERY_TARGET_SEX, 2) == 1;
             while(true) {
-                riskCount = (int) br.verifyRead("위험부담 기준(개): ", riskCount);
-                if(riskCount > 6) {
-                    System.out.println("위험부담 기준은 6개 이하여야 합니다.");
+                riskCount = (int) br.verifyRead(QUERY_RISK_CRITERION, riskCount);
+                if(riskCount > 6){
+                    System.out.println(ERROR_RISK_CRITERION_COUNT);
                 }
                 else {
                     riskCriterion = setRiskCriterion(riskCount);
@@ -177,10 +173,10 @@ public class DevelopViewLogic implements ViewLogic {
             DtoHealth dtoHealth = new DtoHealth(targetAge, targetSex, riskCriterion);
 
             premium = employee.calcSpecificPremium(stPremium, dtoHealth);
-            System.out.printf("보험료: %d(원)\n", premium);
+            System.out.printf(PRINT_PREMIUM, premium);
             healthListInfo.add(dtoHealth.setPremium(premium));
 
-            switch (br.verifyCategory("<< 건강 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory(MENU_ADD_HEALTH_INFO, 2)){
                 case 2 -> isAddHealth = false;
             }
         }
@@ -193,17 +189,16 @@ public class DevelopViewLogic implements ViewLogic {
         while(isAddCar) {
             int targetAge = 0, premium = -1;
             long valueCriterion = -1;
-            System.out.println("<< 자동차 보험 정보 >> (exit: 시스템 종료)");
-            targetAge = setTargetAge((int) br.verifyRead("보험 대상 나이: ", targetAge));
-            valueCriterion = setValueCriterion ((long) br.verifyRead("차량가액 기준(원): ", valueCriterion));
-            System.out.println("대상나이: "+targetAge+"\t차량가액 기준: "+valueCriterion);
+            System.out.println(TITLE_INPUT_CAR_INFO + EXIT_SYSTEM);
+            targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
+            valueCriterion = (long) br.verifyRead(QUERY_VALUE_CRITERION, valueCriterion);
             DtoCar dtoCar = new DtoCar(targetAge, valueCriterion);
 
             premium = employee.calcSpecificPremium(stPremium, dtoCar);
-            System.out.printf("보험료: %d(원)\n", premium);
+            System.out.printf(PRINT_PREMIUM, premium);
             carListInfo.add(dtoCar.setPremium(premium));
 
-            switch (br.verifyCategory("<< 자동차 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory(MENU_ADD_CAR_INFO, 2)){
                 case 2 -> isAddCar = false;
             }
         }
@@ -217,23 +212,22 @@ public class DevelopViewLogic implements ViewLogic {
             BuildingType buildingType = null;
             long collateralAmount = -1;
             int premium = -1;
-            System.out.println("<< 화재 보험 정보 >> (exit: 시스템 종료)");
+            System.out.println(TITLE_INPUT_FIRE_INFO + EXIT_SYSTEM);
             System.out.println();
-            switch (br.verifyCategory("건물종류 선택: 1. 상업용 2. 산업용 3. 기관용 4. 거주용\n", 4)){
+            switch (br.verifyCategory(QUERY_TARGET_BUILDING_TYPE, 4)){
                 case 1 -> buildingType = BuildingType.COMMERCIAL;
                 case 2 -> buildingType = BuildingType.INDUSTRIAL;
                 case 3 -> buildingType = BuildingType.INSTITUTIONAL;
                 case 4 -> buildingType = BuildingType.RESIDENTIAL;
             }
-            collateralAmount = setCollateralAmountCriterion ((long) br.verifyRead("담보금액: ", collateralAmount));
-            System.out.println("건물 종류: "+buildingType+"\t담보금액: "+collateralAmount);
+            collateralAmount = setCollateralAmountCriterion ((long) br.verifyRead(QUERY_COLLATERAL_AMOUNT, collateralAmount));
             DtoFire dtoFire = new DtoFire(buildingType, collateralAmount);
 
             premium = employee.calcSpecificPremium(stPremium, dtoFire);
-            System.out.printf("보험료: %d(원)\n", premium);
+            System.out.printf(PRINT_PREMIUM, premium);
             fireListInfo.add(dtoFire.setPremium(premium));
 
-            switch (br.verifyCategory("<< 화재 보험 조건을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory(MENU_ADD_FIRE_INFO, 2)){
                 case 2 -> isAddFire = false;
             }
         }
@@ -246,13 +240,13 @@ public class DevelopViewLogic implements ViewLogic {
         while(isAddGuarantee) {
             String gName = "", gDescription = "";
             long gAmount = 0;
-            System.out.println("<< 보장 상세 내용 >> (exit: 시스템 종료)");
-            gName = (String) br.verifyRead("보장명: ", gName);
-            gDescription = (String) br.verifyRead("보장 상세 내용: ", gDescription);
-            gAmount = (Long) br.verifyRead("보장금액: ", gAmount);
+            System.out.println(TITLE_INPUT_GUARANTEE + EXIT_SYSTEM);
+            gName = (String) br.verifyRead(QUERY_GUARANTEE_NAME, gName);
+            gDescription = (String) br.verifyRead(QUERY_GUARANTEE_DESCRIPTION, gDescription);
+            gAmount = (Long) br.verifyRead(QUERY_GUARANTEE_AMOUNT, gAmount);
 
             guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
-            switch (br.verifyCategory("<< 보장을 더 추가하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory(MENU_ADD_GUARANTEE, 2)){
                 case 2 -> isAddGuarantee = false;
             }
         }
@@ -263,13 +257,13 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
-            switch (br.verifyCategory("<< 보험료를 산출하시겠습니까? >>\n1.예 2.아니오\n",2)) {
+            switch (br.verifyCategory(MENU_IS_CALCULATE_PREMIUM,2)) {
                 case 1 -> {
                     isCalcPremium = true;
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyCategory("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)) {
+                    switch (br.verifyCategory(MENU_IS_CANCEL, 2)) {
                         case 1 -> forWhile = false;
                     }
                 }
@@ -289,31 +283,31 @@ public class DevelopViewLogic implements ViewLogic {
         while(forWhile) {
             long damageAmount = 0, countContract = 0, businessExpense = 0;
             double profitMargin = 0;
-            System.out.println("<< 기준 보험료 산출 >> (exit: 시스템 종료)");
-            damageAmount = (long) br.verifyRead("발생손해액(단위:만원): ", damageAmount);
-            countContract = (long) br.verifyRead("계약건수(건): ", countContract);
-            businessExpense = (long) br.verifyRead("사업비(단위:만원): ", businessExpense);
-            profitMargin = (Double) br.verifyRead("이익률(1-99%): ", profitMargin);
+            System.out.println(TITLE_CALC_ST_PREMIUM + EXIT_SYSTEM);
+            damageAmount = (long) br.verifyRead(QUERY_DAMAGE_AMOUNT, damageAmount);
+            countContract = (long) br.verifyRead(QUERY_COUNT_CONTRACT, countContract);
+            businessExpense = (long) br.verifyRead(QUERY_BIZ_EXPENSE, businessExpense);
+            profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
             stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
-            System.out.printf("기준 보험료: %d(원)\n", stPremium);
-            switch (br.verifyCategory("<< 산출된 기준 보험료로 확정하시겠습니까? >>\n1.예 2. 아니오\n", 2)){
+            System.out.printf(PRINT_ST_PREMIUM, stPremium);
+            switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
                 case 1 -> forWhile = false;
             }
         }
         return stPremium;
     }
 
-    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) throws IOException {
+    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) {
         boolean forWhile = true;
         while(forWhile){
-            switch (br.verifyCategory("<< 보험을 저장하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+            switch (br.verifyCategory(MENU_IS_REGISTER_INSURANCE, 2)){
                 case 1 -> {
                     employee.develop(type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
-                    System.out.println("정상적으로 보험이 저장되었습니다!");
+                    System.out.println(PRINT_SUCCESS_REGISTER_INSURANCE);
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyCategory("<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                    switch (br.verifyCategory(MENU_IS_CANCEL, 2)){
                         case 1 -> forWhile = false;
                     }
                 }
@@ -323,98 +317,93 @@ public class DevelopViewLogic implements ViewLogic {
 
     private void menuSalesAuthFile(Insurance insurance) throws IOException {
         if(insurance==null) return;
-        try {
-            loop : while(true) {
-                System.out.println("<< 해당 보험의 추가할 파일을 선택하세요. >>");
-                String query = "1. 보험상품신고서\n"
-                        + "2. 선임계리사 검증기초서류\n"
-                        + "3. 보험요율산출기관 검증확인서\n"
-                        + "4. 금융감독원 판매인가서\n"
-                        + "0. 이전 메뉴로 돌아가기\n";
-                switch (br.verifyMenu(query, 5)){
+        loop : while(true) {
+            try {
+                System.out.println(TITLE_REGISTER_SALES_AUTH_FILE);
+                switch (br.verifyMenu(MENU_SALES_AUTH_FILE_TYPE, 5)){
                     // 보험상품신고서
                     case 1 -> {
                         switch (employee.registerAuthProdDeclaration(insurance)) {
                             // 파일 업로드 성공
-                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                             // 파일 업로드 취소
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthProdDeclaration(insurance, null)) {
-                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                                             case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 2 -> {
                         switch (employee.registerAuthSrActuaryVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                             // 파일 업로드 취소
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
-                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                                             case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 3 -> {
                         switch (employee.registerAuthIsoVerification(insurance)) {
                             // 파일 업로드 성공
-                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                             // 파일 업로드 취소
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n\"1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthIsoVerification(insurance, null)) {
-                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                                             case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 4 -> {
                         switch (employee.registerAuthFssOfficialDoc(insurance)) {
                             // 파일 업로드 성공
-                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                             // 파일 업로드 취소
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory("<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n1. 예 2. 아니오\n", 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
-                                            case 1 -> System.out.println("정상적으로 업로드되었습니다!");
+                                            case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
                                             case -1 -> { continue; }
                                         }
                                     }
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요.\n1. 허가 2. 불허", employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 0 -> {
@@ -422,13 +411,13 @@ public class DevelopViewLogic implements ViewLogic {
                     }
                 }
             }
-        }
-        catch (MyFileException e) {
-            System.out.println(e.getMessage());
+            catch (MyFileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    private void menuModifySalesAuthState(MyBufferedReader br, String query, Employee employee, Insurance insurance) {
+    private void menuModifySalesAuthState(String query, Employee employee, Insurance insurance) {
         switch (br.verifyCategory(query, 2)){
             case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
             case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);

@@ -202,7 +202,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                 carContract.setCarType(CarType.valueOf(rs.getString("car_type")));
             carContract.setModelYear(rs.getInt("model_year"));
             carContract.setModelName(rs.getString("name"));
-            carContract.setValue(Long.valueOf(rs.getInt("value")));
+            carContract.setValue(rs.getLong("value"));
 
         } catch (SQLException e) {
             e.printStackTrace();

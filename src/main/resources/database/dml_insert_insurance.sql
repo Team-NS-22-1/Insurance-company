@@ -43,6 +43,5 @@ INSERT INTO insurance_detail (premium, insurance_id) VALUES (1901427, 3);
 INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (13, 'RESIDENTIAL', 100000000);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (3);
 
-#develop_info에 데이터 입력할 때에는 sales_start_date를 넣어줘야함.
 update develop_info set sales_authorization_state = 'PERMISSION' , sales_start_date = sysdate();
 

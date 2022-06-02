@@ -1,6 +1,5 @@
 package insuranceCompany.application.domain.employee;
 
-
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
@@ -19,6 +18,7 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.EXCEPTION_NO_RESULT_LIST;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 
 /**
@@ -372,10 +373,14 @@ public class Employee {
 	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
 
 
-
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
 		AccidentDocumentFile lossAssessment = uploadDocfile(accident, dir, AccDocType.LOSSASSESSMENT);
 
+		createOrUpdateFile(accident, lossAssessment);
+		return lossAssessment;
+	}
+
+	private void createOrUpdateFile(Accident accident, AccidentDocumentFile accidentDocFile) {
 		boolean isExist = false;
 		int lossId = 0;
 		for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
@@ -388,9 +393,8 @@ public class Employee {
 		if (isExist) {
 			accidentDocumentFileDao.update(lossId);
 		} else {
-			accidentDocumentFileDao.create(lossAssessment);
+			accidentDocumentFileDao.create(accidentDocFile);
 		}
-		return lossAssessment;
 	}
 
 	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
@@ -410,7 +414,8 @@ public class Employee {
 	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
 		if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
 			String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.INVESTIGATEACCIDENT.getDesc()+".hwp";
-			uploadDocfile(accident,dir,AccDocType.INVESTIGATEACCIDENT);
+			AccidentDocumentFile accidentDocumentFile = uploadDocfile(accident, dir, AccDocType.INVESTIGATEACCIDENT);
+			createOrUpdateFile(accident,accidentDocumentFile);
 		}
 
 
@@ -606,6 +611,18 @@ public class Employee {
 
 		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
 		updateContractDaoImpl.update(contract);
+	}
+
+	public ArrayList<Insurance> readMyInsuranceList() {
+		return new InsuranceDaoImpl().readByEmployeeId(this.id);
+	}
+
+	public Insurance readMyInsurance(int insuranceId) {
+		Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+		if (insurance.getDevInfo().getEmployeeId() != this.id) {
+			throw new MyIllegalArgumentException(EXCEPTION_NO_RESULT_LIST);
+		}
+		return insurance;
 	}
 
 	public String print() {

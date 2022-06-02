@@ -1,9 +1,6 @@
 package insuranceCompany.application;
 
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.InputInvalidMenuException;
-import insuranceCompany.application.global.exception.MyCloseSequence;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.LoginViewLogic;
 
@@ -42,8 +39,8 @@ public class ApplicationTest {
                 System.exit(0);
             } catch (NumberFormatException e) {
                 System.out.println("형식에 맞는 메뉴를 입력해주세요");
-            } catch (IOException e) {
-                System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
+            } catch (MyIOException e) {
+                System.out.println(e.getMessage());
                 System.exit(0);
             }
         }

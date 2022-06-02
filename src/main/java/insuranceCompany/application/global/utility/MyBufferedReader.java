@@ -24,7 +24,7 @@ public class MyBufferedReader extends BufferedReader {
 
     }
 
-    public Object verifyRead(String query, Object returnType) throws IOException {
+    public Object verifyRead(String query, Object returnType) {
         while(true){
             System.out.print(query);
             try {
@@ -55,10 +55,13 @@ public class MyBufferedReader extends BufferedReader {
             catch (InputException e){
                 System.out.println(e.getMessage());
             }
+            catch (IOException e) {
+                throw new MyIOException();
+            }
         }
     }
 
-    public Object verifySpecificRead(String query, Object returnType, String verifyType) throws IOException {
+    public Object verifySpecificRead(String query, Object returnType, String verifyType) {
         while(true){
             System.out.print(query);
             try {
@@ -100,11 +103,14 @@ public class MyBufferedReader extends BufferedReader {
             catch (InputException e){
                 System.out.println(e.getMessage());
             }
+            catch (IOException e) {
+                throw new MyIOException();
+            }
         }
     }
 
     // verifyMenu()는 '0'을 입력 가능하여 return Menu가 가능토록 구성
-    public int verifyMenu(String query, int categorySize) throws IOException {
+    public int verifyMenu(String query, int categorySize)  {
         while(true){
             System.out.print(query);
             try {
@@ -123,7 +129,7 @@ public class MyBufferedReader extends BufferedReader {
                 System.out.println(e.getMessage());
             }
             catch (IOException e) {
-                throw new InputException(e);
+                throw new MyIOException();
             }
         }
     }
@@ -148,7 +154,7 @@ public class MyBufferedReader extends BufferedReader {
                 System.out.println(e.getMessage());
             }
             catch (IOException e) {
-                throw new InputException(e);
+                throw new MyIOException();
             }
         }
     }
