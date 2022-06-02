@@ -121,7 +121,7 @@ public class CustomerViewLogic implements ViewLogic {
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);
-        } catch (MyIllegalArgumentException | NoResultantException e) {
+        } catch (MyIllegalArgumentException | NoResultantException|InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -1075,10 +1075,10 @@ public class CustomerViewLogic implements ViewLogic {
                     System.out.println(REGISTERACCOUNTINFO);
                     String result = sc.next();
                     result = result.toUpperCase();
-                    if (result.equals(YES)) {
+                    if (result.equals(NO)) {
                         System.out.println(CANCELREGISTERPAYMENT);
                         return;
-                    } else if (result.equals(NO))
+                    } else if (result.equals(YES))
                         break;
                     else
                         throw new InputInvalidDataException();

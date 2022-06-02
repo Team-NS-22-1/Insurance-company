@@ -41,7 +41,6 @@ public class CriterionSetUtil {
     }
 
     public static boolean setRiskCriterion (int riskCount) {
-        boolean riskCriterion = riskCount >= 4;
-        return riskCriterion;
+        return riskCount >= 4;
     }
 }
