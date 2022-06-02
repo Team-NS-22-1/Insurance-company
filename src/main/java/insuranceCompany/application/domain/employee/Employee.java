@@ -629,21 +629,18 @@ public class Employee {
 		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
-	public Contract readContract(int contractId){
-		if (contractId < 1) throw new InputException.InputInvalidDataException();
+	public Contract readContract(int contractId, InsuranceType insuranceType) {
+		if (contractId < 1) throw new InputInvalidDataException();
 		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
 		Contract contract = contractDaoImpl.read(contractId);
 
-		if (contract == null) throw new MyNotExistContractException();
-		InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-		Insurance insurance = insuranceDao.read(contract.getInsuranceId());
+		//if (contract == null) throw new MyNotExistContractException();
+		InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+		Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
 
-		if (!insurance.getInsuranceType().equals(insurance.getInsuranceType())) throw new MyNotExistContractException();
+		if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyNotExistContractException();
 
 		return contract;
-	public List<Contract> readContract(InsuranceType insuranceType){
-		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
-		return contractDaoImpl.readAllByInsuranceType(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
@@ -652,7 +649,7 @@ public class Employee {
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 
-		if (conditionOfUw != ConditionOfUw.RE_AUDIT) contract.setPublishStock(true);
+		if (!conditionOfUw.getName().equals(ConditionOfUw.RE_AUDIT.getName())) contract.setPublishStock(true);
 
 		ContractDaoImpl updateContractDaoImpl = new ContractDaoImpl();
 		updateContractDaoImpl.update(contract);

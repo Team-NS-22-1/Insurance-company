@@ -10,9 +10,7 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
-import insuranceCompany.application.global.exception.InputInvalidMenuException;
-import insuranceCompany.application.global.exception.MyCloseSequence;
-import insuranceCompany.application.global.exception.MyNotExistContractException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MessageUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
@@ -21,8 +19,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndExit;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -44,8 +41,8 @@ public class UnderwritingViewLogic implements ViewLogic {
     public UnderwritingViewLogic() {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-        EmployeeDaoImpl employeeDao = new EmployeeDaoImpl();
-        this.employee = employeeDao.read(2);
+        EmployeeDaoImpl employeeDaoImpl = new EmployeeDaoImpl();
+        this.employee = employeeDaoImpl.read(2);
     }
 
     public UnderwritingViewLogic(Employee employee) {
@@ -57,7 +54,7 @@ public class UnderwritingViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
 
-        createMenuAndExit("<<언더라이팅팀메뉴>>", "인수심사한다");
+        createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
     }
 
     @Override
@@ -74,7 +71,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                 }
 
             } catch (InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+                System.out.println(e.getMessage());
                 command = sc.next();
             }
         }
@@ -100,7 +97,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                     default -> throw new InputInvalidMenuException();
                 }
             } catch (InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+                System.out.println(e.getMessage());
             }
         }
         return true;
@@ -132,16 +129,16 @@ public class UnderwritingViewLogic implements ViewLogic {
                 if (contractId.equals("exit")) throw new MyCloseSequence();
 
                 // read
-                Contract contract = this.employee.readContract(Integer.parseInt(contractId));
+                Contract contract = this.employee.readContract(Integer.parseInt(contractId), insuranceType);
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
                 printContractInfo(contract);
 
                 selectUwState(contract);
 
-            } catch (MyNotExistContractException | InputException.InputInvalidDataException e) {
+            } catch (MyNotExistContractException | MyIllegalArgumentException | InputInvalidDataException e) {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
-                System.out.println(new InputException.InputInvalidDataException().getMessage());
+                System.out.println(new InputInvalidDataException().getMessage());
             }
         }
     }
@@ -180,7 +177,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                     default:
                         throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InvalidMenuException | IOException e) {
+            } catch (InputInvalidMenuException | IOException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -215,7 +212,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                         throw new InputInvalidMenuException();
                 }
             } catch (InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+                System.out.println(e.getMessage());
             }
         }
         return true;
@@ -225,8 +222,8 @@ public class UnderwritingViewLogic implements ViewLogic {
     public void printContractList(List<Contract> contractList) {
 
         for (Contract contract : contractList) {
-            CustomerDaoImpl customerDao = new CustomerDaoImpl();
-            Customer customer = customerDao.read(contract.getCustomerId());
+            CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+            Customer customer = customerDaoImpl.read(contract.getCustomerId());
             System.out.println(contract.getId() + "        " + customer.getName() + "          " + contract.getConditionOfUw().getName());
         }
     }
@@ -234,12 +231,12 @@ public class UnderwritingViewLogic implements ViewLogic {
     public Contract printContractInfo(Contract contract) {
         System.out.println(contract.toString());
 
-        CustomerDaoImpl customerDao = new CustomerDaoImpl();
-        Customer customer = customerDao.read(contract.getCustomerId());
+        CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+        Customer customer = customerDaoImpl.read(contract.getCustomerId());
         System.out.println(customer.toString());
 
-        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-        Insurance insurance = insuranceDao.read(contract.getInsuranceId());
+        InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+        Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
         System.out.println(insurance.print());
 
         return contract;

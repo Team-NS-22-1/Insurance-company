@@ -162,7 +162,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
 
 
 
-    public void update(Contract contract) {
+    public boolean update(Contract contract) {
         String query = "UPDATE contract \n" +
                 "SET reason_of_uw = '" + contract.getReasonOfUw() +"',\n" +
                 "condition_of_uw = '" + contract.getConditionOfUw() + "',\n" +
