@@ -15,7 +15,7 @@ import java.util.List;
  * -----------------------------------------------------------
  * 2022-05-12                규현             최초 생성
  */
-public interface PaymentList extends CrudInterface<Payment> {
+public interface PaymentDao extends CrudInterface<Payment> {
 
     List<Payment> findAllByCustomerId(int customerId);
 }

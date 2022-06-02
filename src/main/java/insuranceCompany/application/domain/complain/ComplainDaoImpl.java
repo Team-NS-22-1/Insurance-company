@@ -1,5 +1,6 @@
 package insuranceCompany.application.domain.complain;
 
+import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.Map;
  * -----------------------------------------------------------
  * 2022-05-23                규현             최초 생성
  */
-public class ComplainListImpl implements ComplainList{
+public class ComplainDaoImpl implements ComplainDao {
     private static Map<Integer, Complain> complainlist = new HashMap<>();
     private static int id;
 

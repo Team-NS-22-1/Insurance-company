@@ -1,6 +1,6 @@
 package insuranceCompany.application.viewlogic.dto.compDto;
 
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.payment.Account;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,12 +20,12 @@ import lombok.Setter;
 @Getter @Setter
 public class AssessDamageResponseDto {
 
-    private AccDocFile accDocFile;
+    private AccidentDocumentFile accidentDocumentFile;
     private Account account;
 
     @Builder
-    public AssessDamageResponseDto(AccDocFile accDocFile, Account account) {
-        this.accDocFile = accDocFile;
+    public AssessDamageResponseDto(AccidentDocumentFile accidentDocumentFile, Account account) {
+        this.accidentDocumentFile = accidentDocumentFile;
         this.account = account;
     }
 }

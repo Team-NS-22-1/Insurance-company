@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class PaymentDaoTest {
 
-    PaymentDao dao = new PaymentDao();
+    PaymentDaoImpl dao = new PaymentDaoImpl();
 
     @Test
     void create_account() {
@@ -50,7 +50,7 @@ class PaymentDaoTest {
                 .setPaytype(PayType.CARD);
 
         dao.create(card);
-        dao = new PaymentDao();
+        dao = new PaymentDaoImpl();
         Payment read = dao.read(card.getId());
 
         System.out.println(read);

@@ -3,18 +3,18 @@ package insuranceCompany.application.dao.contract;
 
 import insuranceCompany.application.dao.CrudInterface;
 import insuranceCompany.application.domain.contract.Contract;
-import insuranceCompany.application.domain.insurance.Insurance;
-import insuranceCompany.application.domain.insurance.InsuranceType;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author ����
  * @version 1.0
- * @created 09-5-2022 ���� 4:39:01
+ * @created 09-5-2022 ���� 4:38:58
  */
 public interface ContractDao extends CrudInterface<Contract> {
-    ArrayList<Contract> readAllByInsuranceType(InsuranceType insuranceType);
-    boolean update(Contract contract);
+
+    List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId);
+    List<Contract> findAllByCustomerId(int customerId);
+    void updatePayment(int contractId, int paymentId);
 }

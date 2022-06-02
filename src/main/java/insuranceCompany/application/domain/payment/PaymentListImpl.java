@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * -----------------------------------------------------------
  * 2022-05-12                규현             최초 생성
  */
-public class PaymentListImpl implements PaymentList{
+public class PaymentListImpl implements PaymentDao {
 
     private static Map<Integer, Payment> paymentList = new HashMap<>();
     private static int idSequence;
@@ -61,7 +61,7 @@ public class PaymentListImpl implements PaymentList{
                 .filter(p -> p.getCustomerId() == customerId)
                 .collect(Collectors.toList());
         if (collect.isEmpty())
-            throw new IllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
+            throw new MyIllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
         return collect;
     }
 }

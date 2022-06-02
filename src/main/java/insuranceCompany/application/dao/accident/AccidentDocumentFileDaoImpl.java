@@ -1,9 +1,9 @@
 package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.Dao;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,35 +23,35 @@ import java.util.List;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-public class AccDocFileDao extends Dao implements AccDocFileList {
+public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocumentFileDao {
 
-    public AccDocFileDao() {
+    public AccidentDocumentFileDaoImpl() {
         super.connect();
     }
 
     @Override
-    public void create(AccDocFile accDocFile) {
-        String query = "insert into acc_doc_file (type, file_address, accident_id, last_modified_date)" +
+    public void create(AccidentDocumentFile accidentDocumentFile) {
+        String query = "insert into accident_document_file (type, file_address, accident_id, last_modified_date)" +
                 "values('%s', '%s', %d, '%s')";
         LocalDateTime now = LocalDateTime.now();
-        String formattedQuery = String.format(query,accDocFile.getType().name(),
-                accDocFile.getFileAddress(),accDocFile.getAccidentId(), now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        String formattedQuery = String.format(query, accidentDocumentFile.getType().name(),
+                accidentDocumentFile.getFileAddress(), accidentDocumentFile.getAccidentId(), now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         int id = super.create(formattedQuery);
-        accDocFile.setId(id);
-        accDocFile.setLastModifedDate(now);
+        accidentDocumentFile.setId(id);
+        accidentDocumentFile.setLastModifedDate(now);
         close();
     }
 
     @Override
-    public AccDocFile read(int id) {
-        String query = "select * from acc_doc_file where acc_doc_file_id = %d";
+    public AccidentDocumentFile read(int id) {
+        String query = "select * from accident_document_file where accident_document_file_id = %d";
         String formattedQuery = String.format(query,id);
         ResultSet rs = super.read(formattedQuery);
-        AccDocFile accDocFile = null;
+        AccidentDocumentFile accidentDocumentFile = null;
         try {
             if (rs.next()) {
-                accDocFile = new AccDocFile();
-                accDocFile.setId(rs.getInt("acc_doc_file_id"))
+                accidentDocumentFile = new AccidentDocumentFile();
+                accidentDocumentFile.setId(rs.getInt("accident_document_file_id"))
                         .setFileAddress(rs.getString("file_address"))
                         .setAccidentId(rs.getInt("accident_id"))
                         .setType(AccDocType.valueOf(rs.getString("type").toUpperCase()))
@@ -62,9 +62,9 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
         }finally {
             close();
         }
-        if(accDocFile==null)
-            throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
-        return accDocFile;
+        if(accidentDocumentFile ==null)
+            throw new IllegalArgumentException("사고 서류 아이디 ["+id+"]에 해당하는 사고 서류 파일 정보가 존재하지 않습니다.");
+        return accidentDocumentFile;
     }
 
 
@@ -72,7 +72,7 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
 
     @Override
     public boolean update(int id) {
-        String query = "update acc_doc_file set last_modified_date = '%s' where acc_doc_file_id = %d";
+        String query = "update accident_document_file set last_modified_date = '%s' where accident_document_file_id = %d";
         String formattedQuery = String.format(query, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),id);
         super.update(formattedQuery);
         close();
@@ -80,21 +80,21 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
     }
 
     @Override
-    public List<AccDocFile> readAllByAccidentId(int accidentId) {
-        String query = "select * from acc_doc_file where accident_id = %d";
+    public List<AccidentDocumentFile> readAllByAccidentId(int accidentId) {
+        String query = "select * from accident_document_file where accident_id = %d";
         String formattedQuery = String.format(query,accidentId);
         ResultSet rs = super.read(formattedQuery);
-        List<AccDocFile> accDocFileList = new ArrayList<>();
+        List<AccidentDocumentFile> accidentDocumentFileList = new ArrayList<>();
 
             try {
                 while(rs.next()) {
-                    AccDocFile accDocFile = new AccDocFile();
-                    accDocFile.setId(rs.getInt("acc_doc_file_id"))
+                    AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
+                    accidentDocumentFile.setId(rs.getInt("accident_document_file_id"))
                             .setFileAddress(rs.getString("file_address"))
                             .setAccidentId(rs.getInt("accident_id"))
                             .setType(AccDocType.valueOf(rs.getString("type").toUpperCase()))
                             .setLastModifedDate(rs.getTimestamp("last_modified_date").toLocalDateTime());
-                    accDocFileList.add(accDocFile);
+                    accidentDocumentFileList.add(accidentDocumentFile);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -102,9 +102,9 @@ public class AccDocFileDao extends Dao implements AccDocFileList {
 
                 close();
             }
-//        if(accDocFileList.size()==0)
-//            throw new IllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
-        return accDocFileList;
+        if(accidentDocumentFileList.size()==0)
+            throw new MyIllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
+        return accidentDocumentFileList;
     }
 
 

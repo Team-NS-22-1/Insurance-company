@@ -1,68 +1,67 @@
 package insuranceCompany.application.login;
 
-import insuranceCompany.application.global.utility.MyBufferedReader;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
+import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.LoginIdFailedException;
+import insuranceCompany.application.global.exception.LoginPwFailedException;
+import insuranceCompany.application.global.utility.MyBufferedReader;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 public class Login {
 
-    private UserListImpl userList = new UserListImpl();
-
-    public Login() throws IOException {
-    }
-
-    public Object loginMenu() throws IOException {
+    public int menuLogin() throws IOException {
         MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
-        boolean forWhile = true;
-        String inputUserId = "", inputPw = "";
-        Object result = null;
-        while(forWhile){
+        String id = "", password = "";
+        int roleId = -1;
+        System.out.println("<< 로그인 >>");
+        loopId: while(true){
             try {
-                System.out.println("<< 로그인 >>");
-                inputUserId = (String) br.verifyRead("아이디: ", inputUserId);
-                inputPw = (String) br.verifyRead("비밀번호: ", inputPw);
-                int loginId = login(inputUserId, inputPw);
-                result = (loginId > 0) ? checkUser(loginId) : (
-                        (loginId == -1) ? "패스워드 실패" :
-                                (loginId == -2) ? "아이디 실패" : "로그인 실패");
-                if(result instanceof String)
-                    System.out.println((String) result);
-                else forWhile = false;
+                id = (String) br.verifyRead("아이디: ", id);
+                if(id.equals("0")) break loopId;                 // 로그인 취소
+                loopPw: while (true) {
+                    password = (String) br.verifyRead("비밀번호: ", password);
+                    if(password.equals("0")) break loopId;        // 로그인 취소
+                    try {
+                        roleId = login(id, password);
+                        break loopId;
+                    }
+                    catch (LoginPwFailedException e) {
+                        System.out.println(e.getMessage());
+                    }
+                    catch (LoginIdFailedException e) {
+                        System.out.println(e.getMessage());
+                        break loopPw;
+                    }
+                }
             }
-            catch (InputException.InputNullDataException |
-                   InputException.InputInvalidDataException e) {
+            catch (InputException e) {
                 System.out.println(e.getMessage());
             }
         }
-        return result;
+        return roleId;
     }
 
-    private int login(String inputId, String inputPw) {
-        ArrayList<User> userArrayList = this.userList.getUserListToArrayList();
-        for(User user : userArrayList){
-            if(user.getUserId().equals(inputId)){
-                if(user.getPassword().equals(inputPw))
-                    return user.getId(); // 로그인 성공
-                else
-                    return -1; // 패스워드 실패
-            }
-            else
-                return -2; // 아이디 실패
-        }
-        return -3; // 로그인 실패
+    private int login(String id, String password) {
+        return new UserDaoImpl().login(id, password);
     }
 
-    private Object checkUser(int loginId){
-        User user = this.userList.read(loginId);
-        if(user.getCustomerId() > 0){
-//            return customerListImpl.read(user.getCustomerId());
-        }
-        else if(user.getEmployeeId() > 0){
-//            return employeeListImpl.read(user.getEmployeeId());
-        }
-        return null;
+    public Customer loginCustomer() throws IOException {
+        int customerId = this.menuLogin();
+        if(customerId < 0) return null;
+        return new CustomerDaoImpl().read(customerId);
     }
+
+    public Employee loginEmployee() throws IOException {
+        int employeeId = this.menuLogin();
+        if(employeeId < 0) return null;
+        return new EmployeeDaoImpl().read(employeeId);
+    }
+
 }

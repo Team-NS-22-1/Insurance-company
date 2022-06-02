@@ -1,10 +1,18 @@
 package insuranceCompany.application.domain.customer;
 
 
+import insuranceCompany.application.dao.accident.*;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
@@ -13,6 +21,9 @@ import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.global.utility.DocUtil;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 
 /**
  * @author 규현
@@ -115,46 +126,64 @@ public class Customer {
 
 	}
 
-	public Complain changeCompEmp(String reason){
+	public Employee changeCompEmp(String reason, Employee compEmployee){
 		Complain complain = Complain.builder().reason(reason)
 				.customerId(this.id).build();
 
 		this.complainList.add(complain);
-		return complain;
+		ComplainDao complainDao = new ComplainDaoImpl();
+		complainDao.create(complain);
+
+		return changeCompEmployee(compEmployee);
 	}
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
-	public AccDocFile claimCompensation(Accident accident, AccDocFile accDocFile){
+	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
 		DocUtil docUtil = DocUtil.getInstance();
-		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+accDocFile.getType().getDesc();
+		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+ accidentDocumentFile.getType().getDesc();
 		String extension = "";
-		if(accDocFile.getType()== AccDocType.PICTUREOFSITE)
+		AccDocType accDocType = accidentDocumentFile.getType();
+		if(accDocType == AccDocType.PICTUREOFSITE)
 			extension = ".jpg";
 		else
 			extension = ".hwp";
 
 		String directory = docUtil.upload(path+extension);
-		if (directory.equals("close")) {
+		if (directory==null) {
 			return null;
 		}
-		accDocFile.setFileAddress(directory);
-		return accDocFile;
+		accidentDocumentFile.setFileAddress(directory);
+
+		AccidentDocumentFileDaoImpl accidentDocumentFileList = new AccidentDocumentFileDaoImpl();
+		if (accident.getAccDocFileList().containsKey(accDocType)) {
+			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+		} else {
+			accidentDocumentFileList.create(accidentDocumentFile);
+			accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
+		}
+		return accidentDocumentFile;
 	}
 
-	public void pay(Contract contract, Payment payment){
+	public void pay(Contract contract){
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		Payment payment = paymentDao.read(contract.getPaymentId());
+
 		if(payment != null)
 			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
 	}
 
-	public void readContract(){
-
+	public List<Contract> readContracts(){
+		ContractDao contractList = new ContractDaoImpl();
+		return contractList.findAllByCustomerId(this.getId());
 	}
 
-	public void readPayment(){
-
+	public void readPayments(){
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		List<Payment> payments = paymentDao.findAllByCustomerId(this.id);
+		this.setPaymentList((ArrayList<Payment>) payments);
 	}
 
-	public Payment createPayment(PaymentDto paymentDto) {
+	private Payment createPayment(PaymentDto paymentDto) {
 		PayType payType = paymentDto.getPayType();
 		Payment payment;
 		if (payType.equals(PayType.CARD)) {
@@ -175,13 +204,23 @@ public class Customer {
 
 	}
 
-	public void addPayment(Payment payment){
+	public void addPayment(PaymentDto paymentDto){
+		Payment payment = createPayment(paymentDto);
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		paymentDao.create(payment);
 		this.paymentList.add(payment);
-		payment.setCustomerId(this.id);
 	}
 
-	public void registerPayment(Contract contract, Payment payment) {
+	public void registerPayment(Contract contract, int paymentId) {
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		Payment payment = paymentDao.read(paymentId);
+		if (payment.getCustomerId() != this.id) {
+			throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
+		}
+
 		contract.setPaymentId(payment.getId());
+		ContractDao contractList = new ContractDaoImpl();
+		contractList.updatePayment(contract.getId(),payment.getId());
 	}
 
 	public Accident reportAccident(AccidentReportDto accidentReportDto){
@@ -206,10 +245,14 @@ public class Customer {
 			accident = new FireAccident();
 			((FireAccident)accident).setPlaceAddress(accidentReportDto.getPlaceAddress());
 		}
-		return accident.setAccidentType(accidentType)
+		 accident.setAccidentType(accidentType)
 				.setDateOfAccident(accidentReportDto.getDateOfAccident())
 				.setDateOfReport(accidentReportDto.getDateOfReport())
 				.setCustomerId(this.id);
+
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		accidentDao.create(accident);
+		return accident;
 	}
 
 	public void signUp() {

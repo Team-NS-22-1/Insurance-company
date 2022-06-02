@@ -14,4 +14,9 @@ import java.util.ArrayList;
 public interface InsuranceDao extends CrudInterface<Insurance> {
     ArrayList<Insurance> readAll();
     ArrayList<Insurance> readByEmployeeId(int eid);
+    void updateByFss(Insurance insurance);
+    void updateByIso(Insurance insurance);
+    void updateByProd(Insurance insurance);
+    void updateBySrActuary(Insurance insurance);
+    void updateBySalesAuthState(Insurance insurance);
 }

@@ -1,24 +1,28 @@
 package insuranceCompany.application.domain.employee;
 
 
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyNotExistContractException;
+import insuranceCompany.application.global.exception.InputInvalidDataException;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.global.exception.InputException.InputInvalidDataException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -262,14 +266,13 @@ public class Employee {
 
 	private boolean checkSalesAuthState(Insurance insurance) {
 		SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
-		if(salesAuthFile.getProdDeclaration()!=null && salesAuthFile.getFssOfficialDoc()!=null && salesAuthFile.getIsoVerification()!=null && salesAuthFile.getSrActuaryVerification()!=null)
-			return true;
-		return false;
+		return (salesAuthFile.getProdDeclaration()!=null) && (salesAuthFile.getFssOfficialDoc()!=null)
+				&& (salesAuthFile.getIsoVerification()!=null) && (salesAuthFile.getSrActuaryVerification()!=null);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 0;
-		return uploadProd(insurance);
+		else return uploadProd(insurance);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance, String nullValue) throws IOException {
@@ -290,7 +293,7 @@ public class Employee {
 
 	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 0;
-		return uploadSrActuary(insurance);
+		else return uploadSrActuary(insurance);
 	}
 
 	public int registerAuthSrActuaryVerification(Insurance insurance, String nullValue) throws IOException {
@@ -311,7 +314,7 @@ public class Employee {
 
 	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 0;
-		return uploadIso(insurance);
+		else return uploadIso(insurance);
 	}
 
 	public int registerAuthIsoVerification(Insurance insurance, String nullValue) throws IOException {
@@ -332,7 +335,7 @@ public class Employee {
 
 	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
 		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 0;
-		return uploadFss(insurance);
+		else return uploadFss(insurance);
 	}
 
 	public int registerAuthFssOfficialDoc(Insurance insurance, String nullValue) throws IOException {
@@ -351,34 +354,65 @@ public class Employee {
 		return 1;
 	}
 	public AssessDamageResponseDto assessDamage(Accident accident, AccountRequestDto accountRequestDto){
-		return AssessDamageResponseDto.builder().accDocFile(uploadLossAssessment(accident))
+		return AssessDamageResponseDto.builder().accidentDocumentFile(uploadLossAssessment(accident))
 				.account(new Account().setBankType(accountRequestDto.getBankType()).setAccountNo(accountRequestDto.getAccountNo()))
 				.build();
 	}
 
-	private AccDocFile uploadLossAssessment(Accident accident) {
-		DocUtil instance = DocUtil.getInstance();
+	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
+
+
+
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
+		AccidentDocumentFile lossAssessment = uploadDocfile(accident, dir, AccDocType.LOSSASSESSMENT);
+
+		boolean isExist = false;
+		int lossId = 0;
+		for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
+			if (accidentDocumentFile.getType() == AccDocType.LOSSASSESSMENT) {
+				lossId = accidentDocumentFile.getId();
+				isExist = true;
+			}
+		}
+		AccidentDocumentFileDao accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+		if (isExist) {
+			accidentDocumentFileDao.update(lossId);
+		} else {
+			accidentDocumentFileDao.create(lossAssessment);
+		}
+		return lossAssessment;
+	}
+
+	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
+		DocUtil instance = DocUtil.getInstance();
 		String fileDir = instance.upload(dir);
 		if (fileDir == null) {
 			return null;
 		}
-		AccDocFile accDocFile = new AccDocFile();
-		accDocFile.setFileAddress(fileDir)
+		AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
+		accidentDocumentFile.setFileAddress(fileDir)
 				.setAccidentId(accident.getId())
-				.setType(AccDocType.LOSSASSESSMENT);
-		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT,accDocFile);
-		return accDocFile;
-	}
-
-	public void assessDamage(){
-
+				.setType(accDocType);
+		accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
+		return accidentDocumentFile;
 	}
 
 	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
+		if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+			String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.INVESTIGATEACCIDENT.getDesc()+".hwp";
+			uploadDocfile(accident,dir,AccDocType.INVESTIGATEACCIDENT);
+		}
+
+
 		accident.setLossReserves(dto.getLossReserves());
 		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
 			((CarAccident)accident).setErrorRate(dto.getErrorRate());
+
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+			accidentDao.updateLossReserveAndErrorRate(accident);
+		else
+			accidentDao.updateLossReserve(accident);
 
 	}
 
@@ -590,8 +624,9 @@ public class Employee {
 		return premium;
 	}
 
-	public void readAccident(){
-
+	public List<Accident> readAccident(){
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		return accidentDao.readAllByEmployeeId(this.getId());
 	}
 
 	public Contract readContract(int contractId){
@@ -606,6 +641,9 @@ public class Employee {
 		if (!insurance.getInsuranceType().equals(insurance.getInsuranceType())) throw new MyNotExistContractException();
 
 		return contract;
+	public List<Contract> readContract(InsuranceType insuranceType){
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		return contractDaoImpl.readAllByInsuranceType(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
@@ -629,7 +667,6 @@ public class Employee {
 				", 직책: " + position.getName() +
 				'}';
 	}
-
 
 	@Override
 	public boolean equals(Object o) {

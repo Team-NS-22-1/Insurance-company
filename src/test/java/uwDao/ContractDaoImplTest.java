@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-class ContractDaoTest {
+class ContractDaoImplTest {
 
     ContractDaoImpl dao = new ContractDaoImpl();
     @Test

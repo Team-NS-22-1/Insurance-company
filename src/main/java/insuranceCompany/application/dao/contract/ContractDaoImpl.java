@@ -5,6 +5,7 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
     public ContractDaoImpl() {
         super.connect();
     }
-    @Override
+
     public void create(Contract contract) {
         try {
             String query = "insert into contract (insurance_id, customer_id, employee_id, premium, is_publish_stock, condition_of_uw) values ('%d', '%d', '%d', '%d', '%d', '%s');";
@@ -39,8 +40,8 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                                 "is_drinking, is_smoking, is_taking_drug, is_having_disease, is_driving, disease_detail) " +
                                 "VALUES (%d, %d, %d, %d, %d, %d, %d, %d, %d, '%s');";
                         input = String.format(inputquery, contract.getId(), healthContract.getHeight(), healthContract.getWeight(),
-                                healthContract.isDangerActivity()?1:0, healthContract.isDrinking()?1:0, healthContract.isSmoking()?1:0, healthContract.isSmoking()?1:0,
-                                healthContract.isTakingDrug()?1:0, healthContract.isHavingDisease()?1:0, healthContract.isDriving()?1:0, healthContract.getDiseaseDetail());
+                                healthContract.isDangerActivity() ? 1 : 0, healthContract.isDrinking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0, healthContract.isSmoking() ? 1 : 0,
+                                healthContract.isTakingDrug() ? 1 : 0, healthContract.isHavingDisease() ? 1 : 0, healthContract.isDriving() ? 1 : 0, healthContract.getDiseaseDetail());
                         super.create(input);
                     }
                     case "FIRE" -> {
@@ -48,7 +49,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                         inputquery = "insert into fire_contract (contract_id, building_area, building_type, collateral_amount, is_actual_residence, is_self_owned)" +
                                 "VALUES (%d, %d, '%s', %d, %d, %d);";
                         input = String.format(inputquery, contract.getId(), fireContract.getBuildingArea(), fireContract.getBuildingType().name(),
-                                fireContract.getCollateralAmount(), fireContract.isActualResidence()?1:0, fireContract.isSelfOwned()?1:0);
+                                fireContract.getCollateralAmount(), fireContract.isActualResidence() ? 1 : 0, fireContract.isSelfOwned() ? 1 : 0);
                         super.create(input);
                     }
                     case "CAR" -> {
@@ -62,12 +63,11 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                 }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             close();
         }
     }
 
-    @Override
     public Contract read(int id) {
         String query = "SELECT *\n" +
                 "         FROM contract c\n" +
@@ -103,6 +103,9 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if (contract == null) {
+            throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
+        }
 
         return contract;
     }
@@ -117,7 +120,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         return false;
     }
 
-    @Override
+
     public ArrayList<Contract> readAllByInsuranceType(InsuranceType insuranceType) {
         ArrayList<Contract> contractList = new ArrayList<>();
         String query = "SELECT *\n" +
@@ -157,8 +160,9 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         return contractList;
     }
 
-    @Override
-    public boolean update(Contract contract) {
+
+
+    public void update(Contract contract) {
         String query = "UPDATE contract \n" +
                 "SET reason_of_uw = '" + contract.getReasonOfUw() +"',\n" +
                 "condition_of_uw = '" + contract.getConditionOfUw() + "',\n" +
@@ -171,6 +175,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
     public Contract setContract(ResultSet rs, Contract contract) {
 
         try {
+
             contract.setId(rs.getInt("contract_id"));
             contract.setReasonOfUw(rs.getString("reason_of_uw"));
             contract.setPaymentId(rs.getInt("payment_id"));
@@ -213,7 +218,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             fireContract.setBuildingArea(rs.getInt("building_area"));
             fireContract.setBuildingType(BuildingType.valueOf(rs.getString("building_type")));
             fireContract.setActualResidence((rs.getInt("is_actual_residence")) != 0);
-            fireContract.setCollateralAmount(Long.valueOf(rs.getInt("collateral_amount")));
+            fireContract.setCollateralAmount((rs.getLong("collateral_amount")));
             fireContract.setSelfOwned((rs.getInt("is_self_owned")) != 0);
 
         } catch (SQLException e) {
@@ -248,9 +253,33 @@ public class ContractDaoImpl extends Dao implements ContractDao {
 
     }
 
+    public List<ContractwithTypeDto> findAllContractWithTypeByCustomerId(int customerId) {
+        String query = "select c.*, i.insurance_type from contract c left join insurance i on c.insurance_id = i.insurance_id where c.customer_id = %d";
+        String formattedQuery = String.format(query, customerId);
+
+        ResultSet rs = super.read(formattedQuery);
+        List<ContractwithTypeDto> contracts = new ArrayList<>();
+        try {
+            while (rs.next()) {
+                Contract contract = new Contract();
+                setContract(rs,contract);
+                ContractwithTypeDto contractDto = new ContractwithTypeDto(contract);
+                contractDto.setInsuranceType(InsuranceType.valueOf(rs.getString("insurance_type").toUpperCase()));
+                contracts.add(contractDto);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally {
+            close();
+        }
+
+        if (contracts.size() == 0)
+            throw new MyIllegalArgumentException("해당 ID로 검색되는 계약이 존재하지 않습니다");
+        return contracts;
+    }
 
     public List<Contract> findAllByCustomerId(int customerId) {
-        String query = "select * from contract where customer_id = %d";
+        String query = "select * from contract c left join insurance i on c.insurance_id=i.insurance_id  where customer_id = %d";
         String formattedQuery = String.format(query, customerId);
 
         ResultSet rs = super.read(formattedQuery);
@@ -258,15 +287,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             try {
                 while (rs.next()) {
                     Contract contract = new Contract();
-                    contract.setId(rs.getInt("contract_id"));
-                    contract.setReasonOfUw(rs.getString("reason_of_uw"));
-                    contract.setPaymentId(rs.getInt("payment_id"));
-                    contract.setInsuranceId(rs.getInt("insurance_id"));
-                    contract.setEmployeeId(rs.getInt("employee_id"));
-                    contract.setPremium(rs.getInt("premium"));
-                    contract.setPublishStock((rs.getInt("is_publish_stock") != 0));
-                    contract.setConditionOfUw(ConditionOfUw.valueOf(rs.getString("condition_of_uw")));
-                    contract.setCustomerId(rs.getInt("customer_id"));
+                    setContract(rs,contract);
                     contracts.add(contract);
                 }
             } catch (SQLException e) {
@@ -283,7 +304,10 @@ public class ContractDaoImpl extends Dao implements ContractDao {
     public void updatePayment(int contractId, int paymentId) {
         String query = "update contract set payment_id = %d where contract_id = %d";
         String formattedQuery = String.format(query, paymentId, contractId);
-        super.update(formattedQuery);
+
+        boolean result = super.update(formattedQuery);
         close();
+        if(!result)
+            throw new MyIllegalArgumentException("입력하신 ID에 오류가 발생했습니다.");
     }
 }
