@@ -3,6 +3,7 @@ package insuranceCompany.application.viewlogic;
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
@@ -68,20 +69,22 @@ public class CompensationViewLogic implements ViewLogic {
     @Override
     public void work(String command) {
 
+        try {
 
-        switch (command) {
-            case "1" :
-                break;
-            case "2":
-                investigateDamage();
-                break;
-            case"3":
-                assessDamage();
-                break;
-            default:
-                throw new MyIllegalArgumentException();
-
-
+            switch (command) {
+                case "1":
+                    break;
+                case "2":
+                    investigateDamage();
+                    break;
+                case "3":
+                    assessDamage();
+                    break;
+                default:
+                    throw new MyIllegalArgumentException();
+            }
+        } catch (MyInvalidAccessException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -94,11 +97,10 @@ public class CompensationViewLogic implements ViewLogic {
             return;
 
         showAccidentDetail(accident);
-        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
-        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accident.getId());
-        //다운로드 하기.
 
-        downloadAccDocFile(accident, accidentDocumentFiles);
+
+
+        downloadAccDocFile(accident);
         System.out.println("다운로드 종료");
         // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
 
@@ -153,6 +155,12 @@ public class CompensationViewLogic implements ViewLogic {
                 System.out.println("현재 직원에게 배당된 사건이 아닙니다. 정확한 값을 입력해주세요.");
                 continue;
             }
+            accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+            List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
+            for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
+                accident.getAccDocFileList().put(accidentDocumentFile.getType(),accidentDocumentFile);
+            }
+
             return accident;
         }
     }
@@ -191,30 +199,17 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void assessDamageWithoutLogin() {
         Accident accident = selectAccident();
-        if(accident == null)
+        if(accident == null) // 배정된 사고가 없을 떄 null. 이거도 exception인가???
             return;
-        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
-        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accident.getId());
+        // 사고조사보고서, 지급준비금, 과실비율이 입력 값이 없으면 돌아가야해.
+        isValidAccident(accident);
         //다운로드 하기.
 
-        downloadAccDocFile(accident, accidentDocumentFiles);
+        downloadAccDocFile(accident);
         AccountRequestDto compAccount = createCompAccount();
         System.out.println("손해사정서를 업로드해주세요.");
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
-        boolean isExist = false;
-        int lossId = 0;
-        for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
-            if (accidentDocumentFile.getType() == AccDocType.LOSSASSESSMENT) {
-                lossId = accidentDocumentFile.getId();
-                isExist = true;
-            }
-        }
-        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
-        if (isExist) {
-            accidentDocumentFileDao.update(lossId);
-        } else {
-            accidentDocumentFileDao.create(assessDamageResponseDto.getAccidentDocumentFile());
-        }
+
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
@@ -238,6 +233,20 @@ public class CompensationViewLogic implements ViewLogic {
         accidentDao = new AccidentDaoImpl();
         accidentDao.delete(accident.getId());
         DocUtil.deleteDir(accident); // 폴더 삭제
+    }
+
+    private void isValidAccident(Accident accident) {
+        if (accident.getLossReserves() == 0 ) {
+            throw new MyInvalidAccessException("지급 준비금이 입력되지 않은 사고이기 떄문에 손해 사정이 불가능합니다.");
+        }
+        if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+            throw new MyInvalidAccessException("사고 조사 보고서가 업로드되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
+        }
+        if (accident instanceof CarAccident) {
+            if (((CarAccident) accident).getErrorRate() == 0) {
+                throw new MyInvalidAccessException("과실 비율이 입력되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
+            }
+        }
     }
 
     private AccountRequestDto createCompAccount() {
@@ -303,10 +312,9 @@ public class CompensationViewLogic implements ViewLogic {
 
     }
 
-    private void downloadAccDocFile(Accident accident, List<AccidentDocumentFile> accidentDocumentFiles) {
+    private void downloadAccDocFile(Accident accident) {
         DocUtil instance = DocUtil.getInstance();
-        for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
-            accident.getAccDocFileList().put(accidentDocumentFile.getType(),accidentDocumentFile);
+        for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
             while (true) {
                 String query = accidentDocumentFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
                 String result = "";

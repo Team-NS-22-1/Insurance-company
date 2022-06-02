@@ -3,6 +3,8 @@ package insuranceCompany.application.domain.employee;
 
 import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
@@ -358,8 +360,26 @@ public class Employee {
 
 	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
 
+
+
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
-		return uploadDocfile(accident, dir,AccDocType.LOSSASSESSMENT);
+		AccidentDocumentFile lossAssessment = uploadDocfile(accident, dir, AccDocType.LOSSASSESSMENT);
+
+		boolean isExist = false;
+		int lossId = 0;
+		for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
+			if (accidentDocumentFile.getType() == AccDocType.LOSSASSESSMENT) {
+				lossId = accidentDocumentFile.getId();
+				isExist = true;
+			}
+		}
+		AccidentDocumentFileDao accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+		if (isExist) {
+			accidentDocumentFileDao.update(lossId);
+		} else {
+			accidentDocumentFileDao.create(lossAssessment);
+		}
+		return lossAssessment;
 	}
 
 	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {

@@ -286,10 +286,13 @@ public class CustomerViewLogic implements ViewLogic {
                 }
                 accidentDao = new AccidentDaoImpl();
                 retAccident = accidentDao.read(accidentId);
+                if(retAccident.getCustomerId() != this.customer.getId())
+                    throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
+
                 break;
             } catch (InputException  e) {
                 System.out.println("정확한 값을 입력해 주세요");
-            } catch (MyIllegalArgumentException e) {
+            } catch (MyIllegalArgumentException | MyInvalidAccessException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -311,7 +314,7 @@ public class CustomerViewLogic implements ViewLogic {
     private void reportAccident()  {
         if (!login()) return;
                 AccidentType accidentType = selectAccidentType();
-                if (accidentType == null)
+                if (accidentType != null)
                 inputAccidentInfo(accidentType);
     }
 
