@@ -5,6 +5,7 @@ import insuranceCompany.application.dao.accident.*;
 import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;

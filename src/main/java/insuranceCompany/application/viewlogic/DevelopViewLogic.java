@@ -5,6 +5,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
@@ -17,8 +18,7 @@ import java.util.ArrayList;
 
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 
 /**
@@ -48,8 +48,8 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-        createMenuAndLogout(MENU_TITLE, MENU_ELEMENTS);
+    public String showMenu() {
+        return createMenuAndLogout(MENU_TITLE_DEV_VIEW_LOGIC, MENU_ELEMENTS_DEV_VIEW_LOGIC);
     }
 
     @Override
@@ -61,14 +61,14 @@ public class DevelopViewLogic implements ViewLogic {
                     this.menuDevelop(this.menuInsuranceType());
                 }
                 case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
+                default -> throw new InputInvalidMenuException();
             }
         }
         catch (IllegalStateException e){
             System.out.println(e.getMessage());
         }
         catch (IOException ex) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         }
     }
 
@@ -87,7 +87,7 @@ public class DevelopViewLogic implements ViewLogic {
         return insuranceArrayList;
     }
 
-    private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
+    private Insurance showInsuranceByEmployeeAndSelect()  {
         while (true) {
             try {
                 ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
@@ -109,7 +109,7 @@ public class DevelopViewLogic implements ViewLogic {
         }
     }
 
-    private InsuranceType menuInsuranceType() throws IOException {
+    private InsuranceType menuInsuranceType() {
         createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS);
         return switch (br.verifyMenu("",3)){
             case 1 -> InsuranceType.HEALTH;
@@ -119,7 +119,7 @@ public class DevelopViewLogic implements ViewLogic {
         };
     }
 
-    private void menuDevelop(InsuranceType type) throws IOException {
+    private void menuDevelop(InsuranceType type) {
         if (type == null) return;
 
         DtoBasicInfo dtoBasicInfo = formInputBasicInfo();
@@ -132,7 +132,7 @@ public class DevelopViewLogic implements ViewLogic {
         formRegisterInsurance(type, dtoBasicInfo, dtoGuarantees,  dtoTypeInfo);
     }
 
-    private DtoBasicInfo formInputBasicInfo() throws IOException {
+    private DtoBasicInfo formInputBasicInfo() {
         String name = "", description = "";
         int paymentPeriod = 0, contractPeriod = 0;
         System.out.println(TITLE_INPUT_BASIC_INFO + EXIT_SYSTEM);
@@ -143,7 +143,7 @@ public class DevelopViewLogic implements ViewLogic {
         return new DtoBasicInfo(name, description, paymentPeriod, contractPeriod);
     }
 
-    private ArrayList<DtoTypeInfo> formInputTypeInfo(InsuranceType type, int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formInputTypeInfo(InsuranceType type, int stPremium) {
         return switch (type) {
             case HEALTH -> formDtoHealth(stPremium);
             case CAR -> formDtoCar(stPremium);
@@ -152,7 +152,7 @@ public class DevelopViewLogic implements ViewLogic {
         };
     }
 
-    private ArrayList<DtoTypeInfo> formDtoHealth(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoHealth(int stPremium) {
         boolean isAddHealth = true;
         ArrayList<DtoTypeInfo> healthListInfo = new ArrayList<>();
         while(isAddHealth){
@@ -184,7 +184,7 @@ public class DevelopViewLogic implements ViewLogic {
         return healthListInfo;
     }
 
-    private ArrayList<DtoTypeInfo> formDtoCar(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoCar(int stPremium) {
         boolean isAddCar = true;
         ArrayList<DtoTypeInfo> carListInfo = new ArrayList<>();
         while(isAddCar) {
@@ -206,7 +206,7 @@ public class DevelopViewLogic implements ViewLogic {
         return carListInfo;
     }
 
-    private ArrayList<DtoTypeInfo> formDtoFire(int stPremium) throws IOException {
+    private ArrayList<DtoTypeInfo> formDtoFire(int stPremium) {
         boolean isAddFire = true;
         ArrayList<DtoTypeInfo> fireListInfo = new ArrayList<>();
         while(isAddFire){
@@ -235,7 +235,7 @@ public class DevelopViewLogic implements ViewLogic {
         return fireListInfo;
     }
 
-    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() throws IOException {
+    private ArrayList<DtoGuarantee> formInputGuaranteeInfo() {
         boolean isAddGuarantee = true;
         ArrayList<DtoGuarantee> guaranteeListInfo = new ArrayList<>();
         while(isAddGuarantee) {
@@ -254,7 +254,7 @@ public class DevelopViewLogic implements ViewLogic {
         return guaranteeListInfo;
     }
 
-    private boolean isCalcPremium() throws IOException {
+    private boolean isCalcPremium() {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
@@ -273,12 +273,12 @@ public class DevelopViewLogic implements ViewLogic {
         return isCalcPremium;
     }
 
-    private int formCalculatePremium(boolean isCalcPremium) throws IOException {
+    private int formCalculatePremium(boolean isCalcPremium) {
         if(!isCalcPremium) return -1;
         return calcStandardPremium();
     }
 
-    private int calcStandardPremium() throws IOException {
+    private int calcStandardPremium() {
         boolean forWhile = true;
         int stPremium= -1;
         while(forWhile) {
@@ -303,7 +303,7 @@ public class DevelopViewLogic implements ViewLogic {
         return stPremium;
     }
 
-    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) throws IOException {
+    private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) {
         boolean forWhile = true;
         while(forWhile){
             switch (br.verifyCategory(MENU_IS_REGISTER_INSURANCE, 2)){
@@ -323,8 +323,8 @@ public class DevelopViewLogic implements ViewLogic {
 
     private void menuSalesAuthFile(Insurance insurance) throws IOException {
         if(insurance==null) return;
-        try {
-            loop : while(true) {
+        loop : while(true) {
+            try {
                 System.out.println(TITLE_REGISTER_SALES_AUTH_FILE);
                 switch (br.verifyMenu(MENU_SALES_AUTH_FILE_TYPE, 5)){
                     // 보험상품신고서
@@ -346,7 +346,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 2 -> {
@@ -367,7 +367,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 3 -> {
@@ -388,7 +388,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 4 -> {
@@ -409,7 +409,7 @@ public class DevelopViewLogic implements ViewLogic {
                                 }
                             }
                             // 판매상태 변경
-                            case 2 -> menuModifySalesAuthState(br, REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
+                            case 2 -> menuModifySalesAuthState(REGISTER_ALL_FILE_MODIFY_STATE, employee, insurance);
                         }
                     }
                     case 0 -> {
@@ -417,13 +417,13 @@ public class DevelopViewLogic implements ViewLogic {
                     }
                 }
             }
-        }
-        catch (MyFileException e) {
-            System.out.println(e.getMessage());
+            catch (MyFileNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
-    private void menuModifySalesAuthState(MyBufferedReader br, String query, Employee employee, Insurance insurance) {
+    private void menuModifySalesAuthState(String query, Employee employee, Insurance insurance) {
         switch (br.verifyCategory(query, 2)){
             case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
             case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);

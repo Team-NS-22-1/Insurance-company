@@ -1,27 +1,27 @@
 package insuranceCompany.application.viewlogic;
 
 import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.global.exception.*;
+import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.domain.employee.Employee;
+import insuranceCompany.application.domain.payment.BankType;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.MyInadequateFormatException;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
+import insuranceCompany.application.global.exception.NoResultantException;
+import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.dao.customer.CustomerDao;
-import insuranceCompany.application.domain.employee.Department;
-import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.payment.BankType;
 import insuranceCompany.outerSystem.Bank;
-import insuranceCompany.application.global.utility.CustomMyBufferedReader;
-import insuranceCompany.application.global.utility.DocUtil;
 
 import java.io.InputStreamReader;
 import java.util.List;
@@ -49,21 +49,21 @@ public class CompensationViewLogic implements ViewLogic {
     private AccidentDao accidentDao;
     private AccidentDocumentFileDao accidentDocumentFileDao;
     private CustomerDao customerList;
-    private CustomMyBufferedReader br;
+    private MyBufferedReader br;
     private Employee employee;
 
     public CompensationViewLogic() {
-        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
     }
 
     public CompensationViewLogic(Employee employee) {
-        this.br = new CustomMyBufferedReader(new InputStreamReader(System.in));
+        this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employee = employee;
     }
 
     @Override
-    public void showMenu() {
-       createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+    public String showMenu() {
+       return createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
     }
 
     @Override

@@ -181,8 +181,8 @@ public class Employee {
 		damageAmount *= 10000;
 		businessExpense *= 10000;
 		profitMargin /= 100;
-		Long purePremium = (damageAmount / countContract);
-		Long riskCost = (businessExpense / countContract);
+		long purePremium = damageAmount / countContract;
+		long riskCost = businessExpense / countContract;
 		int stPremium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return stPremium;
 	}
@@ -272,6 +272,9 @@ public class Employee {
 
 	public void modifySalesAuthState(Insurance insurance, SalesAuthorizationState modify) {
 		insurance.getDevInfo().setSalesAuthorizationState(modify);
+		if(modify == SalesAuthorizationState.PERMISSION){
+			insurance.getDevInfo().setSalesStartDate(LocalDate.now());
+		}
 		new InsuranceDaoImpl().updateBySalesAuthState(insurance);
 	}
 
@@ -373,10 +376,14 @@ public class Employee {
 	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
 
 
-
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
 		AccidentDocumentFile lossAssessment = uploadDocfile(accident, dir, AccDocType.LOSSASSESSMENT);
 
+		createOrUpdateFile(accident, lossAssessment);
+		return lossAssessment;
+	}
+
+	private void createOrUpdateFile(Accident accident, AccidentDocumentFile accidentDocFile) {
 		boolean isExist = false;
 		int lossId = 0;
 		for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
@@ -389,9 +396,8 @@ public class Employee {
 		if (isExist) {
 			accidentDocumentFileDao.update(lossId);
 		} else {
-			accidentDocumentFileDao.create(lossAssessment);
+			accidentDocumentFileDao.create(accidentDocFile);
 		}
-		return lossAssessment;
 	}
 
 	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
@@ -411,7 +417,8 @@ public class Employee {
 	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
 		if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
 			String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.INVESTIGATEACCIDENT.getDesc()+".hwp";
-			uploadDocfile(accident,dir,AccDocType.INVESTIGATEACCIDENT);
+			AccidentDocumentFile accidentDocumentFile = uploadDocfile(accident, dir, AccDocType.INVESTIGATEACCIDENT);
+			createOrUpdateFile(accident,accidentDocumentFile);
 		}
 
 

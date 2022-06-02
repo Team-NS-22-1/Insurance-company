@@ -2,6 +2,7 @@ package insuranceCompany.application.global.utility;
 
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.global.exception.MyFileNotFoundException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,6 +27,7 @@ public class DocUtil extends JFrame {
     private FileOutputStream out;
     static {
         instance = new DocUtil();
+
     }
 
     public static DocUtil getInstance() {
@@ -33,9 +35,25 @@ public class DocUtil extends JFrame {
     }
 
 
+    public static Window getFrontWindow() {
+        return KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+    }
+
+    private static FileDialog getFileDialog(String title, int type) {
+        Window w = getFrontWindow();
+        if (w instanceof Frame) {
+            return new FileDialog((Frame)w, title, type);
+        } else {
+            return new FileDialog((Dialog)w, title, type);
+        }
+    }
     public void download(String dir) {
-        FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
-        dialog.setModal(true);
+
+//        FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
+        FileDialog dialog = getFileDialog("파일다운로드",FileDialog.SAVE);
+
+        dialog.setAlwaysOnTop(true);
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
 
         if(dialog.getDirectory() == null)
@@ -46,7 +64,7 @@ public class DocUtil extends JFrame {
             out = new FileOutputStream(saveFilePath);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
+            throw new MyFileNotFoundException();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,10 +79,15 @@ public class DocUtil extends JFrame {
                 folder.getParentFile().mkdirs();
             }
 
-            FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
+//            FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
+            FileDialog dialog = getFileDialog("파일 업로드",FileDialog.LOAD);
+
             dialog.setFile(getExtension(dir));
-            dialog.setModal(true);
+            dialog.setAlwaysOnTop(true);
+            dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
+            dialog.setModal(true);
+
 
             String originPath = dialog.getDirectory()+dialog.getFile();
             if(dialog.getDirectory() == null)
@@ -73,8 +96,7 @@ public class DocUtil extends JFrame {
             out = new FileOutputStream(dir);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-//            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
-            e.printStackTrace();
+            throw new MyFileNotFoundException("ERROR :: 파일을 찾을 수 없습니다!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -108,7 +130,10 @@ public class DocUtil extends JFrame {
 
     public static void isExist(Accident accident, AccDocType accDocType) {
         String directory =  accident.getCustomerId()+"/"+ accident.getId();
-        File folder = new File(submitPath+directory+"/"+accDocType.getDesc()+".hwp");
+        String extension = ".hwp";
+        if(accDocType==AccDocType.PICTUREOFSITE)
+            extension = ".jpg";
+        File folder = new File(submitPath+directory+"/"+accDocType.getDesc()+extension);
         if (!folder.exists()) {
             System.out.println(accDocType.getDesc() + "파일이 존재하지 않습니다. ");
         }

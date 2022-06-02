@@ -14,7 +14,6 @@ import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MessageUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
@@ -52,9 +51,8 @@ public class UnderwritingViewLogic implements ViewLogic {
     }
 
     @Override
-    public void showMenu() {
-
-        createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
+    public String showMenu() {
+        return createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
     }
 
     @Override
@@ -177,7 +175,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                     default:
                         throw new InputInvalidMenuException();
                 }
-            } catch (InputInvalidMenuException | IOException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println(e.getMessage());
             }
         }

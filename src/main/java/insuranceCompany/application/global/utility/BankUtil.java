@@ -18,7 +18,7 @@ import static insuranceCompany.application.global.utility.FormatUtil.*;
  */
 public class BankUtil {
 
-    public static BankType selectBankType(CustomMyBufferedReader br) {
+    public static BankType selectBankType(MyBufferedReader br) {
         BankType[] values = BankType.values();
         StringBuilder query = new StringBuilder();
         for (int i = 0; i < values.length; i++) {
