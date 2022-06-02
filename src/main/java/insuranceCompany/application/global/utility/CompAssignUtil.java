@@ -40,14 +40,14 @@ public class CompAssignUtil {
         return employeeDao.read(minId);
     }
 
-    public static Employee assignCompEmployee(EmployeeDao employeeDao, AccidentDao accidentDao) {
-        employeeDao = new EmployeeDaoImpl();
+    public static Employee assignCompEmployee() {
+        EmployeeDao employeeDao = new EmployeeDaoImpl();
         List<Employee> compEmployees = employeeDao.readAllCompEmployee();
         int min = Integer.MAX_VALUE;
         int minId = 0;
 
         for (Employee compEmployee : compEmployees) {
-            accidentDao = new AccidentDaoImpl();
+            AccidentDao accidentDao = new AccidentDaoImpl();
             List<Accident> accidents = accidentDao.readAllByEmployeeId(compEmployee.getId());
             if (min > accidents.size()) {
                 min = accidents.size();

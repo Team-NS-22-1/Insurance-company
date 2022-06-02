@@ -214,7 +214,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     private void connectCompEmployee(Accident accident) {
 
-        Employee compEmployee = assignCompEmployee(employeeDao, accidentDao);
+        Employee compEmployee = assignCompEmployee();
         System.out.println(compEmployee.print());
 
 

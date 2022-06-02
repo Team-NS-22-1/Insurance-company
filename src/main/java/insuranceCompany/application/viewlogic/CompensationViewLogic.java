@@ -102,6 +102,8 @@ public class CompensationViewLogic implements ViewLogic {
         System.out.println("다운로드 종료");
         // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
 
+
+
         InvestigateDamageRequestDto dto = new InvestigateDamageRequestDto();
         dto.setAccidentType(accident.getAccidentType());
 
@@ -109,20 +111,17 @@ public class CompensationViewLogic implements ViewLogic {
         inputErrorRate(dto);
         // 지급 준비금 입력.
         inputLossReserve(dto);
-
+        if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+            System.out.println("사고 조사 보고서를 제출해주세요");
+        }
         employee.investigateDamage(dto,accident);
-        accidentDao = new AccidentDaoImpl();
-        if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-            accidentDao.updateLossReserveAndErrorRate(accident);
-        else
-            accidentDao.updateLossReserve(accident);
 
 
         while (true) {
             String rtVal = "";
             rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
             if (rtVal.equals("Y")) {
-                assessDamagewithoutLogin();
+                assessDamageWithoutLogin();
                 break;
             } else if (rtVal.equals("N")) {
                 break;
@@ -187,10 +186,10 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void assessDamage() {
         loginCompEmployee();
-        assessDamagewithoutLogin();
+        assessDamageWithoutLogin();
     }
 
-    private void assessDamagewithoutLogin() {
+    private void assessDamageWithoutLogin() {
         Accident accident = selectAccident();
         if(accident == null)
             return;
@@ -307,6 +306,7 @@ public class CompensationViewLogic implements ViewLogic {
     private void downloadAccDocFile(Accident accident, List<AccidentDocumentFile> accidentDocumentFiles) {
         DocUtil instance = DocUtil.getInstance();
         for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
+            accident.getAccDocFileList().put(accidentDocumentFile.getType(),accidentDocumentFile);
             while (true) {
                 String query = accidentDocumentFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
                 String result = "";

@@ -1,6 +1,8 @@
 package insuranceCompany.application.domain.employee;
 
 
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.Account;
@@ -355,8 +357,13 @@ public class Employee {
 	}
 
 	private AccidentDocumentFile uploadLossAssessment(Accident accident) {
-		DocUtil instance = DocUtil.getInstance();
+
 		String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.LOSSASSESSMENT.getDesc()+".hwp";
+		return uploadDocfile(accident, dir,AccDocType.LOSSASSESSMENT);
+	}
+
+	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
+		DocUtil instance = DocUtil.getInstance();
 		String fileDir = instance.upload(dir);
 		if (fileDir == null) {
 			return null;
@@ -364,19 +371,27 @@ public class Employee {
 		AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
 		accidentDocumentFile.setFileAddress(fileDir)
 				.setAccidentId(accident.getId())
-				.setType(AccDocType.LOSSASSESSMENT);
-		accident.getAccDocFileList().put(AccDocType.LOSSASSESSMENT, accidentDocumentFile);
+				.setType(accDocType);
+		accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
 		return accidentDocumentFile;
 	}
 
-	public void assessDamage(){
-
-	}
-
 	public void investigateDamage(InvestigateDamageRequestDto dto, Accident accident){
+		if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+			String dir = "./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId()+"/"+AccDocType.INVESTIGATEACCIDENT.getDesc()+".hwp";
+			uploadDocfile(accident,dir,AccDocType.INVESTIGATEACCIDENT);
+		}
+
+
 		accident.setLossReserves(dto.getLossReserves());
 		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
 			((CarAccident)accident).setErrorRate(dto.getErrorRate());
+
+		AccidentDao accidentDao = new AccidentDaoImpl();
+		if(accident.getAccidentType() == AccidentType.CARACCIDENT)
+			accidentDao.updateLossReserveAndErrorRate(accident);
+		else
+			accidentDao.updateLossReserve(accident);
 
 	}
 
