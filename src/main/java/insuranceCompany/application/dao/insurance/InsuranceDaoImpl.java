@@ -39,7 +39,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
             // CREATE devInfo
             DevelopInfo devInfo = insurance.getDevInfo();
             String queryFormatDevInfo =
-                    "INSERT INTO dev_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (%d, %d, '%s', '%s');";
+                    "INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (%d, %d, '%s', '%s');";
             String queryDevInfo =
                     String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevelopDate()), devInfo.getSalesAuthorizationState().name());
             super.create(queryDevInfo);

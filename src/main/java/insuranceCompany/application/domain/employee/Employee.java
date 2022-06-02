@@ -181,8 +181,8 @@ public class Employee {
 		damageAmount *= 10000;
 		businessExpense *= 10000;
 		profitMargin /= 100;
-		int purePremium = (int) (damageAmount / countContract);
-		int riskCost = (int) (businessExpense / countContract);
+		Long purePremium = (damageAmount / countContract);
+		Long riskCost = (businessExpense / countContract);
 		int stPremium = (int) ((purePremium + riskCost) / (1 - profitMargin));
 		return stPremium;
 	}

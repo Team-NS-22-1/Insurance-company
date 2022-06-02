@@ -5,6 +5,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
+import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.MyFileException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -281,17 +282,22 @@ public class DevelopViewLogic implements ViewLogic {
         boolean forWhile = true;
         int stPremium= -1;
         while(forWhile) {
-            long damageAmount = 0, countContract = 0, businessExpense = 0;
-            double profitMargin = 0;
-            System.out.println(TITLE_CALC_ST_PREMIUM + EXIT_SYSTEM);
-            damageAmount = (long) br.verifyRead(QUERY_DAMAGE_AMOUNT, damageAmount);
-            countContract = (long) br.verifyRead(QUERY_COUNT_CONTRACT, countContract);
-            businessExpense = (long) br.verifyRead(QUERY_BIZ_EXPENSE, businessExpense);
-            profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
-            stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
-            System.out.printf(PRINT_ST_PREMIUM, stPremium);
-            switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
-                case 1 -> forWhile = false;
+            try {
+                long damageAmount = 0, countContract = 0, businessExpense = 0;
+                double profitMargin = 0;
+                System.out.println(TITLE_CALC_ST_PREMIUM + EXIT_SYSTEM);
+                damageAmount = (long) br.verifyRead(QUERY_DAMAGE_AMOUNT, damageAmount);
+                countContract = (long) br.verifyRead(QUERY_COUNT_CONTRACT, countContract);
+                businessExpense = (long) br.verifyRead(QUERY_BIZ_EXPENSE, businessExpense);
+                profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
+                stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
+                System.out.printf(PRINT_ST_PREMIUM, stPremium);
+                switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
+                    case 1 -> forWhile = false;
+                }
+            }
+            catch (InputException e) {
+                System.out.println(e.getMessage());
             }
         }
         return stPremium;
