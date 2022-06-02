@@ -11,20 +11,20 @@ package insuranceCompany.application.global.exception;
  * -----------------------------------------------------------
  * 2022-06-02                규현             최초 생성
  */
-public class InvalidMenuException extends InputException{
-    public InvalidMenuException() {
+public class InputInvalidMenuException extends InputException{
+    public InputInvalidMenuException() {
         super("ERROR!! : 올바른 메뉴를 입력해주세요.\n");
     }
 
-    public InvalidMenuException(String message) {
+    public InputInvalidMenuException(String message) {
         super("ERROR!! : 올바른 메뉴를 입력해주세요.\n");
     }
 
-    public InvalidMenuException(String message, Throwable cause) {
+    public InputInvalidMenuException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public InvalidMenuException(Throwable cause) {
+    public InputInvalidMenuException(Throwable cause) {
         super(cause);
     }
 }

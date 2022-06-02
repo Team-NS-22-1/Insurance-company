@@ -2,7 +2,6 @@ package insuranceCompany.application.viewlogic;
 
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.dao.accident.ComplainDaoImpl;
 import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
@@ -17,7 +16,6 @@ import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
@@ -36,8 +34,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-
-import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
@@ -107,7 +103,7 @@ public class CustomerViewLogic implements ViewLogic {
                 case "":
                     throw new InputNullDataException();
                 default:
-                    throw new InvalidMenuException();
+                    throw new InputInvalidMenuException();
             }
         } catch (InputException e) {
             System.out.println(e.getMessage());

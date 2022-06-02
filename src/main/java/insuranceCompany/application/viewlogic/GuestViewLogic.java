@@ -66,7 +66,7 @@ public class GuestViewLogic implements ViewLogic {
                 case "":
                     throw new InputNullDataException();
                 default:
-                    throw new InvalidMenuException();
+                    throw new InputInvalidMenuException();
             }
         } catch (InputException | SQLException e) {
             System.out.println(e.getMessage());
@@ -129,7 +129,7 @@ public class GuestViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -361,7 +361,7 @@ public class GuestViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {

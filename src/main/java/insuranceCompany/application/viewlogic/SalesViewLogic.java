@@ -73,7 +73,7 @@ public class SalesViewLogic implements ViewLogic {
                 case "":
                     throw new InputNullDataException();
                 default:
-                    throw new InvalidMenuException();
+                    throw new InputInvalidMenuException();
             }
         } catch(InputException e) {
             System.out.println(e.getMessage());
@@ -220,7 +220,7 @@ public class SalesViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -283,7 +283,7 @@ public class SalesViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -320,7 +320,7 @@ public class SalesViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -375,7 +375,7 @@ public class SalesViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -503,7 +503,7 @@ public class SalesViewLogic implements ViewLogic {
                     case "":
                         throw new InputNullDataException();
                     default:
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {

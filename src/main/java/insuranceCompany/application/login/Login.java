@@ -2,6 +2,7 @@ package insuranceCompany.application.login;
 
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
@@ -60,7 +61,7 @@ public class Login {
     public Employee loginEmployee() throws IOException {
         int employeeId = this.menuLogin();
         if(employeeId < 0) return null;
-        return new EmployeeDao().read(employeeId);
+        return new EmployeeDaoImpl().read(employeeId);
     }
 
 }

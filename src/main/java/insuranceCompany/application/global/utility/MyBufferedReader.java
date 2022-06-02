@@ -63,10 +63,10 @@ public class MyBufferedReader extends BufferedReader {
                     int selectedMenu;
                     selectedMenu = Integer.parseInt(value);
                     if (selectedMenu > categorySize || selectedMenu < 0)
-                        throw new InvalidMenuException();
+                        throw new InputInvalidMenuException();
                     return selectedMenu;
                 } catch (NumberFormatException e) {
-                    throw new InvalidMenuException();
+                    throw new InputInvalidMenuException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -88,10 +88,10 @@ public class MyBufferedReader extends BufferedReader {
                     int selectedCategory;
                     selectedCategory = Integer.parseInt(value);
                     if (selectedCategory > categorySize || selectedCategory < 1)
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                     return selectedCategory;
                 } catch (NumberFormatException e) {
-                    throw new InputException.InputInvalidDataException();
+                    throw new InputInvalidDataException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
