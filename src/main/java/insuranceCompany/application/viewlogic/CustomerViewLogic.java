@@ -109,8 +109,7 @@ public class CustomerViewLogic implements ViewLogic {
                     case "1" -> selectInsurance();
                     case "" -> throw new InputNullDataException();
                 }
-            }
-            else {
+            } else {
                 switch (command) {
                     case "1" -> selectInsurance();
                     case "2" -> payPremiumButton();
@@ -122,6 +121,8 @@ public class CustomerViewLogic implements ViewLogic {
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);
+        } catch (MyIllegalArgumentException | NoResultantException e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -392,6 +393,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private void isFinishedClaimComp(Accident accident, boolean submitted) {
+
         if (submitted) {
             connectCompEmployee(accident);
         } else {
