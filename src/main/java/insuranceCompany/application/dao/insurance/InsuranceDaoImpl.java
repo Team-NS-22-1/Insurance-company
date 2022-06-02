@@ -3,6 +3,7 @@ package insuranceCompany.application.dao.insurance;
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -117,12 +118,13 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
     }
 
     public Insurance read(int id) {
-        Insurance insurance = new Insurance();
+        Insurance  insurance = null;
         try {
             // READ insurance
             String query = "SELECT * FROM insurance WHERE insurance_id = " + id + ";";
             super.read(query);
             if(resultSet.next()){
+                insurance = new Insurance();
                 insurance.setId(resultSet.getInt("insurance_id"))
                         .setName(resultSet.getString("name"))
                         .setDescription(resultSet.getString("description"))
@@ -130,6 +132,11 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         .setPaymentPeriod(resultSet.getInt("payment_period"))
                         .setInsuranceType(InsuranceType.valueOf(resultSet.getString("insurance_type").toUpperCase()));
             }
+
+            if (insurance==null) {
+                throw new MyIllegalArgumentException(id + "에 해당하는 보험 정보가 존재하지 않습니다.");
+            }
+
             // READ guarantee
             ArrayList<Guarantee> guarantees = new ArrayList<>();
             String queryGuarantee = "SELECT * FROM guarantee WHERE insurance_id = " + id + ";";
@@ -255,6 +262,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         finally {
             super.close();
         }
+
         return insurance;
     }
 

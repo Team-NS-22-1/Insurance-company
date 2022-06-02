@@ -1,6 +1,8 @@
 package insuranceCompany.application.global.utility;
 
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InputInvalidDataException;
+import insuranceCompany.application.global.exception.InputNullDataException;
 
 import java.util.Scanner;
 
@@ -19,7 +21,7 @@ public class InputValidation {
                 System.out.println(question);
                 String temp = sc.nextLine();
                 if(temp.isBlank())
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 return temp;
             } catch (InputException e){
                 System.out.println(e.getMessage());
@@ -33,7 +35,7 @@ public class InputValidation {
                 System.out.println(question);
                 String temp = sc.nextLine();
                 if (temp.isBlank()){
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 }
                 return Integer.parseInt(temp);
             } catch (InputException e) {
@@ -50,7 +52,7 @@ public class InputValidation {
                 System.out.println(question);
                 String temp = sc.nextLine();
                 if (temp.isBlank()){
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 }
                 return Long.parseLong(temp);
             } catch (InputException e) {
@@ -61,7 +63,7 @@ public class InputValidation {
         }
     }
 
-    public boolean validateBooleanFormat(String question) {
+    public boolean validateBooleanFormat(String question) throws InputInvalidDataException {
         while (true) {
             try {
                 System.out.println(question);
@@ -75,9 +77,9 @@ public class InputValidation {
                         temp = false;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 return temp;
             } catch (InputException e) {
@@ -92,7 +94,7 @@ public class InputValidation {
                 System.out.println(question);
                 String temp = sc.nextLine();
                 if(temp.isBlank())
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 switch (choice) {
                     case 1:
                         validateNameFormat(temp);
@@ -119,26 +121,26 @@ public class InputValidation {
 
     public void validateNameFormat(String name) {
         if(!isName(name))
-            throw new InputException.InputInvalidDataException();
+            throw new InputInvalidDataException();
     }
 
     public void validateSsnFormat(String ssn) {
         if(!isSsn(ssn))
-            throw new InputException.InputInvalidDataException();
+            throw new InputInvalidDataException();
     }
 
     public void validatePhoneFormat(String phone) {
         if(!isPhone(phone))
-            throw new InputException.InputInvalidDataException();
+            throw new InputInvalidDataException();
     }
 
     public void validateEmailFormat(String email) {
         if(!isEmail(email))
-            throw new InputException.InputInvalidDataException();
+            throw new InputInvalidDataException();
     }
 
     public void validateCarNoFormat(String carNo) {
         if(!isCarNo(carNo))
-            throw new InputException.InputInvalidDataException();
+            throw new InputInvalidDataException();
     }
 }

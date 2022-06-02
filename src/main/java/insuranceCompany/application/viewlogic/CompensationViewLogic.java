@@ -1,24 +1,24 @@
 package insuranceCompany.application.viewlogic;
 
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.accident.*;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.dao.accident.AccDocFileDao;
-import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocFileList;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.BankType;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyInadequateFormatException;
 import insuranceCompany.outerSystem.Bank;
 import insuranceCompany.application.global.utility.CustomMyBufferedReader;
 import insuranceCompany.application.global.utility.DocUtil;
@@ -29,7 +29,7 @@ import java.util.List;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndExit;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 
 /**
@@ -46,10 +46,9 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
  */
 public class CompensationViewLogic implements ViewLogic {
 
-    private AccidentList accidentList;
-    private  AccDocFileList accDocFileList;
+    private AccidentDao accidentDao;
+    private AccidentDocumentFileDao accidentDocumentFileDao;
     private CustomerDao customerList;
-    private EmployeeDao employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 
@@ -64,64 +63,60 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public void showMenu() {
-       createMenuAndExit("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+       createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
     }
 
     @Override
     public void work(String command) {
 
-        switch (command) {
-            case "1" :
-                break;
-            case "2":
-                investigateDamage();
-                break;
-            case"3":
-                assessDamage();
-                break;
-            default:
-                throw new MyIllegalArgumentException();
+        try {
+
+            switch (command) {
+                case "1":
+                    showAccidentList();
+                    break;
+                case "2":
+                    investigateDamage();
+                    break;
+                case "3":
+                    assessDamage();
+                    break;
+                case "0" :
+                    break;
+                default:
+                    throw new MyIllegalArgumentException();
+            }
+        } catch (MyInvalidAccessException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     private void investigateDamage() {
-
-        loginCompEmployee();
-
         Accident accident = selectAccident();
         if(accident == null)
             return;
-
         showAccidentDetail(accident);
-        accDocFileList = new AccDocFileDao();
-        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
-        //다운로드 하기.
 
-        downloadAccDocFile(accident, accDocFiles);
+        downloadAccDocFile(accident);
         System.out.println("다운로드 종료");
-        // investigateDamageaccidentRequestDto 에 지급준비금, 혹은 손해율 가져가서 accident에 넣어서 뱉어줘야겠다.
 
         InvestigateDamageRequestDto dto = new InvestigateDamageRequestDto();
         dto.setAccidentType(accident.getAccidentType());
 
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-        inputErrorRate(dto);
-        // 지급 준비금 입력.
-        inputLossReserve(dto);
-
+        inputErrorRate(dto); // 과실비율 입력
+        inputLossReserve(dto); // 지급 준비금 입력.
+        if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+            System.out.println("사고 조사 보고서를 제출해주세요");
+        }
         employee.investigateDamage(dto,accident);
-        accidentList = new AccidentDao();
-        if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-            accidentList.updateLossReserveAndErrorRate(accident);
-        else
-            accidentList.updateLossReserve(accident);
 
 
         while (true) {
             String rtVal = "";
             rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
             if (rtVal.equals("Y")) {
-                assessDamagewithoutLogin();
+                assessDamage();
                 break;
             } else if (rtVal.equals("N")) {
                 break;
@@ -130,36 +125,61 @@ public class CompensationViewLogic implements ViewLogic {
 
     }
 
-    private Accident selectAccident() {
+    private void showAccidentList() {
+        List<Accident> accidents = getAccidentList();
+        if (accidents == null) return;
+        showAccidentInfo(accidents);
+    }
 
-        accidentList = new AccidentDao();
-        List<Accident> accidents = this.accidentList.readAllByEmployeeId(this.employee.getId());
-        if (accidents.size() == 0) {
-            System.out.println("현재 배당된 사고가 없습니다.");
+    private Accident selectAccident() {
+        List<Accident> accidents = getAccidentList();
+        if (accidents == null) return null;
+        while (true) {
+            try {
+                System.out.println("<< 사고를 선택하세요. >>");
+                showAccidentInfo(accidents);
+                System.out.println("---------------------------------");
+                int accidentId = 0;
+                accidentId = (int) br.verifyRead("사고 ID : ", accidentId);
+                accidentDao = new AccidentDaoImpl();
+                Accident accident = this.accidentDao.read(accidentId);
+                if (accident.getEmployeeId() != this.employee.getId()) {
+                    throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
+                }
+                accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+                List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
+                for (AccidentDocumentFile accidentDocumentFile : accidentDocumentFiles) {
+                    accident.getAccDocFileList().put(accidentDocumentFile.getType(), accidentDocumentFile);
+                }
+                return accident;
+            } catch (MyInvalidAccessException e) {
+                System.out.println(e.getMessage());
+            }
             return null;
         }
-        while (true) {
-            System.out.println("<< 사고를 선택하세요. >>");
-            System.out.println(accidents.size());
-            for (Accident accident : accidents) {
-                accident.printForComEmployee();
-            }
-            System.out.println("---------------------------------");
-            int accidentId = 0;
-            accidentId = (int)br.verifyRead("사고 ID : ", accidentId);
-            accidentList = new AccidentDao();
-            Accident accident = this.accidentList.read(accidentId);
-            if (accident.getEmployeeId() != this.employee.getId()) {
-                System.out.println("현재 직원에게 배당된 사건이 아닙니다. 정확한 값을 입력해주세요.");
-                continue;
-            }
-            return accident;
+    }
+
+    private List<Accident> getAccidentList() {
+        List<Accident> accidents = null;
+        try {
+            accidents = employee.readAccident();
+        } catch (NoResultantException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
+        return accidents;
+    }
+
+    private void showAccidentInfo(List<Accident> accidents) {
+        for (Accident accident : accidents) {
+            accident.printForComEmployee();
         }
     }
 
     private void showAccidentDetail(Accident accident) {
         customerList = new CustomerDaoImpl();
         Customer customer = customerList.read(accident.getCustomerId());
+
 
         accident.printForComEmployee();
         System.out.println("접수자 명 : " + customer.getName());
@@ -180,39 +200,22 @@ public class CompensationViewLogic implements ViewLogic {
                 break;
             }
         }
+
     }
 
     private void assessDamage() {
-        loginCompEmployee();
-        assessDamagewithoutLogin();
-    }
-
-    private void assessDamagewithoutLogin() {
         Accident accident = selectAccident();
-        if(accident == null)
+        if(accident == null) // 배정된 사고가 없을 떄 null. 이거도 exception인가???
             return;
-        accDocFileList = new AccDocFileDao();
-        List<AccDocFile> accDocFiles = accDocFileList.readAllByAccidentId(accident.getId());
+        // 사고조사보고서, 지급준비금, 과실비율이 입력 값이 없으면 돌아가야해.
+        isValidAccident(accident);
         //다운로드 하기.
 
-        downloadAccDocFile(accident, accDocFiles);
+        downloadAccDocFile(accident);
         AccountRequestDto compAccount = createCompAccount();
         System.out.println("손해사정서를 업로드해주세요.");
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
-        boolean isExist = false;
-        int lossId = 0;
-        for (AccDocFile accDocFile : accDocFiles) {
-            if (accDocFile.getType() == AccDocType.LOSSASSESSMENT) {
-                lossId = accDocFile.getId();
-                isExist = true;
-            }
-        }
-        accDocFileList = new AccDocFileDao();
-        if (isExist) {
-            accDocFileList.update(lossId);
-        } else {
-            accDocFileList.create(assessDamageResponseDto.getAccDocFile());
-        }
+
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
@@ -233,9 +236,23 @@ public class CompensationViewLogic implements ViewLogic {
             }
         }
         Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
-        accidentList = new AccidentDao();
-        accidentList.delete(accident.getId());
+        accidentDao = new AccidentDaoImpl();
+        accidentDao.delete(accident.getId());
         DocUtil.deleteDir(accident); // 폴더 삭제
+    }
+
+    private void isValidAccident(Accident accident) {
+        if (accident.getLossReserves() == 0 ) {
+            throw new MyInvalidAccessException("지급 준비금이 입력되지 않은 사고이기 떄문에 손해 사정이 불가능합니다.");
+        }
+        if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
+            throw new MyInvalidAccessException("사고 조사 보고서가 업로드되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
+        }
+        if (accident instanceof CarAccident) {
+            if (((CarAccident) accident).getErrorRate() == 0) {
+                throw new MyInvalidAccessException("과실 비율이 입력되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
+            }
+        }
     }
 
     private AccountRequestDto createCompAccount() {
@@ -271,6 +288,8 @@ public class CompensationViewLogic implements ViewLogic {
         return account;
     }
 
+
+
     private void inputLossReserve(InvestigateDamageRequestDto accident) {
         while (true) {
             long loss_reserve = -1;
@@ -286,60 +305,36 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void inputErrorRate(InvestigateDamageRequestDto accident) {
 
-        while (true) {
-            int errorRate = -1;
-            errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
-            if (isErrorRate(errorRate)) {
-                accident.setErrorRate(errorRate);
-                break;
-            } else {
-                System.out.println("범위에 맞게 입력해주세요.");
+            while (true) {
+                int errorRate = -1;
+                errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
+                if (isErrorRate(errorRate)) {
+                    accident.setErrorRate(errorRate);
+                    break;
+                } else {
+                    System.out.println("범위에 맞게 입력해주세요.");
+                }
             }
-        }
+
     }
 
-    private void downloadAccDocFile(Accident accident, List<AccDocFile> accDocFiles) {
+    private void downloadAccDocFile(Accident accident) {
         DocUtil instance = DocUtil.getInstance();
-        for (AccDocFile accDocFile : accDocFiles) {
+        for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
+            label:
             while (true) {
-                String query = accDocFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
+                String query = accidentDocumentFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
                 String result = "";
                 result = (String) br.verifyRead(query,result);
-                if (result.equals("Y")) {
-                    instance.download(accDocFile.getFileAddress());
-                    break;
-                } else if (result.equals("N")) {
-                    break;
-                } else if (result.equals("0")) {
-                    return;
+                switch (result) {
+                    case "Y":
+                        instance.download(accidentDocumentFile.getFileAddress());
+                        break label;
+                    case "N":
+                        break label;
+                    case "0":
+                        return;
                 }
-            }
-        }
-    }
-
-    private void loginCompEmployee() {
-        while(true){
-            try {
-                System.out.println("<< 직원을 선택하세요. >>");
-                employeeList = new EmployeeDao();
-                List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
-                for(Employee employee : employeeArrayList){
-                    System.out.println(employee.print());
-                }
-                System.out.println("---------------------------------");
-                int employeeId = 0;
-                employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
-                if(employeeId == 0) break;
-                this.employeeList = new EmployeeDao();
-                this.employee = this.employeeList.read(employeeId);
-                if(this.employee.getDepartment() != Department.COMP){
-                    System.out.println("해당 직원은 보상팀 직원이 아닙니다!");
-                    continue;
-                }
-                break;
-            }
-            catch (InputException e) {
-                System.out.println(e.getMessage());
             }
         }
     }

@@ -1,8 +1,8 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.ConditionOfUw;
 import insuranceCompany.application.domain.contract.Contract;
@@ -10,9 +10,7 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.MyCloseSequence;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MessageUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
@@ -21,7 +19,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -43,8 +41,8 @@ public class UnderwritingViewLogic implements ViewLogic {
     public UnderwritingViewLogic() {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-        EmployeeDao employeeDao = new EmployeeDao();
-        this.employee = employeeDao.read(2);
+        EmployeeDaoImpl employeeDaoImpl = new EmployeeDaoImpl();
+        this.employee = employeeDaoImpl.read(2);
     }
 
     public UnderwritingViewLogic(Employee employee) {
@@ -56,7 +54,7 @@ public class UnderwritingViewLogic implements ViewLogic {
     @Override
     public void showMenu() {
 
-        createMenu("<<언더라이팅팀메뉴>>", "인수심사한다");
+        createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
     }
 
     @Override
@@ -69,11 +67,11 @@ public class UnderwritingViewLogic implements ViewLogic {
                 switch (command) {
                     case "1" -> isExit = selectInsuranceType();
                     case "0" -> isExit = true;
-                    default -> throw new InputException.InputInvalidMenuException();
+                    default -> throw new InputInvalidMenuException();
                 }
 
-            } catch (InputException.InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+            } catch (InputInvalidMenuException e) {
+                System.out.println(e.getMessage());
                 command = sc.next();
             }
         }
@@ -91,58 +89,56 @@ public class UnderwritingViewLogic implements ViewLogic {
                 InsuranceType insuranceType = null;
 
                 switch (sc.next()) {
-                    case "1"-> { insuranceType = InsuranceType.HEALTH; readContract(insuranceType); }
-                    case "2"-> { insuranceType = InsuranceType.CAR; readContract(insuranceType); }
-                    case "3"-> { insuranceType = InsuranceType.FIRE; readContract(insuranceType); }
+                    case "1"-> { insuranceType = InsuranceType.HEALTH; readContracts(insuranceType); }
+                    case "2"-> { insuranceType = InsuranceType.CAR; readContracts(insuranceType); }
+                    case "3"-> { insuranceType = InsuranceType.FIRE; readContracts(insuranceType); }
                     case "0" -> isExit = true;
                     case "exit" -> throw new MyCloseSequence();
-                    default -> throw new InputException.InputInvalidMenuException();
+                    default -> throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+            } catch (InputInvalidMenuException e) {
+                System.out.println(e.getMessage());
             }
         }
         return true;
     }
 
-    public void readContract(InsuranceType insuranceType) {
+    public void readContracts(InsuranceType insuranceType) {
         boolean isExit = false;
 
         while (isExit != true) {
 
             try {
+                // read
+                ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+                List<Contract> contractList = contractDaoImpl.readAllByInsuranceType(insuranceType);
+
+                if (contractList.size() == 0) {
+                    isExit = true;
+                    throw new MyNotExistContractException();
+                }
+
                 createMenu("-------------------------------");
                 createMenu("계약 ID | 고객 이름 | 인수심사상태");
-
-                // read
-                List<Contract> contractList = this.employee.readContract(insuranceType);
                 printContractList(contractList);
                 createMenu("-------------------------------");
 
                 MessageUtil.createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
                 String contractId = sc.next();
-
                 if (contractId.equals("0")) break;
                 if (contractId.equals("exit")) throw new MyCloseSequence();
 
-                createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
-
-                ContractDao contractDao = new ContractDao();
-                InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-                Contract contract = contractDao.read(Integer.parseInt(contractId));
-                Insurance insurance = insuranceDao.read(contract.getInsuranceId());
-
-                if (contract.getId() == 0) throw new MyIllegalArgumentException();
-                if (!insurance.getInsuranceType().equals(insuranceType)) throw new MyIllegalArgumentException();
-
                 // read
+                Contract contract = this.employee.readContract(Integer.parseInt(contractId), insuranceType);
+                createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
                 printContractInfo(contract);
+
                 selectUwState(contract);
 
+            } catch (MyNotExistContractException | MyIllegalArgumentException | InputInvalidDataException e) {
+                System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
-            } catch (MyIllegalArgumentException e) {
-                System.out.println("계약 정보가 존재하지 않습니다.");
+                System.out.println(new InputInvalidDataException().getMessage());
             }
         }
     }
@@ -169,7 +165,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                             case "1"-> conditionOfUw = ConditionOfUw.APPROVAL;
                             case "2"-> conditionOfUw = ConditionOfUw.REFUSE;
                             case "3"-> conditionOfUw = ConditionOfUw.RE_AUDIT;
-                            default -> new InputException.InputInvalidMenuException();
+                            default -> new InputInvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
                         break;
@@ -179,14 +175,10 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
-            } catch (MyIllegalArgumentException e) {
-                System.out.println("계약 정보가 존재하지 않습니다.");
-            } catch (IOException e) {
-                System.out.println("인수사유가 잘못되었습니다.");
+            } catch (InputInvalidMenuException | IOException e) {
+                System.out.println(e.getMessage());
             }
         }
         return true;
@@ -208,8 +200,8 @@ public class UnderwritingViewLogic implements ViewLogic {
                         this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
-                        ContractDao contractDao = new ContractDao();
-                        System.out.println(contractDao.read(contractId));
+                        ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+                        System.out.println(contractDaoImpl.read(contractId));
                         isExit = true;
                         break;
                     case "2":
@@ -217,10 +209,10 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
-                System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
+            } catch (InputInvalidMenuException e) {
+                System.out.println(e.getMessage());
             }
         }
         return true;
@@ -230,26 +222,23 @@ public class UnderwritingViewLogic implements ViewLogic {
     public void printContractList(List<Contract> contractList) {
 
         for (Contract contract : contractList) {
-            CustomerDaoImpl customerDao = new CustomerDaoImpl();
-            Customer customer = customerDao.read(contract.getCustomerId());
-            System.out.println(contract.getId() + "        " + customer.getName() + "     " + contract.getConditionOfUw().getName());
+            CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+            Customer customer = customerDaoImpl.read(contract.getCustomerId());
+            System.out.println(contract.getId() + "        " + customer.getName() + "          " + contract.getConditionOfUw().getName());
         }
     }
 
     public Contract printContractInfo(Contract contract) {
         System.out.println(contract.toString());
 
-        CustomerDaoImpl customerDao = new CustomerDaoImpl();
-        Customer customer = customerDao.read(contract.getCustomerId());
+        CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
+        Customer customer = customerDaoImpl.read(contract.getCustomerId());
         System.out.println(customer.toString());
 
-        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-        Insurance insurance = insuranceDao.read(contract.getInsuranceId());
+        InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
+        Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
         System.out.println(insurance.print());
 
-        //InsuranceDetailDao insuranceDetailDao = new InsuranceDetailDao();
-        //InsuranceDetail insuranceDetail = insuranceDetailDao.read(contract.getInsuranceId());
-        //System.out.println(insuranceDetail.print());
         return contract;
 
     }
