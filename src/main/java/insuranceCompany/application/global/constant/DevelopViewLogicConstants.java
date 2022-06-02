@@ -7,8 +7,8 @@ public class DevelopViewLogicConstants {
     public static final String MENU_IS_CANCEL = "<< 정말 취소하시겠습니까? >>\n1. 예 2. 아니오\n";
 
     // Menu
-    public static final String MENU_TITLE = "<< 개발팀 메뉴 >>";
-    public static final String[] MENU_ELEMENTS = {"보험 개발", "판매인가 등록"};
+    public static final String MENU_TITLE_DEV_VIEW_LOGIC = "<< 개발팀 메뉴 >>";
+    public static final String[] MENU_ELEMENTS_DEV_VIEW_LOGIC = {"보험 개발", "판매인가 등록"};
     
     // Method showInsuranceEmployee()
     public static final String EMPLOYEE_INSURANCE_LIST = "<< %s 보험 개발 리스트 >>\n";

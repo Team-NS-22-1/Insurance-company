@@ -46,7 +46,7 @@ public class DevelopViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogout(MENU_TITLE, MENU_ELEMENTS);
+        return createMenuAndLogout(MENU_TITLE_DEV_VIEW_LOGIC, MENU_ELEMENTS_DEV_VIEW_LOGIC);
     }
 
     @Override
