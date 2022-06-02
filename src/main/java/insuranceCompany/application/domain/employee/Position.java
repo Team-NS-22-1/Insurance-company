@@ -7,7 +7,6 @@ package insuranceCompany.application.domain.employee;
  * @created 09-5-2022 오전 2:42:25
  */
 public enum Position {
-	ADMIN("관리자"),
 	DEPTMANAGER("부장"),
 	TEAMLEADER("팀장"),
 	MEMBER("팀원");

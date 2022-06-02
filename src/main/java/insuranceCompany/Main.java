@@ -1,12 +1,10 @@
 package insuranceCompany;
 
-import insuranceCompany.application.ApplicationTest;
+import insuranceCompany.application.Application;
 
 public class Main {
     public static void main(String[] args) {
-//        Application app = new Application();
-//        app.run();
-        ApplicationTest app = new ApplicationTest();
+        Application app = new Application();
         app.run();
     }
 }

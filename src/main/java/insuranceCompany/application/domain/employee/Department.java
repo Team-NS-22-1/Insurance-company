@@ -7,7 +7,6 @@ package insuranceCompany.application.domain.employee;
  * @created 09-5-2022 오전 2:42:24
  */
 public enum Department {
-	ADMIN("관리자"),
 	DEV("개발팀"),
 	UW("언더라이팅"),
 	COMP("보상팀"),
