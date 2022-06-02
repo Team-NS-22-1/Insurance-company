@@ -11,19 +11,20 @@ package insuranceCompany.application.global.exception;
  * -----------------------------------------------------------
  * 2022-05-20                규현             최초 생성
  */
-public class MyFileException extends MyException{
-    public MyFileException() {
+public class MyFileNotFoundException extends MyException{
+    public MyFileNotFoundException() {
+        super("ERROR :: 파일을 찾을 수 없습니다!\n");
     }
 
-    public MyFileException(String message) {
+    public MyFileNotFoundException(String message) {
         super(message);
     }
 
-    public MyFileException(String message, Throwable cause) {
+    public MyFileNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MyFileException(Throwable cause) {
+    public MyFileNotFoundException(Throwable cause) {
         super(cause);
     }
 }

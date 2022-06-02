@@ -14,12 +14,12 @@ import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MessageUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenu;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -177,7 +177,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                     default:
                         throw new InputInvalidMenuException();
                 }
-            } catch (InputInvalidMenuException | IOException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println(e.getMessage());
             }
         }
