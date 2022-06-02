@@ -2,7 +2,7 @@ package insuranceCompany.application.viewlogic;
 
 
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
@@ -83,7 +83,7 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void initEmployee() {
-        EmployeeDao employeeDao = new EmployeeDao();
+        EmployeeDaoImpl employeeDao = new EmployeeDaoImpl();
         ArrayList<Employee> employees = employeeDao.readAllSalesEmployee();
         while(true) {
             try {
@@ -95,7 +95,7 @@ public class SalesViewLogic implements ViewLogic {
                 if (command.isBlank()){
                     throw new InputNullDataException();
                 }
-                employeeDao = new EmployeeDao();
+                employeeDao = new EmployeeDaoImpl();
                 this.employee = employeeDao.read(Integer.parseInt(command));
                 if (employee != null && employee.getDepartment() == Department.SALES)  {
                     break;

@@ -1,6 +1,9 @@
 package insuranceCompany.application.domain.accident;
 
 
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +15,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:56
  */
-public class AccidentListImpl implements AccidentList {
+public class AccidentListImpl implements AccidentDao {
 
 	private static Map<Integer,Accident> accidentList = new HashMap<>();
 	private static int id;
@@ -29,7 +32,7 @@ public class AccidentListImpl implements AccidentList {
 		Accident accident = accidentList.get(id);
 
 		if (accident == null) {
-			throw new IllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new MyIllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		}
 		return accident;
 	}
@@ -45,7 +48,7 @@ public class AccidentListImpl implements AccidentList {
 			accidentList.remove(id);
 			return true;
 		}
-		throw new IllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+		throw new MyIllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 	}
 
 	@Override
@@ -54,7 +57,7 @@ public class AccidentListImpl implements AccidentList {
 		List<Accident> collect = list.stream().filter(a -> a.getCustomerId() == customerId)
 				.collect(Collectors.toList());
 		if(collect.size()==0)
-			throw new IllegalArgumentException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new MyIllegalArgumentException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		return collect;
 	}
 
@@ -64,7 +67,7 @@ public class AccidentListImpl implements AccidentList {
 		List<Accident> collect = list.stream().filter(a -> a.getEmployeeId() == employeeId)
 				.collect(Collectors.toList());
 		if(collect.size()==0)
-			throw new IllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+			throw new MyIllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
 		return collect;
 	}
 

@@ -1,6 +1,8 @@
 package insuranceCompany.application.domain.employee;
 
 
+import insuranceCompany.application.dao.employee.EmployeeDao;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 09-5-2022 오후 4:39:00
  */
-public class EmployeeListImpl implements EmployeeList {
+public class EmployeeListImpl implements EmployeeDao {
 
 	private static HashMap<Integer, Employee> employeeList = new HashMap<>();
 	private static int id = 0;

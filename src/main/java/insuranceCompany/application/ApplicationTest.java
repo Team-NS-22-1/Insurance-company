@@ -1,6 +1,7 @@
 package insuranceCompany.application;
 
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InputInvalidMenuException;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -25,7 +26,7 @@ public class ApplicationTest {
                 while (true){
                     loginViewLogic.showMenu();
                     String command = String.valueOf(br.verifyMenu("", 2));
-                    if(command.equals("0")) throw new InputException.InputInvalidMenuException();
+                    if(command.equals("0")) throw new InputInvalidMenuException();
                     loginViewLogic.work(command);
                 }
             }

@@ -7,6 +7,7 @@ import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.global.exception.MyFileException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
@@ -88,17 +89,28 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private Insurance showInsuranceByEmployeeAndSelect() throws IOException {
-        ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
-        if(insuranceArrayList.size() == 0) {
-            System.out.println(ERROR_NONE_INSURANCE_LIST);
-            return null;
+        while (true) {
+            try {
+                ArrayList<Insurance> insuranceArrayList = showInsuranceByEmployee();
+                if(insuranceArrayList.size() == 0) {
+                    System.out.println(ERROR_NONE_INSURANCE_LIST);
+                    return null;
+                }
+                System.out.println(MENU_SELECT_INSURANCE_FOR_REGISTER_FILE);
+
+                int insuranceId = 0;
+                insuranceId = (int) br.verifyRead(QUERY_INSURANCE_ID, insuranceId);
+                if(insuranceId == 0) return null;
+                Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
+                if (insurance.getDevInfo().getEmployeeId() != this.employee.getId()) {
+                    throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
+                }
+                System.out.println(insurance.printOnlyInsurance());
+                return insurance;
+            } catch (MyIllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
         }
-        System.out.println(MENU_SELECT_INSURANCE_FOR_REGISTER_FILE);
-        int insuranceId = br.verifyMenu(QUERY_INSURANCE_ID, insuranceArrayList.size());
-        if(insuranceId == 0) return null;
-        Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-        System.out.println(insurance.printOnlyInsurance());
-        return insurance;
     }
 
     private InsuranceType menuInsuranceType() throws IOException {
@@ -230,7 +242,7 @@ public class DevelopViewLogic implements ViewLogic {
         while(isAddGuarantee) {
             String gName = "", gDescription = "";
             long gAmount = 0;
-            System.out.println(TITLE_INPUT_GUARANTEE);
+            System.out.println(TITLE_INPUT_GUARANTEE + EXIT_SYSTEM);
             gName = (String) br.verifyRead(QUERY_GUARANTEE_NAME, gName);
             gDescription = (String) br.verifyRead(QUERY_GUARANTEE_DESCRIPTION, gDescription);
             gAmount = (Long) br.verifyRead(QUERY_GUARANTEE_AMOUNT, gAmount);

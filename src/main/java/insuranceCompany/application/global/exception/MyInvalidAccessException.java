@@ -2,7 +2,7 @@ package insuranceCompany.application.global.exception;
 
 /**
  * packageName :  insuranceCompany.application.global.exception
- * fileName : InputInvalidDataException
+ * fileName : MyInvalidAccessException
  * author :  규현
  * date : 2022-06-02
  * description :
@@ -11,20 +11,19 @@ package insuranceCompany.application.global.exception;
  * -----------------------------------------------------------
  * 2022-06-02                규현             최초 생성
  */
-public class InputInvalidDataException extends InputException{
-    public InputInvalidDataException() {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
+public class MyInvalidAccessException extends MyException{
+    public MyInvalidAccessException() {
     }
 
-    public InputInvalidDataException(String message) {
+    public MyInvalidAccessException(String message) {
         super(message);
     }
 
-    public InputInvalidDataException(String message, Throwable cause) {
+    public MyInvalidAccessException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public InputInvalidDataException(Throwable cause) {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n",cause);
+    public MyInvalidAccessException(Throwable cause) {
+        super(cause);
     }
 }

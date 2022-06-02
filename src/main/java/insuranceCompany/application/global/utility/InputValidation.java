@@ -64,7 +64,7 @@ public class InputValidation {
         }
     }
 
-    public boolean validateBooleanFormat(String question) {
+    public boolean validateBooleanFormat(String question) throws InputInvalidDataException {
         while (true) {
             try {
                 System.out.println(question);

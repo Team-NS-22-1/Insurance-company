@@ -1,8 +1,8 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.ConditionOfUw;
 import insuranceCompany.application.domain.contract.Contract;
@@ -10,7 +10,6 @@ import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
-import insuranceCompany.application.global.exception.InputException;
 import insuranceCompany.application.global.exception.InputInvalidMenuException;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
@@ -44,7 +43,7 @@ public class UnderwritingViewLogic implements ViewLogic {
     public UnderwritingViewLogic() {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
-        EmployeeDao employeeDao = new EmployeeDao();
+        EmployeeDaoImpl employeeDao = new EmployeeDaoImpl();
         this.employee = employeeDao.read(2);
     }
 
@@ -128,9 +127,9 @@ public class UnderwritingViewLogic implements ViewLogic {
 
                 createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
 
-                ContractDao contractDao = new ContractDao();
+                ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
                 InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-                Contract contract = contractDao.read(Integer.parseInt(contractId));
+                Contract contract = contractDaoImpl.read(Integer.parseInt(contractId));
                 Insurance insurance = insuranceDao.read(contract.getInsuranceId());
 
                 if (contract.getId() == 0) throw new MyIllegalArgumentException();
@@ -170,7 +169,7 @@ public class UnderwritingViewLogic implements ViewLogic {
                             case "1"-> conditionOfUw = ConditionOfUw.APPROVAL;
                             case "2"-> conditionOfUw = ConditionOfUw.REFUSE;
                             case "3"-> conditionOfUw = ConditionOfUw.RE_AUDIT;
-                            default -> new InputException.InputInvalidMenuException();
+                            default -> new InputInvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
                         break;
@@ -180,9 +179,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             } catch (MyIllegalArgumentException e) {
                 System.out.println("계약 정보가 존재하지 않습니다.");
@@ -209,8 +208,8 @@ public class UnderwritingViewLogic implements ViewLogic {
                         this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
                         createMenu("인수심사 결과가 반영되었습니다.");
-                        ContractDao contractDao = new ContractDao();
-                        System.out.println(contractDao.read(contractId));
+                        ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+                        System.out.println(contractDaoImpl.read(contractId));
                         isExit = true;
                         break;
                     case "2":
@@ -218,9 +217,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "exit":
                         throw new MyCloseSequence();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }
