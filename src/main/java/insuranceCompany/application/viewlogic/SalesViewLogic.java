@@ -54,6 +54,12 @@ public class SalesViewLogic implements ViewLogic {
         this.csu = new CriterionSetUtil();
     }
 
+    public SalesViewLogic(Employee employee) {
+        this.sc = new Scanner(System.in);
+        this.input = new InputValidation();
+        this.employee = employee;
+    }
+
     @Override
     public void showMenu() {
         createMenuAndClose("영업팀 메뉴", "보험상품설계");
@@ -188,7 +194,6 @@ public class SalesViewLogic implements ViewLogic {
         boolean isHavingDisease = input.validateBooleanFormat(question);
         if (isHavingDisease)
             riskCount++;
-
 
         int premium = employee.planHealthInsurance(csu.setTargetAge(age), sex, csu.setRiskCriterion(riskCount), insurance);
 
