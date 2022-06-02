@@ -96,7 +96,7 @@ public class DocUtil extends JFrame {
             out = new FileOutputStream(dir);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-            throw new MyFileNotFoundException();
+            throw new MyFileNotFoundException("ERROR :: 파일을 찾을 수 없습니다!");
         } catch (IOException e) {
             e.printStackTrace();
         }
