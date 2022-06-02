@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-class AccidentDocumentFileDaoTest {
+class AccidentDocumentFileDaoImplTest {
 
-    AccidentDocumentFileDao dao = new AccidentDocumentFileDao();
+    AccidentDocumentFileDaoImpl dao = new AccidentDocumentFileDaoImpl();
 
     @Test
     void create() {
@@ -32,7 +32,7 @@ class AccidentDocumentFileDaoTest {
         accidentDocumentFile.setAccidentId(5);
         dao.create(accidentDocumentFile);
 
-        dao = new AccidentDocumentFileDao();
+        dao = new AccidentDocumentFileDaoImpl();
         AccidentDocumentFile read = dao.read(accidentDocumentFile.getId());
         System.out.println(read);
         assertEquals(accidentDocumentFile.getId(),read.getId());

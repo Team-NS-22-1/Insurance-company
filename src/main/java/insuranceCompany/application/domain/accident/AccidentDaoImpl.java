@@ -1,6 +1,8 @@
 package insuranceCompany.application.domain.accident;
 
 
+import insuranceCompany.application.dao.accident.AccidentDao;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:56
  */
-public class AccidentListImpl implements AccidentList {
+public class AccidentDaoImpl implements AccidentDao {
 
 	private static Map<Integer,Accident> accidentList = new HashMap<>();
 	private static int id;

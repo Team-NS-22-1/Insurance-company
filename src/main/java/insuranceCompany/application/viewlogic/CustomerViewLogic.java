@@ -1,30 +1,30 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.accident.ComplainDao;
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.ComplainDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.AccidentList;
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.complain.Complain;
-import insuranceCompany.application.domain.complain.ComplainList;
+import insuranceCompany.application.dao.accident.ComplainDao;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.employee.EmployeeList;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 import insuranceCompany.outerSystem.CarAccidentService;
@@ -62,14 +62,14 @@ import static insuranceCompany.application.global.utility.MessageUtil.*;
  */
 public class CustomerViewLogic implements ViewLogic {
 
-    private ContractDao contractList;
+    private ContractDaoImpl contractList;
     private InsuranceDaoImpl insuranceList;
     private CustomerDao customerList;
-    private PaymentList paymentList;
-    private AccidentList accidentList;
-    private AccidentDocumentFileList accidentDocumentFileList;
-    private EmployeeList employeeList;
-    private ComplainList complainList;
+    private PaymentDao paymentDao;
+    private AccidentDao accidentDao;
+    private AccidentDocumentFileDao accidentDocumentFileDao;
+    private EmployeeDao employeeDao;
+    private ComplainDao complainDao;
     private Customer customer;
     private Scanner sc;
     private CustomMyBufferedReader br;
@@ -215,7 +215,7 @@ public class CustomerViewLogic implements ViewLogic {
 
     private void connectCompEmployee(Accident accident) {
 
-        Employee compEmployee = assignCompEmployee(employeeList, accidentList);
+        Employee compEmployee = assignCompEmployee(employeeDao, accidentDao);
         System.out.println(compEmployee.print());
 
 
@@ -226,9 +226,9 @@ public class CustomerViewLogic implements ViewLogic {
                 String reasons = "";
                 reasons=(String)br.verifyRead("변경 사유를 입력해주세요 : ",reasons);
                 Complain complain = this.customer.changeCompEmp(reasons);
-                complainList = new ComplainDao();
-                complainList.create(complain);
-                compEmployee = changeCompEmployee(employeeList, accidentList,compEmployee);
+                complainDao = new ComplainDaoImpl();
+                complainDao.create(complain);
+                compEmployee = changeCompEmployee(employeeDao, accidentDao,compEmployee);
                 System.out.println(compEmployee.print());
                 System.out.println("보상처리담당자 변경이 완료되었습니다.");
                 break;
@@ -237,8 +237,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         accident.setEmployeeId(compEmployee.getId());
-        accidentList = new AccidentDao();
-        accidentList.updateCompEmployeeId(accident);
+        accidentDao = new AccidentDaoImpl();
+        accidentDao.updateCompEmployeeId(accident);
     }
 
     private void showFireAccidentDoc(Accident accident) {
@@ -274,8 +274,8 @@ public class CustomerViewLogic implements ViewLogic {
         Accident retAccident = null;
         int accidentId = 0;
         while (true) {
-            accidentList = new AccidentDao();
-            List<Accident> accidents = accidentList.readAllByCustomerId(customer.getId());
+            accidentDao = new AccidentDaoImpl();
+            List<Accident> accidents = accidentDao.readAllByCustomerId(customer.getId());
             for (Accident accident : accidents) {
                 accident.printForCustomer();
             }
@@ -288,16 +288,16 @@ public class CustomerViewLogic implements ViewLogic {
                 if (accidentId == 0) {
                     break;
                 }
-                accidentList = new AccidentDao();
-                retAccident = accidentList.read(accidentId);
+                accidentDao = new AccidentDaoImpl();
+                retAccident = accidentDao.read(accidentId);
                 break;
             } catch (InputException | IllegalArgumentException e) {
                 System.out.println("정확한 값을 입력해 주세요");
             }
         }
         if (accidentId != 0) {
-            accidentDocumentFileList = new AccidentDocumentFileDao();
-            List<AccidentDocumentFile> files = accidentDocumentFileList.readAllByAccidentId(retAccident.getId());
+            accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+            List<AccidentDocumentFile> files = accidentDocumentFileDao.readAllByAccidentId(retAccident.getId());
             for (AccidentDocumentFile file : files) {
                 retAccident.getAccDocFileList().put(file.getType(),file);
             }
@@ -325,8 +325,8 @@ public class CustomerViewLogic implements ViewLogic {
 
         AccidentReportDto accidentReportDto = inputDetailAccidentInfo(inputCommonAccidentInfo(selectAccidentType));
         Accident accident = customer.reportAccident(accidentReportDto);
-        accidentList = new AccidentDao();
-        accidentList.create(accident);
+        accidentDao = new AccidentDaoImpl();
+        accidentDao.create(accident);
 
         accident.printForCustomer();
 
@@ -504,7 +504,7 @@ public class CustomerViewLogic implements ViewLogic {
     }
 
     private AccidentType selectAccidentType() {
-        contractList = new ContractDao();
+        contractList = new ContractDaoImpl();
         List<ContractwithTypeDto> contractTypes = contractList.findAllContractWithTypeByCustomerId(this.customer.getId());
         AccidentType accidentType = null;
             while (true) {
@@ -550,10 +550,8 @@ public class CustomerViewLogic implements ViewLogic {
         customerList = new CustomerDaoImpl();
         this.customer  = customerList.read(customerId);
         try {
-            paymentList = new PaymentDao();
-            List<Payment> payments = paymentList.findAllByCustomerId(customerId);
-            this.customer.setPaymentList((ArrayList<Payment>) payments);
-        } catch (IllegalArgumentException e) {
+            customer.readPayment();
+        } catch (MyIllegalArgumentException e) {
             System.out.println(e.getMessage());
             System.out.println("결제 수단을 추가한 후, 계약에 결제 수단을 등록해주세요.");
         }
@@ -622,7 +620,7 @@ public class CustomerViewLogic implements ViewLogic {
     // 계약의 ID를 입력하는 것으로 이후 작업이 진행될 계약 객체를 선택한다.
     private Contract selectContract(){
         Contract contract = null;
-        contractList = new ContractDao();
+        contractList = new ContractDaoImpl();
         List<Contract> contracts = contractList.findAllByCustomerId(this.customer.getId());
         while (true) {
             try {
@@ -634,7 +632,7 @@ public class CustomerViewLogic implements ViewLogic {
                 String key = sc.next();
                 if (key.equals("0"))
                     break;
-                contractList = new ContractDao();
+                contractList = new ContractDaoImpl();
                 contract = contractList.read(Integer.parseInt(key));
                 break;
             } catch (MyIllegalArgumentException e) {
@@ -672,8 +670,8 @@ public class CustomerViewLogic implements ViewLogic {
 
     // 계약에 대해서 보험료를 납부하는 기능
     private void pay(Contract contract) {
-        paymentList = new PaymentDao();
-        Payment payment = paymentList.read(contract.getPaymentId());
+        paymentDao = new PaymentDaoImpl();
+        Payment payment = paymentDao.read(contract.getPaymentId());
         customer.pay(contract,payment);
     }
 
@@ -699,10 +697,10 @@ public class CustomerViewLogic implements ViewLogic {
                     return;
                 if(key.equals("exit"))
                     throw new MyCloseSequence();
-                this.paymentList = new PaymentDao();
-                Payment payment = this.paymentList.read(Integer.parseInt(key));
+                this.paymentDao = new PaymentDaoImpl();
+                Payment payment = this.paymentDao.read(Integer.parseInt(key));
                 this.customer.registerPayment(contract, payment);
-                contractList = new ContractDao();
+                contractList = new ContractDaoImpl();
                 contractList.updatePayment(contract.getId(),payment.getId());
                 break;
             } catch (NumberFormatException e) {
@@ -792,8 +790,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(card);
-        paymentList = new PaymentDao();
-        paymentList.create(payment);
+        paymentDao = new PaymentDaoImpl();
+        paymentDao.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
 
@@ -896,8 +894,8 @@ public class CustomerViewLogic implements ViewLogic {
             }
         }
         Payment payment = customer.createPayment(account);
-        paymentList = new PaymentDao();
-        paymentList.create(payment);
+        paymentDao = new PaymentDaoImpl();
+        paymentDao.create(payment);
         customer.addPayment(payment);
         System.out.println("결제 수단이 추가되었습니다.");
     }

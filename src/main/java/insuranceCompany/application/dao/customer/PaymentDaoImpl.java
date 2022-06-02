@@ -21,9 +21,9 @@ import java.util.List;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-public class PaymentDao extends Dao implements PaymentList {
+public class PaymentDaoImpl extends Dao implements PaymentDao {
 
-    public PaymentDao() {
+    public PaymentDaoImpl() {
         super.connect();
     }
 
@@ -107,7 +107,7 @@ public class PaymentDao extends Dao implements PaymentList {
             }
 
         if(paymentList.size() == 0)
-            throw new IllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
+            throw new MyIllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
         return  paymentList;
     }
 

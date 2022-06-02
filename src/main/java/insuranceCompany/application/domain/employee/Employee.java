@@ -13,11 +13,10 @@ import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.global.exception.InputInvalidDataException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -497,8 +496,8 @@ public class Employee {
 				.setConditionOfUw(ConditionOfUw.WAIT);
 		if (employee.getId() != 0)
 			contract.setEmployeeId(employee.getId());
-		ContractDao contractDao = new ContractDao();
-		contractDao.create(contract);
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		contractDaoImpl.create(contract);
 	}
 
 	public int planHealthInsurance(int targetAge, boolean targetSex, boolean riskPremiumCriterion, Insurance insurance){
@@ -594,19 +593,19 @@ public class Employee {
 	}
 
 	public List<Contract> readContract(InsuranceType insuranceType){
-		ContractDao contractDao = new ContractDao();
-		return contractDao.readAllByInsuranceType(insuranceType);
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		return contractDaoImpl.readAllByInsuranceType(insuranceType);
 	}
 
 	public void underwriting(int contractId, String reasonOfUw, ConditionOfUw conditionOfUw){
-		ContractDao contractDao = new ContractDao();
-		Contract contract = contractDao.read(contractId);
+		ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
+		Contract contract = contractDaoImpl.read(contractId);
 		contract.setReasonOfUw(reasonOfUw);
 		contract.setConditionOfUw(conditionOfUw);
 		contract.setPublishStock(true);
 
-		ContractDao contractDao1 = new ContractDao();
-		contractDao1.update(contract);
+		ContractDaoImpl contractDaoImpl1 = new ContractDaoImpl();
+		contractDaoImpl1.update(contract);
 	}
 
 	public String print() {

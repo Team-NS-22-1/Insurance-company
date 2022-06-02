@@ -1,6 +1,7 @@
 package insuranceCompany.application.domain.contract;
 
 
+import insuranceCompany.application.dao.contract.ContractDao;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @created 09-5-2022 ���� 4:38:58
  */
-public class ContractListImpl implements ContractList {
+public class ContractListImpl implements ContractDao {
 
 
 	private static Map<Integer, Contract> contractList = new HashMap<>();

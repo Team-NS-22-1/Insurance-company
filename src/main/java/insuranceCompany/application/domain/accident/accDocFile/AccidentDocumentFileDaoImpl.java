@@ -1,5 +1,7 @@
 package insuranceCompany.application.domain.accident.accDocFile;
 
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
  * -----------------------------------------------------------
  * 2022-05-18                규현             최초 생성
  */
-public class AccidentDocumentFileListImpl implements AccidentDocumentFileList {
+public class AccidentDocumentFileDaoImpl implements AccidentDocumentFileDao {
 
     private static Map<Integer, AccidentDocumentFile> accDocFilelist = new HashMap<>();
     private static int id;

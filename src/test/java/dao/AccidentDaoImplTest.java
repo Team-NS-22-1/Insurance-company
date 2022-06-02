@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
@@ -28,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * -----------------------------------------------------------
  * 2022-05-28                규현             최초 생성
  */
-class AccidentDaoTest {
+class AccidentDaoImplTest {
 
     Dao dao = new Dao();
-    AccidentDao ad = new AccidentDao();
+    AccidentDaoImpl ad = new AccidentDaoImpl();
 
     @Test
     void ad_test() {
@@ -43,10 +43,10 @@ class AccidentDaoTest {
                 .setDateOfAccident(LocalDateTime.now())
                 .setDateOfReport(LocalDateTime.now())
                 .setAccidentType(AccidentType.INJURYACCIDENT);
-        ad = new AccidentDao();
+        ad = new AccidentDaoImpl();
         ad.create(accident);
 
-        ad = new AccidentDao();
+        ad = new AccidentDaoImpl();
         Accident read = ad.read(accident.getId());
         read.printForCustomer();
     }

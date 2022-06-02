@@ -1,6 +1,6 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.employee.Department;
@@ -78,7 +78,7 @@ public class DevelopViewLogic implements ViewLogic {
         while(true) {
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
-                ArrayList<Employee> devEmployees = new EmployeeDao().readAllDev();
+                ArrayList<Employee> devEmployees = new EmployeeDaoImpl().readAllDev();
                 for(Employee employee : devEmployees) {
                     System.out.println(employee.print());
                 }
@@ -86,7 +86,7 @@ public class DevelopViewLogic implements ViewLogic {
                 int eid = 0;
                 eid = (int) br.verifyRead("직원 ID: ", eid);
                 if(eid == 0) return;
-                this.employee = new EmployeeDao().read(eid);
+                this.employee = new EmployeeDaoImpl().read(eid);
                 if(this.employee != null) {
                     if (this.employee.getDepartment() == Department.DEV)
                         break;

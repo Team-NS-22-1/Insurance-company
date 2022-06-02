@@ -1,7 +1,8 @@
 package insuranceCompany.application.domain.customer;
 
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
@@ -14,6 +15,7 @@ import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.global.utility.DocUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 규현
@@ -141,7 +143,7 @@ public class Customer {
 		}
 		accidentDocumentFile.setFileAddress(directory);
 
-		AccidentDocumentFileDao accidentDocumentFileList = new AccidentDocumentFileDao();
+		AccidentDocumentFileDaoImpl accidentDocumentFileList = new AccidentDocumentFileDaoImpl();
 		if (accident.getAccDocFileList().containsKey(accDocType)) {
 			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
 		} else {
@@ -161,7 +163,9 @@ public class Customer {
 	}
 
 	public void readPayment(){
-
+		PaymentDao paymentDao = new PaymentDaoImpl();
+		List<Payment> payments = paymentDao.findAllByCustomerId(this.id);
+		this.setPaymentList((ArrayList<Payment>) payments);
 	}
 
 	public Payment createPayment(PaymentDto paymentDto) {

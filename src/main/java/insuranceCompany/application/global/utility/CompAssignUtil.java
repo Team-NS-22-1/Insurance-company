@@ -1,11 +1,11 @@
 package insuranceCompany.application.global.utility;
 
-import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.AccidentList;
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.employee.EmployeeList;
+import insuranceCompany.application.dao.employee.EmployeeDao;
 
 import java.util.List;
 
@@ -22,39 +22,39 @@ import java.util.List;
  */
 public class CompAssignUtil {
 
-    public static Employee changeCompEmployee(EmployeeList employeeList, AccidentList accidentList, Employee employee) {
-        employeeList = new EmployeeDao();
-        List<Employee> compEmployees = employeeList.readAllCompEmployee();
+    public static Employee changeCompEmployee(EmployeeDao employeeDao, AccidentDao accidentDao, Employee employee) {
+        employeeDao = new EmployeeDaoImpl();
+        List<Employee> compEmployees = employeeDao.readAllCompEmployee();
         compEmployees.remove(employee);
         int min = Integer.MAX_VALUE;
         int minId = 0;
-        accidentList = new AccidentDao();
+        accidentDao = new AccidentDaoImpl();
         for (Employee compEmployee : compEmployees) {
-            List<Accident> accidents = accidentList.readAllByEmployeeId(compEmployee.getId());
+            List<Accident> accidents = accidentDao.readAllByEmployeeId(compEmployee.getId());
             if (min > accidents.size()) {
                 min = accidents.size();
                 minId = compEmployee.getId();
             }
         }
-        employeeList = new EmployeeDao();
-        return employeeList.read(minId);
+        employeeDao = new EmployeeDaoImpl();
+        return employeeDao.read(minId);
     }
 
-    public static Employee assignCompEmployee(EmployeeList employeeList, AccidentList accidentList) {
-        employeeList = new EmployeeDao();
-        List<Employee> compEmployees = employeeList.readAllCompEmployee();
+    public static Employee assignCompEmployee(EmployeeDao employeeDao, AccidentDao accidentDao) {
+        employeeDao = new EmployeeDaoImpl();
+        List<Employee> compEmployees = employeeDao.readAllCompEmployee();
         int min = Integer.MAX_VALUE;
         int minId = 0;
 
         for (Employee compEmployee : compEmployees) {
-            accidentList = new AccidentDao();
-            List<Accident> accidents = accidentList.readAllByEmployeeId(compEmployee.getId());
+            accidentDao = new AccidentDaoImpl();
+            List<Accident> accidents = accidentDao.readAllByEmployeeId(compEmployee.getId());
             if (min > accidents.size()) {
                 min = accidents.size();
                 minId = compEmployee.getId();
             }
         }
-        employeeList = new EmployeeDao();
-        return employeeList.read(minId);
+        employeeDao = new EmployeeDaoImpl();
+        return employeeDao.read(minId);
     }
 }

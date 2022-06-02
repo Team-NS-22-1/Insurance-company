@@ -1,15 +1,16 @@
 package insuranceCompany.application.viewlogic;
 
+import insuranceCompany.application.dao.accident.AccidentDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.dao.accident.AccidentDao;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFileList;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.dao.customer.CustomerDao;
@@ -46,10 +47,10 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
  */
 public class CompensationViewLogic implements ViewLogic {
 
-    private AccidentList accidentList;
-    private AccidentDocumentFileList accidentDocumentFileList;
+    private AccidentDao accidentDao;
+    private AccidentDocumentFileDao accidentDocumentFileDao;
     private CustomerDao customerList;
-    private EmployeeDao employeeList;
+    private EmployeeDaoImpl employeeList;
     private CustomMyBufferedReader br;
     private Employee employee;
 
@@ -93,8 +94,8 @@ public class CompensationViewLogic implements ViewLogic {
             return;
 
         showAccidentDetail(accident);
-        accidentDocumentFileList = new AccidentDocumentFileDao();
-        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
+        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
         downloadAccDocFile(accident, accidentDocumentFiles);
@@ -110,11 +111,11 @@ public class CompensationViewLogic implements ViewLogic {
         inputLossReserve(dto);
 
         employee.investigateDamage(dto,accident);
-        accidentList = new AccidentDao();
+        accidentDao = new AccidentDaoImpl();
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-            accidentList.updateLossReserveAndErrorRate(accident);
+            accidentDao.updateLossReserveAndErrorRate(accident);
         else
-            accidentList.updateLossReserve(accident);
+            accidentDao.updateLossReserve(accident);
 
 
         while (true) {
@@ -132,8 +133,8 @@ public class CompensationViewLogic implements ViewLogic {
 
     private Accident selectAccident() {
 
-        accidentList = new AccidentDao();
-        List<Accident> accidents = this.accidentList.readAllByEmployeeId(this.employee.getId());
+        accidentDao = new AccidentDaoImpl();
+        List<Accident> accidents = this.accidentDao.readAllByEmployeeId(this.employee.getId());
         if (accidents.size() == 0) {
             System.out.println("현재 배당된 사고가 없습니다.");
             return null;
@@ -147,8 +148,8 @@ public class CompensationViewLogic implements ViewLogic {
             System.out.println("---------------------------------");
             int accidentId = 0;
             accidentId = (int)br.verifyRead("사고 ID : ", accidentId);
-            accidentList = new AccidentDao();
-            Accident accident = this.accidentList.read(accidentId);
+            accidentDao = new AccidentDaoImpl();
+            Accident accident = this.accidentDao.read(accidentId);
             if (accident.getEmployeeId() != this.employee.getId()) {
                 System.out.println("현재 직원에게 배당된 사건이 아닙니다. 정확한 값을 입력해주세요.");
                 continue;
@@ -193,8 +194,8 @@ public class CompensationViewLogic implements ViewLogic {
         Accident accident = selectAccident();
         if(accident == null)
             return;
-        accidentDocumentFileList = new AccidentDocumentFileDao();
-        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileList.readAllByAccidentId(accident.getId());
+        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
+        List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accident.getId());
         //다운로드 하기.
 
         downloadAccDocFile(accident, accidentDocumentFiles);
@@ -209,11 +210,11 @@ public class CompensationViewLogic implements ViewLogic {
                 isExist = true;
             }
         }
-        accidentDocumentFileList = new AccidentDocumentFileDao();
+        accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
         if (isExist) {
-            accidentDocumentFileList.update(lossId);
+            accidentDocumentFileDao.update(lossId);
         } else {
-            accidentDocumentFileList.create(assessDamageResponseDto.getAccidentDocumentFile());
+            accidentDocumentFileDao.create(assessDamageResponseDto.getAccidentDocumentFile());
         }
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
@@ -235,8 +236,8 @@ public class CompensationViewLogic implements ViewLogic {
             }
         }
         Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
-        accidentList = new AccidentDao();
-        accidentList.delete(accident.getId());
+        accidentDao = new AccidentDaoImpl();
+        accidentDao.delete(accident.getId());
         DocUtil.deleteDir(accident); // 폴더 삭제
     }
 
@@ -326,7 +327,7 @@ public class CompensationViewLogic implements ViewLogic {
         while(true){
             try {
                 System.out.println("<< 직원을 선택하세요. >>");
-                employeeList = new EmployeeDao();
+                employeeList = new EmployeeDaoImpl();
                 List<Employee> employeeArrayList = this.employeeList.readAllCompEmployee();
                 for(Employee employee : employeeArrayList){
                     System.out.println(employee.print());
@@ -335,7 +336,7 @@ public class CompensationViewLogic implements ViewLogic {
                 int employeeId = 0;
                 employeeId = (int) br.verifyRead("직원 ID: ", employeeId);
                 if(employeeId == 0) break;
-                this.employeeList = new EmployeeDao();
+                this.employeeList = new EmployeeDaoImpl();
                 this.employee = this.employeeList.read(employeeId);
                 if(this.employee.getDepartment() != Department.COMP){
                     System.out.println("해당 직원은 보상팀 직원이 아닙니다!");

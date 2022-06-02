@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.accident.ComplainDao;
+import insuranceCompany.application.dao.accident.ComplainDaoImpl;
 import insuranceCompany.application.domain.complain.Complain;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.Test;
@@ -20,9 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * -----------------------------------------------------------
  * 2022-05-30                규현             최초 생성
  */
-class ComplainDaoTest {
+class ComplainDaoImplTest {
 
-    ComplainDao dao = new ComplainDao();
+    ComplainDaoImpl dao = new ComplainDaoImpl();
 
     @Test
     void create() {
