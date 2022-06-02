@@ -57,7 +57,6 @@ public class LoginViewLogic implements ViewLogic {
                 }
                 case 2 -> {
                     CustomerViewLogic customerViewLogic = new CustomerViewLogic();
-                    customerViewLogic.showMenu();
                     String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
                     customerViewLogic.work(command);
                 }
