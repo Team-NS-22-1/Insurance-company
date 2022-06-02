@@ -128,7 +128,7 @@ public class UnderwritingViewLogic implements ViewLogic {
 
                 // read
                 Contract contract = this.employee.readContract(Integer.parseInt(contractId), insuranceType);
-                createMenu("<<계약 정보(계약 ID: " + contractId + ")>>");
+                createMenu("<<계약 정보>>");
                 printContractInfo(contract);
 
                 selectUwState(contract);
