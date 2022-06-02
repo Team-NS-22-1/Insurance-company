@@ -18,7 +18,7 @@ public class NoResultantException extends InputException {
     }
 
     public NoResultantException(String message) {
-        super("ERROR!! : 조회 결과가 없습니다.\n");
+       super(message);
     }
 
     public NoResultantException(String message, Throwable cause) {

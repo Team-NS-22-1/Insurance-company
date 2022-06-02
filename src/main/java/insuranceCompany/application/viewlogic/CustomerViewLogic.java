@@ -288,11 +288,8 @@ public class CustomerViewLogic implements ViewLogic {
                 retAccident = accidentDao.read(accidentId);
                 if(retAccident.getCustomerId() != this.customer.getId())
                     throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
-
                 break;
-            } catch (InputException  e) {
-                System.out.println("정확한 값을 입력해 주세요");
-            } catch (MyIllegalArgumentException | MyInvalidAccessException e) {
+            } catch (InputException | MyIllegalArgumentException | MyInvalidAccessException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -708,7 +705,7 @@ public class CustomerViewLogic implements ViewLogic {
                 } catch (NumberFormatException e) {
                     throw new InputInvalidDataException("ERROR!! : 정확한 형식의 값을 입력해주세요.", e);
                 }
-                } catch (IllegalArgumentException| MyIllegalArgumentException |InputInvalidDataException  e ) {
+                } catch (MyIllegalArgumentException |InputInvalidDataException| MyInvalidAccessException  e ) {
                     System.out.println(e.getMessage());
                 }
             }

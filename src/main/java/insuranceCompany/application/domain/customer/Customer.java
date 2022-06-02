@@ -10,6 +10,7 @@ import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
@@ -214,7 +215,7 @@ public class Customer {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
 		if (payment.getCustomerId() != this.id) {
-			throw new MyIllegalArgumentException("리스트에 있는 아이디를 입력해주세요.");
+			throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
 		}
 
 		contract.setPaymentId(payment.getId());

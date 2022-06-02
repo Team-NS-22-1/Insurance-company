@@ -3,6 +3,7 @@ package insuranceCompany.application.dao.accident;
 import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.NoResultantException;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -147,7 +148,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         List<Accident> accidents = getAccidents(formatted);
         close();
         if(accidents.size() == 0)
-        throw new MyIllegalArgumentException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+        throw new NoResultantException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
         return  accidents;
     }
 
@@ -158,8 +159,8 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
 
         List<Accident> accidents = getAccidents(formatted);
         close();
-//        if(accidents.size()==0)
-//            throw new IllegalArgumentException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+        if(accidents.size()==0)
+            throw new NoResultantException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
         return accidents;
     }
 
