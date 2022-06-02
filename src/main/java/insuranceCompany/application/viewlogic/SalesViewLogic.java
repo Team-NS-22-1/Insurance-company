@@ -10,7 +10,7 @@ import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.InputValidation;
 
 import java.sql.SQLException;
@@ -71,9 +71,9 @@ public class SalesViewLogic implements ViewLogic {
                     planInsurance();
                     break;
                 case "":
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 default:
-                    throw new InputException.InputInvalidMenuException();
+                    throw new InputInvalidMenuException();
             }
         } catch(InputException e) {
             System.out.println(e.getMessage());
@@ -93,7 +93,7 @@ public class SalesViewLogic implements ViewLogic {
                 }
                 command = sc.nextLine();
                 if (command.isBlank()){
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 }
                 employeeDao = new EmployeeDao();
                 this.employee = employeeDao.read(Integer.parseInt(command));
@@ -101,7 +101,7 @@ public class SalesViewLogic implements ViewLogic {
                     break;
                 }
                 else {
-                    throw new InputException.NoResultantException();
+                    throw new NoResultantException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -116,7 +116,7 @@ public class SalesViewLogic implements ViewLogic {
         InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
         ArrayList<Insurance> insurances = insuranceDao.readAll();
         if(insurances.size() == 0)
-            throw new InputException.NoResultantException();
+            throw new NoResultantException();
         while (true) {
             for (Insurance insurance : insurances) {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
@@ -130,7 +130,7 @@ public class SalesViewLogic implements ViewLogic {
                     break;
                 }
                 if (command.isBlank()){
-                    throw new InputException.InputNullDataException();
+                    throw new InputNullDataException();
                 }
                 insuranceDao = new InsuranceDaoImpl();
                 insurance = insuranceDao.read(Integer.parseInt(command));
@@ -149,7 +149,7 @@ public class SalesViewLogic implements ViewLogic {
                     }
                 }
                 else {
-                    throw new InputException.NoResultantException();
+                    throw new NoResultantException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -218,9 +218,9 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println("계약이 취소되었습니다.");
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -251,9 +251,9 @@ public class SalesViewLogic implements ViewLogic {
                         buildingType = INSTITUTIONAL;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 break;
             } catch (InputException e){
@@ -281,9 +281,9 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println("계약이 취소되었습니다.");
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -318,9 +318,9 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println("계약이 취소되었습니다.");
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {
@@ -373,9 +373,9 @@ public class SalesViewLogic implements ViewLogic {
                         isLoop = false;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -464,9 +464,9 @@ public class SalesViewLogic implements ViewLogic {
                         carType = SPORTS;
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 break;
             } catch (InputException e){
@@ -501,9 +501,9 @@ public class SalesViewLogic implements ViewLogic {
                         System.out.println("계약을 취소되었습니다.");
                         break;
                     case "":
-                        throw new InputException.InputNullDataException();
+                        throw new InputNullDataException();
                     default:
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                 }
                 break;
             } catch (InputException e) {

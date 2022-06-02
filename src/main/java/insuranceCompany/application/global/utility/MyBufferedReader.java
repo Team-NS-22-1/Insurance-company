@@ -1,7 +1,6 @@
 package insuranceCompany.application.global.utility;
 
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.MyCloseSequence;
+import insuranceCompany.application.global.exception.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +13,7 @@ public class MyBufferedReader extends BufferedReader {
 
     private void checkBlankOrExit(String value) {
         if(value.equals("") || value == null || value.isBlank())
-            throw new InputException.InputNullDataException();
+            throw new InputNullDataException();
         if(value.equalsIgnoreCase("EXIT"))
             throw new MyCloseSequence();
     }
@@ -41,10 +40,10 @@ public class MyBufferedReader extends BufferedReader {
                         return doubleValue;
                     }
                     else
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                 }
                 catch (NumberFormatException e) {
-                    throw new InputException.InputInvalidDataException();
+                    throw new InputInvalidDataException();
                 }
             }
             catch (InputException e){
@@ -54,7 +53,7 @@ public class MyBufferedReader extends BufferedReader {
     }
 
     // verifyMenu()는 '0'을 입력 가능하여 return Menu가 가능토록 구성
-    public int verifyMenu(String query, int categorySize) throws IOException {
+    public int verifyMenu(String query, int categorySize) throws IOException, InputInvalidMenuException {
         while(true){
             System.out.print(query);
             try {
@@ -64,10 +63,10 @@ public class MyBufferedReader extends BufferedReader {
                     int selectedMenu;
                     selectedMenu = Integer.parseInt(value);
                     if (selectedMenu > categorySize || selectedMenu < 0)
-                        throw new InputException.InputInvalidMenuException();
+                        throw new InputInvalidMenuException();
                     return selectedMenu;
                 } catch (NumberFormatException e) {
-                    throw new InputException.InputInvalidMenuException();
+                    throw new InputInvalidMenuException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());
@@ -89,10 +88,10 @@ public class MyBufferedReader extends BufferedReader {
                     int selectedCategory;
                     selectedCategory = Integer.parseInt(value);
                     if (selectedCategory > categorySize || selectedCategory < 1)
-                        throw new InputException.InputInvalidDataException();
+                        throw new InputInvalidDataException();
                     return selectedCategory;
                 } catch (NumberFormatException e) {
-                    throw new InputException.InputInvalidDataException();
+                    throw new InputInvalidDataException();
                 }
             } catch (InputException e) {
                 System.out.println(e.getMessage());

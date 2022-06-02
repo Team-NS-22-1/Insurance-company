@@ -1,31 +1,33 @@
 package insuranceCompany.application.domain.employee;
 
 
-import insuranceCompany.application.domain.contract.*;
-import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.Account;
-import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
-import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
-import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.dao.contract.ContractDao;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
-import insuranceCompany.application.global.exception.InputException.InputInvalidDataException;
+import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.global.exception.InputInvalidDataException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
+import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
+import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
+import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author SeungHo

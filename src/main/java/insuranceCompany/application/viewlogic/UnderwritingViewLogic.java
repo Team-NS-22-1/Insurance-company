@@ -11,6 +11,7 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InputInvalidMenuException;
 import insuranceCompany.application.global.exception.MyCloseSequence;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MessageUtil;
@@ -69,10 +70,10 @@ public class UnderwritingViewLogic implements ViewLogic {
                 switch (command) {
                     case "1" -> isExit = selectInsuranceType();
                     case "0" -> isExit = true;
-                    default -> throw new InputException.InputInvalidMenuException();
+                    default -> throw new InputInvalidMenuException();
                 }
 
-            } catch (InputException.InputInvalidMenuException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
                 command = sc.next();
             }
@@ -96,9 +97,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                     case "3"-> { insuranceType = InsuranceType.FIRE; readContract(insuranceType); }
                     case "0" -> isExit = true;
                     case "exit" -> throw new MyCloseSequence();
-                    default -> throw new InputException.InputInvalidMenuException();
+                    default -> throw new InputInvalidMenuException();
                 }
-            } catch (InputException.InputInvalidMenuException e) {
+            } catch (InputInvalidMenuException e) {
                 System.out.println("잘못된 명령을 입력했습니다. 다시 입력해주세요.");
             }
         }
