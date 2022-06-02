@@ -1,6 +1,6 @@
 package insuranceCompany.application.global.exception;
 
-import static insuranceCompany.application.global.constants.ExceptionConstants.INPUTINVALIDMENUEXCEPTION;
+import static insuranceCompany.application.global.constant.ExceptionConstants.INPUTINVALIDMENUEXCEPTION;
 
 /**
  * packageName :  insuranceCompany.application.global.exception

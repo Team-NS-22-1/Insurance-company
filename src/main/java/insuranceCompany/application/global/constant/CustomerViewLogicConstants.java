@@ -1,4 +1,4 @@
-package insuranceCompany.application.global.constants;
+package insuranceCompany.application.global.constant;
 
 /**
  * packageName :  insuranceCompany.application.global.constants

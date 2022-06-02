@@ -43,8 +43,8 @@ import java.util.Scanner;
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 
-import static insuranceCompany.application.global.constants.CustomerViewLogicConstants.*;
-import static insuranceCompany.application.global.constants.ExceptionConstants.*;
+import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
@@ -98,8 +98,7 @@ public class CustomerViewLogic implements ViewLogic {
         if (customer.getId() == 0)
             createMenuAndExit("<<고객메뉴>>", "보험가입");
         else
-            createMenuAndLogout("<<고객메뉴>>", "보험가입", "보험료납입", "사고접수", "보상금청구");
-        createMenuAndLogout(CUSTOMERMENU, SIGNININSURANCE, PAYPREMIUM, REPORTACCIDENT, CLAIMCOMPENSATION);
+            createMenuAndLogout(CUSTOMERMENU, SIGNININSURANCE, PAYPREMIUM, REPORTACCIDENT, CLAIMCOMPENSATION);
     }
 
     @Override
