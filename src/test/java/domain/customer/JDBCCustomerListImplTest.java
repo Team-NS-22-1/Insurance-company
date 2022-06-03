@@ -1,14 +1,11 @@
 package domain.customer;
 
-import lombok.extern.slf4j.Slf4j;
+import insuranceCompany.application.domain.customer.Customer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import utility.db.DBUtil;
-import utility.db.DbConst;
+import insuranceCompany.application.global.utility.db.DBUtil;
 
 import java.sql.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * packageName :  domain.customer
@@ -33,7 +30,6 @@ class JDBCCustomerListImplTest {
         Customer findCustomer = null;
         try {
             String query = "insert into customer (name) values (?)";
-            Class.forName(DbConst.JDBC_DRIVER);
             Connection conn = DBUtil.getConnection();
             PreparedStatement pstm = conn.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 
@@ -51,9 +47,8 @@ class JDBCCustomerListImplTest {
 
 
 
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
 
