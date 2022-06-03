@@ -12,7 +12,7 @@ public class Dao {
 
     public void connect() {
         try {
-//            Class.forName(DbConst.JDBC_DRIVER);
+            Class.forName(DbConst.JDBC_DRIVER);
             connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
             if (connect != null){System.out.println("성공");}
             else{System.out.println("실패");}
@@ -20,8 +20,8 @@ public class Dao {
         } catch (SQLException e) {
             // DB 접근 실패 Exception
             e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
