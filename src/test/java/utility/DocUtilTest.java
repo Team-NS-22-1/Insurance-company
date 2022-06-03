@@ -57,5 +57,6 @@ class DocUtilTest {
     @Test
     void 실행테스트() {
         System.out.println("안녕하세요");
+        System.out.println("test");
     }
 }
