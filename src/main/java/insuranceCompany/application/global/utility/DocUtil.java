@@ -41,15 +41,14 @@ public class DocUtil extends JFrame {
 
     private static FileDialog getFileDialog(String title, int type) {
         Window w = getFrontWindow();
-        if (w instanceof Frame) {
-            return new FileDialog((Frame)w, title, type);
+        if (w instanceof Frame frame) {
+            return new FileDialog(frame, title, type);
         } else {
             return new FileDialog((Dialog)w, title, type);
         }
     }
     public void download(String dir) {
 
-//        FileDialog dialog = new FileDialog(this, "파일 다운로드", FileDialog.SAVE);
         FileDialog dialog = getFileDialog("파일다운로드",FileDialog.SAVE);
 
         dialog.setAlwaysOnTop(true);
@@ -144,24 +143,9 @@ public class DocUtil extends JFrame {
         if( file.exists() ){ //파일존재여부확인
 
             if(file.isDirectory()){ //파일이 디렉토리인지 확인
-
                 File[] files = file.listFiles();
-
-                for( int i=0; i<files.length; i++){
-                    if( files[i].delete() ){
-                        System.out.println(files[i].getName()+" 삭제성공");
-                    }else{
-                        System.out.println(files[i].getName()+" 삭제실패");
-                    }
-                }
-
+                for (File value : files) value.delete();
             }
-            if(file.delete()){
-                System.out.println("디렉토리 삭제 성공");
-            }else{
-                System.out.println("디렉토리 삭제 실패");
-            }
-
         }else{
             System.out.println("파일이 존재하지 않습니다.");
         }
