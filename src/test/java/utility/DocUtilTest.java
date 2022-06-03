@@ -53,4 +53,9 @@ class DocUtilTest {
         String originPath = f.getDirectory()+f.getFile();
         System.out.println(originPath);
     }
+    
+    @Test
+    void 실행테스트() {
+        System.out.println("안녕하세요");
+    }
 }
