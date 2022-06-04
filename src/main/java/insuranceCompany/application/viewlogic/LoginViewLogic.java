@@ -12,8 +12,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndExitQuery;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuOnlyExitQuery;
+import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 public class LoginViewLogic implements ViewLogic {
 
@@ -25,7 +24,7 @@ public class LoginViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuOnlyExitQuery(MENU_TITLE_LOGIN_VIEW_LOGIC, MENU_ELEMENTS_LOGIN_VIEW_LOGIC);
+        return createMenuOnlyExitQueryAndInput(MENU_TITLE_LOGIN_VIEW_LOGIC, MENU_ELEMENTS_LOGIN_VIEW_LOGIC);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class LoginViewLogic implements ViewLogic {
 
     private void menuCustomerLogin() throws IOException {
         loop: while(true) {
-            switch (br.verifyMenu(createMenuAndExitQuery(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), 2)) {
+            switch (br.verifyMenu(createMenuOnlyExitQueryAndInput(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), 2)) {
                 case 1 -> {
                     Customer customer = new Login().loginCustomer();
                     if (customer == null) break;
