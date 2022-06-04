@@ -11,6 +11,9 @@ public class HealthContractDto extends ContractDto {
     private boolean isTakingDrug;
     private String diseaseDetail;
 
+    public HealthContractDto () {
+    }
+
     public HealthContractDto (int height, int weight, boolean isDrinking, boolean isSmoking, boolean isDriving, boolean isDangerActivity,
                               boolean isHavingDisease, boolean isTakingDrug, String diseaseDetail){
         this.height = height;

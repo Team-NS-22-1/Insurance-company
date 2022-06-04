@@ -142,13 +142,15 @@ public class CustomerViewLogic implements ViewLogic {
             }
 
             try {
+                int insuranceId = 0;
                 System.out.println("가입할 보험상품의 번호를 입력하세요. \t(0: 뒤로가기)");
-                int insuranceId = br.verifyMenu("보험상품 번호: ", insurances.size());
+                insuranceId = (int) br.verifyRead("보험상품 번호: ", insuranceId);
                 if (insuranceId == 0) break;
 
                 insurance = customer.readInsurance(insuranceId);
                 if (insurance != null && insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
-                    System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
+                    System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n계약기간: " + insurance.getContractPeriod() +
+                                        "년  납입기간: " + insurance.getPaymentPeriod() +"년\n<< 보장내역 >>");
                     for(Guarantee guarantee : insurance.getGuaranteeList()){
                         System.out.println(guarantee);
                     }
@@ -157,7 +159,7 @@ public class CustomerViewLogic implements ViewLogic {
                 else {
                     throw new NoResultantException();
                 }
-            } catch (InputException e) {
+            } catch (InputException | MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("형식에 맞는 코드를 입력해주세요");

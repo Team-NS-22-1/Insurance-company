@@ -9,6 +9,9 @@ public class CarContractDto extends ContractDto {
     private int modelYear;
     private Long value;
 
+    public CarContractDto () {
+    }
+
     public CarContractDto (String carNo, CarType carType, String modelName, int modelYear, Long value) {
         this.carNo = carNo;
         this.carType = carType;

@@ -24,9 +24,15 @@ import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
+import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
 import insuranceCompany.application.viewlogic.dto.compDto.InvestigateDamageRequestDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
+import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
 
 import java.io.IOException;
@@ -444,72 +450,77 @@ public class Employee {
 		return insuranceDao.read(insuranceId);
 	}
 
-	public HealthContract planHealthInsurance(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
-											  boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
-		HealthContract healthContract = new HealthContract();
-		healthContract.setDrinking(isDrinking)
-						.setSmoking(isSmoking)
-						.setDriving(isDriving)
-						.setDangerActivity(isDangerActivity)
-						.setTakingDrug(isTakingDrug)
-						.setHavingDisease(isHavingDisease)
-						.setInsuranceId(insuranceId)
-						.setPremium(premium);
-		return healthContract;
+	public Customer readCustomer(int customerId) {
+		CustomerDaoImpl customerDao = new CustomerDaoImpl();
+		return customerDao.read(customerId);
 	}
 
-	public FireContract planFireInsurance(int insuranceId, int premium, BuildingType buildingType, Long collateralAmount){
-		FireContract fireContract = new FireContract();
-		fireContract.setBuildingType(buildingType)
-					.setCollateralAmount(collateralAmount)
-					.setInsuranceId(insuranceId)
-					.setPremium(premium);
-		return fireContract;
-	}
+//	public HealthContract planHealthInsurance(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
+//											  boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
+//		HealthContract healthContract = new HealthContract();
+//		healthContract.setDrinking(isDrinking)
+//						.setSmoking(isSmoking)
+//						.setDriving(isDriving)
+//						.setDangerActivity(isDangerActivity)
+//						.setTakingDrug(isTakingDrug)
+//						.setHavingDisease(isHavingDisease)
+//						.setInsuranceId(insuranceId)
+//						.setPremium(premium);
+//		return healthContract;
+//	}
+//
+//	public FireContract planFireInsurance(int insuranceId, int premium, BuildingType buildingType, Long collateralAmount){
+//		FireContract fireContract = new FireContract();
+//		fireContract.setBuildingType(buildingType)
+//					.setCollateralAmount(collateralAmount)
+//					.setInsuranceId(insuranceId)
+//					.setPremium(premium);
+//		return fireContract;
+//	}
+//
+//	public CarContract planCarInsurance(int insuranceId, int premium, Long value){
+//		CarContract carContract = new CarContract();
+//		carContract.setValue(value)
+//				.setInsuranceId(insuranceId)
+//				.setPremium(premium)
+//		;
+//		return carContract;
+//	}
+//
+//	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job) {
+//		Customer customer = new Customer();
+//		customer.setName(name)
+//				.setSsn(ssn)
+//				.setPhone(phone)
+//				.setAddress(address)
+//				.setEmail(email)
+//				.setJob(job);
+//		return customer;
+//	};
+//
+//	public HealthContract inputHealthInfo(HealthContract healthContract, int height, int weight, String diseaseDetail){
+//		healthContract.setHeight(height)
+//						.setWeight(weight)
+//						.setDiseaseDetail(diseaseDetail);
+//		return healthContract;
+//	}
+//
+//	public FireContract inputFireInfo(FireContract fireContract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
+//		fireContract.setBuildingArea(buildingArea)
+//				.setSelfOwned(isSelfOwned)
+//				.setActualResidence(isActualResidence);
+//		return fireContract;
+//	}
+//
+//	public CarContract inputCarInfo(CarContract carContract, String carNo, CarType carType, String modelName, int modelYear) {
+//		carContract.setCarNo(carNo)
+//					.setCarType(carType)
+//					.setModelName(modelName)
+//					.setModelYear(modelYear);
+//		return carContract;
+//	}
 
-	public CarContract planCarInsurance(int insuranceId, int premium, Long value){
-		CarContract carContract = new CarContract();
-		carContract.setValue(value)
-				.setInsuranceId(insuranceId)
-				.setPremium(premium)
-		;
-		return carContract;
-	}
-
-	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job) {
-		Customer customer = new Customer();
-		customer.setName(name)
-				.setSsn(ssn)
-				.setPhone(phone)
-				.setAddress(address)
-				.setEmail(email)
-				.setJob(job);
-		return customer;
-	};
-
-	public HealthContract inputHealthInfo(HealthContract healthContract, int height, int weight, String diseaseDetail){
-		healthContract.setHeight(height)
-						.setWeight(weight)
-						.setDiseaseDetail(diseaseDetail);
-		return healthContract;
-	}
-
-	public FireContract inputFireInfo(FireContract fireContract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
-		fireContract.setBuildingArea(buildingArea)
-				.setSelfOwned(isSelfOwned)
-				.setActualResidence(isActualResidence);
-		return fireContract;
-	}
-
-	public CarContract inputCarInfo(CarContract carContract, String carNo, CarType carType, String modelName, int modelYear) {
-		carContract.setCarNo(carNo)
-					.setCarType(carType)
-					.setModelName(modelName)
-					.setModelYear(modelYear);
-		return carContract;
-	}
-
-	public int inquireHealthPremium(int targetAge, boolean targetSex, int riskCount, Insurance insurance){
+	public int planHealthInsurance(int targetAge, boolean targetSex, int riskCount, Insurance insurance){
 		int premium = 0;
 		targetAge = setTargetAge(targetAge);
 		boolean riskCriterion = setRiskCriterion(riskCount);
@@ -527,7 +538,7 @@ public class Employee {
 		return premium;
 	}
 
-	public int inquireFirePremium(BuildingType buildingType, Long collateralAmount, Insurance insurance){
+	public int planFireInsurance(BuildingType buildingType, Long collateralAmount, Insurance insurance){
 		int premium = 0;
 		Long collateralAmountCriterion = setCollateralAmountCriterion(collateralAmount);
 
@@ -544,11 +555,10 @@ public class Employee {
 		return premium;
 	}
 
-	public int inquireCarPremium(int targetAge, Long value, Insurance insurance){
+	public int planCarInsurance(int targetAge, Long value, Insurance insurance){
 		int premium = 0;
 		targetAge = setTargetAge(targetAge);
 		Long valueCriterion = setValueCriterion(value);
-
 
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
@@ -563,27 +573,115 @@ public class Employee {
 		return premium;
 	}
 
-	public void registerContract(Customer customer, Contract contract, User user, Employee employee) {
-		if (customer.getId() == 0) {
-			CustomerDaoImpl customerDao = new CustomerDaoImpl();
-			customerDao.create(customer);
-			user.setRoleId(customer.getId());
-			UserDaoImpl userDao = new UserDaoImpl();
-			userDao.create(user);
-		}
-		contract.setCustomerId(customer.getId())
-				.setConditionOfUw(ConditionOfUw.WAIT)
-				.setEmployeeId(employee.getId());
-		ContractDaoImpl contractDao = new ContractDaoImpl();
-		contractDao.create(contract);
+	public Customer registerCustomer(CustomerDto customerDto) {
+		Customer customer = new Customer();
+		customer.setName(customerDto.getName())
+				.setSsn(customerDto.getSsn())
+				.setAddress(customer.getAddress())
+				.setPhone(customerDto.getPhone())
+				.setEmail(customerDto.getEmail())
+				.setJob(customer.getJob());
+		CustomerDaoImpl customerDao = new CustomerDaoImpl();
+		customerDao.create(customer);
+		return customer;
 	}
 
-	public User createUserAccount(String userId, String password) {
+	public User registerUser(UserDto userDto) {
 		User user = new User();
-		user.setUserId(userId)
-				.setPassword(password);
+		user.setUserId(userDto.getUserId())
+				.setPassword(userDto.getPassword())
+				.setRoleId(userDto.getRoleId());
+		UserDaoImpl userDao = new UserDaoImpl();
+		userDao.create(user);
 		return user;
 	}
+
+	public Contract registerContract(Customer customer, ContractDto contractDto, Insurance insurance) {
+		Contract contract = null;
+		switch (insurance.getInsuranceType()){
+			case HEALTH -> {
+				HealthContract healthContract = new HealthContract();
+
+				healthContract.setHeight(((HealthContractDto) contractDto).getHeight())
+						.setWeight(((HealthContractDto) contractDto).getWeight())
+						.setDrinking(((HealthContractDto) contractDto).isDrinking())
+						.setSmoking(((HealthContractDto) contractDto).isSmoking())
+						.setDriving(((HealthContractDto) contractDto).isDriving())
+						.setDangerActivity(((HealthContractDto) contractDto).isDangerActivity())
+						.setHavingDisease(((HealthContractDto) contractDto).isHavingDisease())
+						.setTakingDrug(((HealthContractDto) contractDto).isTakingDrug())
+						.setDiseaseDetail(((HealthContractDto) contractDto).getDiseaseDetail())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setEmployeeId(contractDto.getEmployeeId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(healthContract);
+				contract = healthContract;
+			}
+			case FIRE -> {
+				FireContract fireContract = new FireContract();
+
+				fireContract.setBuildingArea(((FireContractDto) contractDto).getBuildingArea())
+						.setBuildingType(((FireContractDto) contractDto).getBuildingType())
+						.setCollateralAmount(((FireContractDto) contractDto).getCollateralAmount())
+						.setActualResidence(((FireContractDto) contractDto).isActualResidence())
+						.setSelfOwned(((FireContractDto) contractDto).isSelfOwned())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setEmployeeId(contractDto.getEmployeeId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(fireContract);
+				contract = fireContract;
+			}
+			case CAR -> {
+				CarContract carContract = new CarContract();
+
+				carContract.setCarNo(((CarContractDto) contractDto).getCarNo())
+						.setCarType(((CarContractDto) contractDto).getCarType())
+						.setModelName(((CarContractDto) contractDto).getModelName())
+						.setModelYear(((CarContractDto) contractDto).getModelYear())
+						.setValue(((CarContractDto) contractDto).getValue())
+						.setInsuranceId(insurance.getId())
+						.setCustomerId(customer.getId())
+						.setEmployeeId(contractDto.getEmployeeId())
+						.setPremium(contractDto.getPremium())
+						.setConditionOfUw(ConditionOfUw.WAIT);
+
+				ContractDaoImpl contractDao = new ContractDaoImpl();
+				contractDao.create(carContract);
+				contract = carContract;
+			}
+		}
+		return contract;
+	}
+
+//	public void registerContract(Customer customer, Contract contract, User user, Employee employee) {
+//		if (customer.getId() == 0) {
+//			CustomerDaoImpl customerDao = new CustomerDaoImpl();
+//			customerDao.create(customer);
+//			user.setRoleId(customer.getId());
+//			UserDaoImpl userDao = new UserDaoImpl();
+//			userDao.create(user);
+//		}
+//		contract.setCustomerId(customer.getId())
+//				.setConditionOfUw(ConditionOfUw.WAIT)
+//				.setEmployeeId(employee.getId());
+//		ContractDaoImpl contractDao = new ContractDaoImpl();
+//		contractDao.create(contract);
+//	}
+//
+//	public User createUserAccount(String userId, String password) {
+//		User user = new User();
+//		user.setUserId(userId)
+//				.setPassword(password);
+//		return user;
+//	}
 
 	public List<Accident> readAccident(){
 		AccidentDao accidentDao = new AccidentDaoImpl();

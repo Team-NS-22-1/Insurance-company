@@ -9,6 +9,9 @@ public class FireContractDto extends ContractDto {
     private boolean isActualResidence;
     private boolean isSelfOwned;
 
+    public FireContractDto () {
+    }
+
     public FireContractDto (int buildingArea, BuildingType buildingType, Long collateralAmount, boolean isActualResidence, boolean isSelfOwned) {
         this.buildingArea = buildingArea;
         this.buildingType = buildingType;
