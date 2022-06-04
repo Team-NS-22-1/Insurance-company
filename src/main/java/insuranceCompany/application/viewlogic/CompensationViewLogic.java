@@ -218,7 +218,7 @@ public class CompensationViewLogic implements ViewLogic {
 
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
-        compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
+        compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.\n", compensation);
 
         if (compensation > lossReserves * 1.5) {
             System.out.println("손해 사정서가 반려되었습니다.");

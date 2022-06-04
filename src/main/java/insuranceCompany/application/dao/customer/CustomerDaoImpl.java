@@ -28,7 +28,7 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
     @Override
     public void create(Customer customer) {
 
-            String query = "insert into customer (name, job, email, phone, ssn, address) values ('%s', '%s','%s','%s','%s', '%s')";
+            String query = "INSERT INTO customer (name, job, email, phone, ssn, address) VALUES ('%s', '%s','%s','%s','%s', '%s')";
             String formattedQuery = String.format(query, customer.getName(), customer.getJob(), customer.getEmail(), customer.getPhone(), customer.getSsn(), customer.getAddress());
             int id = super.create(formattedQuery);
             customer.setId(id);
@@ -39,7 +39,7 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
     @Override
     public Customer read(int id) {
         Customer customer = null;
-        String query = "select * from customer where customer_id = "+id;
+        String query = "SELECT * FROM customer WHERE customer_id = "+id;
         try {
         ResultSet rs = super.read(query);
             if (rs.next()) {

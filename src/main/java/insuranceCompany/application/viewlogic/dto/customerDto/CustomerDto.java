@@ -1,6 +1,6 @@
 package insuranceCompany.application.viewlogic.dto.customerDto;
 
-public class CustomerInfoDto {
+public class CustomerDto {
 
     private String name;
     private String ssn;
@@ -9,7 +9,7 @@ public class CustomerInfoDto {
     private String email;
     private String job;
 
-    public CustomerInfoDto(String name, String ssn, String address, String phone, String email, String job) {
+    public CustomerDto(String name, String ssn, String address, String phone, String email, String job) {
         this.name = name;
         this.ssn = ssn;
         this.address = address;

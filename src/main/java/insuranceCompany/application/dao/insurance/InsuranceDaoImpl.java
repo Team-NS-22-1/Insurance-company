@@ -269,9 +269,9 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         Insurance insurance;
         ArrayList<Insurance> insuranceList = new ArrayList<>();
         try {
-            String query = "select * from insurance " +
-                    "inner join develop_info " +
-                    "on insurance.insurance_id = develop_info.insurance_id";
+            String query = "SELECT * FROM insurance " +
+                    "INNER JOIN develop_info " +
+                    "ON insurance.insurance_id = develop_info.insurance_id";
 
             ResultSet rs = super.read(query);
             while (rs.next()) {
@@ -313,43 +313,16 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         return insuranceList;
     }
 
-//    public DevInfo readDevInfo(int id) throws SQLException {
-//        DevInfo devInfo = null;
-//        String query = "select * from dev_info where insurance_id = " + id;
-//        ResultSet rs = super.read(query);
-//
-//        if (rs.next()) {
-//            devInfo = new DevInfo();
-//            devInfo.setId(rs.getInt("dev_info_id"));
-//            devInfo.setInsuranceId(rs.getInt("insurance_id"));
-//            devInfo.setEmployeeId(rs.getInt("employee_id"));
-//            devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
-//            devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
-//            switch (rs.getString("sales_auth_state").toUpperCase()) {
-//                case "WAIT":
-//                    devInfo.setSalesAuthState(SalesAuthState.WAIT);
-//                    break;
-//                case "PERMISSION":
-//                    devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
-//                    break;
-//                case "DISALLOWANCE":
-//                    devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
-//                    break;
-//            }
-//        }
-//        return devInfo;
-//    }
-
     public ArrayList<Insurance> readByEmployeeId(int eid){
         ArrayList<Integer> insuranceIds = new ArrayList<>();
         ArrayList<Insurance> insurances = new ArrayList<>();
         try {
             String query =
-                    "select * from insurance\n" +
-                            "where insurance_id IN (\n" +
-                            "    select insurance_id\n" +
-                            "    from develop_info\n" +
-                            "    where employee_id = " + eid +
+                    "SELECT * FROM insurance\n" +
+                            "WHERE insurance_id IN (\n" +
+                            "    SELECT insurance_id\n" +
+                            "    FROM develop_info\n" +
+                            "    WHERE employee_id = " + eid +
                             ");";
             super.read(query);
             while (resultSet.next()) {
