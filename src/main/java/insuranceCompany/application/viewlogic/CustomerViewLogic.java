@@ -105,7 +105,7 @@ public class CustomerViewLogic implements ViewLogic {
     @Override
     public String showMenu() {
         if (customer.getId() == 0)
-            return createMenuAndExitQuery("<<고객메뉴>>", "보험가입");
+            return createMenuAndExitQuery(CUSTOMER_MENU, SIGN_IN_INSURANCE);
         else
             return createMenuAndLogout(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
     }
@@ -919,8 +919,8 @@ public class CustomerViewLogic implements ViewLogic {
             while (true) {
                 try {
                     int insType = 0;
-                    createMenuAndClose(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
-                    insType = br.verifyMenu("", 4);
+                    String query = createMenuAndExitQuery(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
+                    insType = br.verifyMenu(query, 4);
 
                     switch (insType) {
                         case 1 -> accidentType = AccidentType.CARACCIDENT;
