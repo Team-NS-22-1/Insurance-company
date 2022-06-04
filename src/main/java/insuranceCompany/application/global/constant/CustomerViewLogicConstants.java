@@ -26,13 +26,14 @@ public class CustomerViewLogicConstants {
     public static final String DO_PAY = "결제하기";
     public static final String SET_PAYMENT = "결제수단 설정하기";
     public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단추가하기";
-    public static final String NO_PAYMENT_ON_CONTRACT = "해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
-    public static final String NO_PAYMENT_ON_CUSTOMER = "등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요";
+    public static final String NO_PAYMENT_ON_CONTRACT = "[알림] 해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
+    public static final String NO_PAYMENT_ON_CUSTOMER = "[알림] 현재 계정에 등록된 결제 수단이 존재하지 않습니다.";
     public static final String SUCCESS_REGISTER_PAYMENT = "결제 수단이 추가되었습니다.";
     public static final String CANCEL_REGISTER_PAYMENT = "결제 수단 등록을 취소하셨습니다.";
     public static final String CONTRACT_ID_LABEL = "[ID] : ";
     public static final String CONTRACT_NAME_LABEL = " 이름 : ";
     public static final String CONTRACT_PREMIUM_LABEL =" 보험료 : ";
+    public static final String PAYMENT_LIST_MENU = "<< 결제수단 목록 >>";
 
 
     // ABOUT CARD

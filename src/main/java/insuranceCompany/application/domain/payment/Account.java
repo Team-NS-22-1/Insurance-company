@@ -41,7 +41,7 @@ public class Account extends Payment {
 
 	@Override
 	public String toStringForPay() {
-		return "[" + bankType.name() + "] " + accountNo;
+		return "[" + bankType.name() + "] " + accountNo + " 계좌에서 ";
 
 	}
 }

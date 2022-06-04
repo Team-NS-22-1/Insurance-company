@@ -1,5 +1,8 @@
 package insuranceCompany.outerSystem;
 
+import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.domain.payment.Payment;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,7 +11,9 @@ class ElectronicPaymentSystemTest {
 
     @Test
     void interfaceTest() {
-        test.print();
+        PaymentDao dao = new PaymentDaoImpl();
+        Payment read = dao.read(2);
+        ElectronicPaymentSystem.pay(read.toStringForPay(),10000);
     }
 
     

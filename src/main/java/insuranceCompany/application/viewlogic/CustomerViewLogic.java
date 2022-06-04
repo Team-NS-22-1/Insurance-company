@@ -426,14 +426,13 @@ public class CustomerViewLogic implements ViewLogic {
     private void setPaymentOnContract(Contract contract) {
         ArrayList<Payment> paymentList = this.customer.getPaymentList();
         if (paymentList.isEmpty()) {
-            System.out.println(NO_PAYMENT_ON_CUSTOMER);
             addNewPayment();
             return;
         }
         while (true) {
             try{
-
                 try {
+                    System.out.println(PAYMENT_LIST_MENU);
                     for (Payment payment : paymentList) {
                         System.out.println(payment);
                     }
