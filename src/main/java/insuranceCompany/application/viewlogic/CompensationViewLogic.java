@@ -169,7 +169,6 @@ public class CompensationViewLogic implements ViewLogic {
             accidents = employee.readAccident();
         } catch (NoResultantException e) {
             System.out.println(e.getMessage());
-            return null;
         }
         return accidents;
     }
@@ -219,7 +218,7 @@ public class CompensationViewLogic implements ViewLogic {
 
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
-        compensation = (long) br.verifyRead(INPUT_COMPENSATION, compensation);
+        compensation = (long) br.verifyRead(getInputCompensation(lossReserves), compensation);
 
         if (compensation > lossReserves * 1.5) {
             System.out.println(REJECT_ASSESS_DAMAGE);

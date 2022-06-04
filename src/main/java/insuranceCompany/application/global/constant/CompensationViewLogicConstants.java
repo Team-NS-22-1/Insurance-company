@@ -27,7 +27,9 @@ public class CompensationViewLogicConstants {
     public static final String ASSESS_DAMAGE_QUERY = "손해 사정을 진행하시겠습니까? (Y/N)";
     //손해사정
     public static final String UPLOAD_ASSESS_DAMAGE = "손해사정서를 업로드해주세요.";
-    public static final String INPUT_COMPENSATION = "지급할 보상금을 입력해주세요.";
+    public static String getInputCompensation(long lossReserve) {
+        return "지급할 보상금을 입력해주세요. (입력하신 지급 준비금 : " + lossReserve + ") : ";
+    }
     public static final String REJECT_ASSESS_DAMAGE = "손해 사정서가 반려되었습니다.";
     public static final String NO_ERROR = "고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.";
 
