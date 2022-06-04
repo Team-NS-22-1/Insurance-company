@@ -13,7 +13,7 @@ public class DevelopViewLogicConstants {
     // Method showInsuranceEmployee()
     public static final String EMPLOYEE_INSURANCE_LIST = "<< %s 보험 개발 리스트 >>\n";
     public static final String NONE_INSURANCE_LIST = "--------------NONE---------------";
-    public static final String INSURANCE_LIST_LINE = "---------------------------------";
+
     
     // Method showInsuranceByEmployeeAndSelect()
     public static final String ERROR_NONE_INSURANCE_LIST = "ERROR:: 개발한 보험이 없습니다!";

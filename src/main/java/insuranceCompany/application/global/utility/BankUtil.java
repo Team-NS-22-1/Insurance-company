@@ -3,6 +3,7 @@ package insuranceCompany.application.global.utility;
 import insuranceCompany.application.domain.payment.BankType;
 import insuranceCompany.application.global.exception.MyInadequateFormatException;
 
+import static insuranceCompany.application.global.constant.ExceptionConstants.INPUTWRONGFORMAT;
 import static insuranceCompany.application.global.utility.FormatUtil.*;
 
 /**
@@ -66,7 +67,7 @@ public class BankUtil {
                 break;
         }
         if (!result)
-            throw new MyInadequateFormatException("정확한 형식의 값을 입력해주세요");
+            throw new MyInadequateFormatException(INPUTWRONGFORMAT);
 
         return accountNo;
 
