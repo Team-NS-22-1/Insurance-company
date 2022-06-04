@@ -72,16 +72,10 @@ public class Card extends Payment {
 		int monthValue = expiryDate.getMonthValue();
 		int year = expiryDate.getYear();
 		return "ID : " + id + " 종류 : 카드 " + " 카드사 : " + cardType.name() + " 카드 번호 : " + cardNo + " 만료일 : " + monthValue+"/"+year + " CVC : " + cvcNo;
+	}
 
-
-//		return "Card{" +
-//				"cardNo='" + cardNo + '\'' +
-//				", cardType=" + cardType +
-//				", cvcNo='" + cvcNo + '\'' +
-//				", expiryDate=" + expiryDate +
-//				", id=" + id +
-//				", paytype=" + paytype +
-//				", customerId=" + customerId +
-//				'}';
+	@Override
+	public String toStringForPay() {
+		return "[" + cardType.name() + "] " + cardNo +" 카드에서 ";
 	}
 }

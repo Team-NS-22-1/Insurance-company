@@ -22,6 +22,9 @@ import java.util.List;
  * 2022-05-22                규현             최초 생성
  */
 public class CompAssignUtil {
+    private CompAssignUtil() {
+
+    }
 
     public static Employee changeCompEmployee(Employee employee) {
         EmployeeDao employeeDao = new EmployeeDaoImpl();

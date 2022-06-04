@@ -26,10 +26,15 @@ import insuranceCompany.outerSystem.Bank;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.CompensationViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
 
 
 /**
@@ -63,7 +68,7 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-       return createMenuAndLogout("보상팀 메뉴", "사고목록조회","손해조사","손해사정");
+       return createMenuAndLogoutAndInput(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
     }
 
     @Override
@@ -72,16 +77,16 @@ public class CompensationViewLogic implements ViewLogic {
         try {
 
             switch (command) {
-                case "1":
+                case ONE:
                     showAccidentList();
                     break;
-                case "2":
+                case TWO:
                     investigateDamage();
                     break;
-                case "3":
+                case THREE:
                     assessDamage();
                     break;
-                case "0" :
+                case ZERO:
                     break;
                 default:
                     throw new MyIllegalArgumentException();
@@ -98,7 +103,7 @@ public class CompensationViewLogic implements ViewLogic {
         showAccidentDetail(accident);
 
         downloadAccDocFile(accident);
-        System.out.println("다운로드 종료");
+        System.out.println(FINISH_DOWNLOAD);
 
         InvestigateDamageRequestDto dto = new InvestigateDamageRequestDto();
         dto.setAccidentType(accident.getAccidentType());
@@ -107,18 +112,18 @@ public class CompensationViewLogic implements ViewLogic {
         inputErrorRate(dto); // 과실비율 입력
         inputLossReserve(dto); // 지급 준비금 입력.
         if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
-            System.out.println("사고 조사 보고서를 제출해주세요");
+            System.out.println(INVESTIGATE_ACCIDENT_QUERY);
         }
         employee.investigateDamage(dto,accident);
 
 
         while (true) {
             String rtVal = "";
-            rtVal = (String) br.verifyRead("손해 사정을 진행하시겠습니까? (Y/N)",rtVal);
-            if (rtVal.equals("Y")) {
+            rtVal = (String) br.verifyRead(ASSESS_DAMAGE_QUERY,rtVal);
+            if (rtVal.equals(YES)) {
                 assessDamage();
                 break;
-            } else if (rtVal.equals("N")) {
+            } else if (rtVal.equals(NO)) {
                 break;
             }
         }
@@ -136,15 +141,15 @@ public class CompensationViewLogic implements ViewLogic {
         if (accidents == null) return null;
         while (true) {
             try {
-                System.out.println("<< 사고를 선택하세요. >>");
+                System.out.println(SELECT_ACCIDENT);
                 showAccidentInfo(accidents);
-                System.out.println("---------------------------------");
+                System.out.println(LIST_LINE);
                 int accidentId = 0;
-                accidentId = (int) br.verifyRead("사고 ID : ", accidentId);
+                accidentId = (int) br.verifyRead(ACCIDENT_ID_QUERY, accidentId);
                 accidentDao = new AccidentDaoImpl();
                 Accident accident = this.accidentDao.read(accidentId);
                 if (accident.getEmployeeId() != this.employee.getId()) {
-                    throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
+                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
                 }
                 accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
                 List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
@@ -165,7 +170,6 @@ public class CompensationViewLogic implements ViewLogic {
             accidents = employee.readAccident();
         } catch (NoResultantException e) {
             System.out.println(e.getMessage());
-            return null;
         }
         return accidents;
     }
@@ -182,23 +186,20 @@ public class CompensationViewLogic implements ViewLogic {
 
 
         accident.printForComEmployee();
-        System.out.println("접수자 명 : " + customer.getName());
+        System.out.println(SHOW_CUSTOMER_NAME + customer.getName());
         AccidentType accidentType = accident.getAccidentType();
         switch (accidentType) {
             case CARACCIDENT -> {
-                System.out.println("차량 번호 : " + ((CarAccident)accident).getCarNo());
-                System.out.println("상대방 차주 연락처 : " + ((CarAccident)accident).getOpposingDriverPhone());
-                System.out.println("사고 주소 : " + ((CarAccident)accident).getPlaceAddress());
-                break;
+                System.out.println(SHOW_CAR_NO + ((CarAccident)accident).getCarNo());
+                System.out.println(SHOW_OPPOSING_PHONE + ((CarAccident)accident).getOpposingDriverPhone());
+                System.out.println(SHOW_PLACE_ADDRESS + ((CarAccident)accident).getPlaceAddress());
             }
-            case INJURYACCIDENT -> {
-                System.out.println("부상 부위 : " + ((InjuryAccident)accident).getInjurySite());
-                break;
-            }
-            case FIREACCIDENT -> {
-                System.out.println("사고 주소 : " + ((FireAccident)accident).getPlaceAddress());
-                break;
-            }
+            case INJURYACCIDENT ->
+                System.out.println(SHOW_INJURY_SITE + ((InjuryAccident)accident).getInjurySite());
+
+            case FIREACCIDENT ->
+                System.out.println(SHOW_PLACE_ADDRESS + ((FireAccident)accident).getPlaceAddress());
+
         }
 
     }
@@ -213,15 +214,15 @@ public class CompensationViewLogic implements ViewLogic {
 
         downloadAccDocFile(accident);
         AccountRequestDto compAccount = createCompAccount();
-        System.out.println("손해사정서를 업로드해주세요.");
+        System.out.println(UPLOAD_ASSESS_DAMAGE);
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
 
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
-        compensation = (long) br.verifyRead("지급할 보상금을 입력해주세요.", compensation);
+        compensation = (long) br.verifyRead(getInputCompensation(lossReserves), compensation);
 
         if (compensation > lossReserves * 1.5) {
-            System.out.println("손해 사정서가 반려되었습니다.");
+            System.out.println(REJECT_ASSESS_DAMAGE);
             return;
         }
 
@@ -231,7 +232,7 @@ public class CompensationViewLogic implements ViewLogic {
             compensation = compensation * (errorRate/100);
 
             if (compensation == 0) {
-                System.out.println("고객 과실이 0이기 때문에 보상금을 지급하지 않습니다.");
+                System.out.println(NO_ERROR);
                 return;
             }
         }
@@ -243,15 +244,13 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void isValidAccident(Accident accident) {
         if (accident.getLossReserves() == 0 ) {
-            throw new MyInvalidAccessException("지급 준비금이 입력되지 않은 사고이기 떄문에 손해 사정이 불가능합니다.");
+            throw new MyInvalidAccessException(LOSS_RESERVE_EXCEPTION);
         }
         if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
-            throw new MyInvalidAccessException("사고 조사 보고서가 업로드되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
+            throw new MyInvalidAccessException(INVESTIGATE_ACCIDENT_EXCEPTION);
         }
-        if (accident instanceof CarAccident) {
-            if (((CarAccident) accident).getErrorRate() == 0) {
-                throw new MyInvalidAccessException("과실 비율이 입력되지 않은 사고이기 때문에 손해 사정이 불가능합니다.");
-            }
+        if (accident instanceof CarAccident car && car.getErrorRate() == 0) {
+                throw new MyInvalidAccessException(ERROR_RATE_EXCEPTION);
         }
     }
 
@@ -259,20 +258,20 @@ public class CompensationViewLogic implements ViewLogic {
         AccountRequestDto account = null;
         loop : while (true) {
 
-            System.out.println("계좌 추가하기");
-            System.out.println("은행사 선택하기");
+            System.out.println(REGISTER_ACCOUNT);
+            System.out.println(SELECT_BANK);
             BankType bankType = selectBankType(br);
             if(bankType==null)
                 break ;
             while (true) {
                 try {
                     StringBuilder query = new StringBuilder();
-                    query.append("계좌 번호 입력하기 : (예시 -> ").append(bankType.getFormat()).append(")\n")
-                            .append("0. 취소하기\n");
+                    query.append(showAccountNoEX(bankType.getFormat())).append(LINE_SEPARATOR)
+                            .append(ZERO_MESSAGE).append(LINE_SEPARATOR);
 
                     String command = "";
                     command = (String) br.verifyRead(query.toString(),command);
-                    if (command.equals("0")) {
+                    if (command.equals(ZERO)) {
                         continue loop;
                     }
                     String accountNo = checkAccountFormat(bankType,command);
@@ -281,7 +280,7 @@ public class CompensationViewLogic implements ViewLogic {
                             .build();
                     break loop;
                 } catch (MyInadequateFormatException e) {
-                    System.out.println("정확한 값을 입력해주세요");
+                    System.out.println(e.getMessage());
                 }
             }
         }
@@ -292,27 +291,34 @@ public class CompensationViewLogic implements ViewLogic {
 
     private void inputLossReserve(InvestigateDamageRequestDto accident) {
         while (true) {
-            long loss_reserve = -1;
-            loss_reserve = (long) br.verifyRead("지급 준비금을 입력해주세요 ",loss_reserve);
-            if (loss_reserve< 0 ) {
-                System.out.println("정확한 값을 입력해주세요");
-                continue;
+            try {
+                long loss_reserve = -1;
+                loss_reserve = (long) br.verifyRead(LOSS_RESERVE_QUERY, loss_reserve);
+                if (loss_reserve < 0) {
+                    throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
+                }
+                accident.setLossReserves(loss_reserve);
+                break;
+            } catch (MyInadequateFormatException e) {
+                System.out.println(e.getMessage());
             }
-            accident.setLossReserves(loss_reserve);
-            break;
         }
     }
 
     private void inputErrorRate(InvestigateDamageRequestDto accident) {
 
             while (true) {
-                int errorRate = -1;
-                errorRate = (int) br.verifyRead("과실비율을 입력해주세요 (0~100)",errorRate);
-                if (isErrorRate(errorRate)) {
-                    accident.setErrorRate(errorRate);
-                    break;
-                } else {
-                    System.out.println("범위에 맞게 입력해주세요.");
+                try{
+                    int errorRate = -1;
+                    errorRate = (int) br.verifyRead(ERROR_RATE_QUERY,errorRate);
+                    if (isErrorRate(errorRate)) {
+                        accident.setErrorRate(errorRate);
+                        break;
+                    } else {
+                        throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
+                    }
+                }catch (MyInadequateFormatException e) {
+                    System.out.println(e.getMessage());
                 }
             }
 
@@ -323,16 +329,16 @@ public class CompensationViewLogic implements ViewLogic {
         for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
             label:
             while (true) {
-                String query = accidentDocumentFile.getType().getDesc()+"를 다운로드 하시겠습니까? (Y/N) (0.취소하기)";
+                String query = getDownloadDocExQuery(accidentDocumentFile.getType().getDesc()) + ZERO_MESSAGE;
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 switch (result) {
-                    case "Y":
+                    case YES:
                         instance.download(accidentDocumentFile.getFileAddress());
                         break label;
-                    case "N":
+                    case NO:
                         break label;
-                    case "0":
+                    case ZERO:
                         return;
                 }
             }

@@ -13,7 +13,7 @@ import insuranceCompany.application.domain.payment.Account;
  * -----------------------------------------------------------
  * 2022-05-25                규현             최초 생성
  */
-public class Bank {
+public interface Bank {
 
     public static void sendCompensation(Account account,long compensation) {
         System.out.println("["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다.");

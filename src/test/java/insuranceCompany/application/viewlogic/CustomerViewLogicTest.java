@@ -30,8 +30,19 @@ class CustomerViewLogicTest {
     }
 
     @Test
+    void stringtest() {
+        String a = "ab";
+        String b = "1";
+        String s = b.toUpperCase();
+        System.out.println(s);
+//        String.
+    }
+
+
+    @Test
     void isValidateReportAccident() {
-        assertEquals(isValidateReportAccident(AccidentType.CARACCIDENT,InsuranceType.CAR),true);
+
+        assertEquals(isValidateReportAccident(AccidentType.CARACCIDENT, InsuranceType.CAR), true);
     }
 
     @Test

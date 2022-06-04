@@ -42,4 +42,6 @@ public abstract class Payment {
 
 	@Override
 	public abstract String toString();
+
+	public abstract String toStringForPay();
 }
