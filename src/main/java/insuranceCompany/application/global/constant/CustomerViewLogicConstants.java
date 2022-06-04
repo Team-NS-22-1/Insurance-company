@@ -16,71 +16,81 @@ public class CustomerViewLogicConstants {
     public static final String CANCEL = "취소하셨습니다.";
     public static final String YES = "Y";
     public static final String NO = "N";
-    public static final String ZEROMESSAGE = "0. 취소하기";
+    public static final String ZERO_MESSAGE = "0. 취소하기";
     public static final String ZERO = "0";
-    public static final String EXITMESSAGE = "exit : 종료하기";
+    public static final String EXIT_MESSAGE = "exit : 종료하기";
     public static final String EXIT = "EXIT";
+    public static final String SLASH = "/";
+    public static final String SPACE = " ";
+    public static final String ONE = "1";
+    public static final String TWO = "2";
+    public static final String THREE = "3";
+    public static final String FOUR = "4";
 
     //Main Menu
-    public static final String CUSTOMERMENU = "<<고객메뉴>>";
-    public static final String SIGNININSURANCE = "보험가입";
-    public static final String PAYPREMIUM = "보험료납입";
-    public static final String REPORTACCIDENT = "사고접수";
-    public static final String CLAIMCOMPENSATION = "보상금청구";
+    public static final String CUSTOMER_MENU = "<<고객메뉴>>";
+    public static final String SIGN_IN_INSURANCE = "보험가입";
+    public static final String PAY_PREMIUM = "보험료납입";
+    public static final String REPORT_ACCIDENT = "사고접수";
+    public static final String CLAIM_COMPENSATION = "보상금청구";
 
     // ABOUT PAYMENT COMMON
-    public static final String PAYHEAD = "<<결제 메뉴>>";
-    public static final String DOPAY = "결제하기";
-    public static final String SETPAMENT = "결제수단 설정하기";
-    public static final String ADDACCOUNTMENUHEAD = "결제수단추가하기";
-    public static final String NOPAYMENTONCONTRACT = "해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
-    public static final String NOPAYMENTONCUSTOMER = "등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요";
-    public static final String SUCEESSREGISTERPAYMENT = "결제 수단이 추가되었습니다.";
-    public static final String CANCELREGISTERPAYMENT = "결제 수단 등록을 취소하셨습니다.";
+    public static final String PAY_MENU = "<<결제 메뉴>>";
+    public static final String DO_PAY = "결제하기";
+    public static final String SET_PAYMENT = "결제수단 설정하기";
+    public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단추가하기";
+    public static final String NO_PAYMENT_ON_CONTRACT = "해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
+    public static final String NO_PAYMENT_ON_CUSTOMER = "등록된 결제 수단이 없습니다. 먼저 결제수단을 새로 추가해주세요";
+    public static final String SUCCESS_REGISTER_PAYMENT = "결제 수단이 추가되었습니다.";
+    public static final String CANCEL_REGISTER_PAYMENT = "결제 수단 등록을 취소하셨습니다.";
+    public static final String CONTRACT_ID_LABEL = "[ID] : ";
+    public static final String CONTRACT_NAME_LABEL = " 이름 : ";
+    public static final String CONTRACT_PREMIUM_LABEL =" 보험료 : ";
 
 
     // ABOUT CARD
-    public static final String REGISTERCARD = "카드 추가하기";
-    public static final String SELECTCARDTYPE = "카드사 선택";
-    public static final String CARDNOEX = "카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}";
-    public static final String SELECTCARDTYPENO = "카드사 번호 : ";
-    public static final String CVCEX = "CVC : (예시 : *** {3자리 숫자})";
-    public static final String EXPIRYDATE = "만료일";
+    public static final String REGISTER_CARD = "카드 추가하기";
+    public static final String SELECT_CARD_TYPE = "카드사 선택";
+    public static final String CARD_NO_EX = "카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}";
+    public static final String SELECT_CARD_TYPE_NO = "카드사 번호 : ";
+    public static final String CVC_EX = "CVC : (예시 : *** {3자리 숫자})";
+    public static final String EXPIRY_DATE = "만료일";
     public static final String MONTH = "월 : ";
-    public static final String YEAREX = "년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}";
-    public static final String REGISTERCARDINFO = "카드 정보를 등록하시겠습니까? (Y/N)";
-    public static final String DATEFORMATE = "dd/MM/yyyy";
+    public static final String YEAR_EX = "년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}";
+    public static final String REGISTER_CARD_INFO = "카드 정보를 등록하시겠습니까? (Y/N)";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final String DAY_EX = "01/";
 
 
     // ABOUT ACCOUNT
-    public static final String REGISTERACCOUNT = "계좌 추가하기";
-    public static final String SELECTBANK = "은행사 선택하기";
+    public static final String REGISTER_ACCOUNT = "계좌 추가하기";
+    public static final String SELECT_BANK = "은행사 선택하기";
     public static String showAccountNoEX(String format) {
         return "계좌 번호 입력하기 : (예시 -> " + format + ")";
     }
-    public static final String REGISTERACCOUNTINFO = "계좌 정보를 등록하시겠습니까? (Y/N)";
+    public static final String REGISTER_ACCOUNT_INFO = "계좌 정보를 등록하시겠습니까? (Y/N)";
 
 
-    public static final String CONTRACTLIST = "<<가입된 계약 목록>>";
+    public static final String CONTRACT_LIST = "<<가입된 계약 목록>>";
 
     // report accident
-    public static final String ACCIDENTMENU = "<< 사고 종류 선택 >>";
-    public static final String CARACCIDENT = "자동차 사고";
-    public static final String CARBREAKDOWN = "자동차 고장";
-    public static final String INJURYACCIDENT = "상해 사고";
-    public static final String FIREACCIDENT = "화재 사고";
+    public static final String ACCIDENT_MENU = "<< 사고 종류 선택 >>";
+    public static final String CAR_ACCIDENT = "자동차 사고";
+    public static final String CAR_BREAKDOWN = "자동차 고장";
+    public static final String INJURY_ACCIDENT = "상해 사고";
+    public static final String FIRE_ACCIDENT = "화재 사고";
     public static final String DAY = "일 : ";
     public static final String HOUR = "시 : ";
     public static final String MINUTE = "분 : ";
     public static final String ADDRESS = "사고 장소 : ";
-    public static final String CARNOEX = "차 번호 (ex : __-**_-**** (_ : 한글, * : 숫자)) : ";
-    public static final String OPOSSINGPHONE = "상대방 연락처 : ";
-    public static final String REQUESTONSITE = "현장 출동 요청을 하시겠습니까? (Y/N) : ";
+    public static final String CAR_NO_EX = "차 번호 (ex : __-**_-**** (_ : 한글, * : 숫자)) : ";
+    public static final String OPOSSING_PHONE = "상대방 연락처 : ";
+    public static final String REQUEST_ON_SITE = "현장 출동 요청을 하시겠습니까? (Y/N) : ";
     public static final String SYMPTOM = "고장 증상 : ";
-    public static final String INJURYSITE = "부상 부위 : ";
-    public static final String REPORTACCIDENTINFO = "<< 사고 접수 정보 >> (exit: 시스템 종료)";
-    public static final String INPUTACCIDENTDATE = "사고 일시를 입력해주세요";
-    public static final String INPUTACCIDENTID = "사고 ID 입력 : ";
+    public static final String INJURY_SITE = "부상 부위 : ";
+    public static final String REPORT_ACCIDENT_INFO = "<< 사고 접수 정보 >> (exit: 시스템 종료)";
+    public static final String INPUT_ACCIDENT_DATE = "사고 일시를 입력해주세요";
+    public static final String INPUT_ACCIDENT_ID = "사고 ID 입력 : ";
 
     // 보상금 접수
     public static String getSubmitDocQuery(String format) {
@@ -98,8 +108,9 @@ public class CustomerViewLogicConstants {
     public static String getExDirectory(String format) {
         return "./AccDocFile/Example/" + format+"(예시).hwp";
     }
-    public static final String CHANGECOMPQUERY = "보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)";
-    public static final String INPUTCOMPLAIN = "변경 사유를 입력해주세요 : ";
-    public static final String SUCESSCHANGECOMPEMPLOYEE = "보상처리담당자 변경이 완료되었습니다.";
+    public static final String CHANGE_COMP_QUERY = "보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)";
+    public static final String INPUT_COMPLAIN = "변경 사유를 입력해주세요 : ";
+    public static final String SUCCESS_CHANGE_COMP_EMPLOYEE = "보상처리담당자 변경이 완료되었습니다.";
+    public static final String FAIL_TO_FINISH_CLAIM_COMPENSATION = "추후에 미제출한 정보들을 제출해주세요.";
 
 }
