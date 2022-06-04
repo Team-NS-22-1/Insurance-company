@@ -24,6 +24,7 @@ import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
@@ -1027,9 +1028,9 @@ public class CustomerViewLogic implements ViewLogic {
                 String medicalCertification = "";
                 medicalCertification = (String) br.verifyRead(getDownloadDocExQuery(accDocType.getDesc()), medicalCertification);
                 if (medicalCertification.equals(YES)) {
-                    DocUtil instance = DocUtil.getInstance();
+//                    DocUtil instance = DocUtil.getInstance();
                     String dir = getExDirectory(accDocType.getDesc());
-                    instance.download(dir);
+                    FileDialogUtil.download(dir);
                     break;
                 } else if (medicalCertification.equals(NO)) {
                     break;
@@ -1040,6 +1041,28 @@ public class CustomerViewLogic implements ViewLogic {
         }
         submitFile(accident,accDocType);
     }
+
+//    private void submitDocFile(Accident accident, AccDocType accDocType) {
+//        System.out.println(getSubmitDoc(accDocType.getDesc()));
+//
+//        while (true) {
+//            try {
+//                String medicalCertification = "";
+//                medicalCertification = (String) br.verifyRead(getDownloadDocExQuery(accDocType.getDesc()), medicalCertification);
+//                if (medicalCertification.equals(YES)) {
+//                    DocUtil instance = DocUtil.getInstance();
+//                    String dir = getExDirectory(accDocType.getDesc());
+//                    instance.download(dir);
+//                    break;
+//                } else if (medicalCertification.equals(NO)) {
+//                    break;
+//                }
+//            } catch (MyFileNotFoundException e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
+//        submitFile(accident,accDocType);
+//    }
 
     private void showCarAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);

@@ -19,6 +19,7 @@ import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.outerSystem.ElectronicPaymentSystem;
@@ -275,7 +276,7 @@ public class Customer {
 
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
 	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
-		DocUtil docUtil = DocUtil.getInstance();
+
 		String path = getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
 		String extension = "";
 		AccDocType accDocType = accidentDocumentFile.getType();
@@ -284,7 +285,7 @@ public class Customer {
 		else
 			extension = HWP_EXTENSION;
 
-		String directory = docUtil.upload(path+extension);
+		String directory = FileDialogUtil.uploadAccidentDocumentFile(path+extension);
 		if (directory==null) {
 			return null;
 		}
@@ -299,6 +300,33 @@ public class Customer {
 		}
 		return accidentDocumentFile;
 	}
+
+
+//	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
+//		DocUtil docUtil = DocUtil.getInstance();
+//		String path = getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
+//		String extension = "";
+//		AccDocType accDocType = accidentDocumentFile.getType();
+//		if(accDocType == AccDocType.PICTUREOFSITE)
+//			extension = JPEG_EXTENSION;
+//		else
+//			extension = HWP_EXTENSION;
+//
+//		String directory = docUtil.upload(path+extension);
+//		if (directory==null) {
+//			return null;
+//		}
+//		accidentDocumentFile.setFileAddress(directory);
+//
+//		AccidentDocumentFileDaoImpl accidentDocumentFileList = new AccidentDocumentFileDaoImpl();
+//		if (accident.getAccDocFileList().containsKey(accDocType)) {
+//			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
+//		} else {
+//			accidentDocumentFileList.create(accidentDocumentFile);
+//			accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
+//		}
+//		return accidentDocumentFile;
+//	}
 
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();

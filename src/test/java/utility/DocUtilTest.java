@@ -1,12 +1,18 @@
 package utility;
 
 import insuranceCompany.application.domain.accident.InjuryAccident;
+import insuranceCompany.application.global.exception.MyFileNotFoundException;
 import insuranceCompany.application.global.utility.DocUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import java.awt.*;
+import java.io.*;
+
+import static insuranceCompany.application.global.constant.DocUtilConstants.FILE_UPLOAD_HEAD;
+import static insuranceCompany.application.global.constant.ExceptionConstants.FILE_NOT_FOUND;
 
 /**
  * packageName :  utility
@@ -21,6 +27,70 @@ import java.awt.*;
  */
 class DocUtilTest {
 
+    private FileInputStream in;
+    private FileOutputStream out;
+    private static Frame frame;
+    private static FileDialog dialog;
+    @Test
+    void frameTest() {
+        frame = new Frame("BorderLayoutDemo");
+        frame.setUndecorated(true); // Remove title bar
+//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//        frame.pack();
+        frame.setVisible(true);
+        for (int i = 0; i < 10; i++) {
+            FileDialog fileDialog = new FileDialog(frame,"파일테스트");
+            fileDialog.setVisible(true);
+        }
+    }
+
+    @Test
+    void fuck() {
+        frame = new Frame();
+        frame.setUndecorated(true);
+        frame.setVisible(true);
+        frame.setAlwaysOnTop(true);
+        dialog = new FileDialog(frame, FILE_UPLOAD_HEAD, FileDialog.LOAD);
+        dialog.setVisible(true);
+    }
+    @Test
+    void fileName() {
+
+            FileDialog dialog = new FileDialog(new Frame(), "파일 업로드", FileDialog.LOAD);
+
+
+            dialog.setAlwaysOnTop(true);
+            dialog.setLocationRelativeTo(null);
+            dialog.setVisible(true);
+            dialog.setModal(true);
+
+
+            String originPath = dialog.getDirectory()+dialog.getFile();
+//            if(dialog.getDirectory() == null)
+            System.out.println(originPath);
+
+
+
+
+    }
+    private void readIOBuffer() throws IOException {
+        try {
+            int read, bytebuffer=0;
+            byte[] buffer = new byte[8192];
+            while((read=in.read(buffer)) != -1){
+                out.write(buffer, 0 ,read);
+                bytebuffer += read;
+                if(bytebuffer > 1024*1024){
+                    bytebuffer = 0;
+                    out.flush();
+                }
+            }
+        } finally {
+            out.close();
+            in.close();
+
+        }
+    }
 
     @Test
     void deleteDir() {

@@ -82,7 +82,7 @@ public class CustomerViewLogicConstants {
 
     // 보상금 접수
     public static String getSubmitDocQuery(String format) {
-        return format+"를 제출하시겠습니까?(Y/N)";
+        return format+"를 제출하시겠습니까?(Y/N) 입력 : ";
     }
     public static String getSubmitDocCancel(String format) {
         return format+"의 제출을 취소하셨습니다.";
@@ -91,12 +91,12 @@ public class CustomerViewLogicConstants {
         return format+"를 제출해주세요.";
     }
     public static String getDownloadDocExQuery(String format) {
-        return format+" 양식을 다운로드 받겠습니까>?(Y/N)";
+        return format+" 양식을 다운로드 받겠습니까>?(Y/N) 입력 : ";
     }
     public static String getExDirectory(String format) {
         return "./AccDocFile/Example/" + format+"(예시).hwp";
     }
-    public static final String CHANGE_COMP_QUERY = "보상처리담당자를 변경하실 수 있습니다. 하시겠습니까?(Y/N)";
+    public static final String CHANGE_COMP_QUERY = "보상처리담당자를 변경하실 수 있습니다. 하시겠습니까? (Y/N) 입력 : ";
     public static final String INPUT_COMPLAIN = "변경 사유를 입력해주세요 : ";
     public static final String SUCCESS_CHANGE_COMP_EMPLOYEE = "보상처리담당자 변경이 완료되었습니다.";
     public static final String FAIL_TO_FINISH_CLAIM_COMPENSATION = "추후에 미제출한 정보들을 제출해주세요.";
