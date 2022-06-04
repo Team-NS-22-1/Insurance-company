@@ -108,7 +108,7 @@ public class CustomerViewLogic implements ViewLogic {
         if (customer.getId() == 0)
             return createMenuAndExitQuery(CUSTOMER_MENU, SIGN_IN_INSURANCE);
         else
-            return createMenuAndLogout(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
+            return createMenuAndLogoutAndInput(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
     }
 
     @Override
@@ -332,6 +332,7 @@ public class CustomerViewLogic implements ViewLogic {
                     createMenu(PAY_MENU, DO_PAY, SET_PAYMENT, ADD_ACCOUNT_MENU_HEAD);
                     System.out.println(ZERO_MESSAGE);
                     System.out.println(EXIT_MESSAGE);
+                    System.out.print(INPUT);
                     String next = sc.next();
                     switch (next.toUpperCase()) {
                         case ONE:
@@ -370,6 +371,7 @@ public class CustomerViewLogic implements ViewLogic {
                         showContractInfoForPay(con);
                     }
                     System.out.println(ZERO_MESSAGE);
+                    System.out.print(INPUT);
                     String key = sc.next();
                     if (key.equals(ZERO))
                         break;
@@ -438,6 +440,7 @@ public class CustomerViewLogic implements ViewLogic {
                     }
                     System.out.println(ZERO_MESSAGE);
                     System.out.println(EXIT_MESSAGE);
+                    System.out.print(INPUT);
                     String key = sc.next();
                     key = key.toUpperCase();
                     if (key.equals(ZERO))
@@ -464,6 +467,7 @@ public class CustomerViewLogic implements ViewLogic {
                 createMenu(ADD_ACCOUNT_MENU_HEAD, REGISTER_CARD, REGISTER_ACCOUNT);
                 System.out.println(ZERO_MESSAGE);
                 System.out.println(EXIT_MESSAGE);
+                System.out.print(INPUT);
                 switch (sc.next().toUpperCase()) {
                     case ONE:
                         createCard();
@@ -499,13 +503,16 @@ public class CustomerViewLogic implements ViewLogic {
                 while (true) {
                     try {
                         System.out.println(CARD_NO_EX);
+                        System.out.print(INPUT);
                         String cardNo = validateCardNoFormat(sc.next());
                         System.out.println(CVC_EX);
+                        System.out.print(INPUT);
                         String cvc = validateCVCFormat(sc.next());
                         System.out.println(EXPIRY_DATE);
                         System.out.print(MONTH);
                         int month = validateMonthFormat(sc.nextInt());
-                        System.out.print(YEAR_EX);
+                        System.out.println(YEAR_EX);
+                        System.out.print(INPUT);
                         int year = validateYearFormat(sc.nextInt());
                         LocalDate expireDate = createExpireDate(month, year);
 
@@ -524,6 +531,7 @@ public class CustomerViewLogic implements ViewLogic {
 
                 while (true) {
                     System.out.println(REGISTER_CARD_INFO);
+                    System.out.print(INPUT);
                     String result = sc.next();
                     result = result.toUpperCase();
                     if (result.equals(NO)) {
@@ -553,6 +561,7 @@ public class CustomerViewLogic implements ViewLogic {
         }
         System.out.println(ZERO_MESSAGE);
         System.out.println(SELECT_CARD_TYPE_NO);
+        System.out.print(INPUT);
         String key = sc.next();
         if(key.equals(ZERO))
             return null;
@@ -606,6 +615,7 @@ public class CustomerViewLogic implements ViewLogic {
                     try {
                         System.out.println(showAccountNoEX(bankType.getFormat()));
                         System.out.println(ZERO_MESSAGE);
+                        System.out.print(INPUT);
                         String command = sc.next();
                         if (command.equals(ZERO)) {
                             continue loop;
@@ -625,6 +635,7 @@ public class CustomerViewLogic implements ViewLogic {
 
                 while (true) {
                     System.out.println(REGISTER_ACCOUNT_INFO);
+                    System.out.print(INPUT);
                     String result = sc.next();
                     result = result.toUpperCase();
                     if (result.equals(NO)) {
@@ -920,6 +931,7 @@ public class CustomerViewLogic implements ViewLogic {
                 try {
                     int insType = 0;
                     String query = createMenuAndExitQuery(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
+                    query += INPUT;
                     insType = br.verifyMenu(query, 4);
 
                     switch (insType) {

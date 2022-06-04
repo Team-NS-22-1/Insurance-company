@@ -20,4 +20,5 @@ public class CommonConstants {
     public static final String FOUR = "4";
     public static final String LINE_SEPARATOR = "\n";
     public static final String LIST_LINE = "---------------------------------";
+    public static final String INPUT = "입력 : ";
 }

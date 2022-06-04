@@ -34,6 +34,7 @@ import static insuranceCompany.application.global.utility.BankUtil.checkAccountF
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
 
 
 /**
@@ -67,7 +68,7 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-       return createMenuAndLogout(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
+       return createMenuAndLogoutAndInput(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
     }
 
     @Override

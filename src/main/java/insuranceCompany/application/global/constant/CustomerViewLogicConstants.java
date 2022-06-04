@@ -25,7 +25,7 @@ public class CustomerViewLogicConstants {
     public static final String PAY_MENU = "<<결제 메뉴>>";
     public static final String DO_PAY = "결제하기";
     public static final String SET_PAYMENT = "결제수단 설정하기";
-    public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단추가하기";
+    public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단 추가하기";
     public static final String NO_PAYMENT_ON_CONTRACT = "[알림] 해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
     public static final String NO_PAYMENT_ON_CUSTOMER = "[알림] 현재 계정에 등록된 결제 수단이 존재하지 않습니다.";
     public static final String SUCCESS_REGISTER_PAYMENT = "결제 수단이 추가되었습니다.";
@@ -39,12 +39,12 @@ public class CustomerViewLogicConstants {
     // ABOUT CARD
     public static final String REGISTER_CARD = "카드 추가하기";
     public static final String SELECT_CARD_TYPE = "카드사 선택";
-    public static final String CARD_NO_EX = "카드 번호 : (예시 : ****-****-****-****) {4자리 숫자와 - 입력}";
+    public static final String CARD_NO_EX = "카드 번호 (예시 : ****-****-****-****) {4자리 숫자와 - 입력}";
     public static final String SELECT_CARD_TYPE_NO = "카드사 번호 : ";
-    public static final String CVC_EX = "CVC : (예시 : *** {3자리 숫자})";
+    public static final String CVC_EX = "CVC (예시 : *** {3자리 숫자}) ";
     public static final String EXPIRY_DATE = "만료일";
     public static final String MONTH = "월 : ";
-    public static final String YEAR_EX = "년 : (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력}";
+    public static final String YEAR_EX = "년 (예시 : ****) {4개 숫자 입력 && 202* ~ 203* 까지의 값 입력} : ";
     public static final String REGISTER_CARD_INFO = "카드 정보를 등록하시겠습니까? (Y/N)";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     public static final String DAY_EX = "01/";
