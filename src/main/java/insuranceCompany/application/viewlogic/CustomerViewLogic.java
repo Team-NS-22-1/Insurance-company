@@ -376,7 +376,7 @@ public class CustomerViewLogic implements ViewLogic {
                     contractList = new ContractDaoImpl();
                     contract = contractList.read(Integer.parseInt(key));
                     if (contract.getCustomerId() != this.customer.getId()) {
-                        throw new MyInvalidAccessException(INPUTDATEONLIST);
+                        throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
                     }
 
                     break;
@@ -449,7 +449,7 @@ public class CustomerViewLogic implements ViewLogic {
                     this.customer.registerPayment(contract, paymentId);
                     break;
                 } catch (NumberFormatException e) {
-                    throw new InputInvalidDataException(INPUTWRONGFORMAT, e);
+                    throw new InputInvalidDataException(INPUT_WRONG_FORMAT, e);
                 }
             } catch (MyIllegalArgumentException |InputInvalidDataException| MyInvalidAccessException  e ) {
                 System.out.println(e.getMessage());
@@ -518,7 +518,7 @@ public class CustomerViewLogic implements ViewLogic {
                                 .setPayType(PayType.CARD);
                         break;
                     } catch ( MyInadequateFormatException e) {
-                        System.out.println(INPUTWRONGFORMAT);
+                        System.out.println(INPUT_WRONG_FORMAT);
                     }
                 }
 
@@ -538,7 +538,7 @@ public class CustomerViewLogic implements ViewLogic {
                 break;
 
             } catch (ArrayIndexOutOfBoundsException | NumberFormatException | MyInadequateFormatException | InputInvalidDataException e) {
-                System.out.println(INPUTWRONGFORMAT);
+                System.out.println(INPUT_WRONG_FORMAT);
             }
         }
         customer.addPayment(card);
@@ -639,7 +639,7 @@ public class CustomerViewLogic implements ViewLogic {
 
                 break;
             }catch (ArrayIndexOutOfBoundsException | NumberFormatException| MyInadequateFormatException e) {
-                System.out.println(INPUTWRONGFORMAT);
+                System.out.println(INPUT_WRONG_FORMAT);
             }
         }
         customer.addPayment(account);
@@ -671,7 +671,7 @@ public class CustomerViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 retAccident = accidentDao.read(accidentId);
                 if(retAccident.getCustomerId() != this.customer.getId())
-                    throw new MyInvalidAccessException(INPUTDATEONLIST);
+                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
                 break;
             } catch (InputException | MyIllegalArgumentException | MyInvalidAccessException e) {
                 System.out.println(e.getMessage());
@@ -738,7 +738,7 @@ public class CustomerViewLogic implements ViewLogic {
                 carNo = (String) br.verifyRead(CAR_NO_EX, carNo);
                 if (isCarNo(carNo))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -757,7 +757,7 @@ public class CustomerViewLogic implements ViewLogic {
                 opposingDriverPhone= (String) br.verifyRead(OPOSSING_PHONE, opposingDriverPhone);
                 if(isPhone(opposingDriverPhone))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -837,7 +837,7 @@ public class CustomerViewLogic implements ViewLogic {
                 year = (int) br.verifyRead(YEAR_EX, year);
                 if (isYear(Integer.toString(year)))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -852,7 +852,7 @@ public class CustomerViewLogic implements ViewLogic {
                 month = (int) br.verifyRead(MONTH, month);
                 if(isMonth(month))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             }catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -866,7 +866,7 @@ public class CustomerViewLogic implements ViewLogic {
                 day = (int) br.verifyRead(DAY, day);
                 if(isDay(day))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -882,7 +882,7 @@ public class CustomerViewLogic implements ViewLogic {
                 hour = (int) br.verifyRead(HOUR, hour);
                 if (isHour(hour))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -897,7 +897,7 @@ public class CustomerViewLogic implements ViewLogic {
                 min = (int) br.verifyRead(MINUTE, min);
                 if(isMinute(min))
                     break;
-                throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
             } catch (MyInadequateFormatException e) {
                 System.out.println(e.getMessage());
             }
@@ -938,7 +938,7 @@ public class CustomerViewLogic implements ViewLogic {
                         if(isValidateReportAccident(accidentType,contractType.getInsuranceType()))
                             return accidentType;
                     }
-                    throw new MyInvalidAccessException(NOINSURANCEABOUNTACCIDENT);
+                    throw new MyInvalidAccessException(NO_INSURANCE_ABOUT_ACCIDENT);
                 } catch (MyInvalidAccessException e) {
                     System.out.println(e.getMessage());
                 }
@@ -972,7 +972,7 @@ public class CustomerViewLogic implements ViewLogic {
             case CARACCIDENT -> showCarAccidentDoc(accident);
             case FIREACCIDENT -> showFireAccidentDoc(accident);
             case INJURYACCIDENT ->showInjuryAccidentDoc(accident);
-            case CARBREAKDOWN -> throw new MyIllegalArgumentException(CARBREAKDOWNEXCEPTION);
+            case CARBREAKDOWN -> throw new MyIllegalArgumentException(CAR_BREAKDOWN_EXCEPTION);
         }
     }
     private void showCommonAccidentDoc(Accident accident) {

@@ -148,7 +148,7 @@ public class CompensationViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 Accident accident = this.accidentDao.read(accidentId);
                 if (accident.getEmployeeId() != this.employee.getId()) {
-                    throw new MyInvalidAccessException(INPUTDATEONLIST);
+                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
                 }
                 accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
                 List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
@@ -295,7 +295,7 @@ public class CompensationViewLogic implements ViewLogic {
                 long loss_reserve = -1;
                 loss_reserve = (long) br.verifyRead(LOSS_RESERVE_QUERY, loss_reserve);
                 if (loss_reserve < 0) {
-                    throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                    throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
                 }
                 accident.setLossReserves(loss_reserve);
                 break;
@@ -315,7 +315,7 @@ public class CompensationViewLogic implements ViewLogic {
                         accident.setErrorRate(errorRate);
                         break;
                     } else {
-                        throw new MyInadequateFormatException(INPUTWRONGFORMAT);
+                        throw new MyInadequateFormatException(INPUT_WRONG_FORMAT);
                     }
                 }catch (MyInadequateFormatException e) {
                     System.out.println(e.getMessage());

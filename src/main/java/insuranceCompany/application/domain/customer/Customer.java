@@ -25,6 +25,8 @@ import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static insuranceCompany.application.global.constant.DocUtilConstants.*;
+import static insuranceCompany.application.global.constant.ExceptionConstants.INPUT_DATA_ON_LIST;
 import static insuranceCompany.application.global.utility.CompAssignUtil.changeCompEmployee;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.TargetInfoCalculator.targetAgeCalculator;
@@ -273,13 +275,13 @@ public class Customer {
 	// 파일을 선택해서 저장하고, 파일 주소를 리턴하는 식으로 해야할듯?
 	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
 		DocUtil docUtil = DocUtil.getInstance();
-		String path = "./AccDocFile/submit/"+this.id+"/"+ accident.getId()+"/"+ accidentDocumentFile.getType().getDesc();
+		String path = getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
 		String extension = "";
 		AccDocType accDocType = accidentDocumentFile.getType();
 		if(accDocType == AccDocType.PICTUREOFSITE)
-			extension = ".jpg";
+			extension = JPEG_EXTENSION;
 		else
-			extension = ".hwp";
+			extension = HWP_EXTENSION;
 
 		String directory = docUtil.upload(path+extension);
 		if (directory==null) {
@@ -300,7 +302,7 @@ public class Customer {
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(contract.getPaymentId());
-
+		//TODO 수정
 		if(payment != null)
 			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
 	}
@@ -348,7 +350,7 @@ public class Customer {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
 		if (payment.getCustomerId() != this.id) {
-			throw new MyInvalidAccessException("리스트에 있는 아이디를 입력해주세요.");
+			throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
 		}
 
 		contract.setPaymentId(payment.getId());

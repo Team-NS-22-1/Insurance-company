@@ -1,6 +1,6 @@
 package insuranceCompany.application.global.exception;
 
-import static insuranceCompany.application.global.constant.ExceptionConstants.INPUTINVALIDMENUEXCEPTION;
+import static insuranceCompany.application.global.constant.ExceptionConstants.INPUT_INVALID_MENU_EXCEPTION;
 
 /**
  * packageName :  insuranceCompany.application.global.exception
@@ -15,11 +15,11 @@ import static insuranceCompany.application.global.constant.ExceptionConstants.IN
  */
 public class InputInvalidMenuException extends InputException{
     public InputInvalidMenuException() {
-        super(INPUTINVALIDMENUEXCEPTION);
+        super(INPUT_INVALID_MENU_EXCEPTION);
     }
 
     public InputInvalidMenuException(String message) {
-        super(INPUTINVALIDMENUEXCEPTION);
+        super(INPUT_INVALID_MENU_EXCEPTION);
     }
 
     public InputInvalidMenuException(String message, Throwable cause) {

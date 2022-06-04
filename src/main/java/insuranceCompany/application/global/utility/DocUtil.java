@@ -8,6 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
+import static insuranceCompany.application.global.constant.CommonConstants.SLASH;
+import static insuranceCompany.application.global.constant.DocUtilConstants.*;
+import static insuranceCompany.application.global.constant.ExceptionConstants.FILE_NOT_FOUND;
+import static insuranceCompany.application.global.constant.ExceptionConstants.getFileNotFoundMessage;
+
 /**
  * packageName :  utility
  * fileName : DocUtil
@@ -22,7 +27,7 @@ import java.io.*;
 public class DocUtil extends JFrame {
 
     private static DocUtil instance;
-    private static final String submitPath = "./AccDocFile/submit/";
+    private static final String submitPath = SUBMIT_PATH;
     private FileInputStream in;
     private FileOutputStream out;
     static {
@@ -49,7 +54,7 @@ public class DocUtil extends JFrame {
     }
     public void download(String dir) {
 
-        FileDialog dialog = getFileDialog("파일다운로드",FileDialog.SAVE);
+        FileDialog dialog = getFileDialog(FILE_DOWNLOAD_HEAD,FileDialog.SAVE);
 
         dialog.setAlwaysOnTop(true);
         dialog.setLocationRelativeTo(null);
@@ -79,7 +84,7 @@ public class DocUtil extends JFrame {
             }
 
 //            FileDialog dialog = new FileDialog(this, "파일 업로드", FileDialog.LOAD);
-            FileDialog dialog = getFileDialog("파일 업로드",FileDialog.LOAD);
+            FileDialog dialog = getFileDialog(FILE_UPLOAD_HEAD,FileDialog.LOAD);
 
             dialog.setFile(getExtension(dir));
             dialog.setAlwaysOnTop(true);
@@ -95,7 +100,7 @@ public class DocUtil extends JFrame {
             out = new FileOutputStream(dir);
             readIOBuffer();
         } catch (FileNotFoundException e) {
-            throw new MyFileNotFoundException("ERROR :: 파일을 찾을 수 없습니다!");
+            throw new MyFileNotFoundException(FILE_NOT_FOUND);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,8 +108,8 @@ public class DocUtil extends JFrame {
     }
 
     private String getExtension(String path) {
-        int lastIndexOf = path.lastIndexOf(".");
-        return "*"+path.substring(lastIndexOf);
+        int lastIndexOf = path.lastIndexOf(DOT);
+        return ASTERISK+path.substring(lastIndexOf);
     }
 
 
@@ -128,26 +133,33 @@ public class DocUtil extends JFrame {
     }
 
     public static void isExist(Accident accident, AccDocType accDocType) {
-        String directory =  accident.getCustomerId()+"/"+ accident.getId();
-        String extension = ".hwp";
+        String directory =  accident.getCustomerId()+SLASH+ accident.getId();
+        String extension = HWP_EXTENSION;
         if(accDocType==AccDocType.PICTUREOFSITE)
-            extension = ".jpg";
-        File folder = new File(submitPath+directory+"/"+accDocType.getDesc()+extension);
-        if (!folder.exists()) {
-            System.out.println(accDocType.getDesc() + "파일이 존재하지 않습니다. ");
+            extension = JPEG_EXTENSION;
+        File folder = new File(submitPath+directory+ SLASH +accDocType.getDesc()+extension);
+        try {
+            if (!folder.exists()) {
+                throw new MyFileNotFoundException(getFileNotFoundMessage(accDocType.getDesc()));
+            }
+        } catch (MyFileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
     public static void deleteDir(Accident accident) {
-        File file = new File("./AccDocFile/submit/"+accident.getCustomerId()+"/"+accident.getId());
+        File file = new File(submitPath+accident.getCustomerId()+SLASH+accident.getId());
 
-        if( file.exists() ){ //파일존재여부확인
-
-            if(file.isDirectory()){ //파일이 디렉토리인지 확인
-                File[] files = file.listFiles();
-                for (File value : files) value.delete();
+        try {
+            if (file.exists()) { //파일존재여부확인
+                if (file.isDirectory()) { //파일이 디렉토리인지 확인
+                    File[] files = file.listFiles();
+                    for (File value : files) value.delete();
+                }
+            } else {
+                throw new MyFileNotFoundException(FILE_NOT_FOUND);
             }
-        }else{
-            System.out.println("파일이 존재하지 않습니다.");
+        } catch (MyFileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
     }
 
