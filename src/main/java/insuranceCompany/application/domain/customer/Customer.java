@@ -21,6 +21,7 @@ import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
+import insuranceCompany.outerSystem.ElectronicPaymentSystem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -302,9 +303,8 @@ public class Customer {
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(contract.getPaymentId());
-		//TODO 수정
 		if(payment != null)
-			System.out.println(contract.getPremium() + "원이 결제되었습니다.");
+			ElectronicPaymentSystem.pay(payment.toStringForPay(), contract.getPremium());
 	}
 
 	public List<Contract> readContracts(){
