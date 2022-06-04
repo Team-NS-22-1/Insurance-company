@@ -53,3 +53,4 @@ gradle-app.setting
 src/main/java/insuranceCompany/application/global/utility/db/DbConst.java
 #청구서류 관련
 AccDocFile/submit/**
+fileServer/**
