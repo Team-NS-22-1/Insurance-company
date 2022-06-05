@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.ONE;
-import static insuranceCompany.application.global.constant.ContractViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ContractConstants.*;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
 
 /**
@@ -71,6 +71,7 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
+
     public void selectInsurance() throws IOException {
         ArrayList<Insurance> insurances = employee.readInsurances();
         if(insurances.size() == 0)
@@ -82,8 +83,6 @@ public class SalesViewLogic implements ViewLogic {
             for (Insurance insurance : insurances) {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.printf(CONTRACT_INSURANCES_VALUE_FORMAT, insurance.getId(), insurance.getName(), insurance.printInsuranceType());
-//                    System.out.println("보험상품 번호: " + insurance.getId() + " | 보험상품 이름: " + insurance.getName() +
-//                            "   \t보험상품 종류: " + insurance.getInsuranceType());
             }
 
             try {

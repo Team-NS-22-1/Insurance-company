@@ -46,7 +46,7 @@ import java.util.Scanner;
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.*;
-import static insuranceCompany.application.global.constant.ContractViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ContractConstants.*;
 import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.*;
 import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;

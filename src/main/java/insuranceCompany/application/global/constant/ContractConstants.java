@@ -1,6 +1,6 @@
 package insuranceCompany.application.global.constant;
 
-public class ContractViewLogicConstants {
+public class ContractConstants {
     // Sales Menu
     public static final String SALES_MENU = "<<영업팀 메뉴>>";
     public static final String SALES_MENU_ELEMENTS = "보험상품설계";
