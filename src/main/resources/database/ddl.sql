@@ -11,7 +11,7 @@ address varchar(200)
 create table employee(
 employee_id int primary key not null auto_increment,
 name varchar(10),
-phone varchar(13),
+phone varchar(20),
 department varchar(15),
 position varchar(20)
 );

@@ -236,3 +236,8 @@ INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (1401051, 3);
 INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (108, 'RESIDENTIAL', 5000000000);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (3);
+
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (38974, 1);
+INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (109, 20, 1, 1);
+
+update develop_info set sales_authorization_state = 'PERMISSION' , sales_start_date = sysdate();

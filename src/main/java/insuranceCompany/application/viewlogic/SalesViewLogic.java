@@ -40,7 +40,7 @@ import static insuranceCompany.application.global.utility.MenuUtil.createMenuAnd
 public class SalesViewLogic implements ViewLogic {
     private MyBufferedReader br;
     private Employee employee;
-    private Customer customer;
+//    private Customer customer;
     private Insurance insurance;
 
     public SalesViewLogic(Employee employee) {
@@ -238,7 +238,8 @@ public class SalesViewLogic implements ViewLogic {
             // 등록 고객
             case 1 -> {
                 customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
-                customer = employee.readCustomer(customerId);
+                Customer customer = employee.readCustomer(customerId);
+//                customerDto
             }
             // 미등록 고객
             case 2 -> {
@@ -322,11 +323,10 @@ public class SalesViewLogic implements ViewLogic {
         switch (choice) {
             case 1 -> {
                 User user = null;
-                if (customer.getId() == 0) {
-                    customer = employee.registerCustomer(customerDto);
-                    UserDto userDto = signUp();
+                    Customer customer = employee.registerCustomer(customerDto);
+                    UserDto userDto = signUp(customer);
                     user = employee.registerUser(userDto);
-                }
+
                 Contract contract = employee.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
                 if(user != null)
@@ -338,7 +338,7 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private UserDto signUp() {
+    private UserDto signUp(Customer customer) {
         String userId = "", password = "";
         userId = (String) br.verifyRead(CONTRACT_USER_ID_QUERY, userId);
         password = (String) br.verifyRead(CONTRACT_USER_PASSWORD_QUERY, password);
