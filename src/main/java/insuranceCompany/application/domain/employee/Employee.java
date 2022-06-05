@@ -463,7 +463,7 @@ public class Employee {
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
+			if (healthDetail.getTargetAge() == targetAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
 			}

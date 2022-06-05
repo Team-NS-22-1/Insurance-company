@@ -161,7 +161,7 @@ public class Customer {
 		ArrayList<InsuranceDetail> insuranceDetails = insurance.getInsuranceDetailList();
 		for (InsuranceDetail insuranceDetail : insuranceDetails) {
 			HealthDetail healthDetail = (HealthDetail) insuranceDetail;
-			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.getRiskCriterion()) == riskCriterion) {
+			if (healthDetail.getTargetAge() == targerAge && healthDetail.isTargetSex() == targetSex && (healthDetail.isRiskCriterion()) == riskCriterion) {
 				premium = healthDetail.getPremium();
 				break;
 			}

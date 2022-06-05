@@ -36,7 +36,7 @@ public class MessageUtil {
             sb.append(i + 1).append(".").append(" ").append(elements[i]).append("\n");
         }
         sb.append("0.").append(" ").append("취소하기").append("\n")
-                .append("exit.").append(" ").append("종료하기\n");
+                .append("exit.").append(" ").append("종료하기\n").append("입력 : ");
         return sb.toString();
     }
 

@@ -15,14 +15,14 @@ public class CustomerViewLogicConstants {
 
 
     //Main Menu
-    public static final String CUSTOMER_MENU = "<<고객메뉴>>";
+    public static final String CUSTOMER_MENU = "<< 고객메뉴 >>";
     public static final String SIGN_IN_INSURANCE = "보험가입";
     public static final String PAY_PREMIUM = "보험료납입";
     public static final String REPORT_ACCIDENT = "사고접수";
     public static final String CLAIM_COMPENSATION = "보상금청구";
 
     // ABOUT PAYMENT COMMON
-    public static final String PAY_MENU = "<<결제 메뉴>>";
+    public static final String PAY_MENU = "<< 결제 메뉴 >>";
     public static final String DO_PAY = "결제하기";
     public static final String SET_PAYMENT = "결제수단 설정하기";
     public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단 추가하기";
@@ -59,7 +59,7 @@ public class CustomerViewLogicConstants {
     public static final String REGISTER_ACCOUNT_INFO = "계좌 정보를 등록하시겠습니까? (Y/N)";
 
 
-    public static final String CONTRACT_LIST = "<<가입된 계약 목록>>";
+    public static final String CONTRACT_LIST = "<< 가입된 계약 목록 >>";
 
     // report accident
     public static final String ACCIDENT_MENU = "<< 사고 종류 선택 >>";

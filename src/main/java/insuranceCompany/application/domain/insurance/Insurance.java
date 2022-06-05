@@ -113,6 +113,15 @@ public class Insurance {
 		return this;
 	}
 
+	public String printInsuranceType() {
+		String type = switch (insuranceType){
+			case HEALTH -> "건강보험";
+			case FIRE -> "화재보험";
+			case CAR -> "자동차보험";
+		};
+		return type;
+	}
+
 	public String printGuarantee() {
 		String value = "\n";
 		for(Guarantee guarantee : guaranteeList) {
@@ -123,12 +132,8 @@ public class Insurance {
 
 	private String printInsuranceDetail() {
 		String value = "";
-		switch (insuranceType) {
-			case HEALTH -> {
-				for(InsuranceDetail insuranceDetail : insuranceDetailList) {
+		for(InsuranceDetail insuranceDetail : insuranceDetailList) {
 					value += "  " + insuranceDetail.print() + "\n";
-				}
-			}
 		}
 		return value;
 	}

@@ -57,7 +57,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
 
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
                         int targetSex = healthDetail.isTargetSex() ? 1 : 0;
-                        int RiskCriterion = healthDetail.getRiskCriterion() ? 1 : 0;
+                        int RiskCriterion = healthDetail.isRiskCriterion() ? 1 : 0;
                         String queryFormatHealthDetail =
                                 "INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (%d, %d, %d, %d);";
                         String queryHealthDetail =
