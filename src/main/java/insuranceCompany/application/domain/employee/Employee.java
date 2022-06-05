@@ -21,7 +21,6 @@ import insuranceCompany.application.global.exception.InputInvalidDataException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyNotExistContractException;
 import insuranceCompany.application.global.exception.NoResultantException;
-import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
@@ -407,8 +406,7 @@ public class Employee {
 	}
 
 	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
-		DocUtil instance = DocUtil.getInstance();
-		String fileDir = instance.upload(dir);
+		String fileDir = FileDialogUtil.uploadAccidentDocumentFile(dir);
 		if (fileDir == null) {
 			return null;
 		}

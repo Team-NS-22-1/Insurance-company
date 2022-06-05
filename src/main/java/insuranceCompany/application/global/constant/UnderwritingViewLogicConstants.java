@@ -11,7 +11,6 @@ public class UnderwritingViewLogicConstants {
     public static final String[] INSURANCE_TYPE_MENU_ELEMENTS = {"건강보험", "자동차보험", "화재보험"};
 
     // Method readContracts()
-    public static final String READ_CONTRACTS_LINE = "-------------------------------";
     public static final String READ_CONTRACTS_COLUMN = "계약 ID | 고객 이름 | 인수심사상태";
     public static final String INPUT_CONTRACT_ID = "<<인수심사할 계약 ID를 입력하세요.>>";
     public static final String SHOW_CONTRACT_INFO = "<<계약 정보>>";

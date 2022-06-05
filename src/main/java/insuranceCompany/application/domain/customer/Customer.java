@@ -19,7 +19,6 @@ import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
-import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;

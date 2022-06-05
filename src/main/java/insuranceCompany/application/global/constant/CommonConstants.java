@@ -14,6 +14,7 @@ public class CommonConstants {
     public static final String EXIT = "EXIT";
     public static final String SLASH = "/";
     public static final String SPACE = " ";
+    public static final String COLON = ":";
     public static final String ONE = "1";
     public static final String TWO = "2";
     public static final String THREE = "3";

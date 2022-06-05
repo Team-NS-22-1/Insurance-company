@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
 
@@ -31,8 +32,8 @@ public class LoginViewLogic implements ViewLogic {
     public void work(String command) {
         try {
             switch (command) {
-                case "1" -> menuCustomerLogin();
-                case "2" -> menuEmployeeLogin();
+                case ONE -> menuCustomerLogin();
+                case TWO -> menuEmployeeLogin();
             }
         }
         catch (IOException e) {
@@ -59,7 +60,7 @@ public class LoginViewLogic implements ViewLogic {
                         CustomerViewLogic customerViewLogic = new CustomerViewLogic();
                         customerViewLogic.showMenu();
                         String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
-                        if(command.equals("0")) break;
+                        if(command.equals(ZERO)) break;
                         customerViewLogic.work(command);
                     }
                 }
@@ -129,9 +130,9 @@ public class LoginViewLogic implements ViewLogic {
     }
 
     private boolean checkLogoutOrExit(String command) {
-        if (command.equals("0"))
+        if (command.equals(ZERO))
             return true;
-        if (command.equalsIgnoreCase("EXIT"))
+        if (command.equalsIgnoreCase(EXIT))
             throw new MyCloseSequence();
         return false;
     }

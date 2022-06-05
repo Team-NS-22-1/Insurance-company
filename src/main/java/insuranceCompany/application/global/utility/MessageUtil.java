@@ -1,6 +1,9 @@
 package insuranceCompany.application.global.utility;
 
+import insuranceCompany.application.global.constant.CommonConstants;
 import insuranceCompany.application.login.UserType;
+
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 
 /**
  * packageName :  main.domain.utility
@@ -25,8 +28,8 @@ public class MessageUtil {
 
     public static void createMenuAndExit(String menuName, String ... elements) {
         createMenu(menuName, elements);
-        System.out.println("0 : 취소하기");
-        System.out.println("exit : 시스템 종료");
+        System.out.println(ZERO_MESSAGE);
+        System.out.println(EXIT_MESSAGE);
     }
 
     public static String createMenuAndExitQuery(String menuName, String ... elements) {
@@ -42,7 +45,7 @@ public class MessageUtil {
 
     public static void createMenuOnlyExit(String menuName, String ... elements) {
         createMenu(menuName, elements);
-        System.out.println("exit : 시스템 종료");
+        System.out.println(EXIT_MESSAGE);
     }
 
     public static String createMenuOnlyExitQuery(String menuName, String ... elements) {
