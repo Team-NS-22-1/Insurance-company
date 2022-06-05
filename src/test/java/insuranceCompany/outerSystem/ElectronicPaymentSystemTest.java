@@ -3,7 +3,7 @@ package insuranceCompany.outerSystem;
 import insuranceCompany.application.dao.customer.PaymentDao;
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.customer.payment.Payment;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 class ElectronicPaymentSystemTest {
 

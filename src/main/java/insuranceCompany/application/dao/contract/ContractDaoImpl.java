@@ -12,6 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 public class ContractDaoImpl extends Dao implements ContractDao {
     public ContractDaoImpl() {
         super.connect();
@@ -104,7 +107,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             e.printStackTrace();
         }
         if (contract == null) {
-            throw new MyIllegalArgumentException(id + "에 맞는 계약정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD + id + "에 맞는 계약정보가 존재하지 않습니다."+RESET);
         }
 
         return contract;
@@ -273,8 +276,8 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             close();
         }
 
-        if (contracts.size() == 0)
-            throw new MyIllegalArgumentException("해당 ID로 검색되는 계약이 존재하지 않습니다");
+        if (contracts.isEmpty())
+            throw new MyIllegalArgumentException(RED_BOLD+"해당 ID로 검색되는 계약이 존재하지 않습니다"+RESET);
         return contracts;
     }
 
@@ -296,8 +299,8 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                 close();
             }
 
-        if (contracts.size() == 0)
-            throw new MyIllegalArgumentException("해당 ID로 검색되는 계약이 존재하지 않습니다");
+        if (contracts.isEmpty())
+            throw new MyIllegalArgumentException(RED_BOLD+"해당 ID로 검색되는 계약이 존재하지 않습니다"+RESET);
         return contracts;
     }
 
@@ -308,6 +311,6 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         boolean result = super.update(formattedQuery);
         close();
         if(!result)
-            throw new MyIllegalArgumentException("입력하신 ID에 오류가 발생했습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"입력하신 ID에 오류가 발생했습니다."+RESET);
     }
 }

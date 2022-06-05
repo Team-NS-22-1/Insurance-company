@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 public class InsuranceDaoImpl extends Dao implements InsuranceDao {
 
     public InsuranceDaoImpl() {
@@ -143,7 +146,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
             }
 
             if (insurance==null) {
-                throw new MyIllegalArgumentException("ERROR:: ID["+ id + "]에 해당하는 보험 정보가 존재하지 않습니다.");
+                throw new MyIllegalArgumentException(RED_BOLD+"ERROR:: ID["+ id + "]에 해당하는 보험 정보가 존재하지 않습니다."+RESET);
             }
 
             // READ guarantee

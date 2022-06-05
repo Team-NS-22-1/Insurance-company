@@ -113,8 +113,8 @@ public class CustomerViewLogic implements ViewLogic {
     public void work(String command) {
         try {
             if (customer.getId() == 0) {
-                if (ONE.equals(command)) {
-                    selectInsurance();
+                switch (command) {
+                    case ONE -> selectInsurance();
                 }
             } else {
                 switch (command) {
@@ -925,8 +925,7 @@ public class CustomerViewLogic implements ViewLogic {
             while (true) {
                 try {
                     int insType = 0;
-                    String query = createMenuAndExitQuery(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
-                    query += INPUT;
+                    String query = createMenuAndClose(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
                     insType = br.verifyMenu(query, 4);
 
                     switch (insType) {

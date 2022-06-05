@@ -6,10 +6,7 @@ import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.InputNullDataException;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.NoResultantException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
@@ -43,7 +40,6 @@ import static insuranceCompany.application.global.utility.MenuUtil.createMenuAnd
 public class SalesViewLogic implements ViewLogic {
     private MyBufferedReader br;
     private Employee employee;
-//    private Customer customer;
     private Insurance insurance;
 
     public SalesViewLogic(Employee employee) {
@@ -63,13 +59,11 @@ public class SalesViewLogic implements ViewLogic {
                 selectInsurance();
             }
         } catch (IOException e) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         } catch (MyIllegalArgumentException | InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public void selectInsurance() throws IOException {
         ArrayList<Insurance> insurances = employee.readInsurances();
@@ -176,7 +170,6 @@ public class SalesViewLogic implements ViewLogic {
             if (choice == 0)
                 break;
         }
-
     }
 
     private ContractDto planHealthInsurance() {

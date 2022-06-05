@@ -1,8 +1,8 @@
 package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.Dao;
-import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 
 import java.sql.ResultSet;
@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
 
 /**
  * packageName :  dao
@@ -63,7 +66,7 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
             close();
         }
         if(accidentDocumentFile ==null)
-            throw new IllegalArgumentException("사고 서류 아이디 ["+id+"]에 해당하는 사고 서류 파일 정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"사고 서류 아이디 ["+id+"]에 해당하는 사고 서류 파일 정보가 존재하지 않습니다."+RESET);
         return accidentDocumentFile;
     }
 
@@ -103,7 +106,7 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
                 close();
             }
         if(accidentDocumentFileList.size()==0)
-            throw new MyIllegalArgumentException("사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다."+RESET);
         return accidentDocumentFileList;
     }
 

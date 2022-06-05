@@ -7,6 +7,9 @@ import insuranceCompany.application.viewlogic.LoginViewLogic;
 import java.io.InputStreamReader;
 import java.util.InputMismatchException;
 
+import static insuranceCompany.application.global.constant.CommonConstants.ZERO;
+import static insuranceCompany.application.global.constant.LoginViewLogicConstants.MENU_ELEMENTS_LOGIN_VIEW_LOGIC;
+
 public class Application {
 
     private LoginViewLogic loginViewLogic;
@@ -21,8 +24,8 @@ public class Application {
             try {
                 while (true){
                     String query = loginViewLogic.showMenu();
-                    String command = String.valueOf(br.verifyMenu(query, 2));
-                    if(command.equals("0")) throw new InputInvalidMenuException();
+                    String command = String.valueOf(br.verifyMenu(query, MENU_ELEMENTS_LOGIN_VIEW_LOGIC.length));
+                    if(command.equals(ZERO)) throw new InputInvalidMenuException();
                     loginViewLogic.work(command);
                 }
             }
@@ -33,12 +36,7 @@ public class Application {
                     MyIllegalArgumentException | NullPointerException e) {
                 System.out.println("정확한 값을 입력해주세요.");
             }
-            catch (MyCloseSequence e) {
-                System.out.println(e.getMessage());
-                System.exit(0);
-            } catch (NumberFormatException e) {
-                System.out.println("형식에 맞는 메뉴를 입력해주세요");
-            } catch (MyIOException e) {
+            catch (MyCloseSequence | MyIOException e) {
                 System.out.println(e.getMessage());
                 System.exit(0);
             }

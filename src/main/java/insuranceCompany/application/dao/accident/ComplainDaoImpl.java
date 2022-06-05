@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 /**
  * packageName :  dao
  * fileName : ComplainDao
@@ -51,7 +54,7 @@ public class ComplainDaoImpl extends Dao implements ComplainDao {
             close();
         }
         if (complain == null)
-            throw new MyIllegalArgumentException(id + "에 해당하는 민원정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+id + "에 해당하는 민원정보가 존재하지 않습니다."+RESET);
             return complain;
     }
 
@@ -84,8 +87,8 @@ public class ComplainDaoImpl extends Dao implements ComplainDao {
             }
 
 
-        if(complains.size() == 0)
-            throw new IllegalArgumentException("해당 ID로 조회되는 민원이 존재하지 않습니다.");
+        if(complains.isEmpty())
+            throw new MyIllegalArgumentException(RED_BOLD+"해당 ID로 조회되는 민원이 존재하지 않습니다."+RESET);
         return  complains;
     }
 

@@ -18,7 +18,6 @@ import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
@@ -211,10 +210,10 @@ public class Customer {
 		Customer customer = new Customer();
 		customer.setName(customerDto.getName())
 				.setSsn(customerDto.getSsn())
-				.setAddress(customer.getAddress())
+				.setAddress(customerDto.getAddress())
 				.setPhone(customerDto.getPhone())
 				.setEmail(customerDto.getEmail())
-				.setJob(customer.getJob());
+				.setJob(customerDto.getJob());
 		CustomerDaoImpl customerDao = new CustomerDaoImpl();
 		customerDao.create(customer);
 		return customer;

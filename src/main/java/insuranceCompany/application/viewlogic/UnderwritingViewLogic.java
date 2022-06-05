@@ -45,7 +45,7 @@ public class UnderwritingViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogoutAndInput(UNDERWRITING_MENU, UNDERWRITING_MENU_ELEMENTS);
+        return createMenuAndLogout(UNDERWRITING_MENU, UNDERWRITING_MENU_ELEMENTS);
     }
 
     @Override
