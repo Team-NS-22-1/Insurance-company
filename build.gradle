@@ -8,6 +8,13 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
 
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.13'

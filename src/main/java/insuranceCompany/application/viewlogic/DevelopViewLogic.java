@@ -61,7 +61,6 @@ public class DevelopViewLogic implements ViewLogic {
                     this.menuDevelop(this.menuInsuranceType());
                 }
                 case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
-                default -> throw new InputInvalidMenuException();
             }
         }
         catch (IllegalStateException e){
