@@ -4,7 +4,7 @@ public class UnderwritingViewLogicConstants {
 
     // Menu
     public static final String UNDERWRITING_MENU = "<<언더라이팅팀메뉴>>";
-    public static final String UNDERWRITING_MENU_ELEMENTS = "인수심사한다";
+    public static final String UNDERWRITING_MENU_ELEMENTS = "인수심사";
 
     // Method selectInsuranceType()
     public static final String INSURANCE_TYPE_MENU = "<<보험 종류 선택>>";

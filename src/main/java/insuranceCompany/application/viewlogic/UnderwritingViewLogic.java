@@ -228,7 +228,7 @@ public class UnderwritingViewLogic implements ViewLogic {
         for (Contract contract : contractList) {
             CustomerDaoImpl customerDaoImpl = new CustomerDaoImpl();
             Customer customer = customerDaoImpl.read(contract.getCustomerId());
-            System.out.println(contract.getId() + "        " + customer.getName() + "          " + contract.getConditionOfUw().getName());
+            System.out.println(contract.getId() + "      | " + customer.getName() + "    | " + contract.getConditionOfUw().getName());
         }
     }
 
