@@ -177,3 +177,42 @@ INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criter
 
 
 
+INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('화재보험 1','화재보험 1 설명입니다',80,40,'FIRE');
+INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (4, '화재보험 1 보장 1', '화재보험 1 보장 1 설명입니다', 10000000000);
+INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (4, '화재보험 1 보장 2', '화재보험 1 보장 2 설명입니다', 2000000000);
+INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (4, 1, '2022-06-05', 'WAIT');
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1881577, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (82, 'COMMERCIAL', 100000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1806314, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (83, 'COMMERCIAL', 500000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1731051, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (84, 'COMMERCIAL', 1000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1655788, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (85, 'COMMERCIAL', 5000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1809209, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (86, 'INDUSTRIAL', 100000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1736841, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (87, 'INDUSTRIAL', 500000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1664472, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (88, 'INDUSTRIAL', 1000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1592104, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (89, 'INDUSTRIAL', 5000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1664472, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (90, 'INSTITUTIONAL', 100000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1597893, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (91, 'INSTITUTIONAL', 500000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1531314, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (92, 'INSTITUTIONAL', 1000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1464735, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (93, 'INSTITUTIONAL', 5000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1592104, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (94, 'RESIDENTIAL', 100000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1528420, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (95, 'RESIDENTIAL', 500000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1464735, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (96, 'RESIDENTIAL', 1000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1401051, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (97, 'RESIDENTIAL', 5000000000);
+INSERT INTO insurance_detail (premium, insurance_id) VALUES (1401051, 4);
+INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (98, 'RESIDENTIAL', 5000000000);
+INSERT INTO sales_authorization_file (insurance_id) VALUES (4);
