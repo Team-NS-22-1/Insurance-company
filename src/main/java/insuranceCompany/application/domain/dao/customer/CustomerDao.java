@@ -1,7 +1,7 @@
-package insuranceCompany.application.dao.customer;
+package insuranceCompany.application.domain.dao.customer;
 
 
-import insuranceCompany.application.dao.CrudInterface;
+import insuranceCompany.application.domain.dao.CrudInterface;
 import insuranceCompany.application.domain.customer.Customer;
 
 /**

@@ -5,8 +5,9 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.MyFileNotFoundException;
+import insuranceCompany.application.global.exception.MyIOException;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.insuranceDto.*;
@@ -15,10 +16,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.CommonConstants.LIST_LINE;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.setCollateralAmountCriterion;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.setRiskCriterion;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 
 /**
@@ -109,8 +112,7 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private InsuranceType menuInsuranceType() {
-        createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS);
-        return switch (br.verifyMenu("",3)){
+        return switch (br.verifyMenu(createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS),MENU_INSURANCE_TYPE_ELEMENTS.length)){
             case 1 -> InsuranceType.HEALTH;
             case 2 -> InsuranceType.CAR;
             case 3 -> InsuranceType.FIRE;

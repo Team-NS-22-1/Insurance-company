@@ -1,7 +1,7 @@
-package insuranceCompany.application.dao.contract;
+package insuranceCompany.application.domain.dao.contract;
 
 
-import insuranceCompany.application.dao.CrudInterface;
+import insuranceCompany.application.domain.dao.CrudInterface;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.viewlogic.dto.contractDto.ContractwithTypeDto;
 

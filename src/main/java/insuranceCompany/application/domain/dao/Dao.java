@@ -1,6 +1,6 @@
-package insuranceCompany.application.dao;
+package insuranceCompany.application.domain.dao;
 
-import insuranceCompany.application.global.utility.db.DbConst;
+import insuranceCompany.application.global.constant.DatabaseConstants;
 
 import java.sql.*;
 
@@ -12,8 +12,8 @@ public class Dao {
 
     public void connect() {
         try {
-            Class.forName(DbConst.JDBC_DRIVER);
-            connect = DriverManager.getConnection(DbConst.URL, DbConst.USERNAME, DbConst.PASSWORD);
+            Class.forName(DatabaseConstants.JDBC_DRIVER);
+            connect = DriverManager.getConnection(DatabaseConstants.URL, DatabaseConstants.USERNAME, DatabaseConstants.PASSWORD);
         } catch (SQLException e) {
             System.out.println("ERROR:: DB CONNECTION");
             System.out.println("현재 시스템의 장애가 발생하여 일시적으로 정보를 출력할 수 없습니다.\n" +

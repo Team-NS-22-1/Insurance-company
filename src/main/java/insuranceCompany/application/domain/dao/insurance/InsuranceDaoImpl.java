@@ -1,6 +1,6 @@
-package insuranceCompany.application.dao.insurance;
+package insuranceCompany.application.domain.dao.insurance;
 
-import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.dao.Dao;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
@@ -127,7 +127,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
     }
 
     public Insurance read(int id) {
-        Insurance  insurance = null;
+        Insurance insurance = null;
         try {
             // READ insurance
             String query = "SELECT * FROM insurance WHERE insurance_id = " + id + ";";
@@ -267,9 +267,6 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         }
         catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-        }
-        finally {
-            super.close();
         }
 
         return insurance;

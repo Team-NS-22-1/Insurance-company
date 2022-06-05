@@ -25,8 +25,6 @@ public class FileDialogUtil {
 
     private static final String submitPath = SUBMIT_PATH;
 
-
-
     public static String upload(String dirInsurance) throws IOException {
         frame = new Frame();
         frame.setUndecorated(true); // 서순 중요!!! 제일 위에 배치해야 함.

@@ -1,7 +1,7 @@
 package dao;
 
-import insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.domain.dao.Dao;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;

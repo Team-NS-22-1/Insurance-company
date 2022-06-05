@@ -1,11 +1,11 @@
 package insuranceCompany.application.global.utility;
 
-import insuranceCompany.application.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.domain.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.domain.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.domain.dao.accident.AccidentDao;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.domain.dao.employee.EmployeeDao;
 import insuranceCompany.application.global.exception.NoResultantException;
 
 import java.util.List;
