@@ -7,6 +7,9 @@ import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 /**
  * packageName :  domain.customer
  * fileName : JDBCCustomerListImpl
@@ -57,7 +60,7 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
             close();
         }
         if (customer == null) {
-            throw new MyIllegalArgumentException(id + "에 해당하는 고객정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"ERROR:: ID["+ id + "]에 해당하는 고객 정보가 존재하지 않습니다."+RESET);
         }
         return customer;
     }
