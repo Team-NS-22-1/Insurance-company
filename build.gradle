@@ -8,6 +8,13 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
 
     implementation group: 'com.massisframework', name: 'j-text-utils', version: '0.3.4'
