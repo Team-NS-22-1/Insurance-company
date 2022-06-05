@@ -54,7 +54,7 @@ import static insuranceCompany.application.global.utility.BankUtil.checkAccountF
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
 import static insuranceCompany.application.global.utility.FormatUtil.*;
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.MenuUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic

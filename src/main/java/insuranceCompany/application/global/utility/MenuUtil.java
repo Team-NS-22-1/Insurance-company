@@ -16,7 +16,7 @@ import static insuranceCompany.application.global.constant.CommonConstants.ZERO_
  * -----------------------------------------------------------
  * 2022-05-10                규현             최초 생성
  */
-public class MessageUtil {
+public class MenuUtil {
     public static void createMenu(String menuName, String ... elements) {
         StringBuilder sb = new StringBuilder();
         sb.append(menuName).append("\n");
@@ -39,7 +39,7 @@ public class MessageUtil {
             sb.append(i + 1).append(".").append(" ").append(elements[i]).append("\n");
         }
         sb.append("0.").append(" ").append("취소하기").append("\n")
-                .append("exit.").append(" ").append("종료하기\n").append("입력 : ");
+                .append("exit.").append(" ").append("종료하기\n");
         return sb.toString();
     }
 

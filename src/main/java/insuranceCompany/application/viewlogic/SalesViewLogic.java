@@ -27,7 +27,7 @@ import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.ONE;
 import static insuranceCompany.application.global.constant.ContractConstants.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -53,7 +53,7 @@ public class SalesViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogoutAndInput(SALES_MENU, SALES_MENU_ELEMENTS);
+        return createMenuAndLogout(SALES_MENU, SALES_MENU_ELEMENTS);
     }
 
     @Override

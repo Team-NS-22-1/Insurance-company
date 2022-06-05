@@ -18,7 +18,7 @@ import java.util.Scanner;
 
 import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.UnderwritingViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.MenuUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic

@@ -30,7 +30,7 @@ import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogoutAndInput;
 
 
 /**
