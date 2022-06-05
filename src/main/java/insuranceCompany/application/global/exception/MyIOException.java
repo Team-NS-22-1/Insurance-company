@@ -13,7 +13,7 @@ package insuranceCompany.application.global.exception;
  */
 public class MyIOException extends MyException{
     public MyIOException() {
-        super("\033[1;31mERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
+        super("\033[1;31mERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...\033[0m");
     }
 
     public MyIOException(String message) {

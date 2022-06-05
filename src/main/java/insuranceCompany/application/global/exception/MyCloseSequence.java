@@ -13,7 +13,7 @@ package insuranceCompany.application.global.exception;
  */
 public class MyCloseSequence extends MyException{
     public MyCloseSequence() {
-        super("\033[1;31mEXIT!! : 시스템을 종료합니다.");
+        super("\033[1;31mEXIT!! : 시스템을 종료합니다.\033[0m");
     }
 
     public MyCloseSequence(String message) {
