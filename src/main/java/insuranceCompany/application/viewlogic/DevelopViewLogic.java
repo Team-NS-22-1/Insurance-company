@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import static insuranceCompany.application.global.constant.CommonConstants.LIST_LINE;
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.setCollateralAmountCriterion;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.setRiskCriterion;
@@ -55,11 +55,11 @@ public class DevelopViewLogic implements ViewLogic {
     public void work(String command) {
         try {
             switch (command){
-                case "1" -> {
+                case ONE -> {
                     showInsuranceByEmployee();
                     this.menuDevelop(this.menuInsuranceType());
                 }
-                case "2" -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
+                case TWO -> this.menuSalesAuthFile(showInsuranceByEmployeeAndSelect());
             }
         }
         catch (IllegalStateException e){
@@ -157,7 +157,7 @@ public class DevelopViewLogic implements ViewLogic {
             boolean targetSex, riskCriterion;
             System.out.println(TITLE_INPUT_HEALTH_INFO + EXIT_SYSTEM);
             targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
-            targetSex = br.verifyCategory(QUERY_TARGET_SEX, 2) == 1;
+            targetSex = br.verifyCategory(QUERY_TARGET_SEX, CATEGORY_YES_OR_NO) == 1;
             while(true) {
                 riskCount = (int) br.verifyRead(QUERY_RISK_CRITERION, riskCount);
                 if(riskCount > 6){
@@ -174,7 +174,7 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.printf(PRINT_PREMIUM, premium);
             healthListInfo.add(dtoHealth.setPremium(premium));
 
-            switch (br.verifyCategory(MENU_ADD_HEALTH_INFO, 2)){
+            switch (br.verifyCategory(MENU_ADD_HEALTH_INFO, CATEGORY_YES_OR_NO)){
                 case 2 -> isAddHealth = false;
             }
         }
@@ -196,7 +196,7 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.printf(PRINT_PREMIUM, premium);
             carListInfo.add(dtoCar.setPremium(premium));
 
-            switch (br.verifyCategory(MENU_ADD_CAR_INFO, 2)){
+            switch (br.verifyCategory(MENU_ADD_CAR_INFO, CATEGORY_YES_OR_NO)){
                 case 2 -> isAddCar = false;
             }
         }
@@ -212,7 +212,7 @@ public class DevelopViewLogic implements ViewLogic {
             int premium = -1;
             System.out.println(TITLE_INPUT_FIRE_INFO + EXIT_SYSTEM);
             System.out.println();
-            switch (br.verifyCategory(QUERY_TARGET_BUILDING_TYPE, 4)){
+            switch (br.verifyCategory(QUERY_TARGET_BUILDING_TYPE, CATEGORY_FOUR)){
                 case 1 -> buildingType = BuildingType.COMMERCIAL;
                 case 2 -> buildingType = BuildingType.INDUSTRIAL;
                 case 3 -> buildingType = BuildingType.INSTITUTIONAL;
@@ -225,7 +225,7 @@ public class DevelopViewLogic implements ViewLogic {
             System.out.printf(PRINT_PREMIUM, premium);
             fireListInfo.add(dtoFire.setPremium(premium));
 
-            switch (br.verifyCategory(MENU_ADD_FIRE_INFO, 2)){
+            switch (br.verifyCategory(MENU_ADD_FIRE_INFO, CATEGORY_YES_OR_NO)){
                 case 2 -> isAddFire = false;
             }
         }
@@ -244,7 +244,7 @@ public class DevelopViewLogic implements ViewLogic {
             gAmount = (Long) br.verifyRead(QUERY_GUARANTEE_AMOUNT, gAmount);
 
             guaranteeListInfo.add(new DtoGuarantee(gName, gDescription, gAmount));
-            switch (br.verifyCategory(MENU_ADD_GUARANTEE, 2)){
+            switch (br.verifyCategory(MENU_ADD_GUARANTEE, CATEGORY_YES_OR_NO)){
                 case 2 -> isAddGuarantee = false;
             }
         }
@@ -255,13 +255,13 @@ public class DevelopViewLogic implements ViewLogic {
         boolean isCalcPremium = false;
         boolean forWhile = true;
         while(forWhile) {
-            switch (br.verifyCategory(MENU_IS_CALCULATE_PREMIUM,2)) {
+            switch (br.verifyCategory(MENU_IS_CALCULATE_PREMIUM,CATEGORY_YES_OR_NO)) {
                 case 1 -> {
                     isCalcPremium = true;
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyCategory(MENU_IS_CANCEL, 2)) {
+                    switch (br.verifyCategory(MENU_IS_CANCEL, CATEGORY_YES_OR_NO)) {
                         case 1 -> forWhile = false;
                     }
                 }
@@ -289,7 +289,7 @@ public class DevelopViewLogic implements ViewLogic {
                 profitMargin = (Double) br.verifyRead(QUERY_PROFIT_MARGIN, profitMargin);
                 stPremium = employee.calcStandardPremium(damageAmount, countContract, businessExpense, profitMargin);
                 System.out.printf(PRINT_ST_PREMIUM, stPremium);
-                switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, 2)){
+                switch (br.verifyCategory(MENU_IS_DECISION_ST_PREMIUM, CATEGORY_YES_OR_NO)){
                     case 1 -> forWhile = false;
                 }
             }
@@ -303,14 +303,14 @@ public class DevelopViewLogic implements ViewLogic {
     private void formRegisterInsurance(InsuranceType type, DtoBasicInfo dtoBasicInfo, ArrayList<DtoGuarantee> dtoGuaranteeList, ArrayList<DtoTypeInfo> dtoTypeInfoList) {
         boolean forWhile = true;
         while(forWhile){
-            switch (br.verifyCategory(MENU_IS_REGISTER_INSURANCE, 2)){
+            switch (br.verifyCategory(MENU_IS_REGISTER_INSURANCE, CATEGORY_YES_OR_NO)){
                 case 1 -> {
                     employee.develop(type, dtoBasicInfo, dtoGuaranteeList, dtoTypeInfoList);
                     System.out.println(PRINT_SUCCESS_REGISTER_INSURANCE);
                     forWhile = false;
                 }
                 case 2 -> {
-                    switch (br.verifyCategory(MENU_IS_CANCEL, 2)){
+                    switch (br.verifyCategory(MENU_IS_CANCEL, CATEGORY_YES_OR_NO)){
                         case 1 -> forWhile = false;
                     }
                 }
@@ -322,8 +322,7 @@ public class DevelopViewLogic implements ViewLogic {
         if(insurance==null) return;
         loop : while(true) {
             try {
-                System.out.println(TITLE_REGISTER_SALES_AUTH_FILE);
-                switch (br.verifyMenu(MENU_SALES_AUTH_FILE_TYPE, 5)){
+                switch (br.verifyMenu(createMenuAndClose(TITLE_REGISTER_SALES_AUTH_FILE, MENU_SALES_AUTH_FILE_TYPE), MENU_SALES_AUTH_FILE_TYPE.length)){
                     // 보험상품신고서
                     case 1 -> {
                         switch (employee.registerAuthProdDeclaration(insurance)) {
@@ -333,7 +332,7 @@ public class DevelopViewLogic implements ViewLogic {
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, CATEGORY_YES_OR_NO)){
                                     case 1 -> {
                                         switch (employee.registerAuthProdDeclaration(insurance, null)) {
                                             case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
@@ -354,7 +353,7 @@ public class DevelopViewLogic implements ViewLogic {
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, CATEGORY_YES_OR_NO)){
                                     case 1 -> {
                                         switch (employee.registerAuthSrActuaryVerification(insurance, null)) {
                                             case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
@@ -375,7 +374,7 @@ public class DevelopViewLogic implements ViewLogic {
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, CATEGORY_YES_OR_NO)){
                                     case 1 -> {
                                         switch (employee.registerAuthIsoVerification(insurance, null)) {
                                             case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
@@ -396,7 +395,7 @@ public class DevelopViewLogic implements ViewLogic {
                             case -1 -> { continue; }
                             // 파일 업로드 변경
                             case 0 -> {
-                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, 2)){
+                                switch (br.verifyCategory(ERROR_EXIST_FILE_IS_CHANGE_FILE, CATEGORY_YES_OR_NO)){
                                     case 1 -> {
                                         switch (employee.registerAuthFssOfficialDoc(insurance, null)) {
                                             case 1 -> System.out.println(PRINT_SUCCESS_UPLOAD_SAF);
@@ -421,7 +420,7 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private void menuModifySalesAuthState(String query, Employee employee, Insurance insurance) {
-        switch (br.verifyCategory(query, 2)){
+        switch (br.verifyCategory(query, CATEGORY_YES_OR_NO)){
             case 1 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.PERMISSION);
             case 2 -> employee.modifySalesAuthState(insurance, SalesAuthorizationState.DISALLOWANCE);
         }

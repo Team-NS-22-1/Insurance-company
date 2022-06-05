@@ -76,11 +76,8 @@ public class DevelopViewLogicConstants {
 
     // Method menuSalesAuthFile()
     public static final String TITLE_REGISTER_SALES_AUTH_FILE = "<< 해당 보험의 추가할 파일을 선택하세요. >>";
-    public static final String MENU_SALES_AUTH_FILE_TYPE = "1. 보험상품신고서\n"
-                                                        + "2. 선임계리사 검증기초서류\n"
-                                                        + "3. 보험요율산출기관 검증확인서\n"
-                                                        + "4. 금융감독원 판매인가서\n"
-                                                        + "0. 이전 메뉴로 돌아가기\n";
+    public static final String[] MENU_SALES_AUTH_FILE_TYPE = {"보험상품신고서", "선임계리사 검증기초서류", "보험요율산출기관 검증확인서", "금융감독원 판매인가서"};
+
     public static final String PRINT_SUCCESS_UPLOAD_SAF = "SUCCESS:: 파일이 업로드되었습니다!";
     public static final String ERROR_EXIST_FILE_IS_CHANGE_FILE = "<< 이미 파일이 존재합니다! 변경하시겠습니까? >>\n1. 예 2. 아니오\n";
     public static final String REGISTER_ALL_FILE_MODIFY_STATE = "<< 모든 인가파일이 등록되었습니다! 판매상태를 변경해주세요. >>\n1. 허가 2. 불허\n";
