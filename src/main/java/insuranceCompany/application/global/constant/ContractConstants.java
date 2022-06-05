@@ -81,7 +81,7 @@ public class ContractConstants {
     public static final String CONTRACT_IS_ACTUAL_RESIDENCE_QUERY = "실거주 여부를 입력해주세요. (1. 예  2. 아니요)\n";
 
     // inputCarInfo()
-    public static final String CONTRACT_CAR_NO_QUERY = "차량번호: ";
+    public static final String CONTRACT_CAR_NO_QUERY = "차량번호 (***_ ****): ";
     public static final String CONTRACT_CAR_TYPE_QUERY = "차종을 선택해주세요.\n1. 경형\n2. 소형\n3. 준중형\n4. 중형\n5. 준대형\n6. 대형\n7. 스포츠카\n";
     public static final String CONTRACT_MADEL_NAME_QUERY = "모델 이름: ";
     public static final String CONTRACT_MODEL_YEAR_QUERY = "차량 연식 (단위: 년): ";
