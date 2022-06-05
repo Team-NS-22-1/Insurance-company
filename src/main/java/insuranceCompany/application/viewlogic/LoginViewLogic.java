@@ -9,11 +9,12 @@ import insuranceCompany.application.login.Login;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.MENU_ELEMENTS_DEV_VIEW_LOGIC;
 import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.MenuUtil.*;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndClose;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuOnlyExitQuery;
 
 public class LoginViewLogic implements ViewLogic {
 
@@ -72,7 +73,6 @@ public class LoginViewLogic implements ViewLogic {
     }
 
     private void menuEmployeeLogin() throws IOException {
-        Scanner sc = new Scanner(System.in);
         Employee employee = new Login().loginEmployee();
         if(employee==null) return;
         System.out.printf(MSG_WELCOME_EMPLOYEE, employee.getDepartment().name(), employee.getPosition().name(), employee.getName());
@@ -80,7 +80,7 @@ public class LoginViewLogic implements ViewLogic {
             switch (employee.getDepartment()) {
                 case DEV -> {
                     DevelopViewLogic developViewLogic = new DevelopViewLogic(employee);
-                    String command = String.valueOf(br.verifyMenu(developViewLogic.showMenu(), 2));
+                    String command = String.valueOf(br.verifyMenu(developViewLogic.showMenu(), MENU_ELEMENTS_DEV_VIEW_LOGIC.length));
                     employee = isLogoutEmployee(employee, command);
                     developViewLogic.work(command);
                 }
@@ -120,12 +120,6 @@ public class LoginViewLogic implements ViewLogic {
             employee = null;
             System.out.println(SUCCESS_LOGOUT);
         }
-        return employee;
-    }
-
-    private Employee isLogoutAdmin(Employee employee, String command) {
-        if (checkLogoutOrExit(command))
-            employee = null;
         return employee;
     }
 
