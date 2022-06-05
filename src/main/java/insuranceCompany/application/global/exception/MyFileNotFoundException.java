@@ -13,7 +13,7 @@ package insuranceCompany.application.global.exception;
  */
 public class MyFileNotFoundException extends MyException{
     public MyFileNotFoundException() {
-        super("ERROR :: 파일을 찾을 수 없습니다!\n");
+        super("\033[1;31mERROR :: 파일을 찾을 수 없습니다!\n");
     }
 
     public MyFileNotFoundException(String message) {

@@ -23,7 +23,6 @@ import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.global.utility.DocUtil;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
@@ -52,7 +51,6 @@ import static insuranceCompany.application.global.utility.BankUtil.selectBankTyp
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isCarNo;
 import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.isPhone;
-import static insuranceCompany.application.global.utility.DocUtil.isExist;
 import static insuranceCompany.application.global.utility.FormatUtil.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
 
@@ -833,9 +831,9 @@ public class CustomerViewLogic implements ViewLogic {
         String h = dateFormatter(hour);
         String m = dateFormatter(min);
 
-        String dateFormat = year+"/"+M+"/"+d+" "+h+":"+m;
+        String dateFormat = year+SLASH+M+SLASH+d+SPACE+h+COLON+m;
 
-        LocalDateTime accidentDate = LocalDateTime.parse(dateFormat, DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"));
+        LocalDateTime accidentDate = LocalDateTime.parse(dateFormat, DateTimeFormatter.ofPattern(DATE_FORMAT_HOUR_MINUTE));
 
         return new AccidentReportDto().setAccidentType(selectAccidentType)
                 .setDateOfAccident(accidentDate)
@@ -1001,7 +999,7 @@ public class CustomerViewLogic implements ViewLogic {
         while (true) {
             try {
                 String uploadMedicalCertification = "";
-                isExist(accident,accDocType);
+                FileDialogUtil.isExist(accident,accDocType);
                 uploadMedicalCertification = (String) br.verifyRead(getSubmitDocQuery(accDocType.getDesc()),uploadMedicalCertification);
                 if (uploadMedicalCertification.equals(YES)) {
                     AccidentDocumentFile accidentDocumentFile = customer.claimCompensation(accident, new AccidentDocumentFile().setAccidentId(accident.getId())
@@ -1028,7 +1026,6 @@ public class CustomerViewLogic implements ViewLogic {
                 String medicalCertification = "";
                 medicalCertification = (String) br.verifyRead(getDownloadDocExQuery(accDocType.getDesc()), medicalCertification);
                 if (medicalCertification.equals(YES)) {
-//                    DocUtil instance = DocUtil.getInstance();
                     String dir = getExDirectory(accDocType.getDesc());
                     FileDialogUtil.download(dir);
                     break;
@@ -1041,28 +1038,6 @@ public class CustomerViewLogic implements ViewLogic {
         }
         submitFile(accident,accDocType);
     }
-
-//    private void submitDocFile(Accident accident, AccDocType accDocType) {
-//        System.out.println(getSubmitDoc(accDocType.getDesc()));
-//
-//        while (true) {
-//            try {
-//                String medicalCertification = "";
-//                medicalCertification = (String) br.verifyRead(getDownloadDocExQuery(accDocType.getDesc()), medicalCertification);
-//                if (medicalCertification.equals(YES)) {
-//                    DocUtil instance = DocUtil.getInstance();
-//                    String dir = getExDirectory(accDocType.getDesc());
-//                    instance.download(dir);
-//                    break;
-//                } else if (medicalCertification.equals(NO)) {
-//                    break;
-//                }
-//            } catch (MyFileNotFoundException e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//        submitFile(accident,accDocType);
-//    }
 
     private void showCarAccidentDoc(Accident accident) {
         showCommonAccidentDoc(accident);

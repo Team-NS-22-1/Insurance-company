@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 /**
@@ -63,8 +64,8 @@ public class UnderwritingViewLogic implements ViewLogic {
 
             try {
                 switch (command) {
-                    case "1" -> isExit = selectInsuranceType();
-                    case "0" -> isExit = true;
+                    case ONE -> isExit = selectInsuranceType();
+                    case ZERO -> isExit = true;
                     default -> throw new InputInvalidMenuException();
                 }
 
@@ -86,12 +87,12 @@ public class UnderwritingViewLogic implements ViewLogic {
 
                 InsuranceType insuranceType = null;
 
-                switch (sc.next()) {
-                    case "1"-> { insuranceType = InsuranceType.HEALTH; readContracts(insuranceType); }
-                    case "2"-> { insuranceType = InsuranceType.CAR; readContracts(insuranceType); }
-                    case "3"-> { insuranceType = InsuranceType.FIRE; readContracts(insuranceType); }
-                    case "0" -> isExit = true;
-                    case "exit" -> throw new MyCloseSequence();
+                switch (sc.next().toUpperCase()) {
+                    case ONE-> { insuranceType = InsuranceType.HEALTH; readContracts(insuranceType); }
+                    case TWO-> { insuranceType = InsuranceType.CAR; readContracts(insuranceType); }
+                    case THREE-> { insuranceType = InsuranceType.FIRE; readContracts(insuranceType); }
+                    case ZERO -> isExit = true;
+                    case EXIT -> throw new MyCloseSequence();
                     default -> throw new InputInvalidMenuException();
                 }
             } catch (InputInvalidMenuException e) {
@@ -123,8 +124,8 @@ public class UnderwritingViewLogic implements ViewLogic {
 
                 MessageUtil.createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
                 String contractId = sc.next();
-                if (contractId.equals("0")) break;
-                if (contractId.equals("exit")) throw new MyCloseSequence();
+                if (contractId.equals(ZERO)) break;
+                if (contractId.equalsIgnoreCase(EXIT)) throw new MyCloseSequence();
 
                 // read
                 Contract contract = this.employee.readContract(Integer.parseInt(contractId), insuranceType);
@@ -151,26 +152,26 @@ public class UnderwritingViewLogic implements ViewLogic {
                 MessageUtil.createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
                 String command = sc.next();
 
-                switch (command) {
+                switch (command.toUpperCase()) {
 
-                    case "1": case "2": case "3":
+                    case ONE: case TWO: case THREE:
                         createMenu("<<인수사유를 입력해주세요.>>");
                         String reasonOfUw = "";
                         reasonOfUw = (String) br.verifyRead("인수사유: ", reasonOfUw);
                         ConditionOfUw conditionOfUw = null;
 
                         switch (command) {
-                            case "1"-> conditionOfUw = ConditionOfUw.APPROVAL;
-                            case "2"-> conditionOfUw = ConditionOfUw.REFUSE;
-                            case "3"-> conditionOfUw = ConditionOfUw.RE_AUDIT;
+                            case ONE-> conditionOfUw = ConditionOfUw.APPROVAL;
+                            case TWO-> conditionOfUw = ConditionOfUw.REFUSE;
+                            case THREE-> conditionOfUw = ConditionOfUw.RE_AUDIT;
                             default -> new InputInvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
                         break;
 
-                    case "4":
+                    case FOUR:
                         return false;
-                    case "exit":
+                    case EXIT:
                         throw new MyCloseSequence();
                     default:
                         throw new InputInvalidMenuException();
@@ -192,8 +193,8 @@ public class UnderwritingViewLogic implements ViewLogic {
             try {
                 MessageUtil.createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
 
-                switch (sc.next()) {
-                    case "1":
+                switch (sc.next().toUpperCase()) {
+                    case ONE:
                         // update
                         this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
@@ -202,9 +203,9 @@ public class UnderwritingViewLogic implements ViewLogic {
                         System.out.println(contractDaoImpl.read(contractId));
                         isExit = true;
                         break;
-                    case "2":
+                    case TWO:
                         return false;
-                    case "exit":
+                    case EXIT:
                         throw new MyCloseSequence();
                     default:
                         throw new InputInvalidMenuException();

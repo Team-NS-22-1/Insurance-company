@@ -12,7 +12,7 @@ package insuranceCompany.application.global.exception;
  * 2022-05-18                규현             최초 생성
  */
 public class MyNotExistContractException extends MyException{
-    public MyNotExistContractException() { super("계약 정보가 존재하지 않습니다.");}
+    public MyNotExistContractException() { super("\033[1;31mERROR!! : 계약 정보가 존재하지 않습니다.");}
 
     public MyNotExistContractException(String message) {
         super(message);

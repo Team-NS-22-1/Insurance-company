@@ -12,11 +12,8 @@ import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentF
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.payment.BankType;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyInadequateFormatException;
-import insuranceCompany.application.global.exception.MyInvalidAccessException;
-import insuranceCompany.application.global.exception.NoResultantException;
-import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.exception.*;
+import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.compDto.AccountRequestDto;
 import insuranceCompany.application.viewlogic.dto.compDto.AssessDamageResponseDto;
@@ -33,7 +30,6 @@ import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
 
 
@@ -89,9 +85,9 @@ public class CompensationViewLogic implements ViewLogic {
                 case ZERO:
                     break;
                 default:
-                    throw new MyIllegalArgumentException();
+                    throw new InputInvalidMenuException(INPUT_INVALID_MENU_EXCEPTION);
             }
-        } catch (MyInvalidAccessException e) {
+        } catch (InputInvalidMenuException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -239,7 +235,7 @@ public class CompensationViewLogic implements ViewLogic {
         Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
         accidentDao = new AccidentDaoImpl();
         accidentDao.delete(accident.getId());
-        DocUtil.deleteDir(accident); // 폴더 삭제
+        FileDialogUtil.deleteDir(accident); // 폴더 삭제
     }
 
     private void isValidAccident(Accident accident) {
@@ -325,7 +321,6 @@ public class CompensationViewLogic implements ViewLogic {
     }
 
     private void downloadAccDocFile(Accident accident) {
-        DocUtil instance = DocUtil.getInstance();
         for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
             label:
             while (true) {
@@ -334,7 +329,7 @@ public class CompensationViewLogic implements ViewLogic {
                 result = (String) br.verifyRead(query,result);
                 switch (result) {
                     case YES:
-                        instance.download(accidentDocumentFile.getFileAddress());
+                        FileDialogUtil.download(accidentDocumentFile.getFileAddress());
                         break label;
                     case NO:
                         break label;

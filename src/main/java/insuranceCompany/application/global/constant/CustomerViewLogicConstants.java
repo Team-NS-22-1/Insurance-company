@@ -79,6 +79,7 @@ public class CustomerViewLogicConstants {
     public static final String REPORT_ACCIDENT_INFO = "<< 사고 접수 정보 >> (exit: 시스템 종료)";
     public static final String INPUT_ACCIDENT_DATE = "사고 일시를 입력해주세요";
     public static final String INPUT_ACCIDENT_ID = "사고 ID 입력 : ";
+    public static final String DATE_FORMAT_HOUR_MINUTE = "yyyy/MM/dd HH:mm";
 
     // 보상금 접수
     public static String getSubmitDocQuery(String format) {

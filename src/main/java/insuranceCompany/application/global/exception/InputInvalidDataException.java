@@ -13,7 +13,7 @@ package insuranceCompany.application.global.exception;
  */
 public class InputInvalidDataException extends InputException{
     public InputInvalidDataException() {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
+        super("\033[1;31mERROR!! : 유효하지 않은 값을 입력하였습니다.\n");
     }
 
     public InputInvalidDataException(String message) {
@@ -25,6 +25,6 @@ public class InputInvalidDataException extends InputException{
     }
 
     public InputInvalidDataException(Throwable cause) {
-        super("ERROR!! : 유효하지 않은 값을 입력하였습니다.\n",cause);
+        super("\033[1;31mERROR!! : 유효하지 않은 값을 입력하였습니다.\n",cause);
     }
 }

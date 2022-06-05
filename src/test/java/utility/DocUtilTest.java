@@ -1,18 +1,15 @@
 package utility;
 
 import insuranceCompany.application.domain.accident.InjuryAccident;
-import insuranceCompany.application.global.exception.MyFileNotFoundException;
-import insuranceCompany.application.global.utility.DocUtil;
+import insuranceCompany.application.global.utility.FileDialogUtil;
 import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
 import static insuranceCompany.application.global.constant.DocUtilConstants.FILE_UPLOAD_HEAD;
-import static insuranceCompany.application.global.constant.ExceptionConstants.FILE_NOT_FOUND;
 
 /**
  * packageName :  utility
@@ -97,7 +94,7 @@ class DocUtilTest {
         InjuryAccident accident = new InjuryAccident();
         accident.setId(1);
         accident.setCustomerId(2);
-        DocUtil.deleteDir(accident);
+        FileDialogUtil.deleteDir(accident);
         Assertions.assertEquals(1,accident.getId());
     }
 
