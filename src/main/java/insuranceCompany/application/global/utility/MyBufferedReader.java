@@ -113,6 +113,7 @@ public class MyBufferedReader extends BufferedReader {
     public int verifyMenu(String query, int categorySize)  {
         while(true){
             System.out.print(query);
+            System.out.print("입력: ");
             try {
                 String value = this.readLine();
                 checkBlankOrExit(value);

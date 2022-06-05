@@ -73,7 +73,7 @@ public class MessageUtil {
         }
         sb.append("0.").append(" ").append("취소하기").append("\n")
                         .append("exit.").append(" ").append("종료하기\n");
-        System.out.println(sb.toString());
+        System.out.print(sb.toString());
     }
 
     public static String createMenuAndLogout(String menuName, String ... elements) {
