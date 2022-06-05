@@ -17,6 +17,7 @@ import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.FileDialogUtil;
@@ -382,7 +383,7 @@ public class Customer {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
 		if (payment.getCustomerId() != this.id) {
-			throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+			throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
 		}
 
 		contract.setPaymentId(payment.getId());
