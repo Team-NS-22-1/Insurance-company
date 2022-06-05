@@ -30,7 +30,7 @@ import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.FormatUtil.isErrorRate;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
 
 /**
@@ -64,7 +64,7 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-       return createMenuAndLogoutAndInput(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
+       return createMenuAndLogout(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
     }
 
     @Override

@@ -20,8 +20,8 @@ import static insuranceCompany.application.global.constant.CommonConstants.LIST_
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.setCollateralAmountCriterion;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.setRiskCriterion;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndClose;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndClose;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
 
 /**
