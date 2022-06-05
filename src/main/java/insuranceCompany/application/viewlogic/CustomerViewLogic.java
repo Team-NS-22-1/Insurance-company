@@ -927,7 +927,6 @@ public class CustomerViewLogic implements ViewLogic {
                 try {
                     int insType = 0;
                     String query = createMenuAndExitQuery(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
-                    query += INPUT;
                     insType = br.verifyMenu(query, 4);
 
                     switch (insType) {
