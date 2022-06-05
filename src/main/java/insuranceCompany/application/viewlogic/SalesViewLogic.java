@@ -1,12 +1,11 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.contract.BuildingType;
+import insuranceCompany.application.domain.contract.CarType;
+import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.insurance.Guarantee;
-import insuranceCompany.application.domain.insurance.Insurance;
-import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
+import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
@@ -42,10 +41,6 @@ public class SalesViewLogic implements ViewLogic {
     private Customer customer;
     private Insurance insurance;
 
-    public SalesViewLogic() {
-        this.br = new MyBufferedReader(new InputStreamReader(System.in));
-    }
-
     public SalesViewLogic(Employee employee) {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employee = employee;
@@ -61,9 +56,7 @@ public class SalesViewLogic implements ViewLogic {
         try {
             switch (command) {
                 // 보험상품설계
-                case "1" -> {
-                    selectInsurance();
-                }
+                case "1" -> selectInsurance();
                 case "" -> throw new InputNullDataException();
                 default -> throw new InputInvalidMenuException();
             }
@@ -83,7 +76,7 @@ public class SalesViewLogic implements ViewLogic {
             System.out.println("<< 보험상품목록 >>");
             for (Insurance insurance : insurances) {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
-                    System.out.println("상품번호: " + insurance.getId() + " | 보험이름: " + insurance.getName() + "   \t보험종류: " + insurance.getInsuranceType());
+                    System.out.println("보험상품 번호: " + insurance.getId() + " | 보험상품 이름: " + insurance.getName() + "   \t보험상품 종류: " + insurance.getInsuranceType());
             }
 
             try {
@@ -99,7 +92,7 @@ public class SalesViewLogic implements ViewLogic {
                     for(Guarantee guarantee : insurance.getGuaranteeList()){
                         System.out.println(guarantee);
                     }
-                    decideSigning();
+                    ProgressContract();
                 }
                 else {
                     throw new MyIllegalArgumentException("ERROR:: ID["+ insuranceId + "]에 해당하는 보험 정보가 존재하지 않습니다.");
@@ -112,7 +105,28 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void decideSigning() throws IOException {
+    private void ProgressContract() {
+        switch (insurance.getInsuranceType()) {
+            case HEALTH -> {
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.println("<< 계약조건 >>\n나이: " + ((HealthDetail) insuranceDetail).getTargetAge() + "\n성별: " + ((HealthDetail) insuranceDetail).getTargetSex() +
+                            "\n위험도 기준: " + ((HealthDetail) insuranceDetail).getRiskCriterion() + "\n보험료: " + insuranceDetail.getPremium());
+                }
+            }
+            case FIRE -> {
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.println("<< 계약조건 >>\n건물종류: " + ((FireDetail) insuranceDetail).getTargetBuildingType() +
+                            "\n담보금액: " + ((FireDetail) insuranceDetail).getCollateralAmountCriterion() + "\n보험료: " + insuranceDetail.getPremium());
+                }
+            }
+            case CAR -> {
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.println("<< 계약조건 >>\n나이: " + ((CarDetail) insuranceDetail).getTargetAge() +
+                            "\n차량가액: " + (( CarDetail) insuranceDetail).getValueCriterion() + "\n보험료: " + insuranceDetail.getPremium());
+                }
+            }
+        }
+
         ContractDto contractDto =  switch (insurance.getInsuranceType()) {
             case HEALTH -> planHealthInsurance();
             case FIRE -> planFireInsurance();
@@ -268,7 +282,7 @@ public class SalesViewLogic implements ViewLogic {
 
     private ContractDto inputCarInfo(ContractDto contractDto) {
         CarType carType;
-        String modelName = null, carNo = null;
+        String modelName = "", carNo = "";
         int modelYear = 0;
 
         carNo = (String) br.verifySpecificRead("차량번호: ", carNo, "carNo");
@@ -318,7 +332,6 @@ public class SalesViewLogic implements ViewLogic {
         String userId = "", password = "";
         userId = (String) br.verifyRead("아이디: ", userId);
         password = (String) br.verifyRead("비밀번호: ", password);
-        UserDto userDto = new UserDto(userId, password, customer.getId());
-        return userDto;
+        return new UserDto(userId, password, customer.getId());
     }
 }

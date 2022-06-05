@@ -75,9 +75,6 @@ public class CustomerViewLogic implements ViewLogic {
     private AccidentDocumentFileDao accidentDocumentFileDao;
 
     private Customer customer;
-    private HealthContract healthContract;
-    private FireContract fireContract;
-    private CarContract carContract;
     private Scanner sc;
     private MyBufferedReader br;
     private Insurance insurance;
@@ -109,7 +106,7 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0) {
                 switch (command) {
                     case "1" -> selectInsurance();
-                    case "0" -> System.out.println("");
+                    case "0" -> System.out.println();
                     default -> throw new InputNullDataException();
                 }
             } else {
@@ -193,8 +190,7 @@ public class CustomerViewLogic implements ViewLogic {
         email = (String) br.verifySpecificRead("이메일 (_____@_____.___): ", email, "email");
         job = (String) br.verifyRead("직업: ", job);
 
-        CustomerDto customerDto = new CustomerDto(name, ssn, phone, address, email, job);
-        return customerDto;
+        return new CustomerDto(name, ssn, phone, address, email, job);
     }
 
     private ContractDto inputHealthInfo() {
@@ -222,9 +218,8 @@ public class CustomerViewLogic implements ViewLogic {
         }
 
         int premium = customer.inquireHealthPremium(customer.getSsn(), riskCount, insurance);
-        ContractDto healthContractDto = new HealthContractDto(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
-                                                                    isTakingDrug, isHavingDisease, diseaseDetail).setPremium(premium);
-        return healthContractDto;
+        return new HealthContractDto(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
+                                    isTakingDrug, isHavingDisease, diseaseDetail).setPremium(premium);
     }
 
     private ContractDto inputFireInfo() {
@@ -246,12 +241,10 @@ public class CustomerViewLogic implements ViewLogic {
         isActualResidence = br.verifyCategory("실거주 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
 
         int premium = customer.inquireFirePremium(buildingType, collateralAmount, insurance);
-        ContractDto fireContractDto = new FireContractDto(buildingArea, buildingType, collateralAmount, isSelfOwned,
-                isActualResidence).setPremium(premium);
-        return fireContractDto;
+        return new FireContractDto(buildingArea, buildingType, collateralAmount, isSelfOwned, isActualResidence).setPremium(premium);
     }
 
-    private ContractDto inputCarInfo() throws IOException {
+    private ContractDto inputCarInfo() {
         CarType carType;
         String modelName = "", carNo = "";
         int modelYear = 0;
@@ -273,8 +266,7 @@ public class CustomerViewLogic implements ViewLogic {
         value = (Long) br.verifyRead("차량가액 (단위: 원): ", value);
 
         int premium = customer.inquireCarPremium(customer.getSsn(), value, insurance);
-        ContractDto carContractDto = new CarContractDto(carNo, carType, modelName, modelYear, value).setPremium(premium);
-        return carContractDto;
+        return new CarContractDto(carNo, carType, modelName, modelYear, value).setPremium(premium);
     }
 
     private void signContract(CustomerDto customerDto, ContractDto contractDto) {
@@ -303,8 +295,7 @@ public class CustomerViewLogic implements ViewLogic {
         String userId = "", password = "";
         userId = (String) br.verifyRead("아이디: ", userId);
         password = (String) br.verifyRead("비밀번호: ", password);
-        UserDto userDto = new UserDto(userId, password, customer.getId());
-        return userDto;
+        return new UserDto(userId, password, customer.getId());
     }
 
 

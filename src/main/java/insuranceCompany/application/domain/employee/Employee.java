@@ -455,71 +455,6 @@ public class Employee {
 		return customerDao.read(customerId);
 	}
 
-//	public HealthContract planHealthInsurance(int insuranceId, int premium, boolean isDrinking, boolean isSmoking,
-//											  boolean isDriving, boolean isDangerActivity, boolean isTakingDrug, boolean isHavingDisease){
-//		HealthContract healthContract = new HealthContract();
-//		healthContract.setDrinking(isDrinking)
-//						.setSmoking(isSmoking)
-//						.setDriving(isDriving)
-//						.setDangerActivity(isDangerActivity)
-//						.setTakingDrug(isTakingDrug)
-//						.setHavingDisease(isHavingDisease)
-//						.setInsuranceId(insuranceId)
-//						.setPremium(premium);
-//		return healthContract;
-//	}
-//
-//	public FireContract planFireInsurance(int insuranceId, int premium, BuildingType buildingType, Long collateralAmount){
-//		FireContract fireContract = new FireContract();
-//		fireContract.setBuildingType(buildingType)
-//					.setCollateralAmount(collateralAmount)
-//					.setInsuranceId(insuranceId)
-//					.setPremium(premium);
-//		return fireContract;
-//	}
-//
-//	public CarContract planCarInsurance(int insuranceId, int premium, Long value){
-//		CarContract carContract = new CarContract();
-//		carContract.setValue(value)
-//				.setInsuranceId(insuranceId)
-//				.setPremium(premium)
-//		;
-//		return carContract;
-//	}
-//
-//	public Customer inputCustomerInfo(String name, String ssn, String phone, String address, String email, String job) {
-//		Customer customer = new Customer();
-//		customer.setName(name)
-//				.setSsn(ssn)
-//				.setPhone(phone)
-//				.setAddress(address)
-//				.setEmail(email)
-//				.setJob(job);
-//		return customer;
-//	};
-//
-//	public HealthContract inputHealthInfo(HealthContract healthContract, int height, int weight, String diseaseDetail){
-//		healthContract.setHeight(height)
-//						.setWeight(weight)
-//						.setDiseaseDetail(diseaseDetail);
-//		return healthContract;
-//	}
-//
-//	public FireContract inputFireInfo(FireContract fireContract, int buildingArea, boolean isSelfOwned, boolean isActualResidence){
-//		fireContract.setBuildingArea(buildingArea)
-//				.setSelfOwned(isSelfOwned)
-//				.setActualResidence(isActualResidence);
-//		return fireContract;
-//	}
-//
-//	public CarContract inputCarInfo(CarContract carContract, String carNo, CarType carType, String modelName, int modelYear) {
-//		carContract.setCarNo(carNo)
-//					.setCarType(carType)
-//					.setModelName(modelName)
-//					.setModelYear(modelYear);
-//		return carContract;
-//	}
-
 	public int planHealthInsurance(int targetAge, boolean targetSex, int riskCount, Insurance insurance){
 		int premium = 0;
 		targetAge = setTargetAge(targetAge);
@@ -660,28 +595,6 @@ public class Employee {
 		}
 		return contract;
 	}
-
-//	public void registerContract(Customer customer, Contract contract, User user, Employee employee) {
-//		if (customer.getId() == 0) {
-//			CustomerDaoImpl customerDao = new CustomerDaoImpl();
-//			customerDao.create(customer);
-//			user.setRoleId(customer.getId());
-//			UserDaoImpl userDao = new UserDaoImpl();
-//			userDao.create(user);
-//		}
-//		contract.setCustomerId(customer.getId())
-//				.setConditionOfUw(ConditionOfUw.WAIT)
-//				.setEmployeeId(employee.getId());
-//		ContractDaoImpl contractDao = new ContractDaoImpl();
-//		contractDao.create(contract);
-//	}
-//
-//	public User createUserAccount(String userId, String password) {
-//		User user = new User();
-//		user.setUserId(userId)
-//				.setPassword(password);
-//		return user;
-//	}
 
 	public List<Accident> readAccident(){
 		AccidentDao accidentDao = new AccidentDaoImpl();
