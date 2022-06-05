@@ -10,13 +10,14 @@ import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.complain.Complain;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.complain.Complain;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.FileDialogUtil;
@@ -29,6 +30,7 @@ import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
 import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
+import insuranceCompany.outerSystem.FinancialInstitute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -329,31 +331,6 @@ public class Customer {
 	}
 
 
-//	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
-//		DocUtil docUtil = DocUtil.getInstance();
-//		String path = getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
-//		String extension = "";
-//		AccDocType accDocType = accidentDocumentFile.getType();
-//		if(accDocType == AccDocType.PICTUREOFSITE)
-//			extension = JPEG_EXTENSION;
-//		else
-//			extension = HWP_EXTENSION;
-//
-//		String directory = docUtil.upload(path+extension);
-//		if (directory==null) {
-//			return null;
-//		}
-//		accidentDocumentFile.setFileAddress(directory);
-//
-//		AccidentDocumentFileDaoImpl accidentDocumentFileList = new AccidentDocumentFileDaoImpl();
-//		if (accident.getAccDocFileList().containsKey(accDocType)) {
-//			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-//		} else {
-//			accidentDocumentFileList.create(accidentDocumentFile);
-//			accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
-//		}
-//		return accidentDocumentFile;
-//	}
 
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();
@@ -396,6 +373,7 @@ public class Customer {
 
 	public void addPayment(PaymentDto paymentDto){
 		Payment payment = createPayment(paymentDto);
+		FinancialInstitute.validPaymentInfo(payment);
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		paymentDao.create(payment);
 		this.paymentList.add(payment);
@@ -405,7 +383,7 @@ public class Customer {
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		Payment payment = paymentDao.read(paymentId);
 		if (payment.getCustomerId() != this.id) {
-			throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+			throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
 		}
 
 		contract.setPaymentId(payment.getId());

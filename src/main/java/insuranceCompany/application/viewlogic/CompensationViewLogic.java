@@ -7,11 +7,11 @@ import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.dao.customer.CustomerDao;
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.payment.BankType;
+import insuranceCompany.application.domain.customer.payment.BankType;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -145,7 +145,7 @@ public class CompensationViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 Accident accident = this.accidentDao.read(accidentId);
                 if (accident.getEmployeeId() != this.employee.getId()) {
-                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+                    throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
                 }
                 accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
                 List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
@@ -153,7 +153,7 @@ public class CompensationViewLogic implements ViewLogic {
                     accident.getAccDocFileList().put(accidentDocumentFile.getType(), accidentDocumentFile);
                 }
                 return accident;
-            } catch (MyInvalidAccessException e) {
+            } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
             return null;

@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.payment;
+package insuranceCompany.application.domain.customer.payment;
 
 
 /**

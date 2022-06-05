@@ -1,7 +1,7 @@
 package insuranceCompany.application.domain.accident;
 
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

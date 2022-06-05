@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.payment;
+package insuranceCompany.application.domain.customer.payment;
 
 
 import java.time.LocalDate;
@@ -77,5 +77,10 @@ public class Card extends Payment {
 	@Override
 	public String toStringForPay() {
 		return "[" + cardType.name() + "] " + cardNo +" 카드에서 ";
+	}
+
+	@Override
+	public String toStringForValid() {
+		return "[" + cardType.name() + "] " + cardNo;
 	}
 }

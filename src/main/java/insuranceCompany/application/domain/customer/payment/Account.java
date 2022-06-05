@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.payment;
+package insuranceCompany.application.domain.customer.payment;
 
 
 /**
@@ -43,5 +43,10 @@ public class Account extends Payment {
 	public String toStringForPay() {
 		return "[" + bankType.name() + "] " + accountNo + " 계좌에서 ";
 
+	}
+
+	@Override
+	public String toStringForValid() {
+		return "[" + bankType.name() + "] " + accountNo;
 	}
 }

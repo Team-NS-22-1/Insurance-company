@@ -11,18 +11,19 @@ import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.contract.BuildingType;
 import insuranceCompany.application.domain.contract.CarType;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
+import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-import insuranceCompany.application.domain.payment.*;
+
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -374,11 +375,11 @@ public class CustomerViewLogic implements ViewLogic {
                     contractList = new ContractDaoImpl();
                     contract = contractList.read(Integer.parseInt(key));
                     if (contract.getCustomerId() != this.customer.getId()) {
-                        throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+                        throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
                     }
 
                     break;
-                } catch (MyIllegalArgumentException | MyInvalidAccessException e) {
+                } catch (MyIllegalArgumentException e) {
                     System.out.println(e.getMessage());
                 } catch (NumberFormatException e) {
                     throw new InputInvalidDataException(e);
@@ -449,7 +450,7 @@ public class CustomerViewLogic implements ViewLogic {
                 } catch (NumberFormatException e) {
                     throw new InputInvalidDataException(INPUT_WRONG_FORMAT, e);
                 }
-            } catch (MyIllegalArgumentException |InputInvalidDataException| MyInvalidAccessException  e ) {
+            } catch (MyIllegalArgumentException |InputInvalidDataException e ) {
                 System.out.println(e.getMessage());
             }
         }
@@ -677,9 +678,9 @@ public class CustomerViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 retAccident = accidentDao.read(accidentId);
                 if(retAccident.getCustomerId() != this.customer.getId())
-                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+                    throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
                 break;
-            } catch (InputException | MyIllegalArgumentException | MyInvalidAccessException e) {
+            } catch (InputException | MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }

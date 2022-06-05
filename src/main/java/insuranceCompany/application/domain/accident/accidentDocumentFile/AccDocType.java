@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.accident.accDocFile;
+package insuranceCompany.application.domain.accident.accidentDocumentFile;
 
 /**
  * packageName :  domain.accident.accDocFile
