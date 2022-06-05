@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.NO_PAYMENT_ON_CUSTOMER;
+
 /**
  * packageName :  dao
  * fileName : PaymentDao
@@ -106,8 +108,8 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
                 close();
             }
 
-        if(paymentList.size() == 0)
-            throw new MyIllegalArgumentException("해당 ID로 조회되는 결제수단이 존재하지 않습니다.");
+        if(paymentList.isEmpty())
+            throw new MyIllegalArgumentException(NO_PAYMENT_ON_CUSTOMER);
         return  paymentList;
     }
 

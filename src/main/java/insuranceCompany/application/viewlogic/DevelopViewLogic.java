@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
@@ -81,7 +82,7 @@ public class DevelopViewLogic implements ViewLogic {
             for(Insurance insurance : insuranceArrayList){
                 System.out.println(insurance.printOnlyInsurance());
             }
-            System.out.println(INSURANCE_LIST_LINE);
+            System.out.println(LIST_LINE);
         }
         return insuranceArrayList;
     }
