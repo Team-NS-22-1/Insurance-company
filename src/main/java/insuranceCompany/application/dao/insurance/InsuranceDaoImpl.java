@@ -23,7 +23,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('%s','%s',%d,%d,'%s');";
             String queryInsurance =
                     String.format(queryFormat, insurance.getName(), insurance.getDescription(), insurance.getContractPeriod(), insurance.getPaymentPeriod(), insurance.getInsuranceType().name());
-            System.out.println(queryInsurance);
+
             int insuranceId = super.create(queryInsurance);
             insurance.setId(insuranceId);
 
@@ -34,7 +34,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         "INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (%d, '%s', '%s', %d);";
                 String queryGuarantee =
                         String.format(queryFormatGuarantee, insuranceId, guarantee.getName(), guarantee.getDescription(), guarantee.getGuaranteeAmount());
-                System.out.println(queryGuarantee);
+
                 super.create(queryGuarantee);
             }
 
@@ -44,7 +44,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (%d, %d, '%s', '%s');";
             String queryDevInfo =
                     String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevelopDate()), devInfo.getSalesAuthorizationState().name());
-            System.out.println(queryDevInfo);
+
             super.create(queryDevInfo);
 
             // CREATE insurance detail
@@ -56,7 +56,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
-                        System.out.println(queryInsuranceDetail);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
@@ -66,7 +66,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (%d, %d, %d, %d);";
                         String queryHealthDetail =
                                 String.format(queryFormatHealthDetail, insuranceDetailId, healthDetail.getTargetAge(), targetSex, RiskCriterion);
-                        System.out.println(queryHealthDetail);
+
                         super.create(queryHealthDetail);
                     }
                 }
@@ -77,7 +77,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
-                        System.out.println(queryInsuranceDetail);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         CarDetail carDetail = (CarDetail) insuranceDetail;
@@ -85,7 +85,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (%d, %d, %d);";
                         String queryCarDetail =
                                 String.format(queryFormatCarDetail, insuranceDetailId, carDetail.getTargetAge(), carDetail.getValueCriterion());
-                        System.out.println(queryCarDetail);
+
                         super.create(queryCarDetail);
                     }
                 }
@@ -96,7 +96,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
-                        System.out.println(queryInsuranceDetail);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         FireDetail fireDetail = (FireDetail) insuranceDetail;
@@ -104,7 +104,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (%d, '%s', %d);";
                         String queryFireDetail =
                                 String.format(queryFormatFireDetail, insuranceDetailId, fireDetail.getTargetBuildingType().name(), fireDetail.getCollateralAmountCriterion());
-                        System.out.println(queryFireDetail);
+
                         super.create(queryFireDetail);
                     }
                 }
@@ -117,7 +117,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO sales_authorization_file (insurance_id) VALUES (%d);";
             String querySalesAuthFile =
                     String.format(queryFormatSalesAuthFile, insuranceId);
-            System.out.println(querySalesAuthFile);
+
             super.create(querySalesAuthFile);
 
         }
