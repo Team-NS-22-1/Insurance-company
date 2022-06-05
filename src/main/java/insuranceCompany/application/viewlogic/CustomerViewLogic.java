@@ -47,7 +47,7 @@ import java.util.Scanner;
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.*;
-import static insuranceCompany.application.global.constant.ContractViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ContractConstants.*;
 import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.*;
 import static insuranceCompany.application.global.constant.ExceptionConstants.*;
 import static insuranceCompany.application.global.utility.BankUtil.checkAccountFormat;
@@ -182,9 +182,9 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0)
                 customerDto = inputCustomerInfo();
             ContractDto contractDto = switch (insurance.getInsuranceType()) {
-                case HEALTH -> inputHealthInfo();
+                case HEALTH -> inputHealthInfo(customerDto);
                 case FIRE -> inputFireInfo();
-                case CAR -> inputCarInfo();
+                case CAR -> inputCarInfo(customerDto);
             };
             signContract(customerDto, contractDto);
         }
@@ -192,43 +192,43 @@ public class CustomerViewLogic implements ViewLogic {
 
     private CustomerDto inputCustomerInfo() throws IOException {
         String name = "", ssn = "", phone = "", address = "", email = "", job = "";
-        System.out.println(SALES_INPUT_CUSTOMER_INFO);
+        System.out.println(CONTRACT_INPUT_CUSTOMER_INFO);
 
-        name = (String) br.verifySpecificRead(SALES_CUSTOMER_NAME_QUERY, name, "name");
-        ssn = (String) br.verifySpecificRead(SALES_SSN_QUERY, ssn, "ssn");
-        phone = (String) br.verifySpecificRead(SALES_PHONE_QUERY, phone, "phone");
-        address = (String) br.verifyRead(SALES_ADDRESS_QUERY, address);
-        email = (String) br.verifySpecificRead(SALES_EMAIL_QUERY, email, "email");
-        job = (String) br.verifyRead(SALES_JOB_QUERY, job);
+        name = (String) br.verifySpecificRead(CONTRACT_CUSTOMER_NAME_QUERY, name, "name");
+        ssn = (String) br.verifySpecificRead(CONTRACT_SSN_QUERY, ssn, "ssn");
+        phone = (String) br.verifySpecificRead(CONTRACT_PHONE_QUERY, phone, "phone");
+        address = (String) br.verifyRead(CONTRACT_ADDRESS_QUERY, address);
+        email = (String) br.verifySpecificRead(CONTRACT_EMAIL_QUERY, email, "email");
+        job = (String) br.verifyRead(CONTRACT_JOB_QUERY, job);
 
         return new CustomerDto(name, ssn, phone, address, email, job);
     }
 
-    private ContractDto inputHealthInfo() {
+    private ContractDto inputHealthInfo(CustomerDto customerDto) {
         int riskCount = 0, height = 0, weight = 0;
         String diseaseDetail = "";
         boolean isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
-        System.out.println(SALES_INPUT_HEALTH_INFO);
+        System.out.println(CONTRACT_INPUT_HEALTH_INFO);
 
-        height = (int) br.verifyRead(SALES_HEIGHT_QUERY, height);
-        weight = (int) br.verifyRead(SALES_WEGHIT_QUERY, weight);
-        isDrinking = br.verifyCategory(SALES_IS_DRINKING_QUERY, 2) == 1;
+        height = (int) br.verifyRead(CONTRACT_HEIGHT_QUERY, height);
+        weight = (int) br.verifyRead(CONTRACT_WEGHIT_QUERY, weight);
+        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, 2) == 1;
         if(isDrinking) riskCount++;
-        isSmoking = br.verifyCategory(SALES_IS_SMOKING_QUERY, 2) == 1;
+        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, 2) == 1;
         if(isSmoking) riskCount++;
-        isDriving = br.verifyCategory(SALES_IS_DRIVING_QUERY, 2) == 1;
+        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, 2) == 1;
         if(isDriving) riskCount++;
-        isDangerActivity = br.verifyCategory(SALES_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
+        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
         if(isDangerActivity) riskCount++;
-        isTakingDrug = br.verifyCategory(SALES_IS_TAKING_DRUG_QUERY, 2) == 1;
+        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, 2) == 1;
         if(isTakingDrug) riskCount++;
-        isHavingDisease = br.verifyCategory(SALES_IS_HAVING_DISEASE_QUERY, 2) == 1;
+        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, 2) == 1;
         if (isHavingDisease) {
             riskCount++;
-            diseaseDetail = (String) br.verifyRead(SALES_DISEASE_DETAIL_QUERY, diseaseDetail);
+            diseaseDetail = (String) br.verifyRead(CONTRACT_DISEASE_DETAIL_QUERY, diseaseDetail);
         }
 
-        int premium = customer.inquireHealthPremium(customer.getSsn(), riskCount, insurance);
+        int premium = customer.inquireHealthPremium(customerDto.getSsn(), riskCount, insurance);
         return new HealthContractDto(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
                                     isTakingDrug, isHavingDisease, diseaseDetail).setPremium(premium);
     }
@@ -239,30 +239,30 @@ public class CustomerViewLogic implements ViewLogic {
         Long collateralAmount = 0L;
         boolean isSelfOwned, isActualResidence;
 
-        buildingArea = (int) br.verifyRead(SALES_BUILDING_AREA_QUERY, buildingArea);
-        buildingType = switch (br.verifyCategory(SALES_BUILDING_TYPE_QUERY, 4)) {
+        buildingArea = (int) br.verifyRead(CONTRACT_BUILDING_AREA_QUERY, buildingArea);
+        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, 4)) {
             case 1 -> COMMERCIAL;
             case 2 -> INDUSTRIAL;
             case 3 -> INSTITUTIONAL;
             case 4 -> RESIDENTIAL;
             default -> throw new IllegalStateException();
         };
-        collateralAmount = (Long) br.verifyRead(SALES_COLLATRAL_AMOUNT_QUERY, collateralAmount);
-        isSelfOwned = br.verifyCategory(SALES_IS_SELF_OWNED_QUERY, 2) == 1;
-        isActualResidence = br.verifyCategory(SALES_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
+        collateralAmount = (Long) br.verifyRead(CONTRACT_COLLATERAL_AMOUNT_QUERY, collateralAmount);
+        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, 2) == 1;
+        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
 
         int premium = customer.inquireFirePremium(buildingType, collateralAmount, insurance);
         return new FireContractDto(buildingArea, buildingType, collateralAmount, isSelfOwned, isActualResidence).setPremium(premium);
     }
 
-    private ContractDto inputCarInfo() {
+    private ContractDto inputCarInfo(CustomerDto customerDto) {
         CarType carType;
         String modelName = "", carNo = "";
         int modelYear = 0;
         Long value = 0L;
 
-        carNo = (String) br.verifySpecificRead(SALES_CAR_NO_QUERY, carNo, "carNo");
-        carType = switch (br.verifyCategory(SALES_CAR_TYPE_QUERY, 7)) {
+        carNo = (String) br.verifySpecificRead(CONTRACT_CAR_NO_QUERY, carNo, "carNo");
+        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, 7)) {
             case 1 -> URBAN;
             case 2 -> SUBCOMPACT;
             case 3 -> COMPACT;
@@ -272,11 +272,11 @@ public class CustomerViewLogic implements ViewLogic {
             case 7 -> SPORTS;
             default -> throw new IllegalStateException();
         };
-        modelName = (String) br.verifyRead(SALES_MADEL_NAME_QUERY, modelName);
-        modelYear = (int) br.verifyRead(SALES_MODEL_YEAR_QUERY, modelYear);
-        value = (Long) br.verifyRead(SALES_VALUE_QUERY, value);
+        modelName = (String) br.verifyRead(CONTRACT_MADEL_NAME_QUERY, modelName);
+        modelYear = (int) br.verifyRead(CONTRACT_MODEL_YEAR_QUERY, modelYear);
+        value = (Long) br.verifyRead(CONTRACT_VALUE_QUERY, value);
 
-        int premium = customer.inquireCarPremium(customer.getSsn(), value, insurance);
+        int premium = customer.inquireCarPremium(customerDto.getSsn(), value, insurance);
         return new CarContractDto(carNo, carType, modelName, modelYear, value).setPremium(premium);
     }
 

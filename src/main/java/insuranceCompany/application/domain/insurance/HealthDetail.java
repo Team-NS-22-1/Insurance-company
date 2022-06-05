@@ -62,7 +62,7 @@ public class HealthDetail extends InsuranceDetail {
 
 
 	public String getRiskCriterion() {
-		return isRiskCriterion() ? "초과" : "이하";
+		return isRiskCriterion() ? "해당" : "해당없음";
 	}
 
 	public String print() {

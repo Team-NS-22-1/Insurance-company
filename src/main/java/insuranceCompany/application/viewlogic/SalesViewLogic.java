@@ -77,8 +77,6 @@ public class SalesViewLogic implements ViewLogic {
             for (Insurance insurance : insurances) {
                 if (insurance.getDevelopInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.printf(CONTRACT_INSURANCES_VALUE_FORMAT, insurance.getId(), insurance.getName(), insurance.printInsuranceType());
-//                    System.out.println("보험상품 번호: " + insurance.getId() + " | 보험상품 이름: " + insurance.getName() +
-//                            "   \t보험상품 종류: " + insurance.getInsuranceType());
             }
 
             try {
@@ -164,18 +162,18 @@ public class SalesViewLogic implements ViewLogic {
         boolean targetSex, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
 
         targetAge = (int) br.verifyRead(SALES_TARGET_AGE_QUERY, targetAge);
-        targetSex =  br.verifyCategory(SALES_TARGET_SEX_QUERY, 2) == 1;
-        isDrinking = br.verifyCategory(SALES_IS_DRINKING_QUERY, 2) == 1;
+        targetSex =  br.verifyCategory(CONTRACT_TARGET_SEX_QUERY, 2) == 1;
+        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, 2) == 1;
         if(isDrinking) riskCount++;
-        isSmoking = br.verifyCategory(SALES_IS_SMOKING_QUERY, 2) == 1;
+        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, 2) == 1;
         if(isSmoking) riskCount++;
-        isDriving = br.verifyCategory(SALES_IS_DRIVING_QUERY, 2) == 1;
+        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, 2) == 1;
         if(isDriving) riskCount++;
-        isDangerActivity = br.verifyCategory(SALES_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
+        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
         if(isDangerActivity) riskCount++;
-        isTakingDrug = br.verifyCategory(SALES_IS_TAKING_DRUG_QUERY, 2) == 1;
+        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, 2) == 1;
         if(isTakingDrug) riskCount++;
-        isHavingDisease = br.verifyCategory(SALES_IS_HAVING_DISEASE_QUERY, 2) == 1;
+        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, 2) == 1;
         if (isHavingDisease) riskCount++;
 
         int premium = employee.planHealthInsurance(targetAge, targetSex, riskCount, insurance);
@@ -196,14 +194,14 @@ public class SalesViewLogic implements ViewLogic {
         BuildingType buildingType;
         Long collateralAmount = 0L;
 
-        buildingType = switch (br.verifyCategory(SALES_BUILDING_TYPE_QUERY, 4)) {
+        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, 4)) {
             case 1 -> COMMERCIAL;
             case 2 -> INDUSTRIAL;
             case 3 -> INSTITUTIONAL;
             case 4 -> RESIDENTIAL;
             default -> throw new IllegalStateException();
         };
-        collateralAmount = (Long) br.verifyRead(SALES_COLLATRAL_AMOUNT_QUERY, collateralAmount);
+        collateralAmount = (Long) br.verifyRead(CONTRACT_COLLATERAL_AMOUNT_QUERY, collateralAmount);
 
         int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
         System.out.println(premiumInquiry(premium));
@@ -220,7 +218,7 @@ public class SalesViewLogic implements ViewLogic {
         Long value = 0L;
 
         targetAge = (int) br.verifyRead(SALES_TARGET_AGE_QUERY, targetAge);
-        value = (Long) br.verifyRead(SALES_VALUE_QUERY, value);
+        value = (Long) br.verifyRead(CONTRACT_VALUE_QUERY, value);
 
         int premium = employee.planCarInsurance(targetAge, value, insurance);
         System.out.println(premiumInquiry(premium));
@@ -245,14 +243,14 @@ public class SalesViewLogic implements ViewLogic {
             // 미등록 고객
             case 2 -> {
                 String name = "", ssn = "", phone = "", address = "", email = "", job = "";
-                System.out.println(SALES_INPUT_CUSTOMER_INFO);
+                System.out.println(CONTRACT_INPUT_CUSTOMER_INFO);
 
-                name = (String) br.verifySpecificRead(SALES_CUSTOMER_NAME_QUERY, name, "name");
-                ssn = (String) br.verifySpecificRead(SALES_SSN_QUERY, ssn, "ssn");
-                phone = (String) br.verifySpecificRead(SALES_PHONE_QUERY, phone, "phone");
-                address = (String) br.verifyRead(SALES_ADDRESS_QUERY, address);
-                email = (String) br.verifySpecificRead(SALES_EMAIL_QUERY, email, "email");
-                job = (String) br.verifyRead(SALES_JOB_QUERY, job);
+                name = (String) br.verifySpecificRead(CONTRACT_CUSTOMER_NAME_QUERY, name, "name");
+                ssn = (String) br.verifySpecificRead(CONTRACT_SSN_QUERY, ssn, "ssn");
+                phone = (String) br.verifySpecificRead(CONTRACT_PHONE_QUERY, phone, "phone");
+                address = (String) br.verifyRead(CONTRACT_ADDRESS_QUERY, address);
+                email = (String) br.verifySpecificRead(CONTRACT_EMAIL_QUERY, email, "email");
+                job = (String) br.verifyRead(CONTRACT_JOB_QUERY, job);
 
                 customerDto = new CustomerDto(name, ssn, phone, address, email, job);
             }
@@ -263,12 +261,12 @@ public class SalesViewLogic implements ViewLogic {
     private ContractDto inputHealthInfo(ContractDto contractDto) {
         String diseaseDetail = "";
         int height = 0, weight = 0;
-        System.out.println(SALES_INPUT_HEALTH_INFO);
+        System.out.println(CONTRACT_INPUT_HEALTH_INFO);
 
-        height = (int) br.verifyRead(SALES_HEIGHT_QUERY, height);
-        weight = (int) br.verifyRead(SALES_WEGHIT_QUERY, weight);
+        height = (int) br.verifyRead(CONTRACT_HEIGHT_QUERY, height);
+        weight = (int) br.verifyRead(CONTRACT_WEGHIT_QUERY, weight);
         if (((HealthContractDto) contractDto).isHavingDisease())
-            diseaseDetail = (String) br.verifyRead(SALES_DISEASE_DETAIL_QUERY, diseaseDetail);
+            diseaseDetail = (String) br.verifyRead(CONTRACT_DISEASE_DETAIL_QUERY, diseaseDetail);
 
         ((HealthContractDto) contractDto).setHeight(height)
                                         .setWeight(weight)
@@ -281,9 +279,9 @@ public class SalesViewLogic implements ViewLogic {
         int buildingArea = 0;
         boolean isSelfOwned, isActualResidence;
 
-        buildingArea = (int) br.verifyRead(SALES_BUILDING_AREA_QUERY, buildingArea);
-        isSelfOwned = br.verifyCategory(SALES_IS_SELF_OWNED_QUERY, 2) == 1;
-        isActualResidence = br.verifyCategory(SALES_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
+        buildingArea = (int) br.verifyRead(CONTRACT_BUILDING_AREA_QUERY, buildingArea);
+        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, 2) == 1;
+        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
 
         ((FireContractDto) contractDto).setBuildingArea(buildingArea)
                                         .setSelfOwned(isSelfOwned)
@@ -297,8 +295,8 @@ public class SalesViewLogic implements ViewLogic {
         String modelName = "", carNo = "";
         int modelYear = 0;
 
-        carNo = (String) br.verifySpecificRead(SALES_CAR_NO_QUERY, carNo, "carNo");
-        carType = switch (br.verifyCategory(SALES_CAR_TYPE_QUERY, 7)) {
+        carNo = (String) br.verifySpecificRead(CONTRACT_CAR_NO_QUERY, carNo, "carNo");
+        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, 7)) {
             case 1 -> URBAN;
             case 2 -> SUBCOMPACT;
             case 3 -> COMPACT;
@@ -308,8 +306,8 @@ public class SalesViewLogic implements ViewLogic {
             case 7 -> SPORTS;
             default -> throw new IllegalStateException();
         };
-        modelName = (String) br.verifyRead(SALES_MADEL_NAME_QUERY, modelName);
-        modelYear = (int) br.verifyRead(SALES_MODEL_YEAR_QUERY, modelYear);
+        modelName = (String) br.verifyRead(CONTRACT_MADEL_NAME_QUERY, modelName);
+        modelYear = (int) br.verifyRead(CONTRACT_MODEL_YEAR_QUERY, modelYear);
 
         ((CarContractDto) contractDto).setCarNo(carNo)
                                     .setCarType(carType)

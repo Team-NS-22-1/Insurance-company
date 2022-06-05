@@ -23,4 +23,5 @@ INSERT INTO user (user_id, password, role_id) VALUES ('devmember', '1234', 9);
 INSERT INTO user (user_id, password, role_id) VALUES ('uwmember', '1234', 10);
 INSERT INTO user (user_id, password, role_id) VALUES ('compmember', '1234', 11);
 INSERT INTO user (user_id, password, role_id) VALUES ('salesmember', '1234', 12);
+INSERT INTO user (user_id, password, role_id) VALUES ('admin', 'admin', 1);
 
