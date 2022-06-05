@@ -1,7 +1,7 @@
 package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.CrudInterface;
-import insuranceCompany.application.domain.complain.Complain;
+import insuranceCompany.application.domain.accident.complain.Complain;
 
 import java.util.List;
 

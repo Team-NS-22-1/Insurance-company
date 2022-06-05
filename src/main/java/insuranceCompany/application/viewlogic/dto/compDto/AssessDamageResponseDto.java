@@ -1,7 +1,7 @@
 package insuranceCompany.application.viewlogic.dto.compDto;
 
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.customer.payment.Account;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

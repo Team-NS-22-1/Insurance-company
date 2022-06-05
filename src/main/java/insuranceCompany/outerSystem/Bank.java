@@ -1,6 +1,6 @@
 package insuranceCompany.outerSystem;
 
-import insuranceCompany.application.domain.payment.Account;
+import insuranceCompany.application.domain.customer.payment.Account;
 
 /**
  * packageName :  outerSystem

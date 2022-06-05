@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.complain;
+package insuranceCompany.application.domain.accident.complain;
 
 import lombok.Builder;
 import lombok.Getter;

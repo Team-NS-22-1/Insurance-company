@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.payment;
+package insuranceCompany.application.domain.customer.payment;
 
 
 /**
@@ -44,4 +44,6 @@ public abstract class Payment {
 	public abstract String toString();
 
 	public abstract String toStringForPay();
+
+	public abstract String toStringForValid();
 }
