@@ -29,6 +29,7 @@ import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
 import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
+import insuranceCompany.outerSystem.FinancialInstitute;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -371,6 +372,7 @@ public class Customer {
 
 	public void addPayment(PaymentDto paymentDto){
 		Payment payment = createPayment(paymentDto);
+		FinancialInstitute.validPaymentInfo(payment);
 		PaymentDao paymentDao = new PaymentDaoImpl();
 		paymentDao.create(payment);
 		this.paymentList.add(payment);

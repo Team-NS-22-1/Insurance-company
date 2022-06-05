@@ -44,4 +44,6 @@ public abstract class Payment {
 	public abstract String toString();
 
 	public abstract String toStringForPay();
+
+	public abstract String toStringForValid();
 }

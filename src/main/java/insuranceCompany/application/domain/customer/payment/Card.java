@@ -78,4 +78,9 @@ public class Card extends Payment {
 	public String toStringForPay() {
 		return "[" + cardType.name() + "] " + cardNo +" 카드에서 ";
 	}
+
+	@Override
+	public String toStringForValid() {
+		return "[" + cardType.name() + "] " + cardNo;
+	}
 }
