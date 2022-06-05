@@ -510,10 +510,10 @@ public class Employee {
 		Customer customer = new Customer();
 		customer.setName(customerDto.getName())
 				.setSsn(customerDto.getSsn())
-				.setAddress(customer.getAddress())
+				.setAddress(customerDto.getAddress())
 				.setPhone(customerDto.getPhone())
 				.setEmail(customerDto.getEmail())
-				.setJob(customer.getJob());
+				.setJob(customerDto.getJob());
 		CustomerDaoImpl customerDao = new CustomerDaoImpl();
 		customerDao.create(customer);
 		return customer;

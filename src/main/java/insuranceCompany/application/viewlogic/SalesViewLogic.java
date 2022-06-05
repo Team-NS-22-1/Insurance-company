@@ -8,7 +8,6 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
-import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
@@ -330,20 +329,17 @@ public class SalesViewLogic implements ViewLogic {
         int choice = br.verifyCategory(SALES_CONCLUDE_CONTRACT, 2);
         switch (choice) {
             case 1 -> {
-                User user = null;
                 if (customerDto == null) {
                     customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
                     customer = employee.readCustomer(customerId);
-
-                } else {
+                }
+                else {
                     customer = employee.registerCustomer(customerDto);
                     UserDto userDto = signUp(customer.getId());
-                    user = employee.registerUser(userDto);
+                    employee.registerUser(userDto);
                 }
                 Contract contract = employee.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
-                if(user != null)
-                    System.out.println(user);
                 System.out.println(contract);
                 System.out.println(SALES_CONCLUDE);
             }
