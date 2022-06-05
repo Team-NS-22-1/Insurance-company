@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.ONE;
-import static insuranceCompany.application.global.constant.ContractViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.ContractConstants.*;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
 /**
