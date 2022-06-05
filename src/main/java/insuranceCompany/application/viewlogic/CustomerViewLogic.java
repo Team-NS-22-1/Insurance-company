@@ -106,16 +106,15 @@ public class CustomerViewLogic implements ViewLogic {
         if (customer.getId() == 0)
             return createMenuAndExitQuery(CUSTOMER_MENU, SIGN_IN_INSURANCE);
         else
-            return createMenuAndLogoutAndInput(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
+            return createMenuAndLogout(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
     }
 
     @Override
     public void work(String command) {
         try {
             if (customer.getId() == 0) {
-                switch (command) {
-                    case ONE -> selectInsurance();
-                    case "" -> throw new InputNullDataException();
+                if (ONE.equals(command)) {
+                    selectInsurance();
                 }
             } else {
                 switch (command) {
@@ -123,7 +122,6 @@ public class CustomerViewLogic implements ViewLogic {
                     case TWO -> payPremiumButton();
                     case THREE -> reportAccident();
                     case FOUR -> claimCompensation();
-                    case "" -> throw new InputNullDataException();
                 }
             }
         } catch (IOException e) {

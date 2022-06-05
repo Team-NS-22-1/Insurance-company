@@ -59,9 +59,8 @@ public class SalesViewLogic implements ViewLogic {
     @Override
     public void work(String command) {
         try {
-            switch (command) {
-                case ONE -> selectInsurance();
-                case "" -> throw new InputNullDataException();
+            if (ONE.equals(command)) {
+                selectInsurance();
             }
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
