@@ -139,6 +139,7 @@ public class MyBufferedReader extends BufferedReader {
     public int verifyCategory(String query, int categorySize) {
         while(true){
             System.out.print(query);
+            System.out.print("선택: ");
             try {
                 String value = this.readLine();
                 checkBlankOrExit(value);

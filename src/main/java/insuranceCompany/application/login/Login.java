@@ -1,7 +1,6 @@
 package insuranceCompany.application.login;
 
 import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDao;
 import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
@@ -16,7 +15,7 @@ import java.io.InputStreamReader;
 
 public class Login {
 
-    public int menuLogin() throws IOException {
+    public int menuLogin() {
         MyBufferedReader br = new MyBufferedReader(new InputStreamReader(System.in));
         String id = "", password = "";
         int roleId = -1;
