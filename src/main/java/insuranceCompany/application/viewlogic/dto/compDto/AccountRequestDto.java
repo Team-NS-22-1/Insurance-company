@@ -1,6 +1,6 @@
 package insuranceCompany.application.viewlogic.dto.compDto;
 
-import insuranceCompany.application.domain.payment.BankType;
+import insuranceCompany.application.domain.customer.payment.BankType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

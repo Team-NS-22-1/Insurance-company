@@ -1,8 +1,8 @@
 package insuranceCompany.application.login;
 
-import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.domain.dao.employee.EmployeeDaoImpl;
-import insuranceCompany.application.domain.dao.user.UserDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.InputException;

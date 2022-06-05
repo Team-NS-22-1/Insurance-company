@@ -1,7 +1,7 @@
 package insuranceCompany.application.global.utility;
 
 import insuranceCompany.application.domain.accident.Accident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
 import insuranceCompany.application.global.exception.MyFileNotFoundException;
 
 import javax.swing.*;

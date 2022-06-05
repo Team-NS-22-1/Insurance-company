@@ -1,22 +1,22 @@
 package insuranceCompany.application.domain.customer;
 
 
-import insuranceCompany.application.domain.dao.accident.*;
-import insuranceCompany.application.domain.dao.contract.ContractDao;
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.domain.dao.customer.PaymentDao;
-import insuranceCompany.application.domain.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.dao.user.UserDaoImpl;
+import insuranceCompany.application.dao.accident.*;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
-import insuranceCompany.application.domain.complain.Complain;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.complain.Complain;
 import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.FileDialogUtil;
@@ -329,31 +329,6 @@ public class Customer {
 	}
 
 
-//	public AccidentDocumentFile claimCompensation(Accident accident, AccidentDocumentFile accidentDocumentFile){
-//		DocUtil docUtil = DocUtil.getInstance();
-//		String path = getSubmitPath(id,accident.getId(),accidentDocumentFile.getType().getDesc());
-//		String extension = "";
-//		AccDocType accDocType = accidentDocumentFile.getType();
-//		if(accDocType == AccDocType.PICTUREOFSITE)
-//			extension = JPEG_EXTENSION;
-//		else
-//			extension = HWP_EXTENSION;
-//
-//		String directory = docUtil.upload(path+extension);
-//		if (directory==null) {
-//			return null;
-//		}
-//		accidentDocumentFile.setFileAddress(directory);
-//
-//		AccidentDocumentFileDaoImpl accidentDocumentFileList = new AccidentDocumentFileDaoImpl();
-//		if (accident.getAccDocFileList().containsKey(accDocType)) {
-//			accidentDocumentFileList.update(accident.getAccDocFileList().get(accDocType).getId());
-//		} else {
-//			accidentDocumentFileList.create(accidentDocumentFile);
-//			accident.getAccDocFileList().put(accDocType, accidentDocumentFile);
-//		}
-//		return accidentDocumentFile;
-//	}
 
 	public void pay(Contract contract){
 		PaymentDao paymentDao = new PaymentDaoImpl();

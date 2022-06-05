@@ -1,11 +1,11 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.CarAccident;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.global.exception.MyInvalidAccessException;
 import insuranceCompany.application.global.exception.NoResultantException;

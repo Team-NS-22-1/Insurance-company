@@ -1,6 +1,6 @@
 package insuranceCompany.application.global.utility;
 
-import insuranceCompany.application.domain.payment.BankType;
+import insuranceCompany.application.domain.customer.payment.BankType;
 import insuranceCompany.application.global.exception.MyInadequateFormatException;
 
 import static insuranceCompany.application.global.constant.ExceptionConstants.INPUT_WRONG_FORMAT;

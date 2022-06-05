@@ -1,17 +1,17 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.accident.AccidentDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.domain.dao.customer.CustomerDao;
-import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDao;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
 import insuranceCompany.application.domain.accident.*;
-import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccDocType;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.payment.BankType;
+import insuranceCompany.application.domain.customer.payment.BankType;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
