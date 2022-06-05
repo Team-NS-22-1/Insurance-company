@@ -24,4 +24,3 @@ INSERT INTO user (user_id, password, role_id) VALUES ('uwmember', '1234', 10);
 INSERT INTO user (user_id, password, role_id) VALUES ('compmember', '1234', 11);
 INSERT INTO user (user_id, password, role_id) VALUES ('salesmember', '1234', 12);
 
-INSERT INTO customer (name, job, ssn, phone, email, address) VALUES ('관리자', '관리자', '900101-1000000', '010-9999-9999', 'admin@naver.com', '관리자');

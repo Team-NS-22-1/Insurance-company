@@ -1,6 +1,6 @@
-package insuranceCompany.application.dao.accident;
+package insuranceCompany.application.domain.dao.accident;
 
-import insuranceCompany.application.dao.CrudInterface;
+import insuranceCompany.application.domain.dao.CrudInterface;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 
 import java.util.List;

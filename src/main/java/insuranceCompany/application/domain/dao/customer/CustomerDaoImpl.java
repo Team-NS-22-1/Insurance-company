@@ -1,12 +1,11 @@
-package insuranceCompany.application.dao.customer;
+package insuranceCompany.application.domain.dao.customer;
 
-import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.dao.Dao;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.utility.db.DBUtil;
-import insuranceCompany.application.global.utility.db.DbConst;
 
-import java.sql.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * packageName :  domain.customer
@@ -71,23 +70,6 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
 
     @Override
     public boolean delete(int id) {
-        Connection conn = null;
-        PreparedStatement pstm = null;
-        ResultSet rs = null;
-        try {
-            String query = "delete from customer where customer_id = ?";
-            Class.forName(DbConst.JDBC_DRIVER);
-            conn = DBUtil.getConnection();
-            pstm = conn.prepareStatement(query);
-            pstm.setInt(1, id);
-            pstm.executeUpdate();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }finally {
-            close();
-        }
         return true;
     }
 

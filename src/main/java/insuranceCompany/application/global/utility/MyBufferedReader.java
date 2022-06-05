@@ -6,7 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
-import static insuranceCompany.application.global.utility.CustomerInfoFormatUtil.*;
+import static insuranceCompany.application.global.utility.FormatUtil.*;
 
 public class MyBufferedReader extends BufferedReader {
     public MyBufferedReader(Reader in) {

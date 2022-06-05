@@ -1,6 +1,6 @@
 package insuranceCompany.application.domain.accident.accDocFile;
 
-import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;

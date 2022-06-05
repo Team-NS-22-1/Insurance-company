@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.domain.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.Position;

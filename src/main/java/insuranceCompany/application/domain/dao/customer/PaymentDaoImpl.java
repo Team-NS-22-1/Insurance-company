@@ -1,6 +1,6 @@
-package insuranceCompany.application.dao.customer;
+package insuranceCompany.application.domain.dao.customer;
 
-import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.dao.Dao;
 import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 

@@ -50,7 +50,7 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 #db관련
-src/main/java/insuranceCompany/application/global/utility/db/DbConst.java
+src/main/java/insuranceCompany/application/global/constant/DatabaseConstants.java
 #청구서류 관련
 AccDocFile/submit/**
 fileServer/**
