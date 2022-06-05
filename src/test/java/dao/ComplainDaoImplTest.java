@@ -1,9 +1,9 @@
 package dao;
 
 import insuranceCompany.application.dao.accident.ComplainDaoImpl;
-import insuranceCompany.application.domain.complain.Complain;
+import insuranceCompany.application.domain.accident.complain.Complain;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.List;
 

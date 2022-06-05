@@ -41,10 +41,6 @@ public class DevelopViewLogic implements ViewLogic {
 
     private MyBufferedReader br;
 
-    public DevelopViewLogic() {
-        this.br = new MyBufferedReader(new InputStreamReader(System.in));
-    }
-
     public DevelopViewLogic(Employee employee) {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
         this.employee = employee;

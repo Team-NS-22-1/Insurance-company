@@ -1,9 +1,9 @@
 package dao;
 
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.domain.payment.*;
+import insuranceCompany.application.domain.customer.payment.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.LocalDate;
 import java.util.List;

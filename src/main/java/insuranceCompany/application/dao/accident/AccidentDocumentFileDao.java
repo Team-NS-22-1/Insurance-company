@@ -1,7 +1,7 @@
 package insuranceCompany.application.dao.accident;
 
 import insuranceCompany.application.dao.CrudInterface;
-import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
+import insuranceCompany.application.domain.accident.accidentDocumentFile.AccidentDocumentFile;
 
 import java.util.List;
 
