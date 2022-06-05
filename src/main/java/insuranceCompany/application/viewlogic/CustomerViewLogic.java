@@ -294,7 +294,6 @@ public class CustomerViewLogic implements ViewLogic {
                 }
                 Contract contract = customer.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
-                System.out.println(user);
                 System.out.println(contract);
                 System.out.println(CUSTOMER_SIGN);
             }
