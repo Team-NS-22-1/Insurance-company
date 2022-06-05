@@ -1,7 +1,7 @@
 package insuranceCompany.application.global.constant;
 
 public class SalesViewLogicConstants {
-    // main menu
+    // Sales Menu
     public static final String SALES_MENU = "<<영업팀 메뉴>>";
     public static final String SALES_MENU_ELEMENTS = "보험상품설계";
 
@@ -48,7 +48,9 @@ public class SalesViewLogicConstants {
 
     // Method plan...
     public static final String SALES_TARGET_AGE_QUERY = "고객님의 나이: ";
-    public static final String SALES_INQUIRY_PREMIUM_1 = "조회된 귀하의 보험료는 ";
+    public static String salesPremiumInquiry(int premium) {
+        return "조회된 귀하의 보험료는 " + premium + "원 입니다.";
+    }
     public static final String SALES_INQUIRY_PREMIUM_2 = "원 입니다.";
 
     // Method inputCustomerInfo()

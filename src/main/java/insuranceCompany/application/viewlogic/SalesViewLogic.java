@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
+import static insuranceCompany.application.global.constant.SalesViewLogicConstants.SALES_MENU;
+import static insuranceCompany.application.global.constant.SalesViewLogicConstants.SALES_MENU_ELEMENTS;
 import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
 
 /**
@@ -48,7 +50,7 @@ public class SalesViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogout("<<영업팀 메뉴>>", "보험상품설계");
+        return createMenuAndLogout(SALES_MENU, SALES_MENU_ELEMENTS);
     }
 
     @Override
