@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.insurance.Insurance;
 import org.junit.jupiter.api.Test;
 

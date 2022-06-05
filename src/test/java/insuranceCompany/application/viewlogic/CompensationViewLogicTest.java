@@ -1,7 +1,7 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.employee.EmployeeDao;
-import insuranceCompany.application.domain.dao.employee.EmployeeDaoImpl;
+import insuranceCompany.application.dao.employee.EmployeeDao;
+import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.CarAccident;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;

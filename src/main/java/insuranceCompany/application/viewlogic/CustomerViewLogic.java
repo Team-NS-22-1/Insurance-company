@@ -1,13 +1,13 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.accident.AccidentDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.domain.dao.contract.ContractDao;
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDao;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDao;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;
@@ -183,9 +183,9 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0)
                 customerDto = inputCustomerInfo();
             ContractDto contractDto = switch (insurance.getInsuranceType()) {
-                case HEALTH -> inputHealthInfo();
+                case HEALTH -> inputHealthInfo(customerDto);
                 case FIRE -> inputFireInfo();
-                case CAR -> inputCarInfo();
+                case CAR -> inputCarInfo(customerDto);
             };
             signContract(customerDto, contractDto);
         }
@@ -205,7 +205,7 @@ public class CustomerViewLogic implements ViewLogic {
         return new CustomerDto(name, ssn, phone, address, email, job);
     }
 
-    private ContractDto inputHealthInfo() {
+    private ContractDto inputHealthInfo(CustomerDto customerDto) {
         int riskCount = 0, height = 0, weight = 0;
         String diseaseDetail = "";
         boolean isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
@@ -229,7 +229,7 @@ public class CustomerViewLogic implements ViewLogic {
             diseaseDetail = (String) br.verifyRead(CONTRACT_DISEASE_DETAIL_QUERY, diseaseDetail);
         }
 
-        int premium = customer.inquireHealthPremium(customer.getSsn(), riskCount, insurance);
+        int premium = customer.inquireHealthPremium(customerDto.getSsn(), riskCount, insurance);
         return new HealthContractDto(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
                                     isTakingDrug, isHavingDisease, diseaseDetail).setPremium(premium);
     }
@@ -256,7 +256,7 @@ public class CustomerViewLogic implements ViewLogic {
         return new FireContractDto(buildingArea, buildingType, collateralAmount, isSelfOwned, isActualResidence).setPremium(premium);
     }
 
-    private ContractDto inputCarInfo() {
+    private ContractDto inputCarInfo(CustomerDto customerDto) {
         CarType carType;
         String modelName = "", carNo = "";
         int modelYear = 0;
@@ -277,7 +277,7 @@ public class CustomerViewLogic implements ViewLogic {
         modelYear = (int) br.verifyRead(CONTRACT_MODEL_YEAR_QUERY, modelYear);
         value = (Long) br.verifyRead(CONTRACT_VALUE_QUERY, value);
 
-        int premium = customer.inquireCarPremium(customer.getSsn(), value, insurance);
+        int premium = customer.inquireCarPremium(customerDto.getSsn(), value, insurance);
         return new CarContractDto(carNo, carType, modelName, modelYear, value).setPremium(premium);
     }
 

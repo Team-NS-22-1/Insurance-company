@@ -1,6 +1,6 @@
 package dao;
 
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import org.junit.jupiter.api.Test;

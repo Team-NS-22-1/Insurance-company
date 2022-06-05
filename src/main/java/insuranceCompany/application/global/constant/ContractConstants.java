@@ -23,10 +23,10 @@ public class ContractConstants {
     public static final String SALES_SELECT_INSURANCE_ID = "설계할 보험상품의 번호를 입력하세요. \t(0 : 뒤로가기)";
 
     // decideSigning()
-    public static final String SALES_INSURANCE_DATAIL = "<< 계약조건 >>\n";
+    public static final String SALES_INSURANCE_DATAIL = "<< 계약조건 >>";
     public static final String SALES_TARGET_AGE = "나이";
     public static final String SALES_TARGET_SEX = "성별";
-    public static final String SALES_RISK_CRITERTION = "고위험군";
+    public static final String SALES_RISK_CRITERTION = "고위험군 여부";
     public static final String SALES_BUIILDING_TYPE = "건물종류";
     public static final String SALES_COLLATERAL_AMOUNT_CRITERION = "담보금액기준";
     public static final String SALES_VALUE_CRITERION = "차량가액기준";
@@ -101,10 +101,10 @@ public class ContractConstants {
     // Table format
     public static final String CONTRACT_INSURANCES_CATEGORY_FORMAT = "%-4s\t|\t%-10s\t|\t%-5s\n";
     public static final String CONTRACT_INSURANCES_VALUE_FORMAT = "%-4s\t|\t%-10s\t|\t%-5s\n";
-    public static final String CONTRACT_GUARANTEES_CATEGORY_FORMAT = "%-12s\t|\t%-20s\t\t|\t%-11s\n";
-    public static final String CONTRACT_GUARANTEES_VALUE_FORMAT = "%-10s\t|\t%-20s\t|\t%-5d원\n";
-    public static final String CONTRACT_HEALTH_DETAIL_CATEGORY_FORMAT = "%-10s\t|\t%-3s\t|\t%-6s\t|\t%-8s\n";
-    public static final String CONTRACT_HEALTH_DETAIL_VALUE_FORMAT = "%-10s\t|\t%-3s\t|\t%-6s\t\t|\t%-5d원\n";
+    public static final String CONTRACT_GUARANTEES_CATEGORY_FORMAT = "%-10s\t|\t%-10s\t|\t%-11s\n";
+    public static final String CONTRACT_GUARANTEES_VALUE_FORMAT = "%-10s\t|\t%-10s\t|\t%-5d원\n";
+    public static final String CONTRACT_HEALTH_DETAIL_CATEGORY_FORMAT = "%-8s\t|\t%-3s\t|\t%-7s\t|\t%-8s\n";
+    public static final String CONTRACT_HEALTH_DETAIL_VALUE_FORMAT = "%-8s\t|\t%-3s\t|\t%-7s\t|\t%-5d원\n";
     public static final String CONTRACT_FIRE_DETAIL_CATEGORY_FORMAT = "%-2s\t|\t%-10s\t|\t%-7s\n";
     public static final String CONTRACT_FIRE_DETAIL_VALUE_FORMAT = "%-3s\t|\t%-10s\t|\t%-7d원\n";
     public static final String CONTRACT_CAR_DETAIL_CATEGORY_FORMAT = "%-8s\t|\t%-20s\t|\t%-5s\n";

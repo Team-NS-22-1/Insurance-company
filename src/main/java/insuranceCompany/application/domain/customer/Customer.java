@@ -1,14 +1,14 @@
 package insuranceCompany.application.domain.customer;
 
 
-import insuranceCompany.application.domain.dao.accident.*;
-import insuranceCompany.application.domain.dao.contract.ContractDao;
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.domain.dao.customer.PaymentDao;
-import insuranceCompany.application.domain.dao.customer.PaymentDaoImpl;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.dao.user.UserDaoImpl;
+import insuranceCompany.application.dao.accident.*;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.user.UserDaoImpl;
 import insuranceCompany.application.domain.accident.*;
 import insuranceCompany.application.domain.accident.accDocFile.AccDocType;
 import insuranceCompany.application.domain.accident.accDocFile.AccidentDocumentFile;

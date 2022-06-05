@@ -1,6 +1,6 @@
 package uwDao;
 
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
 import insuranceCompany.application.domain.contract.Contract;
 import org.junit.jupiter.api.Test;
 

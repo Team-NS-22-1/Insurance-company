@@ -1,6 +1,6 @@
-package insuranceCompany.application.domain.dao.employee;
+package insuranceCompany.application.dao.employee;
 
-import insuranceCompany.application.domain.dao.Dao;
+import insuranceCompany.application.dao.Dao;
 import insuranceCompany.application.domain.employee.Department;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.employee.Position;

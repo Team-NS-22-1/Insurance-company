@@ -1,6 +1,6 @@
-package insuranceCompany.application.domain.dao.user;
+package insuranceCompany.application.dao.user;
 
-import insuranceCompany.application.domain.dao.CrudInterface;
+import insuranceCompany.application.dao.CrudInterface;
 import insuranceCompany.application.login.User;
 
 public interface UserDao extends CrudInterface<User> {

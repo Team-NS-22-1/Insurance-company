@@ -1,7 +1,7 @@
-package insuranceCompany.application.domain.dao.insurance;
+package insuranceCompany.application.dao.insurance;
 
 
-import insuranceCompany.application.domain.dao.CrudInterface;
+import insuranceCompany.application.dao.CrudInterface;
 import insuranceCompany.application.domain.insurance.Insurance;
 
 import java.util.ArrayList;
