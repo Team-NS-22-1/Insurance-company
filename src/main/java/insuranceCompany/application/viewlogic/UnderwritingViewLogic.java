@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
+import static insuranceCompany.application.global.constant.UnderwritingViewLogicConstants.*;
 import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
 
@@ -38,13 +39,6 @@ public class UnderwritingViewLogic implements ViewLogic {
     private MyBufferedReader br;
     private Employee employee;
 
-    public UnderwritingViewLogic() {
-        this.sc = new Scanner(System.in);
-        this.br = new MyBufferedReader(new InputStreamReader(System.in));
-        EmployeeDaoImpl employeeDaoImpl = new EmployeeDaoImpl();
-        this.employee = employeeDaoImpl.read(2);
-    }
-
     public UnderwritingViewLogic(Employee employee) {
         this.sc = new Scanner(System.in);
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
@@ -53,7 +47,7 @@ public class UnderwritingViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogout("<<언더라이팅팀메뉴>>", "인수심사한다");
+        return createMenuAndLogoutAndInput(UNDERWRITING_MENU, UNDERWRITING_MENU_ELEMENTS);
     }
 
     @Override
@@ -83,14 +77,17 @@ public class UnderwritingViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenuAndExit("<<보험 종류 선택>>","건강보험", "자동차보험", "화재보험");
+                String command = String .valueOf(br.verifyMenu(
+                        createMenuAndExitQuery(INSURANCE_TYPE_MENU, INSURANCE_TYPE_MENU_ELEMENTS),
+                        INSURANCE_TYPE_MENU_ELEMENTS.length
+                ));
 
                 InsuranceType insuranceType = null;
 
-                switch (sc.next().toUpperCase()) {
-                    case ONE-> { insuranceType = InsuranceType.HEALTH; readContracts(insuranceType); }
-                    case TWO-> { insuranceType = InsuranceType.CAR; readContracts(insuranceType); }
-                    case THREE-> { insuranceType = InsuranceType.FIRE; readContracts(insuranceType); }
+                switch (command) {
+                    case ONE -> { insuranceType = InsuranceType.HEALTH; readContracts(insuranceType); }
+                    case TWO -> { insuranceType = InsuranceType.CAR; readContracts(insuranceType); }
+                    case THREE -> { insuranceType = InsuranceType.FIRE; readContracts(insuranceType); }
                     case ZERO -> isExit = true;
                     case EXIT -> throw new MyCloseSequence();
                     default -> throw new InputInvalidMenuException();
@@ -108,7 +105,7 @@ public class UnderwritingViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                // read
+                // 계약 목록 조회 (read)
                 ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
                 List<Contract> contractList = contractDaoImpl.readAllByInsuranceType(insuranceType);
 
@@ -116,20 +113,22 @@ public class UnderwritingViewLogic implements ViewLogic {
                     isExit = true;
                     throw new MyNotExistContractException();
                 }
-
-                createMenu("-------------------------------");
-                createMenu("계약 ID | 고객 이름 | 인수심사상태");
+                createMenu(LIST_LINE);
+                createMenu(READ_CONTRACTS_COLUMN);
                 printContractList(contractList);
-                createMenu("-------------------------------");
+                createMenu(LIST_LINE);
 
-                MessageUtil.createMenuAndExit("<<인수심사할 계약 ID를 입력하세요.>>");
-                String contractId = sc.next();
+                // 계약 ID 입력
+                createMenuAndExit(INPUT_CONTRACT_ID);
+                String contractId = "";
+                contractId = (String) br.verifyRead(INPUT, contractId);
+
                 if (contractId.equals(ZERO)) break;
-                if (contractId.equalsIgnoreCase(EXIT)) throw new MyCloseSequence();
+                if (contractId.equals(EXIT)) throw new MyCloseSequence();
 
-                // read
+                // 계약 정보 조회(read)
                 Contract contract = this.employee.readContract(Integer.parseInt(contractId), insuranceType);
-                createMenu("<<계약 정보>>");
+                createMenu(SHOW_CONTRACT_INFO);
                 printContractInfo(contract);
 
                 selectUwState(contract);
@@ -149,21 +148,25 @@ public class UnderwritingViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenuOnlyExit("<<인수심사결과 선택>>","승인", "거절", "보류", "계약 목록 조회");
-                String command = sc.next();
+                // 인수심사 결과 선택
+                String command = String.valueOf(br.verifyMenu(
+                        createMenuOnlyExitQueryAndInput(SELECT_UNDERWRITING_STATE, SELECT_UNDERWRITING_STATE_MENU),
+                        SELECT_UNDERWRITING_STATE_MENU.length
+                ));
 
-                switch (command.toUpperCase()) {
+                switch (command) {
 
                     case ONE: case TWO: case THREE:
-                        createMenu("<<인수사유를 입력해주세요.>>");
+                        // 인수 사유 입력
+                        createMenu(INPUT_UNDERWRITING_REASON_MENU);
                         String reasonOfUw = "";
-                        reasonOfUw = (String) br.verifyRead("인수사유: ", reasonOfUw);
+                        reasonOfUw = (String) br.verifyRead(INPUT_UNDERWRITING_REASON, reasonOfUw);
                         ConditionOfUw conditionOfUw = null;
 
                         switch (command) {
-                            case ONE-> conditionOfUw = ConditionOfUw.APPROVAL;
-                            case TWO-> conditionOfUw = ConditionOfUw.REFUSE;
-                            case THREE-> conditionOfUw = ConditionOfUw.RE_AUDIT;
+                            case ONE -> conditionOfUw = ConditionOfUw.APPROVAL;
+                            case TWO -> conditionOfUw = ConditionOfUw.REFUSE;
+                            case THREE -> conditionOfUw = ConditionOfUw.RE_AUDIT;
                             default -> new InputInvalidMenuException();
                         }
                         isExit = confirmUnderWriting(contract.getId(), reasonOfUw, conditionOfUw);
@@ -191,14 +194,18 @@ public class UnderwritingViewLogic implements ViewLogic {
         while (isExit != true) {
 
             try {
-                MessageUtil.createMenuOnlyExit("<<인수심사 결과를 반영하시겠습니까?>>", "예", "아니오");
+                // 인수 심사 결과 반영 확인
+                String command = String.valueOf(br.verifyMenu(
+                        createMenuOnlyExitQueryAndInput(CONFIRM_UNDERWRITING_MENU, CONFIRM_UNDERWRITING_MENU_ELEMENTS),
+                        CONFIRM_UNDERWRITING_MENU_ELEMENTS.length
+                ));
 
-                switch (sc.next().toUpperCase()) {
+                switch (command) {
                     case ONE:
                         // update
                         this.employee.underwriting(contractId, reasonOfUw, conditionOfUw);
 
-                        createMenu("인수심사 결과가 반영되었습니다.");
+                        createMenu(CONFIRM_UNDERWRITING_MESSAGE);
                         ContractDaoImpl contractDaoImpl = new ContractDaoImpl();
                         System.out.println(contractDaoImpl.read(contractId));
                         isExit = true;
