@@ -145,7 +145,7 @@ public class CompensationViewLogic implements ViewLogic {
                 accidentDao = new AccidentDaoImpl();
                 Accident accident = this.accidentDao.read(accidentId);
                 if (accident.getEmployeeId() != this.employee.getId()) {
-                    throw new MyInvalidAccessException(INPUT_DATA_ON_LIST);
+                    throw new MyIllegalArgumentException(INPUT_DATA_ON_LIST);
                 }
                 accidentDocumentFileDao = new AccidentDocumentFileDaoImpl();
                 List<AccidentDocumentFile> accidentDocumentFiles = accidentDocumentFileDao.readAllByAccidentId(accidentId);
@@ -153,7 +153,7 @@ public class CompensationViewLogic implements ViewLogic {
                     accident.getAccDocFileList().put(accidentDocumentFile.getType(), accidentDocumentFile);
                 }
                 return accident;
-            } catch (MyInvalidAccessException e) {
+            } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
             return null;
