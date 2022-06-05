@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.NO_PAYMENT_ON_CUSTOMER;
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
 
 /**
  * packageName :  dao
@@ -74,7 +76,7 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
         }
 
         if (payment == null) {
-            throw new MyIllegalArgumentException(id + "는 없는 ID 입니다. 다시 확인해주세요.");
+            throw new MyIllegalArgumentException(RED_BOLD+id + "는 없는 ID 입니다. 다시 확인해주세요."+RESET);
         }
 
         return payment;
