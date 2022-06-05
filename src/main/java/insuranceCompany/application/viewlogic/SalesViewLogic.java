@@ -340,8 +340,6 @@ public class SalesViewLogic implements ViewLogic {
                 }
                 Contract contract = employee.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
-                if(user != null)
-                    System.out.println(user);
                 System.out.println(contract);
                 System.out.println(SALES_CONCLUDE);
             }
