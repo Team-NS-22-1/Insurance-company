@@ -608,7 +608,6 @@ public class CustomerViewLogic implements ViewLogic {
                 while (true) {
                     try {
                         System.out.println(showAccountNoEX(bankType.getFormat()));
-                        System.out.println(ZERO_MESSAGE);
                         System.out.print(INPUT);
                         String command = sc.next();
                         if (command.equals(ZERO)) {

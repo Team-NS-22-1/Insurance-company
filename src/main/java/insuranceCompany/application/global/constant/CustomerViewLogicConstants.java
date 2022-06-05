@@ -58,7 +58,7 @@ public class CustomerViewLogicConstants {
     public static final String REGISTER_ACCOUNT = "계좌 추가하기";
     public static final String SELECT_BANK = "은행사 선택하기";
     public static String showAccountNoEX(String format) {
-        return "계좌 번호 입력하기 : (예시 -> " + format + ")";
+        return "계좌 번호 입력하기 : (예시 -> " + format + ") " + ZERO_MESSAGE;
     }
     public static final String REGISTER_ACCOUNT_INFO = "계좌 정보를 등록하시겠습니까? (Y/N)";
 
@@ -96,7 +96,7 @@ public class CustomerViewLogicConstants {
         return format+"를 제출해주세요.";
     }
     public static String getDownloadDocExQuery(String format) {
-        return format+" 양식을 다운로드 받겠습니까>?(Y/N) "+ZERO_MESSAGE+" 입력 : ";
+        return format+" 양식을 다운로드 받겠습니까? (Y/N) 입력 : ";
     }
     public static String getExDirectory(String format) {
         return "./AccDocFile/Example/" + format+"(예시).hwp";

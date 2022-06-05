@@ -12,6 +12,7 @@ import insuranceCompany.application.domain.accident.accidentDocumentFile.Acciden
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.customer.payment.BankType;
+import insuranceCompany.application.global.constant.CompensationViewLogicConstants;
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
@@ -210,6 +211,10 @@ public class CompensationViewLogic implements ViewLogic {
 
         downloadAccDocFile(accident);
         AccountRequestDto compAccount = createCompAccount();
+        if (compAccount == null) {
+            System.out.println(INPUT_ACCOUNT);
+            return;
+        }
         System.out.println(UPLOAD_ASSESS_DAMAGE);
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
 
@@ -266,9 +271,7 @@ public class CompensationViewLogic implements ViewLogic {
             while (true) {
                 try {
                     StringBuilder query = new StringBuilder();
-                    query.append(showAccountNoEX(bankType.getFormat())).append(LINE_SEPARATOR)
-                            .append(ZERO_MESSAGE).append(LINE_SEPARATOR);
-
+                    query.append(showAccountNoEX(bankType.getFormat())).append(LINE_SEPARATOR).append(INPUT);
                     String command = "";
                     command = (String) br.verifyRead(query.toString(),command);
                     if (command.equals(ZERO)) {
@@ -328,7 +331,7 @@ public class CompensationViewLogic implements ViewLogic {
         for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
             label:
             while (true) {
-                String query = getDownloadDocExQuery(accidentDocumentFile.getType().getDesc());
+                String query = CompensationViewLogicConstants.getDownloadDocExQuery(accidentDocumentFile.getType().getDesc());
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 switch (result) {

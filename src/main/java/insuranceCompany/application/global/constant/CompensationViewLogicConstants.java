@@ -1,5 +1,7 @@
 package insuranceCompany.application.global.constant;
 
+import static insuranceCompany.application.global.constant.CommonConstants.ZERO_MESSAGE;
+
 public class CompensationViewLogicConstants {
 
     //COMMON
@@ -7,7 +9,7 @@ public class CompensationViewLogicConstants {
     public static final String READ_ACCIDENT_LIST = "사고목록조회";
     public static final String INVESTIGATE_DAMAGE = "손해조사";
     public static final String ASSESS_DAMAGE = "손해사정";
-    public static final String SELECT_ACCIDENT = "<< 사고를 선택하세요. >>";
+    public static final String SELECT_ACCIDENT = "<< 접수된 사고를 선택하세요. >>";
     public static final String ACCIDENT_ID_QUERY = "사고 ID : ";
     public static final String SHOW_CUSTOMER_NAME = "접수자 명";
     public static final String SHOW_CAR_NO = "차량 번호 : ";
@@ -24,7 +26,7 @@ public class CompensationViewLogicConstants {
     public static final String ERROR_RATE_QUERY = "과실비율을 입력해주세요 (0~100) : ";
 
 
-    public static final String ASSESS_DAMAGE_QUERY = "손해 사정을 진행하시겠습니까? (Y/N)";
+    public static final String ASSESS_DAMAGE_QUERY = "손해 사정을 진행하시겠습니까? (Y/N) 입력 : ";
     //손해사정
     public static final String UPLOAD_ASSESS_DAMAGE = "손해사정서를 업로드해주세요.";
     public static String getInputCompensation(long lossReserve) {
@@ -38,7 +40,11 @@ public class CompensationViewLogicConstants {
     public static final String INVESTIGATE_ACCIDENT_EXCEPTION ="사고 조사 보고서가 업로드되지 않은 사고이기 때문에 손해 사정이 불가능합니다.";
     public static final String ERROR_RATE_EXCEPTION = "과실 비율이 입력되지 않은 사고이기 때문에 손해 사정이 불가능합니다.";
 
+    public static String getDownloadDocExQuery(String format) {
+        return format+" 양식을 다운로드 받겠습니까? (Y/N) "+ZERO_MESSAGE+" 입력 : ";
+    }
 
+    public static final String INPUT_ACCOUNT = "계좌 입력을 하지 않았습니다.";
 
 }
 
