@@ -23,6 +23,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('%s','%s',%d,%d,'%s');";
             String queryInsurance =
                     String.format(queryFormat, insurance.getName(), insurance.getDescription(), insurance.getContractPeriod(), insurance.getPaymentPeriod(), insurance.getInsuranceType().name());
+
             int insuranceId = super.create(queryInsurance);
             insurance.setId(insuranceId);
 
@@ -33,6 +34,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         "INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (%d, '%s', '%s', %d);";
                 String queryGuarantee =
                         String.format(queryFormatGuarantee, insuranceId, guarantee.getName(), guarantee.getDescription(), guarantee.getGuaranteeAmount());
+
                 super.create(queryGuarantee);
             }
 
@@ -42,6 +44,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (%d, %d, '%s', '%s');";
             String queryDevInfo =
                     String.format(queryFormatDevInfo, insuranceId, devInfo.getEmployeeId(), java.sql.Date.valueOf(devInfo.getDevelopDate()), devInfo.getSalesAuthorizationState().name());
+
             super.create(queryDevInfo);
 
             // CREATE insurance detail
@@ -53,15 +56,17 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         HealthDetail healthDetail = (HealthDetail) insuranceDetail;
                         int targetSex = healthDetail.isTargetSex() ? 1 : 0;
-                        int RiskCriterion = healthDetail.getRiskCriterion() ? 1 : 0;
+                        int RiskCriterion = healthDetail.isRiskCriterion() ? 1 : 0;
                         String queryFormatHealthDetail =
                                 "INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (%d, %d, %d, %d);";
                         String queryHealthDetail =
                                 String.format(queryFormatHealthDetail, insuranceDetailId, healthDetail.getTargetAge(), targetSex, RiskCriterion);
+
                         super.create(queryHealthDetail);
                     }
                 }
@@ -72,6 +77,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         CarDetail carDetail = (CarDetail) insuranceDetail;
@@ -79,6 +85,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (%d, %d, %d);";
                         String queryCarDetail =
                                 String.format(queryFormatCarDetail, insuranceDetailId, carDetail.getTargetAge(), carDetail.getValueCriterion());
+
                         super.create(queryCarDetail);
                     }
                 }
@@ -89,6 +96,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO insurance_detail (premium, insurance_id) VALUES (%d, %d);";
                         String queryInsuranceDetail =
                                 String.format(queryFormatInsuranceDetail, insuranceDetail.getPremium(), insuranceId);
+
                         int insuranceDetailId = super.create(queryInsuranceDetail);
 
                         FireDetail fireDetail = (FireDetail) insuranceDetail;
@@ -96,6 +104,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                                 "INSERT INTO fire_detail (fire_detail_id, target_building_type, collateral_amount_criterion) VALUES (%d, '%s', %d);";
                         String queryFireDetail =
                                 String.format(queryFormatFireDetail, insuranceDetailId, fireDetail.getTargetBuildingType().name(), fireDetail.getCollateralAmountCriterion());
+
                         super.create(queryFireDetail);
                     }
                 }
@@ -108,6 +117,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "INSERT INTO sales_authorization_file (insurance_id) VALUES (%d);";
             String querySalesAuthFile =
                     String.format(queryFormatSalesAuthFile, insuranceId);
+
             super.create(querySalesAuthFile);
 
         }
@@ -266,9 +276,9 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         Insurance insurance;
         ArrayList<Insurance> insuranceList = new ArrayList<>();
         try {
-            String query = "select * from insurance " +
-                    "inner join develop_info " +
-                    "on insurance.insurance_id = develop_info.insurance_id";
+            String query = "SELECT * FROM insurance " +
+                    "INNER JOIN develop_info " +
+                    "ON insurance.insurance_id = develop_info.insurance_id";
 
             ResultSet rs = super.read(query);
             while (rs.next()) {
@@ -310,43 +320,16 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         return insuranceList;
     }
 
-//    public DevInfo readDevInfo(int id) throws SQLException {
-//        DevInfo devInfo = null;
-//        String query = "select * from dev_info where insurance_id = " + id;
-//        ResultSet rs = super.read(query);
-//
-//        if (rs.next()) {
-//            devInfo = new DevInfo();
-//            devInfo.setId(rs.getInt("dev_info_id"));
-//            devInfo.setInsuranceId(rs.getInt("insurance_id"));
-//            devInfo.setEmployeeId(rs.getInt("employee_id"));
-//            devInfo.setDevDate(rs.getDate("dev_date").toLocalDate());
-//            devInfo.setSalesStartDate(rs.getDate("sales_start_date").toLocalDate());
-//            switch (rs.getString("sales_auth_state").toUpperCase()) {
-//                case "WAIT":
-//                    devInfo.setSalesAuthState(SalesAuthState.WAIT);
-//                    break;
-//                case "PERMISSION":
-//                    devInfo.setSalesAuthState(SalesAuthState.PERMISSION);
-//                    break;
-//                case "DISALLOWANCE":
-//                    devInfo.setSalesAuthState(SalesAuthState.DISALLOWANCE);
-//                    break;
-//            }
-//        }
-//        return devInfo;
-//    }
-
     public ArrayList<Insurance> readByEmployeeId(int eid){
         ArrayList<Integer> insuranceIds = new ArrayList<>();
         ArrayList<Insurance> insurances = new ArrayList<>();
         try {
             String query =
-                    "select * from insurance\n" +
-                            "where insurance_id IN (\n" +
-                            "    select insurance_id\n" +
-                            "    from develop_info\n" +
-                            "    where employee_id = " + eid +
+                    "SELECT * FROM insurance\n" +
+                            "WHERE insurance_id IN (\n" +
+                            "    SELECT insurance_id\n" +
+                            "    FROM develop_info\n" +
+                            "    WHERE employee_id = " + eid +
                             ");";
             super.read(query);
             while (resultSet.next()) {

@@ -15,7 +15,7 @@ public class HealthDetail extends InsuranceDetail {
 	public HealthDetail(){
 	}
 
-	public boolean getRiskCriterion() {
+	public boolean isRiskCriterion() {
 		return riskCriterion;
 	}
 
@@ -44,6 +44,25 @@ public class HealthDetail extends InsuranceDetail {
 
 	public String getTargetSex() {
 		return isTargetSex() ? "남성" : "여성";
+	}
+
+	public String printTargetAge() {
+		 String ageRange = switch (targetAge) {
+			case 100 -> "100세 이상";
+			case 80 -> "80 ~ 100세";
+			case 60 -> "60 ~ 80세";
+			case 50 -> "50 ~ 60세";
+			case 40 -> "40 ~ 50세";
+			case 30 -> "30 ~ 40세";
+			case 20 -> "20 ~ 30세";
+			default -> "20세 이하";
+		 };
+		 return ageRange;
+	}
+
+
+	public String getRiskCriterion() {
+		return isRiskCriterion() ? "초과" : "이하";
 	}
 
 	public String print() {

@@ -40,7 +40,5 @@ public class ContractwithTypeDto {
         isPublishStock = contract.isPublishStock();
         conditionOfUw = contract.getConditionOfUw();
         insuranceId = contract.getInsuranceId();
-
     }
-
 }

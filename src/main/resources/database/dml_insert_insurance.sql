@@ -14,10 +14,10 @@ INSERT INTO insurance_detail (premium, insurance_id) VALUES (29178, 1);
 INSERT INTO health_detail (health_detail_id, target_age, target_sex, risk_criterion) VALUES (5, 60, 0, 0);
 INSERT INTO sales_authorization_file (insurance_id) VALUES (1);
 
-INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('자동차 보험 1','자동차 보험 1 설명입니다.',60,40,'CAR');
-INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차 보험 보장 1', '자동차 보험 보장 1 설명입니다.', 100000000000);
-INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차 보험 보장 2', '자동차 보험 보장 2 설명입니다.', 2000000000000);
-INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차 보험 보장 3', '자동차 보험 보장 3 설명입니다.', 4000000000000);
+INSERT INTO insurance (name, description, contract_period, payment_period, insurance_type) VALUES ('자동차보험 1','자동차보험 1 설명입니다.',60,40,'CAR');
+INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차보험 보장 1', '자동차보험 보장 1 설명입니다.', 100000000000);
+INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차보험 보장 2', '자동차보험 보장 2 설명입니다.', 2000000000000);
+INSERT INTO guarantee (insurance_id, name, description, amount) VALUES (2, '자동차보험 보장 3', '자동차보험 보장 3 설명입니다.', 4000000000000);
 INSERT INTO develop_info (insurance_id, employee_id, develop_date, sales_authorization_state) VALUES (2, 1, '2022-05-31', 'WAIT');
 INSERT INTO insurance_detail (premium, insurance_id) VALUES (60750, 2);
 INSERT INTO car_detail (car_detail_id, target_age, value_criterion) VALUES (6, 20, 100000000);

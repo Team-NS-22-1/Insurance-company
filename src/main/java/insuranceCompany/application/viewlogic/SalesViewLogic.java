@@ -1,19 +1,23 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
-import insuranceCompany.application.domain.contract.*;
+import insuranceCompany.application.domain.contract.BuildingType;
+import insuranceCompany.application.domain.contract.CarType;
+import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
-import insuranceCompany.application.domain.insurance.Guarantee;
-import insuranceCompany.application.domain.insurance.Insurance;
-import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
+import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.InputInvalidMenuException;
 import insuranceCompany.application.global.exception.InputNullDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
+import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.ContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
+import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
+import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +25,9 @@ import java.util.ArrayList;
 
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogout;
+import static insuranceCompany.application.global.constant.CommonConstants.ONE;
+import static insuranceCompany.application.global.constant.ContractViewLogicConstants.*;
+import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -36,16 +42,9 @@ import static insuranceCompany.application.global.utility.MessageUtil.createMenu
  */
 public class SalesViewLogic implements ViewLogic {
     private MyBufferedReader br;
-    private HealthContract healthContract;
-    private FireContract fireContract;
-    private CarContract carContract;
     private Employee employee;
     private Customer customer;
     private Insurance insurance;
-
-    public SalesViewLogic() {
-        this.br = new MyBufferedReader(new InputStreamReader(System.in));
-    }
 
     public SalesViewLogic(Employee employee) {
         this.br = new MyBufferedReader(new InputStreamReader(System.in));
@@ -54,62 +53,60 @@ public class SalesViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogout("<<영업팀 메뉴>>", "보험상품설계");
+        return createMenuAndLogoutAndInput(SALES_MENU, SALES_MENU_ELEMENTS);
     }
 
     @Override
     public void work(String command) {
         try {
             switch (command) {
-                // 보험상품설계
-                case "1" -> {
-                    selectInsurance();
-                }
+                case ONE -> selectInsurance();
                 case "" -> throw new InputNullDataException();
-                default -> throw new InputInvalidMenuException();
             }
-        } catch(InputException e) {
-            System.out.println(e.getMessage());
         } catch (IOException e) {
             System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
             System.exit(0);
+        } catch (MyIllegalArgumentException | InputNullDataException e) {
+            System.out.println(e.getMessage());
         }
     }
 
     public void selectInsurance() throws IOException {
-        InsuranceDaoImpl insuranceDao = new InsuranceDaoImpl();
-        ArrayList<Insurance> insurances = insuranceDao.readAll();
+        ArrayList<Insurance> insurances = employee.readInsurances();
         if(insurances.size() == 0)
             throw new NoResultantException();
         while (true) {
-            System.out.println("<< 보험상품목록 >>");
+            System.out.println(CONTRACT_INSURANCE_LIST);
+            System.out.printf(CONTRACT_INSURANCES_CATEGORY_FORMAT, CONTRACT_INSURANCE_ID, CONTRACT_INSURANCE_NAME, CONTRACT_INSURANCE_TYPE);
+            System.out.println(CONTRACT_SHORT_DIVISION);
             for (Insurance insurance : insurances) {
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
-                    System.out.println("상품번호: " + insurance.getId() + " | 보험이름: " + insurance.getName() + "   \t보험종류: " + insurance.getInsuranceType());
+                    System.out.printf(CONTRACT_INSURANCES_VALUE_FORMAT, insurance.getId(), insurance.getName(), insurance.printInsuranceType());
+//                    System.out.println("보험상품 번호: " + insurance.getId() + " | 보험상품 이름: " + insurance.getName() +
+//                            "   \t보험상품 종류: " + insurance.getInsuranceType());
             }
 
             try {
-                System.out.println("설계할 보험상품의 번호를 입력하세요. \t(0 : 뒤로가기)");
-                int insuranceId = br.verifyMenu("보험상품 번호: ", insurances.size());
-                if (insuranceId == 0) break;
+                int insuranceId = 0;
+                System.out.println(SALES_SELECT_INSURANCE_ID);
+                insuranceId = (int) br.verifyRead(CONTRACT_INPUT_INSURANCE_ID, insuranceId);
+                if(insuranceId == 0) break;
 
-                insuranceDao = new InsuranceDaoImpl();
-                insurance = insuranceDao.read(insuranceId);
+                insurance = employee.readInsurance(insuranceId);
                 if (insurance.getDevInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION) {
-                    System.out.println("<< 상품안내 >>\n" + insurance.getDescription() + "\n<< 보장내역 >>");
+                    System.out.println(CONTRACT_INSURANCE_DESCRIPTION + insurance.getDescription() + CONTRACT_INSURANCE_CONTRACT_PERIOD + insurance.getContractPeriod() +
+                            CONTRACT_YEAR_PARAMETER + CONTRACT_INSURANCE_PAYMENT_PERIOD + insurance.getPaymentPeriod() +CONTRACT_YEAR_PARAMETER + CONTRACT_INSURANCE_GUARANTEE);
+                    System.out.printf(CONTRACT_GUARANTEES_CATEGORY_FORMAT, "",CONTRACT_INSURANCE_GUARANTEE_DESCRIPTION, CONTRACT_INSURANCE_GUARANTEE_AMOUNT);
+                    System.out.println(CONTRACT_LONG_DIVISION);
                     for(Guarantee guarantee : insurance.getGuaranteeList()){
-                        System.out.println(guarantee);
+                        System.out.printf(CONTRACT_GUARANTEES_VALUE_FORMAT, guarantee.getName(), guarantee.getDescription(), guarantee.getGuaranteeAmount());
                     }
-                    switch (insurance.getInsuranceType()) {
-                        case HEALTH -> planHealthInsurance();
-                        case FIRE -> planFireInsurance();
-                        case CAR -> planCarInsurance();
-                    }
+                    ProgressContract();
                 }
                 else {
-                    throw new NoResultantException();
+                    throw new MyIllegalArgumentException("ERROR:: ID["+ insuranceId + "]에 해당하는 보험 정보가 존재하지 않습니다.");
                 }
-            } catch (InputException e) {
+            } catch (InputException | MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             } catch (NumberFormatException e) {
                 System.out.println("형식에 맞는 코드를 입력해주세요");
@@ -117,152 +114,196 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
-    private void planHealthInsurance() throws IOException {
-        int riskCount = 0, targetAge = 0;
-        boolean targetSex, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
+    private void ProgressContract() {
+        System.out.println(SALES_INSURANCE_DATAIL);
+        switch (insurance.getInsuranceType()) {
+            case HEALTH -> {
+                System.out.printf(CONTRACT_HEALTH_DETAIL_CATEGORY_FORMAT, SALES_TARGET_AGE, SALES_TARGET_SEX, SALES_RISK_CRITERTION, SALES__PREMIUM);
+                System.out.println(CONTRACT_SHORT_DIVISION);
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.printf(CONTRACT_HEALTH_DETAIL_VALUE_FORMAT, ((HealthDetail) insuranceDetail).printTargetAge(),
+                            ((HealthDetail) insuranceDetail).getTargetSex(), ((HealthDetail) insuranceDetail).getRiskCriterion(),
+                            insuranceDetail.getPremium());
+                }
+            }
+            case FIRE -> {
+                System.out.printf(CONTRACT_FIRE_DETAIL_CATEGORY_FORMAT, SALES_BUIILDING_TYPE, SALES_COLLATERAL_AMOUNT_CRITERION, SALES__PREMIUM);
+                System.out.println(CONTRACT_SHORT_DIVISION);
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.printf(CONTRACT_FIRE_DETAIL_VALUE_FORMAT, ((FireDetail) insuranceDetail).printBuildingType(), ((FireDetail) insuranceDetail).printCollateralAmountCriterion(), insuranceDetail.getPremium());
+                }
+            }
+            case CAR -> {
+                System.out.printf(CONTRACT_CAR_DETAIL_CATEGORY_FORMAT, SALES_TARGET_AGE, SALES_VALUE_CRITERION, SALES__PREMIUM);
+                System.out.println(CONTRACT_SHORT_DIVISION);
+                for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
+                    System.out.printf(CONTRACT_CAR_DETAIL_VALUE_FORMAT, ((CarDetail) insuranceDetail).printTargetAge(),
+                            (( CarDetail) insuranceDetail).printValueCriterion(), insuranceDetail.getPremium());
+                }
+            }
+        }
 
-        targetAge = (int) br.verifyRead("고객님의 나이: ", targetAge);
-        targetSex =  br.verifyCategory("고객님의 성별 \n1. 남  2. 여\n", 2) == 1;
-        isDrinking = br.verifyCategory("음주 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if(isDrinking) riskCount++;
-        isSmoking = br.verifyCategory("흡연 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if(isSmoking) riskCount++;
-        isDriving = br.verifyCategory("운전 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if(isDriving) riskCount++;
-        isDangerActivity = br.verifyCategory("위험 취미 활동 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if(isDangerActivity) riskCount++;
-        isTakingDrug = br.verifyCategory("약물 복용 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if(isTakingDrug) riskCount++;
-        isHavingDisease = br.verifyCategory("질병 이력 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        if (isHavingDisease) riskCount++;
+        ContractDto contractDto =  switch (insurance.getInsuranceType()) {
+            case HEALTH -> planHealthInsurance();
+            case FIRE -> planFireInsurance();
+            case CAR -> planCarInsurance();
+        };
 
-        int premium = employee.inquireHealthPremium(targetAge, targetSex, riskCount, insurance);
-        System.out.println("조회된 귀하의 보험료는 " + premium + "원 입니다.");
-
-        int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
+        int choice = br.verifyCategory(SALES_PROGRESS_CONTRACT, 2);
         switch (choice) {
             case 1 -> {
-                healthContract = employee.planHealthInsurance(insurance.getId(), premium, isDrinking, isSmoking,
-                                                                isDriving, isDangerActivity, isTakingDrug, isHavingDisease);
-                inputCustomerInfo();
+                CustomerDto customerDto = inputCustomerInfo();
+                contractDto = switch (insurance.getInsuranceType()) {
+                    case HEALTH -> inputHealthInfo(contractDto);
+                    case FIRE -> inputFireInfo(contractDto);
+                    case CAR -> inputCarInfo(contractDto);
+                };
+                concludeContract(customerDto, contractDto);
             }
-            case 2 -> System.out.println("계약이 취소되었습니다.");
+            case 2 -> System.out.println(SALES_CANCEL);
         }
     }
 
-    private void planFireInsurance() throws IOException {
+    private ContractDto planHealthInsurance() {
+        int riskCount = 0, targetAge = 0;
+        boolean targetSex, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
+
+        targetAge = (int) br.verifyRead(SALES_TARGET_AGE_QUERY, targetAge);
+        targetSex =  br.verifyCategory(SALES_TARGET_SEX_QUERY, 2) == 1;
+        isDrinking = br.verifyCategory(SALES_IS_DRINKING_QUERY, 2) == 1;
+        if(isDrinking) riskCount++;
+        isSmoking = br.verifyCategory(SALES_IS_SMOKING_QUERY, 2) == 1;
+        if(isSmoking) riskCount++;
+        isDriving = br.verifyCategory(SALES_IS_DRIVING_QUERY, 2) == 1;
+        if(isDriving) riskCount++;
+        isDangerActivity = br.verifyCategory(SALES_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
+        if(isDangerActivity) riskCount++;
+        isTakingDrug = br.verifyCategory(SALES_IS_TAKING_DRUG_QUERY, 2) == 1;
+        if(isTakingDrug) riskCount++;
+        isHavingDisease = br.verifyCategory(SALES_IS_HAVING_DISEASE_QUERY, 2) == 1;
+        if (isHavingDisease) riskCount++;
+
+        int premium = employee.planHealthInsurance(targetAge, targetSex, riskCount, insurance);
+        System.out.println(premiumInquiry(premium));
+
+        HealthContractDto healthContractDto = new HealthContractDto();
+        healthContractDto.setDrinking(isDrinking)
+                .setSmoking(isSmoking)
+                .setDriving(isDriving)
+                .setDangerActivity(isDangerActivity)
+                .setTakingDrug(isTakingDrug)
+                .setHavingDisease(isHavingDisease)
+                .setPremium(premium);
+        return healthContractDto;
+    }
+
+    private ContractDto planFireInsurance() {
         BuildingType buildingType;
         Long collateralAmount = 0L;
 
-        buildingType = switch (br.verifyCategory("건물종류를 선택해주세요.\n1. 상업용\n2. 산업용\n3. 기관용\n4. 거주용\n", 4)) {
+        buildingType = switch (br.verifyCategory(SALES_BUILDING_TYPE_QUERY, 4)) {
             case 1 -> COMMERCIAL;
             case 2 -> INDUSTRIAL;
             case 3 -> INSTITUTIONAL;
             case 4 -> RESIDENTIAL;
             default -> throw new IllegalStateException();
         };
-        collateralAmount = (Long) br.verifyRead("담보금액: (단워: 원): ", collateralAmount);
+        collateralAmount = (Long) br.verifyRead(SALES_COLLATRAL_AMOUNT_QUERY, collateralAmount);
 
-        int premium = employee.inquireFirePremium(buildingType, collateralAmount, insurance);
-        System.out.println("조회된 귀하의 보험료는 " + premium + "원 입니다.");
+        int premium = employee.planFireInsurance(buildingType, collateralAmount, insurance);
+        System.out.println(premiumInquiry(premium));
 
-        int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
-        switch (choice) {
-            case 1 -> {
-                fireContract = employee.planFireInsurance(insurance.getId(), premium, buildingType, collateralAmount);
-                inputCustomerInfo();
-            }
-            case 2 -> System.out.println("계약이 취소되었습니다.");
-        }
+        FireContractDto fireContractDto = new FireContractDto();
+        fireContractDto.setBuildingType(buildingType)
+                .setCollateralAmount(collateralAmount)
+                .setPremium(premium);
+        return fireContractDto;
     }
 
-    private void planCarInsurance() throws IOException {
+    private ContractDto planCarInsurance() {
         int targetAge = 0;
         Long value = 0L;
 
-        targetAge = (int) br.verifyRead("고객님의 나이: ", targetAge);
-        value = (Long) br.verifyRead("차량가액 (단위: 원): ", value);
+        targetAge = (int) br.verifyRead(SALES_TARGET_AGE_QUERY, targetAge);
+        value = (Long) br.verifyRead(SALES_VALUE_QUERY, value);
 
-        int premium = employee.inquireCarPremium(targetAge, value, insurance);
-        System.out.println("귀하의 보험료는 " + premium + "원 입니다.");
+        int premium = employee.planCarInsurance(targetAge, value, insurance);
+        System.out.println(premiumInquiry(premium));
 
-        int choice = br.verifyCategory("보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n", 2);
-        switch (choice) {
-            case 1 -> {
-                carContract = employee.planCarInsurance(insurance.getId(), premium, value);
-                inputCustomerInfo();
-            }
-            case 2 -> System.out.println("계약이 취소되었습니다.");
-        }
+        CarContractDto carContractDto = new CarContractDto();
+        carContractDto.setValue(value)
+                    .setPremium(premium);
+        return carContractDto;
     }
 
-    private void inputCustomerInfo() throws IOException {
+    private CustomerDto inputCustomerInfo() {
         int customerId = 0;
+        CustomerDto customerDto = null;
 
-        int choice = br.verifyCategory("등록된 회원입니까?\n1. 예\n2. 아니요\n", 2);
+        int choice = br.verifyCategory(SALES_IS_CONTRACTED_CUSTOMER, 2);
         switch (choice) {
             // 등록 고객
             case 1 -> {
-                customerId = (int) br.verifyRead("고객 ID를 입력해주세요.\n고객 ID: ", customerId);
-
-                CustomerDaoImpl customerDao = new CustomerDaoImpl();
-                customer = customerDao.read(customerId);
+                customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
+                customer = employee.readCustomer(customerId);
             }
             // 미등록 고객
             case 2 -> {
                 String name = "", ssn = "", phone = "", address = "", email = "", job = "";
-                System.out.println("<<고객님의 개인정보를 입력해주세요.>>");
+                System.out.println(SALES_INPUT_CUSTOMER_INFO);
 
-                name = (String) br.verifySpecificRead("이름: ", name, "name");
-                ssn = (String) br.verifySpecificRead("주민번호 (______-*******): ", ssn, "ssn");
-                phone = (String) br.verifySpecificRead("연락처 (0__-____-____): ", phone, "phone");
-                address = (String) br.verifyRead("주소: ", address);
-                email = (String) br.verifySpecificRead("이메일 (_____@_____.___): ", email, "email");
-                job = (String) br.verifyRead("직업: ", job);
+                name = (String) br.verifySpecificRead(SALES_CUSTOMER_NAME_QUERY, name, "name");
+                ssn = (String) br.verifySpecificRead(SALES_SSN_QUERY, ssn, "ssn");
+                phone = (String) br.verifySpecificRead(SALES_PHONE_QUERY, phone, "phone");
+                address = (String) br.verifyRead(SALES_ADDRESS_QUERY, address);
+                email = (String) br.verifySpecificRead(SALES_EMAIL_QUERY, email, "email");
+                job = (String) br.verifyRead(SALES_JOB_QUERY, job);
 
-                customer = employee.inputCustomerInfo(name, ssn, phone, address, email, job);
+                customerDto = new CustomerDto(name, ssn, phone, address, email, job);
             }
         }
-
-        switch (insurance.getInsuranceType()) {
-            case HEALTH -> inputHealthInfo();
-            case FIRE -> inputFireInfo();
-            case CAR -> inputCarInfo();
-        }
+        return customerDto;
     }
 
-    private void inputHealthInfo() throws IOException {
+    private ContractDto inputHealthInfo(ContractDto contractDto) {
         String diseaseDetail = "";
         int height = 0, weight = 0;
+        System.out.println(SALES_INPUT_HEALTH_INFO);
 
-        height = (int) br.verifyRead("키 (단위: cm): ", height);
-        weight = (int) br.verifyRead("몸무게 (단위: kg): ", weight);
-        if (healthContract.isHavingDisease())
-            diseaseDetail = (String) br.verifyRead("질병에 대한 상세 내용를 입력해주세요.\n", diseaseDetail);
+        height = (int) br.verifyRead(SALES_HEIGHT_QUERY, height);
+        weight = (int) br.verifyRead(SALES_WEGHIT_QUERY, weight);
+        if (((HealthContractDto) contractDto).isHavingDisease())
+            diseaseDetail = (String) br.verifyRead(SALES_DISEASE_DETAIL_QUERY, diseaseDetail);
 
-        healthContract = employee.inputHealthInfo(healthContract, height, weight, diseaseDetail);
-        concludeContract(healthContract);
+        ((HealthContractDto) contractDto).setHeight(height)
+                                        .setWeight(weight)
+                                        .setDiseaseDetail(diseaseDetail)
+                                        .setEmployeeId(employee.getId());
+        return contractDto;
     }
 
-    private void inputFireInfo() throws IOException {
+    private ContractDto inputFireInfo(ContractDto contractDto) {
         int buildingArea = 0;
         boolean isSelfOwned, isActualResidence;
 
-        buildingArea = (int) br.verifyRead("건물면적 (단위: m^2): ", buildingArea);
-        isSelfOwned = br.verifyCategory("자가 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
-        isActualResidence = br.verifyCategory("실거주 여부를 입력해주세요. \n1. 예  2. 아니요\n", 2) == 1;
+        buildingArea = (int) br.verifyRead(SALES_BUILDING_AREA_QUERY, buildingArea);
+        isSelfOwned = br.verifyCategory(SALES_IS_SELF_OWNED_QUERY, 2) == 1;
+        isActualResidence = br.verifyCategory(SALES_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
 
-        fireContract = employee.inputFireInfo(fireContract, buildingArea, isSelfOwned, isActualResidence);
-        concludeContract(fireContract);
+        ((FireContractDto) contractDto).setBuildingArea(buildingArea)
+                                        .setSelfOwned(isSelfOwned)
+                                        .setActualResidence(isActualResidence)
+                                        .setEmployeeId(employee.getId());
+        return contractDto;
     }
 
-    private void inputCarInfo() throws IOException {
+    private ContractDto inputCarInfo(ContractDto contractDto) {
         CarType carType;
-        String modelName = null, carNo = null;
+        String modelName = "", carNo = "";
         int modelYear = 0;
 
-        carNo = (String) br.verifySpecificRead("차량번호: ", carNo, "carNo");
-        carType = switch (br.verifyCategory("차종을 선택해주세요.\n1. 경형\n2. 소형\n3. 준중형\n4. 중형\n5. 준대형\n6. 대형\n7. 스포츠카\n", 7)) {
+        carNo = (String) br.verifySpecificRead(SALES_CAR_NO_QUERY, carNo, "carNo");
+        carType = switch (br.verifyCategory(SALES_CAR_TYPE_QUERY, 7)) {
             case 1 -> URBAN;
             case 2 -> SUBCOMPACT;
             case 3 -> COMPACT;
@@ -272,35 +313,42 @@ public class SalesViewLogic implements ViewLogic {
             case 7 -> SPORTS;
             default -> throw new IllegalStateException();
         };
-        modelName = (String) br.verifyRead("모델 이름: ", modelName);
-        modelYear = (int) br.verifyRead("차량 연식 (단위: 년): ", modelYear);
+        modelName = (String) br.verifyRead(SALES_MADEL_NAME_QUERY, modelName);
+        modelYear = (int) br.verifyRead(SALES_MODEL_YEAR_QUERY, modelYear);
 
-        carContract = employee.inputCarInfo(carContract, carNo, carType, modelName, modelYear);
-        concludeContract(carContract);
+        ((CarContractDto) contractDto).setCarNo(carNo)
+                                    .setCarType(carType)
+                                    .setModelName(modelName)
+                                    .setModelYear(modelYear)
+                                    .setEmployeeId(employee.getId());
+        return  contractDto;
     }
 
-    private void concludeContract(Contract contract) throws IOException {
-        int choice = br.verifyCategory("보험 계약을을 체결하시겠습니까?\n1. 계약체결\n2. 취소\n", 2);
+    private void concludeContract(CustomerDto customerDto, ContractDto contractDto) {
+        int choice = br.verifyCategory(SALES_CONCLUDE_CONTRACT, 2);
         switch (choice) {
             case 1 -> {
                 User user = null;
                 if (customer.getId() == 0) {
-                    user = signUp();
+                    customer = employee.registerCustomer(customerDto);
+                    UserDto userDto = signUp();
+                    user = employee.registerUser(userDto);
                 }
-                employee.registerContract(customer, contract, user, employee);
+                Contract contract = employee.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
+                if(user != null)
+                    System.out.println(user);
                 System.out.println(contract);
-                System.out.println("계약을 체결하였습니다.");
+                System.out.println(SALES_CONCLUDE);
             }
-            case 2 -> System.out.println("계약을 취소되었습니다.");
+            case 2 -> System.out.println(SALES_CANCEL);
         }
     }
 
-    private User signUp() throws IOException {
+    private UserDto signUp() {
         String userId = "", password = "";
-        userId = (String) br.verifyRead("고객이 지정한 아이디: ", userId);
-        password = (String) br.verifyRead("고객이 지정한 비밀번호: ", password);
-        User user = employee.createUserAccount(userId, password);
-        return user;
+        userId = (String) br.verifyRead(CONTRACT_USER_ID_QUERY, userId);
+        password = (String) br.verifyRead(CONTRACT_USER_PASSWORD_QUERY, password);
+        return new UserDto(userId, password, customer.getId());
     }
 }
