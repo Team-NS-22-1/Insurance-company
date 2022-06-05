@@ -233,9 +233,13 @@ public class CompensationViewLogic implements ViewLogic {
             }
         }
         Bank.sendCompensation(assessDamageResponseDto.getAccount(),compensation);
-        accidentDao = new AccidentDaoImpl();
-        accidentDao.delete(accident.getId());
-        FileDialogUtil.deleteDir(accident); // 폴더 삭제
+        try {
+            accidentDao = new AccidentDaoImpl();
+            accidentDao.delete(accident.getId());
+            FileDialogUtil.deleteDir(accident); // 폴더 삭제
+        } catch (MyIllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void isValidAccident(Accident accident) {

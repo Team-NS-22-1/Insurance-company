@@ -11,6 +11,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 /**
  * packageName :  domain.accident
  * fileName : JDBCAccidentListImpl
@@ -131,7 +134,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
             close();
         }
         if (ac == null) {
-            throw new MyIllegalArgumentException("사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         }
         return ac;
     }
@@ -148,7 +151,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         List<Accident> accidents = getAccidents(formatted);
         close();
         if(accidents.isEmpty())
-         throw new NoResultantException("고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+         throw new NoResultantException(RED_BOLD+"고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         return  accidents;
     }
 
@@ -160,7 +163,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         List<Accident> accidents = getAccidents(formatted);
         close();
         if(accidents.isEmpty())
-            throw new NoResultantException("보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+            throw new NoResultantException(RED_BOLD+"보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         return accidents;
     }
 
@@ -273,7 +276,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         boolean result = super.delete(formattedQuery);
         close();
         if(!result)
-            throw new IllegalArgumentException("사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다.");
+            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
 
         return true;
     }
