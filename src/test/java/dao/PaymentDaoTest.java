@@ -2,14 +2,14 @@ package dao;
 
 import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.customer.payment.*;
-import insuranceCompany.application.domain.payment.*;
 import insuranceCompany.application.global.exception.MyIllegalArgumentException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * packageName :  dao
