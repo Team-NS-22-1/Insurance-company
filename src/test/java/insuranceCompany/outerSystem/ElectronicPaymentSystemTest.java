@@ -1,7 +1,7 @@
 package insuranceCompany.outerSystem;
 
-import insuranceCompany.application.domain.dao.customer.PaymentDao;
-import insuranceCompany.application.domain.dao.customer.PaymentDaoImpl;
+import insuranceCompany.application.dao.customer.PaymentDao;
+import insuranceCompany.application.dao.customer.PaymentDaoImpl;
 import insuranceCompany.application.domain.payment.Payment;
 import org.junit.jupiter.api.Test;
 

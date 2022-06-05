@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.dao;
+package insuranceCompany.application.dao;
 
 import insuranceCompany.application.global.constant.DatabaseConstants;
 

@@ -1,13 +1,13 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.accident.AccidentDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDaoImpl;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDao;
-import insuranceCompany.application.domain.dao.accident.AccidentDocumentFileDaoImpl;
-import insuranceCompany.application.domain.dao.contract.ContractDao;
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDao;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDao;
+import insuranceCompany.application.dao.accident.AccidentDaoImpl;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDao;
+import insuranceCompany.application.dao.accident.AccidentDocumentFileDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDao;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDao;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.accident.Accident;
 import insuranceCompany.application.domain.accident.AccidentType;
 import insuranceCompany.application.domain.accident.CarAccident;

@@ -1,4 +1,4 @@
-package insuranceCompany.application.domain.dao;
+package insuranceCompany.application.dao;
 
 public interface CrudInterface<E> {
     void create(E e);

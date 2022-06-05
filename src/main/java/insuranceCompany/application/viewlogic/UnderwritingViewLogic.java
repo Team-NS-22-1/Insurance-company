@@ -1,8 +1,8 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.ConditionOfUw;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
