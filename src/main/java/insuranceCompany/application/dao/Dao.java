@@ -43,7 +43,6 @@ public class Dao {
     }
 
     public ResultSet read(String query) {
-        connect();
         try {
             statement = connect.createStatement();
             resultSet = statement.executeQuery(query);
