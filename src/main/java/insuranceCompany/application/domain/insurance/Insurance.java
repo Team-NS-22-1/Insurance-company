@@ -163,4 +163,9 @@ public class Insurance {
 				"}";
 	}
 
+	public String[] getColumnName() {
+		String[] column = {"보험ID", "보험유형", "이름", "설명", "계약기간", "납입기간"};
+		return column;
+	}
+
 }

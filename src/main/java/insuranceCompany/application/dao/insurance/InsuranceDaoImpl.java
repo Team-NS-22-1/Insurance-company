@@ -117,7 +117,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
     }
 
     public Insurance read(int id) {
-        Insurance  insurance = null;
+        Insurance insurance = null;
         try {
             // READ insurance
             String query = "SELECT * FROM insurance WHERE insurance_id = " + id + ";";
@@ -257,9 +257,6 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
         }
         catch (NullPointerException | SQLException e) {
             e.printStackTrace();
-        }
-        finally {
-            super.close();
         }
 
         return insurance;
