@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.MenuUtil.*;
 
 public class LoginViewLogic implements ViewLogic {
 

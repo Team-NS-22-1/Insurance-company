@@ -54,7 +54,7 @@ import static insuranceCompany.application.global.utility.BankUtil.checkAccountF
 import static insuranceCompany.application.global.utility.BankUtil.selectBankType;
 import static insuranceCompany.application.global.utility.CompAssignUtil.assignCompEmployee;
 import static insuranceCompany.application.global.utility.FormatUtil.*;
-import static insuranceCompany.application.global.utility.MessageUtil.*;
+import static insuranceCompany.application.global.utility.MenuUtil.*;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -106,7 +106,7 @@ public class CustomerViewLogic implements ViewLogic {
         if (customer.getId() == 0)
             return createMenuAndExitQuery(CUSTOMER_MENU, SIGN_IN_INSURANCE);
         else
-            return createMenuAndLogoutAndInput(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
+            return createMenuAndLogout(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
     }
 
     @Override
@@ -115,7 +115,6 @@ public class CustomerViewLogic implements ViewLogic {
             if (customer.getId() == 0) {
                 switch (command) {
                     case ONE -> selectInsurance();
-                    case "" -> throw new InputNullDataException();
                 }
             } else {
                 switch (command) {
@@ -123,7 +122,6 @@ public class CustomerViewLogic implements ViewLogic {
                     case TWO -> payPremiumButton();
                     case THREE -> reportAccident();
                     case FOUR -> claimCompensation();
-                    case "" -> throw new InputNullDataException();
                 }
             }
         } catch (IOException e) {

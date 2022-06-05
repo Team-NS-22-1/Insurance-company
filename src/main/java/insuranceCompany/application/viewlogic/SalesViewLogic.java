@@ -6,10 +6,7 @@ import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.global.exception.InputException;
-import insuranceCompany.application.global.exception.InputNullDataException;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.NoResultantException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
@@ -27,7 +24,7 @@ import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
 import static insuranceCompany.application.global.constant.CommonConstants.ONE;
 import static insuranceCompany.application.global.constant.ContractConstants.*;
-import static insuranceCompany.application.global.utility.MessageUtil.createMenuAndLogoutAndInput;
+import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
 /**
  * packageName :  main.domain.viewUtils.viewlogic
@@ -53,7 +50,7 @@ public class SalesViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuAndLogoutAndInput(SALES_MENU, SALES_MENU_ELEMENTS);
+        return createMenuAndLogout(SALES_MENU, SALES_MENU_ELEMENTS);
     }
 
     @Override
@@ -61,16 +58,13 @@ public class SalesViewLogic implements ViewLogic {
         try {
             switch (command) {
                 case ONE -> selectInsurance();
-                case "" -> throw new InputNullDataException();
             }
         } catch (IOException e) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
+            throw new MyIOException();
         } catch (MyIllegalArgumentException | InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public void selectInsurance() throws IOException {
         ArrayList<Insurance> insurances = employee.readInsurances();
