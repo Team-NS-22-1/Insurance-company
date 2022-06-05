@@ -2,6 +2,9 @@ package insuranceCompany.outerSystem;
 
 import insuranceCompany.application.domain.customer.payment.Account;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+import static insuranceCompany.application.global.utility.ConsoleColors.YELLOW_BOLD;
+
 /**
  * packageName :  outerSystem
  * fileName : Bank
@@ -16,6 +19,6 @@ import insuranceCompany.application.domain.customer.payment.Account;
 public interface Bank {
 
     public static void sendCompensation(Account account,long compensation) {
-        System.out.println("["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다.");
+        System.out.println(YELLOW_BOLD+"[알림] ["+account.getBankType() + "]"+account.getAccountNo() + "로 "+compensation + "원이 지급되었습니다."+RESET);
     }
 }

@@ -233,8 +233,6 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         return accidentList;
     }
