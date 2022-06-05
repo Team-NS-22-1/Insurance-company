@@ -17,8 +17,8 @@ public class Insurance {
 	private InsuranceType insuranceType;
 	private ArrayList<Guarantee> guaranteeList = new ArrayList<>();
 	private ArrayList<InsuranceDetail> insuranceDetailList = new ArrayList<>();
-	private DevelopInfo devInfo;
-	private SalesAuthorizationFile salesAuthFile;
+	private DevelopInfo developInfo;
+	private SalesAuthorizationFile salesAuthorizationFile;
 
 	public Insurance(){
 	}
@@ -95,21 +95,21 @@ public class Insurance {
 		return this;
 	}
 
-	public DevelopInfo getDevInfo() {
-		return devInfo;
+	public DevelopInfo getDevelopInfo() {
+		return developInfo;
 	}
 
-	public Insurance setDevInfo(DevelopInfo devInfo) {
-		this.devInfo = devInfo;
+	public Insurance setDevelopInfo(DevelopInfo developInfo) {
+		this.developInfo = developInfo;
 		return this;
 	}
 
-	public SalesAuthorizationFile getSalesAuthFile() {
-		return salesAuthFile;
+	public SalesAuthorizationFile getSalesAuthorizationFile() {
+		return salesAuthorizationFile;
 	}
 
-	public Insurance setSalesAuthFile(SalesAuthorizationFile salesAuthFile) {
-		this.salesAuthFile = salesAuthFile;
+	public Insurance setSalesAuthorizationFile(SalesAuthorizationFile salesAuthorizationFile) {
+		this.salesAuthorizationFile = salesAuthorizationFile;
 		return this;
 	}
 
@@ -146,8 +146,8 @@ public class Insurance {
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 개발정보 " + devInfo.print() +
-				", 인가파일 " + salesAuthFile.print() +
+				", 개발정보 " + developInfo.print() +
+				", 인가파일 " + salesAuthorizationFile.print() +
 				", " + printGuarantee() +
 				printInsuranceDetail() +
 				'}';
@@ -161,8 +161,8 @@ public class Insurance {
 				", 설명: '" + description + '\'' +
 				", 계약기간: " + contractPeriod +
 				", 납입기간: " + paymentPeriod +
-				", 개발정보 " + devInfo.print() +
-				", 인가파일 " + salesAuthFile.print() +
+				", 개발정보 " + developInfo.print() +
+				", 인가파일 " + salesAuthorizationFile.print() +
 				", 보장정보 개수: " + (guaranteeList.size()-1) +
 				", 보험상세정보 개수: " + (insuranceDetailList.size()-1) +
 				"}";

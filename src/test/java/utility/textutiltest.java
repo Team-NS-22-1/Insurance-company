@@ -35,18 +35,8 @@ public class textutiltest {
         }
 
 
-
-
         TextTable tx = new TextTable(f,fields);
         tx.printTable();
-    }
-
-    @Test
-    void test2() throws IllegalAccessException {
-        EmployeeDaoImpl dao = new EmployeeDaoImpl();
-        ArrayList<Employee> employees = (ArrayList<Employee>) dao.readAllCompEmployee();
-
-        printTable(Employee.class,employees);
     }
 
     public static void printTable(Class<?> clz, ArrayList<?> clzzs) throws IllegalAccessException {
@@ -69,10 +59,17 @@ public class textutiltest {
             }
         }
 
-
-
-
         TextTable tx = new TextTable(f,fields);
         tx.printTable();
     }
+
+    @Test
+    void test2() throws IllegalAccessException {
+        EmployeeDaoImpl dao = new EmployeeDaoImpl();
+        ArrayList<Employee> employees = (ArrayList<Employee>) dao.readAllCompEmployee();
+
+        printTable(Employee.class,employees);
+    }
+
+
 }
