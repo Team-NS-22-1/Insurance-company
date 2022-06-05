@@ -1,9 +1,8 @@
 package insuranceCompany.application.viewlogic;
 
-import insuranceCompany.application.dao.contract.ContractDaoImpl;
-import insuranceCompany.application.dao.customer.CustomerDaoImpl;
-import insuranceCompany.application.dao.employee.EmployeeDaoImpl;
-import insuranceCompany.application.dao.insurance.InsuranceDaoImpl;
+import insuranceCompany.application.domain.dao.contract.ContractDaoImpl;
+import insuranceCompany.application.domain.dao.customer.CustomerDaoImpl;
+import insuranceCompany.application.domain.dao.insurance.InsuranceDaoImpl;
 import insuranceCompany.application.domain.contract.ConditionOfUw;
 import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
@@ -11,15 +10,14 @@ import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.global.exception.*;
-import insuranceCompany.application.global.utility.MessageUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 
 import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Scanner;
 
-import static insuranceCompany.application.global.constant.UnderwritingViewLogicConstants.*;
 import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.UnderwritingViewLogicConstants.*;
 import static insuranceCompany.application.global.utility.MessageUtil.*;
 
 /**
@@ -150,7 +148,7 @@ public class UnderwritingViewLogic implements ViewLogic {
             try {
                 // 인수심사 결과 선택
                 String command = String.valueOf(br.verifyMenu(
-                        createMenuOnlyExitQueryAndInput(SELECT_UNDERWRITING_STATE, SELECT_UNDERWRITING_STATE_MENU),
+                        createMenuOnlyExitQuery(SELECT_UNDERWRITING_STATE, SELECT_UNDERWRITING_STATE_MENU),
                         SELECT_UNDERWRITING_STATE_MENU.length
                 ));
 
@@ -196,7 +194,7 @@ public class UnderwritingViewLogic implements ViewLogic {
             try {
                 // 인수 심사 결과 반영 확인
                 String command = String.valueOf(br.verifyMenu(
-                        createMenuOnlyExitQueryAndInput(CONFIRM_UNDERWRITING_MENU, CONFIRM_UNDERWRITING_MENU_ELEMENTS),
+                        createMenuOnlyExitQuery(CONFIRM_UNDERWRITING_MENU, CONFIRM_UNDERWRITING_MENU_ELEMENTS),
                         CONFIRM_UNDERWRITING_MENU_ELEMENTS.length
                 ));
 

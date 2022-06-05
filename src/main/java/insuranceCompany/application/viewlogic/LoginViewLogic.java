@@ -25,7 +25,7 @@ public class LoginViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-        return createMenuOnlyExitQueryAndInput(MENU_TITLE_LOGIN_VIEW_LOGIC, MENU_ELEMENTS_LOGIN_VIEW_LOGIC);
+        return createMenuOnlyExitQuery(MENU_TITLE_LOGIN_VIEW_LOGIC, MENU_ELEMENTS_LOGIN_VIEW_LOGIC);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class LoginViewLogic implements ViewLogic {
 
     private void menuCustomerLogin() throws IOException {
         loop: while(true) {
-            switch (br.verifyMenu(createMenuOnlyExitQueryAndInput(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), 2)) {
+            switch (br.verifyMenu(createMenuAndClose(MENU_TITLE_LOGIN_CUSTOMER, MENU_ELEMENTS_LOGIN_CUSTOMER), MENU_ELEMENTS_LOGIN_CUSTOMER.length)) {
                 case 1 -> {
                     Customer customer = new Login().loginCustomer();
                     if (customer == null) break;

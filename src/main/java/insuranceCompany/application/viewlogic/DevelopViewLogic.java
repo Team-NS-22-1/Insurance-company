@@ -112,8 +112,7 @@ public class DevelopViewLogic implements ViewLogic {
     }
 
     private InsuranceType menuInsuranceType() {
-        createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS);
-        return switch (br.verifyMenu("",3)){
+        return switch (br.verifyMenu(createMenuAndClose(MENU_INSURANCE_TYPE_TITLE, MENU_INSURANCE_TYPE_ELEMENTS),MENU_INSURANCE_TYPE_ELEMENTS.length)){
             case 1 -> InsuranceType.HEALTH;
             case 2 -> InsuranceType.CAR;
             case 3 -> InsuranceType.FIRE;

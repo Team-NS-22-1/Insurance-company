@@ -1,9 +1,9 @@
 package insuranceCompany.application.global.utility;
 
-import insuranceCompany.application.global.constant.CommonConstants;
 import insuranceCompany.application.login.UserType;
 
-import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.CommonConstants.EXIT_MESSAGE;
+import static insuranceCompany.application.global.constant.CommonConstants.ZERO_MESSAGE;
 
 /**
  * packageName :  main.domain.utility
@@ -58,25 +58,15 @@ public class MessageUtil {
         return sb.toString();
     }
 
-    public static String createMenuOnlyExitQueryAndInput(String menuName, String ... elements) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(menuName).append("\n");
-        for (int i = 0; i < elements.length; i++) {
-            sb.append(i + 1).append(".").append(" ").append(elements[i]).append("\n");
-        }
-        sb.append("exit.").append(" ").append("종료하기\n").append("입력 : ");
-        return sb.toString();
-    }
-
-    public static void createMenuAndClose(String menuName, String ... elements) {
+    public static String createMenuAndClose(String menuName, String ... elements) {
         StringBuilder sb = new StringBuilder();
         sb.append(menuName).append("\n");
         for (int i = 0; i < elements.length; i++) {
             sb.append(i + 1).append(".").append(" ").append(elements[i]).append("\n");
         }
         sb.append("0.").append(" ").append("취소하기").append("\n")
-                        .append("exit.").append(" ").append("종료하기\n");
-        System.out.print(sb.toString());
+                .append("exit.").append(" ").append("종료하기\n");
+        return sb.toString();
     }
 
     public static String createMenuAndLogout(String menuName, String ... elements) {

@@ -1,6 +1,6 @@
-package insuranceCompany.application.dao.user;
+package insuranceCompany.application.domain.dao.user;
 
-import insuranceCompany.application.dao.Dao;
+import insuranceCompany.application.domain.dao.Dao;
 import insuranceCompany.application.global.exception.LoginIdFailedException;
 import insuranceCompany.application.global.exception.LoginPwFailedException;
 import insuranceCompany.application.login.User;
