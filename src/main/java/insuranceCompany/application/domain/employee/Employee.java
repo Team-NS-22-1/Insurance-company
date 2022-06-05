@@ -112,8 +112,8 @@ public class Employee {
 				.setContractPeriod(basicInfo.getContractPeriod())
 				.setPaymentPeriod(basicInfo.getPaymentPeriod())
 				.setGuaranteeList(developGuarantee(guaranteeInfoList))
-				.setDevInfo(developDevInfo())
-				.setSalesAuthFile(new SalesAuthorizationFile());
+				.setDevelopInfo(developDevInfo())
+				.setSalesAuthorizationFile(new SalesAuthorizationFile());
 		switch (type) {
 			case HEALTH -> developHealth(insurance, typeInfoList);
 			case CAR -> developCar(insurance, typeInfoList);
@@ -276,26 +276,26 @@ public class Employee {
 	}
 
 	public void modifySalesAuthState(Insurance insurance, SalesAuthorizationState modify) {
-		insurance.getDevInfo().setSalesAuthorizationState(modify);
+		insurance.getDevelopInfo().setSalesAuthorizationState(modify);
 		if(modify == SalesAuthorizationState.PERMISSION){
-			insurance.getDevInfo().setSalesStartDate(LocalDate.now());
+			insurance.getDevelopInfo().setSalesStartDate(LocalDate.now());
 		}
 		new InsuranceDaoImpl().updateBySalesAuthState(insurance);
 	}
 
 	private boolean checkSalesAuthState(Insurance insurance) {
-		SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthFile();
+		SalesAuthorizationFile salesAuthFile = insurance.getSalesAuthorizationFile();
 		return (salesAuthFile.getProdDeclaration()!=null) && (salesAuthFile.getFssOfficialDoc()!=null)
 				&& (salesAuthFile.getIsoVerification()!=null) && (salesAuthFile.getSrActuaryVerification()!=null);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getProdDeclaration()!=null) return 0;
+		if(insurance.getSalesAuthorizationFile().getProdDeclaration()!=null) return 0;
 		else return uploadProd(insurance);
 	}
 
 	public int registerAuthProdDeclaration(Insurance insurance, String nullValue) throws IOException {
-		insurance.getSalesAuthFile().setProdDeclaration(nullValue);
+		insurance.getSalesAuthorizationFile().setProdDeclaration(nullValue);
 		return uploadProd(insurance);
 	}
 
@@ -303,7 +303,7 @@ public class Employee {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
 		if(savePath == null) return -1;
-		insurance.getSalesAuthFile().setProdDeclaration(savePath)
+		insurance.getSalesAuthorizationFile().setProdDeclaration(savePath)
 				.setModifiedProd(LocalDateTime.now());
 		new InsuranceDaoImpl().updateByProd(insurance);
 		if(checkSalesAuthState(insurance)) return 2;
@@ -311,12 +311,12 @@ public class Employee {
 	}
 
 	public int registerAuthSrActuaryVerification(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getSrActuaryVerification()!=null) return 0;
+		if(insurance.getSalesAuthorizationFile().getSrActuaryVerification()!=null) return 0;
 		else return uploadSrActuary(insurance);
 	}
 
 	public int registerAuthSrActuaryVerification(Insurance insurance, String nullValue) throws IOException {
-		insurance.getSalesAuthFile().setSrActuaryVerification(nullValue);
+		insurance.getSalesAuthorizationFile().setSrActuaryVerification(nullValue);
 		return uploadSrActuary(insurance);
 	}
 
@@ -324,7 +324,7 @@ public class Employee {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
 		if(savePath == null) return -1;
-		insurance.getSalesAuthFile().setSrActuaryVerification(savePath)
+		insurance.getSalesAuthorizationFile().setSrActuaryVerification(savePath)
 				.setModifiedSrActuary(LocalDateTime.now());
 		new InsuranceDaoImpl().updateBySrActuary(insurance);
 		if(checkSalesAuthState(insurance)) return 2;
@@ -332,12 +332,12 @@ public class Employee {
 	}
 
 	public int registerAuthIsoVerification(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getIsoVerification()!=null) return 0;
+		if(insurance.getSalesAuthorizationFile().getIsoVerification()!=null) return 0;
 		else return uploadIso(insurance);
 	}
 
 	public int registerAuthIsoVerification(Insurance insurance, String nullValue) throws IOException {
-		insurance.getSalesAuthFile().setIsoVerification(nullValue);
+		insurance.getSalesAuthorizationFile().setIsoVerification(nullValue);
 		return uploadIso(insurance);
 	}
 
@@ -345,7 +345,7 @@ public class Employee {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
 		if(savePath == null) return -1;
-		insurance.getSalesAuthFile().setIsoVerification(savePath)
+		insurance.getSalesAuthorizationFile().setIsoVerification(savePath)
 				.setModifiedIso(LocalDateTime.now());
 		new InsuranceDaoImpl().updateByIso(insurance);
 		if(checkSalesAuthState(insurance)) return 2;
@@ -353,12 +353,12 @@ public class Employee {
 	}
 
 	public int registerAuthFssOfficialDoc(Insurance insurance) throws IOException {
-		if(insurance.getSalesAuthFile().getFssOfficialDoc()!=null) return 0;
+		if(insurance.getSalesAuthorizationFile().getFssOfficialDoc()!=null) return 0;
 		else return uploadFss(insurance);
 	}
 
 	public int registerAuthFssOfficialDoc(Insurance insurance, String nullValue) throws IOException {
-		insurance.getSalesAuthFile().setFssOfficialDoc(nullValue);
+		insurance.getSalesAuthorizationFile().setFssOfficialDoc(nullValue);
 		return uploadFss(insurance);
 	}
 
@@ -366,7 +366,7 @@ public class Employee {
 		String dirInsurance = insurance.getId() + ". " + insurance.getName();
 		String savePath = FileDialogUtil.upload(dirInsurance);
 		if(savePath == null) return -1;
-		insurance.getSalesAuthFile().setFssOfficialDoc(savePath)
+		insurance.getSalesAuthorizationFile().setFssOfficialDoc(savePath)
 				.setModifiedFss(LocalDateTime.now());
 		new InsuranceDaoImpl().updateByFss(insurance);
 		if(checkSalesAuthState(insurance)) return 2;
@@ -631,7 +631,7 @@ public class Employee {
 
 	public Insurance readMyInsurance(int insuranceId) {
 		Insurance insurance = new InsuranceDaoImpl().read(insuranceId);
-		if (insurance.getDevInfo().getEmployeeId() != this.id) {
+		if (insurance.getDevelopInfo().getEmployeeId() != this.id) {
 			throw new MyIllegalArgumentException(EXCEPTION_NO_RESULT_LIST);
 		}
 		return insurance;
