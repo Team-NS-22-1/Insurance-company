@@ -328,7 +328,7 @@ public class CompensationViewLogic implements ViewLogic {
         for (AccidentDocumentFile accidentDocumentFile : accident.getAccDocFileList().values()) {
             label:
             while (true) {
-                String query = getDownloadDocExQuery(accidentDocumentFile.getType().getDesc()) + ZERO_MESSAGE;
+                String query = getDownloadDocExQuery(accidentDocumentFile.getType().getDesc());
                 String result = "";
                 result = (String) br.verifyRead(query,result);
                 switch (result) {

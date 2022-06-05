@@ -1,5 +1,9 @@
 package insuranceCompany.application.global.constant;
 
+import static insuranceCompany.application.global.constant.CommonConstants.ZERO_MESSAGE;
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 /**
  * packageName :  insuranceCompany.application.global.constants
  * fileName : CustomerViewLogicConstants
@@ -26,8 +30,8 @@ public class CustomerViewLogicConstants {
     public static final String DO_PAY = "결제하기";
     public static final String SET_PAYMENT = "결제수단 설정하기";
     public static final String ADD_ACCOUNT_MENU_HEAD = "결제수단 추가하기";
-    public static final String NO_PAYMENT_ON_CONTRACT = "[알림] 해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요.";
-    public static final String NO_PAYMENT_ON_CUSTOMER = "[알림] 현재 계정에 등록된 결제 수단이 존재하지 않습니다.";
+    public static final String NO_PAYMENT_ON_CONTRACT = RED_BOLD+"[알림] 해당 계약에 대해 결제 수단 정보가 없습니다. 설정해주세요."+RESET;
+    public static final String NO_PAYMENT_ON_CUSTOMER = RED_BOLD+"[알림] 현재 계정에 등록된 결제 수단이 존재하지 않습니다."+RESET;
     public static final String SUCCESS_REGISTER_PAYMENT = "결제 수단이 추가되었습니다.";
     public static final String CANCEL_REGISTER_PAYMENT = "결제 수단 등록을 취소하셨습니다.";
     public static final String CONTRACT_ID_LABEL = "[ID] : ";
@@ -92,7 +96,7 @@ public class CustomerViewLogicConstants {
         return format+"를 제출해주세요.";
     }
     public static String getDownloadDocExQuery(String format) {
-        return format+" 양식을 다운로드 받겠습니까>?(Y/N) 입력 : ";
+        return format+" 양식을 다운로드 받겠습니까>?(Y/N) "+ZERO_MESSAGE+" 입력 : ";
     }
     public static String getExDirectory(String format) {
         return "./AccDocFile/Example/" + format+"(예시).hwp";

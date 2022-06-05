@@ -25,7 +25,7 @@ public class BankUtil {
         for (int i = 0; i < values.length; i++) {
             query.append(i + 1).append(" ").append(values[i]).append("\n");
         }
-        query.append("0. 취소하기").append("\n").append("은행 번호 : ").append("\n");
+        query.append("0. 취소하기").append("\n").append("은행 번호 : ");
         String key = "";
         key = (String) br.verifyRead(query.toString(),key);
 

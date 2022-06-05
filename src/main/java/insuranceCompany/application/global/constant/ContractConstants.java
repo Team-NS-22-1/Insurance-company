@@ -22,8 +22,10 @@ public class ContractConstants {
     public static final String CUSTOMER_SELECT_INSURANCE_ID = "가입할 보험상품의 번호를 입력하세요. \t(0: 뒤로가기)";
     public static final String SALES_SELECT_INSURANCE_ID = "설계할 보험상품의 번호를 입력하세요. \t(0 : 뒤로가기)";
 
-    // decideSigning()
-    public static final String SALES_INSURANCE_DATAIL = "<< 계약조건 >>";
+    // progressContract()
+    public static final String SALES_INQUIRE_CONDITION = "가입조건을 확인하시겠습니까? \n1. 예  2. 아니요\n";
+    public static final String SALES_BACK = "(0 : 뒤로가기)\n";
+    public static final String SALES_INSURANCE_DATAIL = "<< 가입조건 >>";
     public static final String SALES_TARGET_AGE = "나이";
     public static final String SALES_TARGET_SEX = "성별";
     public static final String SALES_RISK_CRITERTION = "고위험군 여부";
@@ -31,8 +33,8 @@ public class ContractConstants {
     public static final String SALES_COLLATERAL_AMOUNT_CRITERION = "담보금액기준";
     public static final String SALES_VALUE_CRITERION = "차량가액기준";
 
-    public static final String SALES_PROGRESS_CONTRACT = "보험계약을 진행하시겠습니까?\n1. 계약\n2. 취소\n";
-    public static final String CUSTOMER_DICIDE_SIGNING = "해당 보험상품을 가입하시겠습니까?\n1. 가입\n2. 취소\n";
+    public static final String SALES_PROGRESS_CONTRACT = "보험계약을 진행하시겠습니까?\n1. 계약  2. 취소\n";
+    public static final String CUSTOMER_DICIDE_SIGNING = "해당 보험상품을 가입하시겠습니까?\n1. 가입  2. 취소\n";
 
     public static final String SALES__PREMIUM= "보험료";
     public static final String SALES_CANCEL= "계약이 취소되었습니다.";
@@ -81,7 +83,7 @@ public class ContractConstants {
     public static final String CONTRACT_IS_ACTUAL_RESIDENCE_QUERY = "실거주 여부를 입력해주세요. (1. 예  2. 아니요)\n";
 
     // inputCarInfo()
-    public static final String CONTRACT_CAR_NO_QUERY = "차량번호: ";
+    public static final String CONTRACT_CAR_NO_QUERY = "차량번호 (***_ ****): ";
     public static final String CONTRACT_CAR_TYPE_QUERY = "차종을 선택해주세요.\n1. 경형\n2. 소형\n3. 준중형\n4. 중형\n5. 준대형\n6. 대형\n7. 스포츠카\n";
     public static final String CONTRACT_MADEL_NAME_QUERY = "모델 이름: ";
     public static final String CONTRACT_MODEL_YEAR_QUERY = "차량 연식 (단위: 년): ";
@@ -109,6 +111,6 @@ public class ContractConstants {
     public static final String CONTRACT_FIRE_DETAIL_VALUE_FORMAT = "%-3s\t|\t%-10s\t|\t%-7d원\n";
     public static final String CONTRACT_CAR_DETAIL_CATEGORY_FORMAT = "%-8s\t|\t%-20s\t|\t%-5s\n";
     public static final String CONTRACT_CAR_DETAIL_VALUE_FORMAT = "%-8s\t|\t%-20s\t|\t%-5d원\n";
-    public static final String CONTRACT_SHORT_DIVISION = "__________________________________________";
-    public static final String CONTRACT_LONG_DIVISION = "___________________________________________________________________";
+    public static final String CONTRACT_SHORT_DIVISION = "________________________________________";
+    public static final String CONTRACT_LONG_DIVISION = "____________________________________________________";
 }

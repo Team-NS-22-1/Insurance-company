@@ -40,7 +40,10 @@ import static insuranceCompany.application.global.utility.MenuUtil.createMenuAnd
 public class SalesViewLogic implements ViewLogic {
     private MyBufferedReader br;
     private Employee employee;
+<<<<<<< HEAD
 //    private Customer customer;
+=======
+>>>>>>> bdf0ffe148f3246df0b4cb0a9bf799f740c06f12
     private Insurance insurance;
 
     public SalesViewLogic(Employee employee) {
@@ -56,8 +59,8 @@ public class SalesViewLogic implements ViewLogic {
     @Override
     public void work(String command) {
         try {
-            switch (command) {
-                case ONE -> selectInsurance();
+            if (ONE.equals(command)) {
+                selectInsurance();
             }
         } catch (IOException e) {
             throw new MyIOException();
@@ -108,11 +111,42 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void ProgressContract() {
+        while (true) {
+            int choice = br.verifyCategory(SALES_INQUIRE_CONDITION, 2);
+            if (choice == 1) {
+                inquireCondition();
+            }
+            break;
+        }
+
+
+        ContractDto contractDto =  switch (insurance.getInsuranceType()) {
+            case HEALTH -> planHealthInsurance();
+            case FIRE -> planFireInsurance();
+            case CAR -> planCarInsurance();
+        };
+
+        int choice = br.verifyCategory(SALES_PROGRESS_CONTRACT, 2);
+        switch (choice) {
+            case 1 -> {
+                CustomerDto customerDto = inputCustomerInfo();
+                contractDto = switch (insurance.getInsuranceType()) {
+                    case HEALTH -> inputHealthInfo(contractDto);
+                    case FIRE -> inputFireInfo(contractDto);
+                    case CAR -> inputCarInfo(contractDto);
+                };
+                concludeContract(customerDto, contractDto);
+            }
+            case 2 -> System.out.println(SALES_CANCEL);
+        }
+    }
+
+    private void inquireCondition() {
         System.out.println(SALES_INSURANCE_DATAIL);
         switch (insurance.getInsuranceType()) {
             case HEALTH -> {
                 System.out.printf(CONTRACT_HEALTH_DETAIL_CATEGORY_FORMAT, SALES_TARGET_AGE, SALES_TARGET_SEX, SALES_RISK_CRITERTION, SALES__PREMIUM);
-                System.out.println(CONTRACT_SHORT_DIVISION);
+                System.out.println(CONTRACT_LONG_DIVISION);
                 for (InsuranceDetail insuranceDetail : insurance.getInsuranceDetailList()) {
                     System.out.printf(CONTRACT_HEALTH_DETAIL_VALUE_FORMAT, ((HealthDetail) insuranceDetail).printTargetAge(),
                             ((HealthDetail) insuranceDetail).getTargetSex(), ((HealthDetail) insuranceDetail).getRiskCriterion(),
@@ -135,25 +169,10 @@ public class SalesViewLogic implements ViewLogic {
                 }
             }
         }
-
-        ContractDto contractDto =  switch (insurance.getInsuranceType()) {
-            case HEALTH -> planHealthInsurance();
-            case FIRE -> planFireInsurance();
-            case CAR -> planCarInsurance();
-        };
-
-        int choice = br.verifyCategory(SALES_PROGRESS_CONTRACT, 2);
-        switch (choice) {
-            case 1 -> {
-                CustomerDto customerDto = inputCustomerInfo();
-                contractDto = switch (insurance.getInsuranceType()) {
-                    case HEALTH -> inputHealthInfo(contractDto);
-                    case FIRE -> inputFireInfo(contractDto);
-                    case CAR -> inputCarInfo(contractDto);
-                };
-                concludeContract(customerDto, contractDto);
-            }
-            case 2 -> System.out.println(SALES_CANCEL);
+        while (true){
+            int choice = br.verifyMenu(SALES_BACK, 0);
+            if (choice == 0)
+                break;
         }
     }
 
@@ -230,10 +249,10 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private CustomerDto inputCustomerInfo() {
-        int customerId = 0;
         CustomerDto customerDto = null;
 
         int choice = br.verifyCategory(SALES_IS_CONTRACTED_CUSTOMER, 2);
+<<<<<<< HEAD
         switch (choice) {
             // 등록 고객
             case 1 -> {
@@ -241,20 +260,21 @@ public class SalesViewLogic implements ViewLogic {
                 Customer customer = employee.readCustomer(customerId);
 //                customerDto
             }
+=======
+        if (choice == 2) {
+>>>>>>> bdf0ffe148f3246df0b4cb0a9bf799f740c06f12
             // 미등록 고객
-            case 2 -> {
-                String name = "", ssn = "", phone = "", address = "", email = "", job = "";
-                System.out.println(CONTRACT_INPUT_CUSTOMER_INFO);
+            String name = "", ssn = "", phone = "", address = "", email = "", job = "";
+            System.out.println(CONTRACT_INPUT_CUSTOMER_INFO);
 
-                name = (String) br.verifySpecificRead(CONTRACT_CUSTOMER_NAME_QUERY, name, "name");
-                ssn = (String) br.verifySpecificRead(CONTRACT_SSN_QUERY, ssn, "ssn");
-                phone = (String) br.verifySpecificRead(CONTRACT_PHONE_QUERY, phone, "phone");
-                address = (String) br.verifyRead(CONTRACT_ADDRESS_QUERY, address);
-                email = (String) br.verifySpecificRead(CONTRACT_EMAIL_QUERY, email, "email");
-                job = (String) br.verifyRead(CONTRACT_JOB_QUERY, job);
+            name = (String) br.verifySpecificRead(CONTRACT_CUSTOMER_NAME_QUERY, name, "name");
+            ssn = (String) br.verifySpecificRead(CONTRACT_SSN_QUERY, ssn, "ssn");
+            phone = (String) br.verifySpecificRead(CONTRACT_PHONE_QUERY, phone, "phone");
+            address = (String) br.verifyRead(CONTRACT_ADDRESS_QUERY, address);
+            email = (String) br.verifySpecificRead(CONTRACT_EMAIL_QUERY, email, "email");
+            job = (String) br.verifyRead(CONTRACT_JOB_QUERY, job);
 
-                customerDto = new CustomerDto(name, ssn, phone, address, email, job);
-            }
+            customerDto = new CustomerDto(name, ssn, phone, address, email, job);
         }
         return customerDto;
     }
@@ -319,12 +339,24 @@ public class SalesViewLogic implements ViewLogic {
     }
 
     private void concludeContract(CustomerDto customerDto, ContractDto contractDto) {
+        int customerId = 0;
+        Customer customer;
         int choice = br.verifyCategory(SALES_CONCLUDE_CONTRACT, 2);
         switch (choice) {
             case 1 -> {
                 User user = null;
+<<<<<<< HEAD
                     Customer customer = employee.registerCustomer(customerDto);
                     UserDto userDto = signUp(customer);
+=======
+                if (customerDto == null) {
+                    customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
+                    customer = employee.readCustomer(customerId);
+
+                } else {
+                    customer = employee.registerCustomer(customerDto);
+                    UserDto userDto = signUp(customer.getId());
+>>>>>>> bdf0ffe148f3246df0b4cb0a9bf799f740c06f12
                     user = employee.registerUser(userDto);
 
                 Contract contract = employee.registerContract(customer, contractDto, insurance);
@@ -338,10 +370,14 @@ public class SalesViewLogic implements ViewLogic {
         }
     }
 
+<<<<<<< HEAD
     private UserDto signUp(Customer customer) {
+=======
+    private UserDto signUp(int customerId) {
+>>>>>>> bdf0ffe148f3246df0b4cb0a9bf799f740c06f12
         String userId = "", password = "";
         userId = (String) br.verifyRead(CONTRACT_USER_ID_QUERY, userId);
         password = (String) br.verifyRead(CONTRACT_USER_PASSWORD_QUERY, password);
-        return new UserDto(userId, password, customer.getId());
+        return new UserDto(userId, password, customerId);
     }
 }
