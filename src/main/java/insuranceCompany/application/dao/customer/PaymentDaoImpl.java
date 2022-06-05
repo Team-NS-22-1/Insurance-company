@@ -149,8 +149,6 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
                     .setId(id);
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         return payment;
     }

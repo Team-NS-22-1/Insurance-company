@@ -112,6 +112,7 @@ public class SalesViewLogic implements ViewLogic {
                 break;
         }
 
+
         ContractDto contractDto =  switch (insurance.getInsuranceType()) {
             case HEALTH -> planHealthInsurance();
             case FIRE -> planFireInsurance();

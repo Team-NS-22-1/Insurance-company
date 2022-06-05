@@ -1,5 +1,8 @@
 package insuranceCompany.application.global.constant;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 public class DevelopViewLogicConstants {
     
     public static final String EXIT_SYSTEM = " [exit: 시스템 종료]";
@@ -16,10 +19,10 @@ public class DevelopViewLogicConstants {
 
     
     // Method showInsuranceByEmployeeAndSelect()
-    public static final String ERROR_NONE_INSURANCE_LIST = "ERROR:: 개발한 보험이 없습니다!";
+    public static final String ERROR_NONE_INSURANCE_LIST = RED_BOLD+"ERROR:: 개발한 보험이 없습니다!"+RESET;
     public static final String MENU_SELECT_INSURANCE_FOR_REGISTER_FILE = "<< 파일을 추가할 보험을 선택하세요. >>";
     public static final String QUERY_INSURANCE_ID = "보험 ID: ";
-    public static final String EXCEPTION_NO_RESULT_LIST = "ERROR:: 리스트에 있는 아이디를 입력해주세요.";
+    public static final String EXCEPTION_NO_RESULT_LIST = RED_BOLD+"ERROR:: 리스트에 있는 아이디를 입력해주세요."+RESET;
     
     // Method menuInsuranceType()
     public static final String MENU_INSURANCE_TYPE_TITLE = "<< 보험 종류 선택 >>";
