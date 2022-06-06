@@ -65,7 +65,7 @@ public class CompensationViewLogic implements ViewLogic {
 
     @Override
     public String showMenu() {
-       return createMenuAndLogout(COMPENSATION_MENU_HEAD, READ_ACCIDENT_LIST, INVESTIGATE_DAMAGE,ASSESS_DAMAGE);
+       return createMenuAndLogout(COMPENSATION_MENU_HEAD, MENU_ELEMENTS_COMP_VIEW_LOGIC);
     }
 
     @Override

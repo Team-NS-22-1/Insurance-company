@@ -5,6 +5,8 @@ public class ContractConstants {
     public static final String SALES_MENU = "<<영업팀 메뉴>>";
     public static final String SALES_MENU_ELEMENTS = "보험상품설계";
 
+    public static final String [] MENU_ELEMENT_GUEST_VIEW_LOGIC = {SALES_MENU_ELEMENTS};
+
     // selectInsurance()
     public static final String CONTRACT_INSURANCE_LIST = "<< 보험상품목록 >>";
     public static final String CONTRACT_INSURANCE_ID = "상품번호";

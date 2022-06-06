@@ -9,6 +9,8 @@ public class CompensationViewLogicConstants {
     public static final String READ_ACCIDENT_LIST = "사고목록조회";
     public static final String INVESTIGATE_DAMAGE = "손해조사";
     public static final String ASSESS_DAMAGE = "손해사정";
+
+    public static final String [] MENU_ELEMENTS_COMP_VIEW_LOGIC = {READ_ACCIDENT_LIST,INVESTIGATE_DAMAGE,ASSESS_DAMAGE};
     public static final String SELECT_ACCIDENT = "<< 접수된 사고를 선택하세요. >>";
     public static final String ACCIDENT_ID_QUERY = "사고 ID : ";
     public static final String SHOW_CUSTOMER_NAME = "접수자 명";

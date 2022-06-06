@@ -24,6 +24,7 @@ public class CustomerViewLogicConstants {
     public static final String PAY_PREMIUM = "보험료납입";
     public static final String REPORT_ACCIDENT = "사고접수";
     public static final String CLAIM_COMPENSATION = "보상금청구";
+    public static final String [] MENU_ELEMENTS_CUSTOMER_VIEW_LOGIC = {SIGN_IN_INSURANCE, PAY_PREMIUM,REPORT_ACCIDENT, CLAIM_COMPENSATION};
 
     // ABOUT PAYMENT COMMON
     public static final String PAY_MENU = "<< 결제 메뉴 >>";
@@ -71,6 +72,7 @@ public class CustomerViewLogicConstants {
     public static final String CAR_BREAKDOWN = "자동차 고장";
     public static final String INJURY_ACCIDENT = "상해 사고";
     public static final String FIRE_ACCIDENT = "화재 사고";
+    public static final String [] KIND_OF_ACCIDENT = {CAR_ACCIDENT, CAR_BREAKDOWN,INJURY_ACCIDENT,FIRE_ACCIDENT};
     public static final String DAY = "일 : ";
     public static final String HOUR = "시 : ";
     public static final String MINUTE = "분 : ";
