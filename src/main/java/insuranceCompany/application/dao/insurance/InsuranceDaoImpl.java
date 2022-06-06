@@ -287,6 +287,14 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
             while (rs.next()) {
                 insurance = new Insurance();
                 insurance.setDevelopInfo(new DevelopInfo());
+                switch (rs.getString("sales_authorization_state").toUpperCase()) {
+                    case "PERMISSION":
+                        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.PERMISSION);
+                        break;
+                    case "WAIT":
+                    case "DISALLOWANCE":
+                        continue;
+                }
                 insurance.setId(rs.getInt("insurance_id"));
                 insurance.setName(rs.getString("name"));
                 insurance.setDescription(rs.getString("description"));
@@ -301,17 +309,6 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                         break;
                     case "CAR":
                         insurance.setInsuranceType(InsuranceType.CAR);
-                        break;
-                }
-                switch (rs.getString("sales_authorization_state").toUpperCase()) {
-                    case "WAIT":
-                        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.WAIT);
-                        break;
-                    case "PERMISSION":
-                        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.PERMISSION);
-                        break;
-                    case "DISALLOWANCE":
-                        insurance.getDevelopInfo().setSalesAuthorizationState(SalesAuthorizationState.DISALLOWANCE);
                         break;
                 }
                 insuranceList.add(insurance);

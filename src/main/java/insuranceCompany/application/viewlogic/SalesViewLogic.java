@@ -163,7 +163,7 @@ public class SalesViewLogic implements ViewLogic {
             }
         }
         while (true){
-            int choice = br.verifyMenu(SALES_BACK, 0);
+            int choice = br.verifyMenu(SALES_BACK, CATEGORY_BACK);
             if (choice == 0)
                 break;
         }
