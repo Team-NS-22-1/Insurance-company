@@ -24,6 +24,7 @@ public class CustomerViewLogicConstants {
     public static final String PAY_PREMIUM = "보험료납입";
     public static final String REPORT_ACCIDENT = "사고접수";
     public static final String CLAIM_COMPENSATION = "보상금청구";
+    public static final String [] MENU_ELEMENTS_CUSTOMER_VIEW_LOGIC = {SIGN_IN_INSURANCE, PAY_PREMIUM,REPORT_ACCIDENT, CLAIM_COMPENSATION};
 
     // ABOUT PAYMENT COMMON
     public static final String PAY_MENU = "<< 결제 메뉴 >>";
@@ -58,7 +59,7 @@ public class CustomerViewLogicConstants {
     public static final String REGISTER_ACCOUNT = "계좌 추가하기";
     public static final String SELECT_BANK = "은행사 선택하기";
     public static String showAccountNoEX(String format) {
-        return "계좌 번호 입력하기 : (예시 -> " + format + ")";
+        return "계좌 번호 입력하기 : (예시 -> " + format + ") " + ZERO_MESSAGE;
     }
     public static final String REGISTER_ACCOUNT_INFO = "계좌 정보를 등록하시겠습니까? (Y/N)";
 
@@ -71,11 +72,12 @@ public class CustomerViewLogicConstants {
     public static final String CAR_BREAKDOWN = "자동차 고장";
     public static final String INJURY_ACCIDENT = "상해 사고";
     public static final String FIRE_ACCIDENT = "화재 사고";
+    public static final String [] KIND_OF_ACCIDENT = {CAR_ACCIDENT, CAR_BREAKDOWN,INJURY_ACCIDENT,FIRE_ACCIDENT};
     public static final String DAY = "일 : ";
     public static final String HOUR = "시 : ";
     public static final String MINUTE = "분 : ";
     public static final String ADDRESS = "사고 장소 : ";
-    public static final String CAR_NO_EX = "차 번호 (ex : __-**_-**** (_ : 한글, * : 숫자)) : ";
+    public static final String CAR_NO_EX = "차 번호 (ex : **_ **** (_ : 한글, * : 숫자)) : ";
     public static final String OPOSSING_PHONE = "상대방 연락처 : ";
     public static final String REQUEST_ON_SITE = "현장 출동 요청을 하시겠습니까? (Y/N) : ";
     public static final String SYMPTOM = "고장 증상 : ";
@@ -96,7 +98,7 @@ public class CustomerViewLogicConstants {
         return format+"를 제출해주세요.";
     }
     public static String getDownloadDocExQuery(String format) {
-        return format+" 양식을 다운로드 받겠습니까>?(Y/N) "+ZERO_MESSAGE+" 입력 : ";
+        return format+" 양식을 다운로드 받겠습니까? (Y/N) 입력 : ";
     }
     public static String getExDirectory(String format) {
         return "./AccDocFile/Example/" + format+"(예시).hwp";

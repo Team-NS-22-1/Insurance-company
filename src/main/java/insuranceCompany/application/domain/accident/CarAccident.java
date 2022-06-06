@@ -84,7 +84,7 @@ public class CarAccident extends Accident {
 		String accidentInfo ="사고번호 : "+id +"\n사고 일시 : " + accidentDate + "\n접수 일시 : " + reportDate
 				+"\n사고 장소 : " + placeAddress
 				+"\n차량번호 : " + carNo +"\n상대방 연락처 : " + opposingDriverPhone
-				+"\n 현장 출동 여부 : " + request;
+				+"\n현장 출동 여부 : " + request;
 		System.out.println(accidentInfo);
 	}
 

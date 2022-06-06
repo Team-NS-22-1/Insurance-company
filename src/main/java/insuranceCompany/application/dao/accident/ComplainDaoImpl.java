@@ -34,7 +34,7 @@ public class ComplainDaoImpl extends Dao implements ComplainDao {
         String formattedQuery = String.format(query,complain.getReason(),complain.getCustomerId());
         int id = super.create(formattedQuery);
         complain.setId(id);
-        close();
+      
     }
 
     // Not Use
@@ -50,8 +50,6 @@ public class ComplainDaoImpl extends Dao implements ComplainDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         if (complain == null)
             throw new MyIllegalArgumentException(RED_BOLD+id + "에 해당하는 민원정보가 존재하지 않습니다."+RESET);
@@ -82,8 +80,6 @@ public class ComplainDaoImpl extends Dao implements ComplainDao {
 
             } catch (SQLException e) {
                 e.printStackTrace();
-            }finally {
-                close();
             }
 
 

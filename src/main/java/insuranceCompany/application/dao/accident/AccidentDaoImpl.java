@@ -60,7 +60,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         }
 
         super.create(detailFormat);
-        close();
+
     }
 
     @Override
@@ -130,11 +130,9 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         if (ac == null) {
-            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
+            throw new MyIllegalArgumentException(RED_BOLD+"ERROR !! : 사고 아이디 ["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         }
         return ac;
     }
@@ -149,9 +147,9 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         String query = "select * from accident where customer_Id = %d";
         String formatted = String.format(query,customerId);
         List<Accident> accidents = getAccidents(formatted);
-        close();
+
         if(accidents.isEmpty())
-         throw new NoResultantException(RED_BOLD+"고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
+         throw new NoResultantException(RED_BOLD+"ERROR !! : 고객 아이디 ["+customerId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         return  accidents;
     }
 
@@ -163,7 +161,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         List<Accident> accidents = getAccidents(formatted);
 
         if(accidents.isEmpty())
-            throw new NoResultantException(RED_BOLD+"보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
+            throw new NoResultantException(RED_BOLD+"ERROR !! : 보상팀 아이디 ["+employeeId+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
         return accidents;
     }
 
@@ -185,7 +183,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
                         if (detailRs.next()) {
                             ((CarAccident) ac).setCarNo(detailRs.getString("car_no"))
                                     .setPlaceAddress(detailRs.getString("place_address"))
-                                    .setOpposingDriverPhone(detailRs.getString("opposiong_driver_phone"))
+                                    .setOpposingDriverPhone(detailRs.getString("opposing_driver_phone"))
                                     .setRequestOnSite(detailRs.getInt("is_request_on_site") == 1 ? true : false)
                                     .setErrorRate(detailRs.getInt("error_rate"));
 
@@ -242,7 +240,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         String query = "update accident set loss_reserves = %d where accident_id = %d";
         String formatted = String.format(query,accident.getLossReserves(),accident.getId());
         super.update(formatted);
-        close();
+
     }
 
     @Override
@@ -255,7 +253,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         String detailFormatted = String.format(detailQuery,((CarAccident)accident).getErrorRate(),accident.getId());
         System.out.println(detailFormatted);
         super.update(detailFormatted);
-        close();
+
     }
 
     @Override
@@ -263,7 +261,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         String query = "update accident set employee_id = %d where accident_id = %d";
         String formatted = String.format(query,accident.getEmployeeId(),accident.getId());
         super.update(formatted);
-        close();
+
     }
 
 
@@ -272,9 +270,9 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
         String query = "delete from accident where accident_id = %d";
         String formattedQuery = String.format(query,id);
         boolean result = super.delete(formattedQuery);
-        close();
+
         if(!result)
-            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
+            throw new MyIllegalArgumentException(RED_BOLD+"ERROR !! : 사고 아이디["+id+"]에 해당하는 사고 정보가 존재하지 않습니다."+RESET);
 
         return true;
     }

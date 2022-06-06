@@ -34,8 +34,6 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
             String formattedQuery = String.format(query, customer.getName(), customer.getJob(), customer.getEmail(), customer.getPhone(), customer.getSsn(), customer.getAddress());
             int id = super.create(formattedQuery);
             customer.setId(id);
-
-        close();
     }
 
     @Override
@@ -56,10 +54,9 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         if (customer == null) {
+
             throw new MyIllegalArgumentException(RED_BOLD+"ERROR:: ID["+ id + "]에 해당하는 고객 정보가 존재하지 않습니다."+RESET);
         }
         return customer;

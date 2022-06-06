@@ -9,7 +9,7 @@ public class DocUtilConstants {
     public static String getSubmitPath(int customerId, int accidentId, String format) {
         return   SUBMIT_PATH+customerId+"/"+ accidentId+"/"+ format;
     }
-    public static final String JPEG_EXTENSION = ".jpeg";
+    public static final String JPG_EXTENSION = ".jpg";
     public static final String HWP_EXTENSION = ".hwp";
 
     public static final String FILE_DOWNLOAD_HEAD = "파일 다운로드";

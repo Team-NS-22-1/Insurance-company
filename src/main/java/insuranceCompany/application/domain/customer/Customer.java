@@ -309,7 +309,7 @@ public class Customer {
 		String extension = "";
 		AccDocType accDocType = accidentDocumentFile.getType();
 		if(accDocType == AccDocType.PICTUREOFSITE)
-			extension = JPEG_EXTENSION;
+			extension = JPG_EXTENSION;
 		else
 			extension = HWP_EXTENSION;
 
