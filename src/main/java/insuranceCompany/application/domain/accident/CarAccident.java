@@ -3,6 +3,8 @@ package insuranceCompany.application.domain.accident;
 
 import java.time.format.DateTimeFormatter;
 
+import static insuranceCompany.application.global.constant.CommonConstants.LIST_LINE;
+
 /**
  * @author 규현
  * @version 1.0
@@ -86,6 +88,7 @@ public class CarAccident extends Accident {
 				+"\n차량번호 : " + carNo +"\n상대방 연락처 : " + opposingDriverPhone
 				+"\n현장 출동 여부 : " + request;
 		System.out.println(accidentInfo);
+		System.out.println(LIST_LINE);
 	}
 
 

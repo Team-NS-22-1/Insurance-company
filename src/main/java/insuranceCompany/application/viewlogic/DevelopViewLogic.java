@@ -18,8 +18,7 @@ import java.util.ArrayList;
 
 import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.*;
-import static insuranceCompany.application.global.utility.CriterionSetUtil.setCollateralAmountCriterion;
-import static insuranceCompany.application.global.utility.CriterionSetUtil.setRiskCriterion;
+import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndClose;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
@@ -156,7 +155,7 @@ public class DevelopViewLogic implements ViewLogic {
             int targetAge = 0, premium = -1, riskCount = -1;
             boolean targetSex, riskCriterion;
             System.out.println(TITLE_INPUT_HEALTH_INFO + EXIT_SYSTEM);
-            targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
+            targetAge = setTargetAge((int) br.verifyRead(QUERY_TARGET_AGE, targetAge));
             targetSex = br.verifyCategory(QUERY_TARGET_SEX, CATEGORY_YES_OR_NO) == 1;
             while(true) {
                 riskCount = (int) br.verifyRead(QUERY_RISK_CRITERION, riskCount);
@@ -188,8 +187,8 @@ public class DevelopViewLogic implements ViewLogic {
             int targetAge = 0, premium = -1;
             long valueCriterion = -1;
             System.out.println(TITLE_INPUT_CAR_INFO + EXIT_SYSTEM);
-            targetAge = (int) br.verifyRead(QUERY_TARGET_AGE, targetAge);
-            valueCriterion = (long) br.verifyRead(QUERY_VALUE_CRITERION, valueCriterion);
+            targetAge = setTargetAge((int) br.verifyRead(QUERY_TARGET_AGE, targetAge));
+            valueCriterion = setValueCriterion((long) br.verifyRead(QUERY_VALUE_CRITERION, valueCriterion));
             DtoCar dtoCar = new DtoCar(targetAge, valueCriterion);
 
             premium = employee.calcSpecificPremium(stPremium, dtoCar);
