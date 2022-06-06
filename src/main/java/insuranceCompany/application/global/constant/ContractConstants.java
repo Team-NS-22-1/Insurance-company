@@ -6,9 +6,9 @@ import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
 public class ContractConstants {
     // Sales Menu
     public static final String SALES_MENU = "<<영업팀 메뉴>>";
-    public static final String SALES_MENU_ELEMENTS = "보험상품설계";
+    public static final String[] SALES_MENU_ELEMENTS = {"보험상품설계"};
 
-    public static final String [] MENU_ELEMENT_GUEST_VIEW_LOGIC = {SALES_MENU_ELEMENTS};
+    public static final String [] MENU_ELEMENT_GUEST_VIEW_LOGIC = SALES_MENU_ELEMENTS;
 
     // selectInsurance()
     public static final String CONTRACT_INSURANCE_LIST = "<< 보험상품목록 >>";
