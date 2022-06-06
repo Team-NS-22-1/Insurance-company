@@ -26,5 +26,6 @@ public class CommonConstants {
     public static final int CATEGORY_YES_OR_NO = 2;
     public static final int CATEGORY_FOUR = 4;
     public static final int CATEGORY_SEVEN = 7;
+    public static final int CATEGORY_BACK = 0;
 
 }
