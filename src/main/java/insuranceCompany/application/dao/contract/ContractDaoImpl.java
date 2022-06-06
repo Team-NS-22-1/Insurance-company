@@ -57,7 +57,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                     }
                     case "CAR" -> {
                         CarContract carContract = (CarContract) contract;
-                        inputquery = "insert into car_contract (contract_id, car_no, car_type, model_year, model_name, value)" +
+                        inputquery = "insert into car_contract (contract_id, car_no, car_type, model_year, name, value)" +
                                 "values (%d, '%s', '%s', %d, '%s', %d) ";
                         input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType().name(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
