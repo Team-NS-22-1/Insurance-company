@@ -1,5 +1,8 @@
 package insuranceCompany.application.global.constant;
 
+import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
+import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+
 public class ContractConstants {
     // Sales Menu
     public static final String SALES_MENU = "<<영업팀 메뉴>>";
@@ -41,16 +44,10 @@ public class ContractConstants {
     public static final String SALES__PREMIUM= "보험료";
     public static final String SALES_CANCEL= "계약이 취소되었습니다.";
 
-    // planFireInsurance()
-
-
-    // planCarInsurance()
-
-
     // Method plan...
     public static final String SALES_TARGET_AGE_QUERY = "고객님의 나이: ";
     public static String premiumInquiry(int premium) {
-        return "조회된 귀하의 보험료는 " + premium + "원 입니다.";
+        return "<< 조회된 귀하의 보험료는 " + premium + "원 입니다. >>";
     }
 
     // Method inputCustomerInfo()
@@ -99,6 +96,7 @@ public class ContractConstants {
     public static final String CUSTOMER_SIGN = "가입이 완료되었습니다.";
     public static final String CUSTOMER_CANCEL = "가입이 취소되었습니다.";
 
+    public static final String CONTRACT_SIGN_UP = "<< 회원가입 >>";
     public static final String CONTRACT_USER_ID_QUERY = "아이디: ";
     public static final String CONTRACT_USER_PASSWORD_QUERY = "비밀번호: ";
 
@@ -115,4 +113,7 @@ public class ContractConstants {
     public static final String CONTRACT_CAR_DETAIL_VALUE_FORMAT = "%-8s\t|\t%-20s\t|\t%-5d원\n";
     public static final String CONTRACT_SHORT_DIVISION = "________________________________________";
     public static final String CONTRACT_LONG_DIVISION = "____________________________________________________";
+
+    // exceptions
+    public static String exceptionNoInsurance(int insuranceID){return RED_BOLD+"ERROR:: ID["+ insuranceID + "]에 해당하는 보험 정보가 존재하지 않습니다."+RESET;}
 }

@@ -56,7 +56,8 @@ public class CustomerDaoImpl extends Dao implements CustomerDao {
             e.printStackTrace();
         }
         if (customer == null) {
-            throw new MyIllegalArgumentException(RED_BOLD+ id + "에 해당하는 고객정보가 존재하지 않습니다."+RESET);
+
+            throw new MyIllegalArgumentException(RED_BOLD+"ERROR:: ID["+ id + "]에 해당하는 고객 정보가 존재하지 않습니다."+RESET);
         }
         return customer;
     }
