@@ -49,6 +49,7 @@ public class CompensationViewLogicConstants {
     }
 
     public static final String INPUT_ACCOUNT = RED_BOLD+"ERROR !! : 계좌 입력을 하지 않았습니다."+RESET;
+    public static final String ERROR_ASSESS_DAMAGE = RED_BOLD+"ERROR !! : 손해 사정서를 업로드 하지 않았습니다."+RESET;
 
 }
 

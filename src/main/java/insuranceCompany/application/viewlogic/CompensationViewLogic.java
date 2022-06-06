@@ -106,7 +106,7 @@ public class CompensationViewLogic implements ViewLogic {
         dto.setAccidentType(accident.getAccidentType());
 
         if(accident.getAccidentType() == AccidentType.CARACCIDENT)
-        inputErrorRate(dto); // 과실비율 입력
+            inputErrorRate(dto); // 과실비율 입력
         inputLossReserve(dto); // 지급 준비금 입력.
         if (!accident.getAccDocFileList().containsKey(AccDocType.INVESTIGATEACCIDENT)) {
             System.out.println(INVESTIGATE_ACCIDENT_QUERY);
@@ -225,12 +225,18 @@ public class CompensationViewLogic implements ViewLogic {
 
 
         System.out.println(UPLOAD_ASSESS_DAMAGE);
-        AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
+        AssessDamageResponseDto assessDamageResponseDto = null;
+        try {
+            assessDamageResponseDto  = this.employee.assessDamage(accident, compAccount);
+        } catch (MyInvalidAccessException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
 
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead(getInputCompensation(lossReserves), compensation);
-
+        System.out.println(compensation);
         if (compensation > lossReserves * 1.5) {
             System.out.println(REJECT_ASSESS_DAMAGE);
             return;
@@ -239,8 +245,9 @@ public class CompensationViewLogic implements ViewLogic {
         if (accident.getAccidentType() == AccidentType.CARACCIDENT) {
             int errorRate = 0;
             errorRate = ((CarAccident)accident).getErrorRate();
-            compensation = compensation * (errorRate/100);
-
+            System.out.println(errorRate);
+            compensation = (long) (compensation * (((double)errorRate/100)));
+            System.out.println(compensation);
             if (compensation == 0) {
                 System.out.println(NO_ERROR);
                 return;

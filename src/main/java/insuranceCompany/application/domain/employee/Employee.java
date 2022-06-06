@@ -17,10 +17,7 @@ import insuranceCompany.application.domain.contract.*;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.insurance.*;
 import insuranceCompany.application.domain.customer.payment.Account;
-import insuranceCompany.application.global.exception.InputInvalidDataException;
-import insuranceCompany.application.global.exception.MyIllegalArgumentException;
-import insuranceCompany.application.global.exception.MyNotExistContractException;
-import insuranceCompany.application.global.exception.NoResultantException;
+import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
@@ -41,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static insuranceCompany.application.global.constant.CompensationViewLogicConstants.ERROR_ASSESS_DAMAGE;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.EXCEPTION_NO_RESULT_LIST;
 import static insuranceCompany.application.global.utility.CriterionSetUtil.*;
 
@@ -408,7 +406,7 @@ public class Employee {
 	private AccidentDocumentFile uploadDocfile(Accident accident, String dir,AccDocType accDocType) {
 		String fileDir = FileDialogUtil.uploadAccidentDocumentFile(dir);
 		if (fileDir == null) {
-			return null;
+			throw new MyInvalidAccessException(ERROR_ASSESS_DAMAGE);
 		}
 		AccidentDocumentFile accidentDocumentFile = new AccidentDocumentFile();
 		accidentDocumentFile.setFileAddress(fileDir)

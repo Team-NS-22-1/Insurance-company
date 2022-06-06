@@ -251,7 +251,6 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
 
         String detailQuery = "update car_accident set error_rate = %d where accident_id = %d";
         String detailFormatted = String.format(detailQuery,((CarAccident)accident).getErrorRate(),accident.getId());
-        System.out.println(detailFormatted);
         super.update(detailFormatted);
 
     }
