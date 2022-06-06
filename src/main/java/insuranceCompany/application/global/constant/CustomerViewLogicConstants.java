@@ -82,11 +82,12 @@ public class CustomerViewLogicConstants {
     public static final String REQUEST_ON_SITE = "현장 출동 요청을 하시겠습니까? (Y/N) : ";
     public static final String SYMPTOM = "고장 증상 : ";
     public static final String INJURY_SITE = "부상 부위 : ";
-    public static final String REPORT_ACCIDENT_INFO = "<< 사고 접수 정보 >> (exit: 시스템 종료)";
+    public static final String REPORT_ACCIDENT_INFO = "<< 사고 접수 정보 입력 >> (exit: 시스템 종료)";
     public static final String INPUT_ACCIDENT_DATE = "사고 일시를 입력해주세요";
     public static final String INPUT_ACCIDENT_ID = "사고 ID 입력 : ";
     public static final String DATE_FORMAT_HOUR_MINUTE = "yyyy/MM/dd HH:mm";
 
+    public static final String ACCIDENT_LIST = "<< 접수된 사고 목록 >>";
     // 보상금 접수
     public static String getSubmitDocQuery(String format) {
         return format+"를 제출하시겠습니까?(Y/N) 입력 : ";

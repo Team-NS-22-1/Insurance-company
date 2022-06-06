@@ -236,7 +236,6 @@ public class CompensationViewLogic implements ViewLogic {
         long lossReserves = accident.getLossReserves();
         long compensation = 0L;
         compensation = (long) br.verifyRead(getInputCompensation(lossReserves), compensation);
-        System.out.println(compensation);
         if (compensation > lossReserves * 1.5) {
             System.out.println(REJECT_ASSESS_DAMAGE);
             return;
@@ -245,9 +244,7 @@ public class CompensationViewLogic implements ViewLogic {
         if (accident.getAccidentType() == AccidentType.CARACCIDENT) {
             int errorRate = 0;
             errorRate = ((CarAccident)accident).getErrorRate();
-            System.out.println(errorRate);
             compensation = (long) (compensation * (((double)errorRate/100)));
-            System.out.println(compensation);
             if (compensation == 0) {
                 System.out.println(NO_ERROR);
                 return;

@@ -664,6 +664,7 @@ public class CustomerViewLogic implements ViewLogic {
         while (true) {
             accidentDao = new AccidentDaoImpl();
             List<Accident> accidents = accidentDao.readAllByCustomerId(customer.getId());
+            System.out.println(ACCIDENT_LIST);
             for (Accident accident : accidents) {
                 accident.printForCustomer();
             }

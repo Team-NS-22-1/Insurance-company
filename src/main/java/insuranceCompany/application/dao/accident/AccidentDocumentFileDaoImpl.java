@@ -12,8 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static insuranceCompany.application.global.utility.ConsoleColors.RED_BOLD;
-import static insuranceCompany.application.global.utility.ConsoleColors.RESET;
+import static insuranceCompany.application.global.utility.ConsoleColors.*;
 
 /**
  * packageName :  dao
@@ -100,8 +99,8 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-        if(accidentDocumentFileList.size()==0)
-            throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다."+RESET);
+        if(accidentDocumentFileList.isEmpty())
+            throw new MyIllegalArgumentException(YELLOW_BOLD+"[알림] 사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다."+RESET);
         return accidentDocumentFileList;
     }
 

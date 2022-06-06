@@ -363,7 +363,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                 "UPDATE sales_authorization_file SET fss_official_doc = '%s', modified_fss = '%s' WHERE insurance_id = %d;";
         String query =
                 String.format(queryFormat, salesAuthFile.getFssOfficialDoc(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedFss()), insurance.getId());
-        System.out.println(query);
+
         super.update(query);
     }
 
@@ -373,7 +373,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                 "UPDATE sales_authorization_file SET iso_verification = '%s', modified_iso = '%s' WHERE insurance_id = %d;";
         String query =
                 String.format(queryFormat, salesAuthFile.getIsoVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedIso()), insurance.getId());
-        System.out.println(query);
+
         super.update(query);
     }
 
@@ -383,7 +383,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                 "UPDATE sales_authorization_file SET prod_declaration = '%s', modified_prod = '%s' WHERE insurance_id = %d;";
         String query =
                 String.format(queryFormat, salesAuthFile.getProdDeclaration(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedProd()), insurance.getId());
-        System.out.println(query);
+
         super.update(query);
     }
 
@@ -393,7 +393,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                 "UPDATE sales_authorization_file SET sr_actuary_verification = '%s', modified_sr_actuary = '%s' WHERE insurance_id = %d;";
         String query =
                 String.format(queryFormat, salesAuthFile.getSrActuaryVerification(), java.sql.Timestamp.valueOf(salesAuthFile.getModifiedSrActuary()), insurance.getId());
-        System.out.println(query);
+
         super.update(query);
     }
 
@@ -404,7 +404,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
             String query =
                     String.format(queryFormat, insurance.getDevelopInfo().getSalesAuthorizationState().name(),
                             java.sql.Date.valueOf(insurance.getDevelopInfo().getSalesStartDate()), insurance.getId());
-            System.out.println(query);
+
             super.update(query);
         }
         else {
@@ -412,7 +412,7 @@ public class InsuranceDaoImpl extends Dao implements InsuranceDao {
                     "UPDATE develop_info SET sales_authorization_state = '%s' WHERE insurance_id = %d;";
             String query =
                     String.format(queryFormat, insurance.getDevelopInfo().getSalesAuthorizationState().name(), insurance.getId());
-            System.out.println(query);
+
             super.update(query);
         }
     }
