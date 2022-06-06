@@ -57,7 +57,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                     }
                     case "CAR" -> {
                         CarContract carContract = (CarContract) contract;
-                        inputquery = "insert into fire_contract (contract_id, car_no, car_type, model_year, model_name, value)" +
+                        inputquery = "insert into car_contract (contract_id, car_no, car_type, model_year, name, value)" +
                                 "values (%d, '%s', '%s', %d, '%s', %d) ";
                         input = String.format(inputquery, contract.getId(), carContract.getCarNo(), carContract.getCarType().name(),
                                 carContract.getModelYear(), carContract.getModelName(), carContract.getValue());
@@ -272,8 +272,6 @@ public class ContractDaoImpl extends Dao implements ContractDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
 
         if (contracts.isEmpty())
@@ -295,10 +293,7 @@ public class ContractDaoImpl extends Dao implements ContractDao {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-            }finally {
-                close();
             }
-
         if (contracts.isEmpty())
             throw new MyIllegalArgumentException(RED_BOLD+"해당 ID로 검색되는 계약이 존재하지 않습니다"+RESET);
         return contracts;
@@ -309,7 +304,6 @@ public class ContractDaoImpl extends Dao implements ContractDao {
         String formattedQuery = String.format(query, paymentId, contractId);
 
         boolean result = super.update(formattedQuery);
-        close();
         if(!result)
             throw new MyIllegalArgumentException(RED_BOLD+"입력하신 ID에 오류가 발생했습니다."+RESET);
     }

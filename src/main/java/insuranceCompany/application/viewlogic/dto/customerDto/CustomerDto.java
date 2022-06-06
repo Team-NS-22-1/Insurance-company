@@ -1,5 +1,7 @@
 package insuranceCompany.application.viewlogic.dto.customerDto;
 
+import insuranceCompany.application.domain.customer.Customer;
+
 public class CustomerDto {
 
     private String name;
@@ -16,6 +18,15 @@ public class CustomerDto {
         this.phone = phone;
         this.email = email;
         this.job = job;
+    }
+
+    public CustomerDto(Customer customer) {
+        this.name = customer.getName();
+        this.ssn = customer.getSsn();
+        this.address = customer.getAddress();
+        this.phone = customer.getPhone();
+        this.email = customer.getEmail();
+        this.job = customer.getJob();
     }
 
     public String getName() {

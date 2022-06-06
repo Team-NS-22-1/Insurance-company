@@ -6,7 +6,10 @@ import insuranceCompany.application.domain.contract.Contract;
 import insuranceCompany.application.domain.customer.Customer;
 import insuranceCompany.application.domain.employee.Employee;
 import insuranceCompany.application.domain.insurance.*;
-import insuranceCompany.application.global.exception.*;
+import insuranceCompany.application.global.exception.InputException;
+import insuranceCompany.application.global.exception.InputNullDataException;
+import insuranceCompany.application.global.exception.MyIllegalArgumentException;
+import insuranceCompany.application.global.exception.NoResultantException;
 import insuranceCompany.application.global.utility.MyBufferedReader;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.CarContractDto;
@@ -15,13 +18,12 @@ import insuranceCompany.application.viewlogic.dto.contractDto.FireContractDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.HealthContractDto;
 import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static insuranceCompany.application.domain.contract.BuildingType.*;
 import static insuranceCompany.application.domain.contract.CarType.*;
-import static insuranceCompany.application.global.constant.CommonConstants.ONE;
+import static insuranceCompany.application.global.constant.CommonConstants.*;
 import static insuranceCompany.application.global.constant.ContractConstants.*;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndLogout;
 
@@ -57,14 +59,12 @@ public class SalesViewLogic implements ViewLogic {
             if (ONE.equals(command)) {
                 selectInsurance();
             }
-        } catch (IOException e) {
-            throw new MyIOException();
         } catch (MyIllegalArgumentException | InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    public void selectInsurance() throws IOException {
+    public void selectInsurance() {
         ArrayList<Insurance> insurances = employee.readInsurances();
         if(insurances.size() == 0)
             throw new NoResultantException();
@@ -95,23 +95,21 @@ public class SalesViewLogic implements ViewLogic {
                     ProgressContract();
                 }
                 else {
-                    throw new MyIllegalArgumentException("ERROR:: ID["+ insuranceId + "]에 해당하는 보험 정보가 존재하지 않습니다.");
+                    throw new MyIllegalArgumentException(exceptionNoInsurance(insurance.getId()));
                 }
             } catch (InputException | MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("형식에 맞는 코드를 입력해주세요");
             }
         }
     }
 
     private void ProgressContract() {
         while (true) {
-            int choice = br.verifyCategory(SALES_INQUIRE_CONDITION, 2);
-            if (choice == 1) {
+            int choice = br.verifyCategory(SALES_INQUIRE_CONDITION, CATEGORY_YES_OR_NO);
+            if (choice == 1)
                 inquireCondition();
-            }
-            break;
+            else
+                break;
         }
 
 
@@ -121,7 +119,7 @@ public class SalesViewLogic implements ViewLogic {
             case CAR -> planCarInsurance();
         };
 
-        int choice = br.verifyCategory(SALES_PROGRESS_CONTRACT, 2);
+        int choice = br.verifyCategory(SALES_PROGRESS_CONTRACT, CATEGORY_YES_OR_NO);
         switch (choice) {
             case 1 -> {
                 CustomerDto customerDto = inputCustomerInfo();
@@ -176,18 +174,18 @@ public class SalesViewLogic implements ViewLogic {
         boolean targetSex, isDrinking, isSmoking, isDriving, isDangerActivity, isTakingDrug, isHavingDisease;
 
         targetAge = (int) br.verifyRead(SALES_TARGET_AGE_QUERY, targetAge);
-        targetSex =  br.verifyCategory(CONTRACT_TARGET_SEX_QUERY, 2) == 1;
-        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, 2) == 1;
+        targetSex =  br.verifyCategory(CONTRACT_TARGET_SEX_QUERY, CATEGORY_YES_OR_NO) == 1;
+        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDrinking) riskCount++;
-        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, 2) == 1;
+        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isSmoking) riskCount++;
-        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, 2) == 1;
+        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDriving) riskCount++;
-        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
+        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDangerActivity) riskCount++;
-        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, 2) == 1;
+        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isTakingDrug) riskCount++;
-        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, 2) == 1;
+        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, CATEGORY_YES_OR_NO) == 1;
         if (isHavingDisease) riskCount++;
 
         int premium = employee.planHealthInsurance(targetAge, targetSex, riskCount, insurance);
@@ -208,7 +206,7 @@ public class SalesViewLogic implements ViewLogic {
         BuildingType buildingType;
         Long collateralAmount = 0L;
 
-        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, 4)) {
+        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, CATEGORY_FOUR)) {
             case 1 -> COMMERCIAL;
             case 2 -> INDUSTRIAL;
             case 3 -> INSTITUTIONAL;
@@ -286,8 +284,8 @@ public class SalesViewLogic implements ViewLogic {
         boolean isSelfOwned, isActualResidence;
 
         buildingArea = (int) br.verifyRead(CONTRACT_BUILDING_AREA_QUERY, buildingArea);
-        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, 2) == 1;
-        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
+        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, CATEGORY_YES_OR_NO) == 1;
+        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, CATEGORY_YES_OR_NO) == 1;
 
         ((FireContractDto) contractDto).setBuildingArea(buildingArea)
                                         .setSelfOwned(isSelfOwned)
@@ -302,7 +300,7 @@ public class SalesViewLogic implements ViewLogic {
         int modelYear = 0;
 
         carNo = (String) br.verifySpecificRead(CONTRACT_CAR_NO_QUERY, carNo, "carNo");
-        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, 7)) {
+        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, CATEGORY_SEVEN)) {
             case 1 -> URBAN;
             case 2 -> SUBCOMPACT;
             case 3 -> COMPACT;
@@ -326,12 +324,20 @@ public class SalesViewLogic implements ViewLogic {
     private void concludeContract(CustomerDto customerDto, ContractDto contractDto) {
         int customerId = 0;
         Customer customer;
-        int choice = br.verifyCategory(SALES_CONCLUDE_CONTRACT, 2);
+        int choice = br.verifyCategory(SALES_CONCLUDE_CONTRACT, CATEGORY_YES_OR_NO);
         switch (choice) {
             case 1 -> {
                 if (customerDto == null) {
-                    customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
-                    customer = employee.readCustomer(customerId);
+                    while (true) {
+                        try {
+                            customerId = (int) br.verifyRead(SALES_INPUT_CUSTOMER_ID, customerId);
+                            customer = employee.readCustomer(customerId);
+                            if (customer != null)
+                                break;
+                        } catch (MyIllegalArgumentException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
                 }
                 else {
                     customer = employee.registerCustomer(customerDto);
@@ -349,6 +355,8 @@ public class SalesViewLogic implements ViewLogic {
 
     private UserDto signUp(int customerId) {
         String userId = "", password = "";
+
+        System.out.println(CONTRACT_SIGN_UP);
         userId = (String) br.verifyRead(CONTRACT_USER_ID_QUERY, userId);
         password = (String) br.verifyRead(CONTRACT_USER_PASSWORD_QUERY, password);
         return new UserDto(userId, password, customerId);

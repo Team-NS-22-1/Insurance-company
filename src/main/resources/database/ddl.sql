@@ -3,7 +3,7 @@ customer_id int primary key not null auto_increment,
 name varchar(10),
 job varchar(20),
 ssn varchar(14),
-phone varchar(13),
+phone varchar(20),
 email varchar(30),
 address varchar(200)
 );

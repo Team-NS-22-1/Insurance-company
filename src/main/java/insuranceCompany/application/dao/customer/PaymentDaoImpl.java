@@ -56,7 +56,7 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
         }
 
         super.create(detailFormat);
-        close();
+
     }
 
     @Override
@@ -71,10 +71,7 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
-
         if (payment == null) {
             throw new MyIllegalArgumentException(RED_BOLD+id + "는 없는 ID 입니다. 다시 확인해주세요."+RESET);
         }
@@ -106,8 +103,6 @@ public class PaymentDaoImpl extends Dao implements PaymentDao {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-            }finally {
-                close();
             }
 
         if(paymentList.isEmpty())

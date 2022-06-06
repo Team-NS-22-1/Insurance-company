@@ -23,18 +23,15 @@ import insuranceCompany.application.domain.insurance.Guarantee;
 import insuranceCompany.application.domain.insurance.Insurance;
 import insuranceCompany.application.domain.insurance.InsuranceType;
 import insuranceCompany.application.domain.insurance.SalesAuthorizationState;
-
 import insuranceCompany.application.global.exception.*;
 import insuranceCompany.application.global.utility.FileDialogUtil;
 import insuranceCompany.application.global.utility.MyBufferedReader;
-import insuranceCompany.application.login.User;
 import insuranceCompany.application.viewlogic.dto.UserDto.UserDto;
 import insuranceCompany.application.viewlogic.dto.accidentDto.AccidentReportDto;
 import insuranceCompany.application.viewlogic.dto.contractDto.*;
 import insuranceCompany.application.viewlogic.dto.customerDto.CustomerDto;
 import insuranceCompany.outerSystem.CarAccidentService;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -104,7 +101,7 @@ public class CustomerViewLogic implements ViewLogic {
     @Override
     public String showMenu() {
         if (customer.getId() == 0)
-            return createMenuAndExitQuery(CUSTOMER_MENU, SIGN_IN_INSURANCE);
+            return createMenuAndExitQuery(CUSTOMER_MENU, MENU_ELEMENT_GUEST_VIEW_LOGIC);
         else
             return createMenuAndLogout(CUSTOMER_MENU, SIGN_IN_INSURANCE, PAY_PREMIUM, REPORT_ACCIDENT, CLAIM_COMPENSATION);
     }
@@ -124,15 +121,12 @@ public class CustomerViewLogic implements ViewLogic {
                     case FOUR -> claimCompensation();
                 }
             }
-        } catch (IOException e) {
-            System.out.println("ERROR:: IO 시스템에 장애가 발생하였습니다!\n프로그램을 종료합니다...");
-            System.exit(0);
         } catch (MyIllegalArgumentException | NoResultantException | InputNullDataException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void selectInsurance() throws IOException {
+    private void selectInsurance() {
         ArrayList<Insurance> insurances = customer.readInsurances();
         if(insurances.size() == 0)
             throw new NoResultantException();
@@ -143,8 +137,6 @@ public class CustomerViewLogic implements ViewLogic {
             for (Insurance insurance : insurances) {
                 if (insurance.getDevelopInfo().getSalesAuthorizationState() == SalesAuthorizationState.PERMISSION)
                     System.out.printf(CONTRACT_INSURANCES_VALUE_FORMAT, insurance.getId(), insurance.getName(), insurance.printInsuranceType());
-//                    System.out.println("보험상품 번호: " + insurance.getId() + " | 보험상품 이름: " + insurance.getName() +
-//                            "   \t보험상품 종류: " + insurance.getInsuranceType());
             }
 
             try {
@@ -165,22 +157,22 @@ public class CustomerViewLogic implements ViewLogic {
                     decideSigning();
                 }
                 else {
-                    throw new NoResultantException();
+                    throw new MyIllegalArgumentException(exceptionNoInsurance(insurance.getId()));
                 }
             } catch (InputException | MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
-            } catch (NumberFormatException e) {
-                System.out.println("형식에 맞는 코드를 입력해주세요");
             }
         }
     }
 
-    private void decideSigning() throws IOException {
-        int choice = br.verifyCategory(CUSTOMER_DICIDE_SIGNING, 2);
+    private void decideSigning() {
+        int choice = br.verifyCategory(CUSTOMER_DICIDE_SIGNING, CATEGORY_YES_OR_NO);
         CustomerDto customerDto = null;
         if (choice == 1) {
             if (customer.getId() == 0)
                 customerDto = inputCustomerInfo();
+            else
+                customerDto = new CustomerDto(customer);
             ContractDto contractDto = switch (insurance.getInsuranceType()) {
                 case HEALTH -> inputHealthInfo(customerDto);
                 case FIRE -> inputFireInfo();
@@ -190,7 +182,7 @@ public class CustomerViewLogic implements ViewLogic {
         }
     }
 
-    private CustomerDto inputCustomerInfo() throws IOException {
+    private CustomerDto inputCustomerInfo() {
         String name = "", ssn = "", phone = "", address = "", email = "", job = "";
         System.out.println(CONTRACT_INPUT_CUSTOMER_INFO);
 
@@ -212,23 +204,29 @@ public class CustomerViewLogic implements ViewLogic {
 
         height = (int) br.verifyRead(CONTRACT_HEIGHT_QUERY, height);
         weight = (int) br.verifyRead(CONTRACT_WEGHIT_QUERY, weight);
-        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, 2) == 1;
+        isDrinking = br.verifyCategory(CONTRACT_IS_DRINKING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDrinking) riskCount++;
-        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, 2) == 1;
+        isSmoking = br.verifyCategory(CONTRACT_IS_SMOKING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isSmoking) riskCount++;
-        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, 2) == 1;
+        isDriving = br.verifyCategory(CONTRACT_IS_DRIVING_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDriving) riskCount++;
-        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, 2) == 1;
+        isDangerActivity = br.verifyCategory(CONTRACT_IS_DANGER_ACTIVITY_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isDangerActivity) riskCount++;
-        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, 2) == 1;
+        isTakingDrug = br.verifyCategory(CONTRACT_IS_TAKING_DRUG_QUERY, CATEGORY_YES_OR_NO) == 1;
         if(isTakingDrug) riskCount++;
-        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, 2) == 1;
+        isHavingDisease = br.verifyCategory(CONTRACT_IS_HAVING_DISEASE_QUERY, CATEGORY_YES_OR_NO) == 1;
         if (isHavingDisease) {
             riskCount++;
             diseaseDetail = (String) br.verifyRead(CONTRACT_DISEASE_DETAIL_QUERY, diseaseDetail);
         }
 
-        int premium = customer.inquireHealthPremium(customerDto.getSsn(), riskCount, insurance);
+        String ssn;
+        if (customerDto == null)
+            ssn = customer.getSsn();
+        else
+            ssn = customerDto.getSsn();
+
+        int premium = customer.inquireHealthPremium(ssn, riskCount, insurance);
         return new HealthContractDto(height, weight, isDrinking, isSmoking, isDriving, isDangerActivity,
                                     isTakingDrug, isHavingDisease, diseaseDetail).setPremium(premium);
     }
@@ -240,7 +238,7 @@ public class CustomerViewLogic implements ViewLogic {
         boolean isSelfOwned, isActualResidence;
 
         buildingArea = (int) br.verifyRead(CONTRACT_BUILDING_AREA_QUERY, buildingArea);
-        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, 4)) {
+        buildingType = switch (br.verifyCategory(CONTRACT_BUILDING_TYPE_QUERY, CATEGORY_FOUR)) {
             case 1 -> COMMERCIAL;
             case 2 -> INDUSTRIAL;
             case 3 -> INSTITUTIONAL;
@@ -248,8 +246,8 @@ public class CustomerViewLogic implements ViewLogic {
             default -> throw new IllegalStateException();
         };
         collateralAmount = (Long) br.verifyRead(CONTRACT_COLLATERAL_AMOUNT_QUERY, collateralAmount);
-        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, 2) == 1;
-        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, 2) == 1;
+        isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, CATEGORY_YES_OR_NO) == 1;
+        isActualResidence = br.verifyCategory(CONTRACT_IS_ACTUAL_RESIDENCE_QUERY, CATEGORY_YES_OR_NO) == 1;
 
         int premium = customer.inquireFirePremium(buildingType, collateralAmount, insurance);
         return new FireContractDto(buildingArea, buildingType, collateralAmount, isSelfOwned, isActualResidence).setPremium(premium);
@@ -262,7 +260,7 @@ public class CustomerViewLogic implements ViewLogic {
         Long value = 0L;
 
         carNo = (String) br.verifySpecificRead(CONTRACT_CAR_NO_QUERY, carNo, "carNo");
-        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, 7)) {
+        carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, CATEGORY_SEVEN)) {
             case 1 -> URBAN;
             case 2 -> SUBCOMPACT;
             case 3 -> COMPACT;
@@ -276,21 +274,26 @@ public class CustomerViewLogic implements ViewLogic {
         modelYear = (int) br.verifyRead(CONTRACT_MODEL_YEAR_QUERY, modelYear);
         value = (Long) br.verifyRead(CONTRACT_VALUE_QUERY, value);
 
-        int premium = customer.inquireCarPremium(customerDto.getSsn(), value, insurance);
+        String ssn;
+        if (customerDto == null)
+            ssn = customer.getSsn();
+        else
+            ssn = customerDto.getSsn();
+
+        int premium = customer.inquireCarPremium(ssn, value, insurance);
         return new CarContractDto(carNo, carType, modelName, modelYear, value).setPremium(premium);
     }
 
     private void signContract(CustomerDto customerDto, ContractDto contractDto) {
         System.out.println(premiumInquiry(contractDto.getPremium()));
 
-        int choice = br.verifyCategory(CUSTOMER_SGIN_CONTRACT, 2);
+        int choice = br.verifyCategory(CUSTOMER_SGIN_CONTRACT, CATEGORY_YES_OR_NO);
         switch (choice) {
             case 1 -> {
-                User user = null;
                 if (customer.getId() == 0) {
                     customer = customer.registerCustomer(customerDto);
                     UserDto userDto = signUp();
-                    user = customer.registerUser(userDto);
+                    customer.registerUser(userDto);
                 }
                 Contract contract = customer.registerContract(customer, contractDto, insurance);
                 System.out.println(customer);
@@ -303,6 +306,8 @@ public class CustomerViewLogic implements ViewLogic {
 
     private UserDto signUp() {
         String userId = "", password = "";
+
+        System.out.println(CONTRACT_SIGN_UP);
         userId = (String) br.verifyRead(CONTRACT_USER_ID_QUERY, userId);
         password = (String) br.verifyRead(CONTRACT_USER_PASSWORD_QUERY, password);
         return new UserDto(userId, password, customer.getId());
@@ -608,7 +613,6 @@ public class CustomerViewLogic implements ViewLogic {
                 while (true) {
                     try {
                         System.out.println(showAccountNoEX(bankType.getFormat()));
-                        System.out.println(ZERO_MESSAGE);
                         System.out.print(INPUT);
                         String command = sc.next();
                         if (command.equals(ZERO)) {
@@ -924,8 +928,8 @@ public class CustomerViewLogic implements ViewLogic {
             while (true) {
                 try {
                     int insType = 0;
-                    String query = createMenuAndClose(ACCIDENT_MENU, CAR_ACCIDENT, CAR_BREAKDOWN, INJURY_ACCIDENT, FIRE_ACCIDENT);
-                    insType = br.verifyMenu(query, 4);
+                    String query = createMenuAndClose(ACCIDENT_MENU, KIND_OF_ACCIDENT);
+                    insType = br.verifyMenu(query, KIND_OF_ACCIDENT.length);
 
                     switch (insType) {
                         case 1 -> accidentType = AccidentType.CARACCIDENT;

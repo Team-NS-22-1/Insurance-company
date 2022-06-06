@@ -11,8 +11,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static insuranceCompany.application.global.constant.CommonConstants.*;
+import static insuranceCompany.application.global.constant.CompensationViewLogicConstants.MENU_ELEMENTS_COMP_VIEW_LOGIC;
+import static insuranceCompany.application.global.constant.ContractConstants.MENU_ELEMENT_GUEST_VIEW_LOGIC;
+import static insuranceCompany.application.global.constant.ContractConstants.SALES_MENU_ELEMENTS;
+import static insuranceCompany.application.global.constant.CustomerViewLogicConstants.MENU_ELEMENTS_CUSTOMER_VIEW_LOGIC;
 import static insuranceCompany.application.global.constant.DevelopViewLogicConstants.MENU_ELEMENTS_DEV_VIEW_LOGIC;
 import static insuranceCompany.application.global.constant.LoginViewLogicConstants.*;
+import static insuranceCompany.application.global.constant.UnderwritingViewLogicConstants.UNDERWRITING_MENU_ELEMENTS;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuAndClose;
 import static insuranceCompany.application.global.utility.MenuUtil.createMenuOnlyExitQuery;
 
@@ -51,7 +56,7 @@ public class LoginViewLogic implements ViewLogic {
                     System.out.printf(MSG_WELCOME_CUSTOMER, customer.getName());
                     while (customer != null) {
                         CustomerViewLogic customerViewLogic = new CustomerViewLogic(customer);
-                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(),4));
+                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), MENU_ELEMENTS_CUSTOMER_VIEW_LOGIC.length));
                         customer = isLogoutCustomer(customer, command);
                         customerViewLogic.work(command);
                     }
@@ -60,7 +65,7 @@ public class LoginViewLogic implements ViewLogic {
                     while(true){
                         CustomerViewLogic customerViewLogic = new CustomerViewLogic();
                         customerViewLogic.showMenu();
-                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), 1));
+                        String command = String.valueOf(br.verifyMenu(customerViewLogic.showMenu(), MENU_ELEMENT_GUEST_VIEW_LOGIC.length));
                         if(command.equals(ZERO)) break;
                         customerViewLogic.work(command);
                     }
@@ -86,20 +91,20 @@ public class LoginViewLogic implements ViewLogic {
                 }
                 case UW -> {
                     UnderwritingViewLogic underwritingViewLogic = new UnderwritingViewLogic(employee);
-                    String command = String.valueOf(br.verifyMenu(underwritingViewLogic.showMenu(), 1));
+                    String command = String.valueOf(br.verifyMenu(underwritingViewLogic.showMenu(), UNDERWRITING_MENU_ELEMENTS.length));
                     employee = isLogoutEmployee(employee, command);
                     underwritingViewLogic.work(command);
                 }
                 case COMP -> {
                     CompensationViewLogic compensationViewLogic = new CompensationViewLogic(employee);
                     ;
-                    String command = String.valueOf(br.verifyMenu(compensationViewLogic.showMenu(), 3));
+                    String command = String.valueOf(br.verifyMenu(compensationViewLogic.showMenu(), MENU_ELEMENTS_COMP_VIEW_LOGIC.length));
                     employee = isLogoutEmployee(employee, command);
                     compensationViewLogic.work(command);
                 }
                 case SALES -> {
                     SalesViewLogic salesViewLogic = new SalesViewLogic(employee);
-                    String command = String.valueOf(br.verifyMenu(salesViewLogic.showMenu(), 1));
+                    String command = String.valueOf(br.verifyMenu(salesViewLogic.showMenu(), SALES_MENU_ELEMENTS.length));
                     employee = isLogoutEmployee(employee, command);
                     salesViewLogic.work(command);
                 }

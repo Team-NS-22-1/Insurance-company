@@ -42,7 +42,7 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
         int id = super.create(formattedQuery);
         accidentDocumentFile.setId(id);
         accidentDocumentFile.setLastModifedDate(now);
-        close();
+
     }
 
     @Override
@@ -62,8 +62,6 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
-            close();
         }
         if(accidentDocumentFile ==null)
             throw new MyIllegalArgumentException(RED_BOLD+"사고 서류 아이디 ["+id+"]에 해당하는 사고 서류 파일 정보가 존재하지 않습니다."+RESET);
@@ -78,7 +76,7 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
         String query = "update accident_document_file set last_modified_date = '%s' where accident_document_file_id = %d";
         String formattedQuery = String.format(query, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),id);
         super.update(formattedQuery);
-        close();
+
         return true;
     }
 
@@ -101,9 +99,6 @@ public class AccidentDocumentFileDaoImpl extends Dao implements AccidentDocument
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-            }finally {
-
-                close();
             }
         if(accidentDocumentFileList.size()==0)
             throw new MyIllegalArgumentException(RED_BOLD+"사고 아이디 ["+accidentId+"]에 해당하는 사고 파일 정보가 존재하지 않습니다."+RESET);
