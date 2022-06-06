@@ -49,7 +49,7 @@ public class AccidentDaoImpl extends Dao implements AccidentDao {
                 ,((CarAccident)accident).getErrorRate());
             }
             case CARBREAKDOWN -> {detail_query = "insert into car_breakdown (accident_id, car_no, place_address, symptom) values ('%d', '%s', '%s','%s')";
-            detailFormat = String.format(detailFormat, accident.getId(), ((CarBreakdown)accident).getCarNo(), ((CarBreakdown)accident).getPlaceAddress(), ((CarBreakdown)accident).getSymptom());
+            detailFormat = String.format(detail_query, accident.getId(), ((CarBreakdown)accident).getCarNo(), ((CarBreakdown)accident).getPlaceAddress(), ((CarBreakdown)accident).getSymptom());
             }
             case FIREACCIDENT -> {detail_query = "insert into fire_accident (accident_id, place_address) values ('%d', '%s')";
             detailFormat = String.format(detail_query, accident.getId(), ((FireAccident)accident).getPlaceAddress());
