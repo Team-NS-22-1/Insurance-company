@@ -241,7 +241,7 @@ public class UnderwritingViewLogic implements ViewLogic {
 
         InsuranceDaoImpl insuranceDaoImpl = new InsuranceDaoImpl();
         Insurance insurance = insuranceDaoImpl.read(contract.getInsuranceId());
-        System.out.println(insurance.print());
+        System.out.println(insurance.printOnlyInsurance());
 
         return contract;
 
