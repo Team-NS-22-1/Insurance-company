@@ -77,7 +77,7 @@ public class CustomerViewLogicConstants {
     public static final String HOUR = "시 : ";
     public static final String MINUTE = "분 : ";
     public static final String ADDRESS = "사고 장소 : ";
-    public static final String CAR_NO_EX = "차 번호 (ex : __-**_-**** (_ : 한글, * : 숫자)) : ";
+    public static final String CAR_NO_EX = "차 번호 (ex : **_ **** (_ : 한글, * : 숫자)) : ";
     public static final String OPOSSING_PHONE = "상대방 연락처 : ";
     public static final String REQUEST_ON_SITE = "현장 출동 요청을 하시겠습니까? (Y/N) : ";
     public static final String SYMPTOM = "고장 증상 : ";

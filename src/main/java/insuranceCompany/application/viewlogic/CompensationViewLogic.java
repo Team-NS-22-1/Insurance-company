@@ -143,6 +143,9 @@ public class CompensationViewLogic implements ViewLogic {
                 System.out.println(LIST_LINE);
                 int accidentId = 0;
                 accidentId = (int) br.verifyRead(ACCIDENT_ID_QUERY, accidentId);
+                if (accidentId == 0) {
+                    return null;
+                }
                 accidentDao = new AccidentDaoImpl();
                 Accident accident = this.accidentDao.read(accidentId);
                 if (accident.getEmployeeId() != this.employee.getId()) {
@@ -157,7 +160,6 @@ public class CompensationViewLogic implements ViewLogic {
             } catch (MyIllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
-            return null;
         }
     }
 
@@ -202,19 +204,26 @@ public class CompensationViewLogic implements ViewLogic {
     }
 
     private void assessDamage() {
-        Accident accident = selectAccident();
-        if(accident == null) // 배정된 사고가 없을 떄 null. 이거도 exception인가???
-            return;
-        // 사고조사보고서, 지급준비금, 과실비율이 입력 값이 없으면 돌아가야해.
-        isValidAccident(accident);
+        Accident accident = null;
+        AccountRequestDto compAccount = null;
+        while (true) {
+            try {
+                accident = selectAccident();
+                if (accident == null) // 배정된 사고가 없을 떄 null. 이거도 exception인가???
+                    return;
+                isValidAccident(accident);
+                downloadAccDocFile(accident);
+                compAccount = createCompAccount();
+                break;
+
+            } catch (MyInvalidAccessException e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
         //다운로드 하기.
 
-        downloadAccDocFile(accident);
-        AccountRequestDto compAccount = createCompAccount();
-        if (compAccount == null) {
-            System.out.println(INPUT_ACCOUNT);
-            return;
-        }
+
         System.out.println(UPLOAD_ASSESS_DAMAGE);
         AssessDamageResponseDto assessDamageResponseDto = this.employee.assessDamage(accident,compAccount);
 
@@ -267,7 +276,7 @@ public class CompensationViewLogic implements ViewLogic {
             System.out.println(SELECT_BANK);
             BankType bankType = selectBankType(br);
             if(bankType==null)
-                break ;
+               throw new MyInvalidAccessException(INPUT_ACCOUNT);
             while (true) {
                 try {
                     StringBuilder query = new StringBuilder();

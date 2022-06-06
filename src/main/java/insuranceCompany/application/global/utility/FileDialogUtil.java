@@ -64,8 +64,8 @@ public class FileDialogUtil {
             }
 
 
-            frame = new JFrame("BorderLayoutDemo");
-            frame.setUndecorated(true); // Remove title bar
+            frame = new JFrame();
+            frame.setUndecorated(true);
             frame.pack();
             frame.setVisible(true);
 
@@ -97,14 +97,13 @@ public class FileDialogUtil {
     }
 
     public static void download(String dir) {
-        frame = new JFrame("BorderLayoutDemo");
-        frame.setUndecorated(true); // Remove title bar
-
+        frame = new JFrame();
+        frame.setUndecorated(true);
         frame.pack();
         frame.setVisible(true);
 
         dialog = new FileDialog(frame,FILE_DOWNLOAD_HEAD,FileDialog.SAVE);
-
+        dialog.setFile(getFileName(dir));
         dialog.setAlwaysOnTop(true);
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
@@ -124,37 +123,11 @@ public class FileDialogUtil {
 
     }
 
-    /*
-    public static void download(String filePath) throws IOException {
-        String originFileName = "보험상품신고서.pdf";
-        String originFilePath = "src/보험상품신고서.pdf";
-
-        frame = new JFrame();
-        dialog = new FileDialog(frame, "파일 다운로드", FileDialog.SAVE);
-        dialog.setFile(originFileName);
-        dialog.setModal(true);
-        dialog.setVisible(true);
-
-        if(dialog.getDirectory() == null)
-            return;
-
-        String saveFilePath = dialog.getDirectory()+dialog.getFile();
-
-        try {
-            in = new FileInputStream(originFilePath);
-            out = new FileOutputStream(saveFilePath);
-            readIOBuffer();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("ERROR :: 파일을 찾을 수 없습니다!");
-        }
-    }
-    */
-
     public static void isExist(Accident accident, AccDocType accDocType) {
         String directory = getDirectory(accident);
         String extension = HWP_EXTENSION;
         if(accDocType==AccDocType.PICTUREOFSITE)
-            extension = JPEG_EXTENSION;
+            extension = JPG_EXTENSION;
         File folder = new File(submitPath+directory+ SLASH +accDocType.getDesc()+extension);
         try {
             if (!folder.exists()) {
@@ -207,5 +180,9 @@ public class FileDialogUtil {
     private static String getExtension(String path) {
         int lastIndexOf = path.lastIndexOf(DOT);
         return ASTERISK+path.substring(lastIndexOf);
+    }
+
+    private static String getFileName(String dir) {
+        return  dir.substring(dir.lastIndexOf(SLASH) + 1);
     }
 }
