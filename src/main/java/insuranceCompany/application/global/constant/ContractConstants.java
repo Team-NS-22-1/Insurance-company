@@ -103,8 +103,8 @@ public class ContractConstants {
     // Table format
     public static final String CONTRACT_INSURANCES_CATEGORY_FORMAT = "%-4s\t|\t%-10s\t|\t%-5s\n";
     public static final String CONTRACT_INSURANCES_VALUE_FORMAT = "%-4s\t|\t%-10s\t|\t%-5s\n";
-    public static final String CONTRACT_GUARANTEES_CATEGORY_FORMAT = "%-10s\t|\t%-10s\t|\t%-11s\n";
-    public static final String CONTRACT_GUARANTEES_VALUE_FORMAT = "%-10s\t|\t%-10s\t|\t%-5d원\n";
+    public static final String CONTRACT_GUARANTEES_CATEGORY_FORMAT = "%-12s\t|\t%-22s\t|\t%-11s\n";
+    public static final String CONTRACT_GUARANTEES_VALUE_FORMAT = "%-10s\t|\t%-18s\t|\t%-5d원\n";
     public static final String CONTRACT_HEALTH_DETAIL_CATEGORY_FORMAT = "%-8s\t|\t%-3s\t|\t%-7s\t|\t%-8s\n";
     public static final String CONTRACT_HEALTH_DETAIL_VALUE_FORMAT = "%-8s\t|\t%-3s\t|\t%-7s\t|\t%-5d원\n";
     public static final String CONTRACT_FIRE_DETAIL_CATEGORY_FORMAT = "%-2s\t|\t%-10s\t|\t%-7s\n";
