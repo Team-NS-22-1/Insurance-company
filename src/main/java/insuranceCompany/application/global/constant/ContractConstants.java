@@ -75,6 +75,7 @@ public class ContractConstants {
     public static final String CONTRACT_DISEASE_DETAIL_QUERY = "질병에 대한 상세 내용를 입력해주세요.\n";
 
     // inputFireInfo()
+    public static final String CONTRACT_INPUT_FIRE_INFO = "<< 고객님의 건물정보를 입력해주세요. >>";
     public static final String CONTRACT_BUILDING_AREA_QUERY = "건물면적 (단위: m^2): ";
     public static final String CONTRACT_BUILDING_TYPE_QUERY = "건물종류를 선택해주세요.\n1. 상업용\n2. 산업용\n3. 기관용\n4. 거주용\n";
     public static final String CONTRACT_COLLATERAL_AMOUNT_QUERY = "담보금액: (단워: 원): ";
@@ -82,6 +83,7 @@ public class ContractConstants {
     public static final String CONTRACT_IS_ACTUAL_RESIDENCE_QUERY = "실거주 여부를 입력해주세요. (1. 예  2. 아니요)\n";
 
     // inputCarInfo()
+    public static final String CONTRACT_INPUT_CAR_INFO = "<< 고객님의 차량정보를 입력해주세요. >>";
     public static final String CONTRACT_CAR_NO_QUERY = "차량번호 (***_ ****): ";
     public static final String CONTRACT_CAR_TYPE_QUERY = "차종을 선택해주세요.\n1. 경형\n2. 소형\n3. 준중형\n4. 중형\n5. 준대형\n6. 대형\n7. 스포츠카\n";
     public static final String CONTRACT_MADEL_NAME_QUERY = "모델 이름: ";

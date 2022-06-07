@@ -282,6 +282,7 @@ public class SalesViewLogic implements ViewLogic {
     private ContractDto inputFireInfo(ContractDto contractDto) {
         int buildingArea = 0;
         boolean isSelfOwned, isActualResidence;
+        System.out.println(CONTRACT_INPUT_FIRE_INFO);
 
         buildingArea = (int) br.verifyRead(CONTRACT_BUILDING_AREA_QUERY, buildingArea);
         isSelfOwned = br.verifyCategory(CONTRACT_IS_SELF_OWNED_QUERY, CATEGORY_YES_OR_NO) == 1;
@@ -298,6 +299,7 @@ public class SalesViewLogic implements ViewLogic {
         CarType carType;
         String modelName = "", carNo = "";
         int modelYear = 0;
+        System.out.println(CONTRACT_INPUT_CAR_INFO);
 
         carNo = (String) br.verifySpecificRead(CONTRACT_CAR_NO_QUERY, carNo, "carNo");
         carType = switch (br.verifyCategory(CONTRACT_CAR_TYPE_QUERY, CATEGORY_SEVEN)) {
